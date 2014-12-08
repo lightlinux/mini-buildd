@@ -16,36 +16,67 @@ mini-buildd (1.1.0) unstable; urgency=medium
 
 mini-buildd (1.0.5) unstable; urgency=medium
 
-  This version removes the "sudo workaround" for the per-build chroot
-  setup (as the resp. bug #608840 in 'sbuild' is now fixed).
+  This version upgrade unfortunately requires some manual
+  maintenance:
 
-  It's highly recommended to re-create all chroots once now to get rid of the
-  workaround's '/etc/sudoers' file in chroots, which imposes a potential
-  security risk.
+  (1) "sudo chroot workaround" removed:
 
-  All 1.0.x versions will still remove the '/etc/sudoers' in snapshots prior to
-  builds (i.e., you keep the same level of security as before even if you do
-  nothing), but 1st this will be removed in future versions of mini-buildd
-  (>= 1.1.x), and 2nd you gain security now in case the chroots are used by
-  third parties.
+  This version removes the "sudo workaround" for the per-build
+  chroot setup (as the resp. bug #608840 in 'sbuild' is now
+  fixed).
 
-  To re-create chroots, enter the Web configuration frontend as 'admin' user,
-  and first run 'Remove' and then 'PCA' on each chroot instance.
+  You must RE-CREATE ALL CHROOTS ONCE NOW to get rid of the
+  workaround's '/etc/sudoers' file in chroots, which imposes a
+  potential security risk.
 
- -- Stephan Sürken <absurd@debian.org>  Thu, 09 Oct 2014 17:35:36 +0000
+  FWIW: These chroots will all be automatically disabled in the
+  next 'check' run (which automatically is done weekly). All
+  1.0.x versions will still remove the '/etc/sudoers' in
+  snapshots prior to builds (i.e., you keep the same level of
+  security as before even if you do nothing until the chroot is
+  actually disabled).
 
-mini-buildd (1.0.0~alpha.1) experimental; urgency=low
+  To re-create chroots, enter the web configuration frontend as
+  'admin' user, and first run 'Remove' and then 'PCA' on each
+  chroot instance.
 
-  * An 0.8.x (mini-dinstall/flat/multipackage) repository cannot be (automatically)
-  migrated into a new 1.0 (reprepro/pool/migration one). If you have upgraded from
-  0.8.x, your complete "old" repository will still be accessible like before (you
-  can not build for it anymore, though).
+  (2) Updated default snippets for eatmydata 82:
 
-  It's recommendend to just keep the old repository (located in '$HOME/rep/*') as-is,
-  and use it as "Source" in your new (replacing) 1.0.0 setup (located in
-  '$HOME/repositories/*').
+  The new eatmydata 82 (sid/jessie) breaks the old eatmydata
+  shell snippet (which is automatically added for newly created
+  Distributions to the -- otherwise freely configurable --
+  distribution's "chroot setup script").
 
-  Advanced users or purists may think about manually migrating packages to the new
-  1.0 setup manually using reprepro at some point.
+  This breakage usually only means eatmydata is not enabled in
+  builds (which may dramatically increase your build times), and
+  ugly error messages in build logs.
 
- -- Stephan Sürken <absurd@debian.org>  Wed, 22 Aug 2012 18:55:39 +0200
+  To update the snippet, enter the web configuration frontend as
+  'admin' user, and fix up (or entirely remove) the snippet for
+  each distribution instance from "Chroot setup options/Chroot
+  setup script" (for your cut&paste pleasure, an updated snippet
+  is shown there in the example script).
+
+  Note that you also need to 'PCA' all depending repositories
+  afterwards.
+
+ -- Stephan Sürken <absurd@debian.org>  Wed, 22 Oct 2014 14:01:36 +0000
+
+mini-buildd (1.0.0) unstable; urgency=low
+
+  * An 0.8.x (mini-dinstall/flat/multipackage) repository is
+  _not_ automatically migrated into the new 1.0
+  (reprepro/pool/migration) one. If you have upgraded from
+  0.8.x, your complete "old" repository will still be accessible
+  like before (you can not build for it anymore, though).
+
+  It's recommendend to just keep the old repository (located in
+  '$HOME/rep/*') as-is, and use it as "Source" in your new
+  (replacing) 1.0.x setup (located in '$HOME/repositories/*').
+
+  In case you actually want to migrate your packages, please
+  check out the resp. Admin Manual section:
+
+  http://localhost:8066/doc/admin.html#migrate-packages-from-0-8-x
+
+ -- Stephan Sürken <absurd@debian.org>  Thu, 23 Oct 2014 11:11:44 +0000

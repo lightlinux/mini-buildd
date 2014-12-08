@@ -142,6 +142,21 @@ lines`` as changelog entry to control it on a per-upload basis::
 	  This overwrites the extra config "Internal-APT-Priority" for
 	  the distribution.
 
+FAQ
+===
+.. todo:: **BUG**: *reprepro fails with debian/ as symlink in Debian native packages*
+
+	 Please follow [#debbug768046]_ for this subject.
+
+	 In such a case, builds will be fine, but reprepro will not be
+	 able to install the package; you will only be able to see
+	 reprepro's error "No section and no priority for" in the
+	 ``daemon.log``.
+
+	 For the moment, just avoid such a setup (which is imho not
+	 desireable anyway). However, as it's a legal setup afaik it
+	 should work after all.
+
 .. _user_api:
 
 *************
@@ -248,3 +263,4 @@ References
 .. [#debbug484011] http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=484011
 .. [#debbug248561] http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=248561
 .. [#debbug657561] http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=657561
+.. [#debbug768046] http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=768046
