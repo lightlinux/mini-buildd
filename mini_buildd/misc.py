@@ -345,9 +345,9 @@ def guess_codeversion(release):
     >>> guess_codeversion({"Origin": "Debian", "Version": "7.1", "Codename": "wheezy"})
     u'70'
     >>> guess_codeversion({"Origin": "Debian", "Codename": "jessie"})
-    u'JESSIE'
+    u'~JESSIE'
     >>> guess_codeversion({"Origin": "Debian", "Codename": "sid"})
-    u'SID'
+    u'~SID'
     >>> guess_codeversion({"Origin": "Ubuntu", "Version": "12.10", "Codename": "quantal"})
     u'1210'
     """
@@ -360,7 +360,7 @@ def guess_codeversion(release):
         else:
             return digit0 + digit1
     except:
-        return release["Codename"].upper()
+        return "~" + release["Codename"].upper()
 
 
 def pkg_fmt(status, distribution, package, version, extra=None, message=None):
