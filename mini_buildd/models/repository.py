@@ -819,7 +819,7 @@ Example:
                     for s in self.layout.suiteoption_set.all():
                         if s.suite.name == distribution.suite:
                             return d, s
-        raise Exception("No such distribution in repository {i}: {d}".format(self.identity, d=distribution.get()))
+        raise Exception("No such distribution in repository {i}: {d}".format(i=self.identity, d=distribution.get()))
 
     def mbd_get_apt_keys(self, distribution):
         result = self.mbd_get_daemon().model.mbd_get_pub_key()
