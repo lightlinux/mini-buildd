@@ -322,7 +322,7 @@ Manage your account : {url}accounts/login/
                 if s.subscriber.is_active:
                     add_to(address, "subscriber", is_automatic=False)
                 else:
-                    msglog.debug("Notify: Skipping subscription address: {a}: Account disabled".format(a=address, r=self.allow_emails_to))
+                    msglog.debug("Notify: Skipping subscription address: {a}: Account disabled".format(a=address))
 
         try:
             django.core.mail.send_mass_mail(m_to)
