@@ -1,4 +1,4 @@
-mini-buildd (1.1.0~~0) UNRELEASED; urgency=medium
+mini-buildd (1.1.0) UNRELEASED; urgency=medium
 
   * [d85d2d4] Add all available sources.lists to keyring packages for easy
     integration.
