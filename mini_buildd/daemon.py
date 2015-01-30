@@ -18,6 +18,8 @@ import debian.deb822
 import debian.changelog
 import debian.debian_support
 
+import django.conf
+
 import mini_buildd.misc
 import mini_buildd.changes
 import mini_buildd.gnupg
@@ -440,6 +442,13 @@ class Daemon(object):
 
     def _update_from_model(self):
         self.model = self._new_model_object()
+
+        # p-d-registration uses DEFAULT_FROM_EMAIL django setting for sending emails; there is no other way to set this.
+        # As this setting lives in the django "Daemon" instance, there is no way to set it before django is up.
+        # This code updates a django setting at runtime: https://docs.djangoproject.com/en/1.7/topics/settings/#altering-settings-at-runtime
+        # Some however actually may be changed: https://code.djangoproject.com/ticket/14628
+        # We are confident that DEFAULT_FROM_EMAIL belongs to that group; also, this method is always called thread-locked
+        django.conf.settings.DEFAULT_FROM_EMAIL = self.model.email_address
 
         if self.keyrings is None:
             self.keyrings = Keyrings()
