@@ -1,3 +1,24 @@
+mini-buildd (1.0.5snap20150201103349) experimental; urgency=medium
+
+  Stable snasphot via 'experimental' during jessie freeze.
+  * [dcfe369] doc/user.rst: Document Bug 768046.
+  * [ebd2df4] debian/po/nl.po: Add dutch translation. (Closes: 767278)
+  * [0a2034e] debian/control: Update Stds-Ver to 3.9.6 (no changes
+    needed).
+  * [0f57f5f] control: Update debootstrap suggested version to 1.0.64.
+  * [51f6bd5] pylint 1.3.1: Fix two new warnings (indeed buggy code which
+    may lead to problems)
+  * [83ffe9e] config: Always sync the debconf "home" value with actual
+    home of an existing mini-buildd user. Thanks to Marc Haber (Closes:
+    774078)
+  * [3d1ec5f] p-d-registration: Use configured email address for outgoing
+    mails (instead of django's default).
+  * [62af2c5] p-d-registration: Workaround for p-d-registration bug
+    #775363: Uses wrong uid hash for django >= 1.6 (Fixes: Broken "reset
+    password" URLs)
+
+ -- Stephan Sürken <absurd@debian.org>  Sun, 01 Feb 2015 10:34:11 +0000
+
 mini-buildd (1.0.5) unstable; urgency=medium
 
   * [016c59f] mini_buildd/daemon.py: Fix warning with pylint 1.3.
