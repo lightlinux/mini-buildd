@@ -337,6 +337,11 @@ codeversion is only used for base sources.""")
             cls._mbd_get_or_create(msglog, "Ubuntu", "utopic-backports",
                                    ["40976EAF437D05B5", "3B4FE6ACC0B21F32"],
                                    "Codename: utopic\nSuite: utopic-backports")
+            cls._mbd_get_or_create(msglog, "Ubuntu", "vivid",
+                                   ["40976EAF437D05B5", "3B4FE6ACC0B21F32"])
+            cls._mbd_get_or_create(msglog, "Ubuntu", "vivid-backports",
+                                   ["40976EAF437D05B5", "3B4FE6ACC0B21F32"],
+                                   "Codename: vivid\nSuite: vivid-backports")
 
         @classmethod
         def mbd_filter_active_base_sources(cls):
