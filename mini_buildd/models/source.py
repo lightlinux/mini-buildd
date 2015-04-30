@@ -271,6 +271,9 @@ codeversion is only used for base sources.""")
             """
             Add well-known Debian sources
 
+            7638D0442B90D010: Debian Archive Automatic Signing Key (8/jessie) <ftpmaster@debian.org>
+            CBF8D6FD518E17E1: Jessie Stable Release Key <debian-release@lists.debian.org>
+
             8B48AD6246925553: Debian Archive Automatic Signing Key (7.0/wheezy) <ftpmaster@debian.org>
             6FB2A1C265FFB764: Wheezy Stable Release Key <debian-release@lists.debian.org>
 
@@ -290,11 +293,11 @@ codeversion is only used for base sources.""")
             cls._mbd_get_or_create(msglog, "Debian", "squeeze",
                                    ["AED4B06F473041FA", "64481591B98321F9"])
             cls._mbd_get_or_create(msglog, "Debian", "wheezy",
-                                   ["8B48AD6246925553", "6FB2A1C265FFB764"])
+                                   ["8B48AD6246925553", "6FB2A1C265FFB764", "7638D0442B90D010"])
             cls._mbd_get_or_create(msglog, "Debian", "jessie",
-                                   ["8B48AD6246925553", "6FB2A1C265FFB764"])
+                                   ["8B48AD6246925553", "CBF8D6FD518E17E1", "7638D0442B90D010"])
             cls._mbd_get_or_create(msglog, "Debian", "sid",
-                                   ["8B48AD6246925553", "6FB2A1C265FFB764"])
+                                   ["8B48AD6246925553", "6FB2A1C265FFB764", "7638D0442B90D010"])
             cls._mbd_get_or_create(msglog, "Backports.org archive", "etch-backports",
                                    ["EA8E8B2116BA136C"])
             cls._mbd_get_or_create(msglog, "Debian Backports", "lenny-backports",
@@ -302,7 +305,7 @@ codeversion is only used for base sources.""")
             cls._mbd_get_or_create(msglog, "Debian Backports", "squeeze-backports",
                                    ["AED4B06F473041FA", "8B48AD6246925553"])
             cls._mbd_get_or_create(msglog, "Debian Backports", "wheezy-backports",
-                                   ["8B48AD6246925553", "6FB2A1C265FFB764"])
+                                   ["8B48AD6246925553", "6FB2A1C265FFB764", "7638D0442B90D010"])
 
         @classmethod
         def mbd_meta_add_ubuntu(cls, msglog):
