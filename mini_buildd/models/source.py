@@ -306,6 +306,10 @@ codeversion is only used for base sources.""")
                                    ["AED4B06F473041FA", "8B48AD6246925553"])
             cls._mbd_get_or_create(msglog, "Debian Backports", "wheezy-backports",
                                    ["8B48AD6246925553", "6FB2A1C265FFB764", "7638D0442B90D010"])
+            cls._mbd_get_or_create(msglog, "Debian Backports", "wheezy-backports-sloppy",
+                                   ["8B48AD6246925553", "7638D0442B90D010"])
+            cls._mbd_get_or_create(msglog, "Debian Backports", "jessie-backports",
+                                   ["8B48AD6246925553", "7638D0442B90D010"])
 
         @classmethod
         def mbd_meta_add_ubuntu(cls, msglog):
