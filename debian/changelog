@@ -1,3 +1,19 @@
+mini-buildd (1.0.6) unstable; urgency=medium
+
+  The "Jessie Release" release.
+  Please also see
+    http://mini-buildd.installiert.net/blog/post_jessie_housekeeping.html
+  for some post-jessie housekeeping hints.
+  * [57e99e9] wizards: Add support for Ubuntu vivid.
+  * [1094e7a] wizards: Add support for new Debian apt keys with the jessie
+    release (Fixes: wheezy, jessie, sid).
+  * [9ffa8ef] wizards: Add support for jessie-backports and wheezy-
+    backports-sloppy.
+  * [1e43efd] wizards: Support Debian stretch (deps: needs debootstrap >=
+    1.0.65).
+
+ -- Stephan Sürken <absurd@debian.org>  Fri, 01 May 2015 19:05:34 +0000
+
 mini-buildd (1.0.5snap20150201103349) experimental; urgency=medium
 
   Stable snasphot via 'experimental' during jessie freeze.
