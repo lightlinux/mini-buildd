@@ -135,7 +135,7 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
         better way to get these values.
         """
         regex = re.compile("^(Status|Lintian): [^ ]+$")
-        with mini_buildd.misc.open_utf8(buildlog) as f:
+        with open(buildlog) as f:
             for l in f:
                 if regex.match(l):
                     LOG.debug("Build log line detected as build status: {l}".format(l=l.strip()))
@@ -205,7 +205,7 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
         mini_buildd.misc.sbuild_keys_workaround()
         buildlog = os.path.join(self._build_dir, self._breq.buildlog_name)
         LOG.info("{p}: Running sbuild: {c}".format(p=self.key, c=" ".join(sbuild_cmd)))
-        with mini_buildd.misc.open_utf8(buildlog, "w") as l:
+        with open(buildlog, "w") as l:
             retval = subprocess.call(sbuild_cmd,
                                      cwd=self._build_dir,
                                      env=mini_buildd.misc.taint_env({"HOME": self._build_dir,
