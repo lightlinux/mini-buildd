@@ -433,8 +433,13 @@ this would mean losing all packages!
 
     @property
     def days_until_recheck(self):
-        " Field temporarily implemented as extra_option. "
-        return int(self.mbd_get_extra_option("Days-Until-Recheck", "7"))
+        """
+        Field temporarily implemented as extra_option.
+
+        .. note:: Currently using 6 days as default value -- as it copes better with the current setup to restart
+                  mini-buildd weekly (via cron.weekly) to actually achieve automated checking.
+        """
+        return int(self.mbd_get_extra_option("Days-Until-Recheck", "6"))
 
     def mbd_set_changed(self, request):
         if self.mbd_is_active():
