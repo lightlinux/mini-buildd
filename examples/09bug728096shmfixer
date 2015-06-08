@@ -25,7 +25,7 @@ set -e
 . "$SETUP_DATA_DIR/common-functions"
 . "$SETUP_DATA_DIR/common-config"
 
-if [ "$(readlink -m "${CHROOT_DIRECTORY}/dev/shm")" = "/run/shm" ]; then
+if [ "$(/bin/readlink "${CHROOT_DIRECTORY}/dev/shm")" = "/run/shm" ]; then
 	printf "W: Workaround for: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=728096\n" >&2
 	printf "W: Fixing SHM symlink in source chroot (systemd?)\n" >&2
 	rm -v "${CHROOT_DIRECTORY}/dev/shm"
