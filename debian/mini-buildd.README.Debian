@@ -1,0 +1,31 @@
+.. -*- mode: rst -*-
+
+===========
+mini-buildd
+===========
+
+All documentation is in mini-buildd's online manual at
+
+http://localhost:8066/doc/index.html
+
+Hasty fellows may want to jump to the quickstart right ahead:
+
+http://localhost:8066/doc/quickstart.html
+
+Workaround for Bug #728096 (shm, systemd)
+=========================================
+
+Please see:
+
+- https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=728096
+- http://localhost:8066/doc/admin.html?highlight=shm#id5
+
+If you use directory chroots (recommended default), you can just use the outlined workaround::
+
+	# cd /etc/schroot/setup.d
+	# ln -s /usr/share/doc/mini-buildd/examples/09bug728096shmfixer .
+
+For other chroot backends, please do the workaround via schroot
+in the source chroot manually.
+
+ -- Stephan Sürken <absurd@debian.org>, Tue,  9 Jun 2015 13:36:36 +0000
