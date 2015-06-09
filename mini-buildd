@@ -13,7 +13,6 @@ import logging.handlers
 
 # PEP 3143
 import daemon
-import daemon.pidlockfile
 import daemon.runner
 
 import argcomplete
