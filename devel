@@ -246,8 +246,8 @@ mbd_update()
 	trap "git checkout debian/changelog" EXIT
 
 	_head "Building snapshot..."
-	git dch --snapshot --auto --ignore-branch
-	git-buildpackage --git-ignore-new --git-ignore-branch -us -uc
+	gbp dch --snapshot --auto --ignore-branch
+	gbp buildpackage --git-ignore-new --git-ignore-branch -us -uc
 
 	_head "Installing snapshot..."
 	cat <<EOF | sudo debconf-set-selections --verbose -
