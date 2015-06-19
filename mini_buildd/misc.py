@@ -213,8 +213,9 @@ class HoPo(object):
             raise Exception("Invalid bind argument (HOST:PORT): '{b}'".format(b=bind))
 
     def test_bind(self):
-        "Check that we can bind to that port (not already bound, permissions)"
-        s = socket.socket()
+        "Check that we can bind to the first found addrinfo (not already bound, permissions)."
+        ai = socket.getaddrinfo(self.host, self.port)[0]
+        s = socket.socket(family=ai[0])
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.bind(self.tuple)
         s.close()
