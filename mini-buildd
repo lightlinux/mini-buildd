@@ -61,7 +61,7 @@ class Main(object):
         parser.add_argument("--version", action="version", version=mini_buildd.__version__)
 
         group_conf = parser.add_argument_group("daemon arguments")
-        group_conf.add_argument("-W", "--httpd-bind", action="store", default="0.0.0.0:8066",
+        group_conf.add_argument("-W", "--httpd-bind", action="store", default=":::8066",
                                 help="Web Server IP/Hostname and port to bind to.")
         group_conf.add_argument("-S", "--smtp", action="store", default=":@smtp://localhost:25",
                                 help="SMTP credentials in format '[USER]:[PASSWORD]@smtp|ssmtp://HOST:PORT'.")

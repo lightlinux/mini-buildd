@@ -73,7 +73,7 @@ automatically added.""")
 
     ftpd_bind = django.db.models.CharField(
         max_length=200,
-        default="0.0.0.0:8067",
+        default=":::8067",
         help_text="FTP Server IP/Hostname and port to bind to.")
 
     ftpd_options = django.db.models.CharField(max_length=255, default="", blank=True, help_text="For future use.")
