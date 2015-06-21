@@ -1,3 +1,39 @@
+mini-buildd (1.0.7) unstable; urgency=medium
+
+  [ Stephan Sürken ]
+  * [44fe400] [devel]: Remove python-django-lint from installdep helper.
+  * [2bb2bbe] models: Set default "Days-Until-Recheck" value from 7 to 6
+    (works out better with cron.daily).
+  * [6a06f68] Builder: Don't expect buildlogs to be UTF-8 (Fixes: Build
+    failure with such buildlogs).
+  * [add889b] examples/09bug728096shmfixer: Make work again under jessie+
+    systems (this fixes a bug in that bug workaround which has been
+    triggered by bug fix for #674755 ;).
+  * [2e628f0] examples/09bug728096shmfixer: Harden, so it's only run when
+    really needed.
+  * [5ea7888] Add debian/mini-buildd.README.Debian (including a hint for
+    the shm workaround).
+  * [38af7d4] [devel] Update devel script to new "gbp .." call scheme.
+  * [b3eb016] misc.py: HoPo::test_bind(): Make work for IPv6. (Closes:
+    789103)
+
+  [ Ben Finney ]
+  * [307d472] Depend on ‘python-daemon’ 2.0.5 for new lockfile API.
+  * [793f229] Remove references to obsolete ‘daemon.pidlockfile’ API.
+    (Closes: 789089)
+
+  [ Stephan Sürken ]
+  * [285b0f6] Add a per-branch debian/gbp.conf, and point to 1.0.x.
+  * [ac3c6ff] debian/control: Remove obsolete Suggests on debootstrap
+    (Fixes lintian/stronger-dependency-implies-weaker).
+  * [59ec7cc] doc/quickstart.rst: Clarify the meaning of 'Uploader', and
+    describe the per-user auth workflow. (Closes: 789154)
+  * [c0956b1] models/gnupg.py: Prefer explicitly pasted key over
+    keyid/keyserver (Fixes non-intuitive behavior when keys are re-
+    prepared with no keyserver available).
+
+ -- Stephan Sürken <absurd@debian.org>  Sun, 21 Jun 2015 16:33:51 +0000
+
 mini-buildd (1.0.6) unstable; urgency=medium
 
   The "Jessie Release" release.
