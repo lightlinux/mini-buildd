@@ -55,13 +55,13 @@ class GnuPGPublicKey(mini_buildd.models.base.StatusModel):
 
     def mbd_prepare(self, _request):
         with contextlib.closing(mini_buildd.gnupg.TmpGnuPG()) as gpg:
-            if self.key_id:
+            if self.key:
+                # Add key given explicitly
+                gpg.add_pub_key(self.key)
+            elif self.key_id:
                 # Receive key from keyserver
                 gpg.recv_key(self.mbd_get_daemon().model.gnupg_keyserver, self.key_id)
                 self.key = gpg.get_pub_key(self.key_id)
-            elif self.key:
-                # Add key given explicitly
-                gpg.add_pub_key(self.key)
 
             for colons in gpg.get_pub_colons(type_regex="^(pub|fpr)$"):
                 if colons.type == "pub":
@@ -80,8 +80,6 @@ class GnuPGPublicKey(mini_buildd.models.base.StatusModel):
         self.key_expires = ""
         self.key_name = ""
         self.key_fingerprint = ""
-        if self.key_id:
-            self.key = ""
 
     def mbd_sync(self, request):
         self._mbd_remove_and_prepare(request)
