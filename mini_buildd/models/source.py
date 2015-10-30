@@ -62,8 +62,11 @@ Use the 'directory' notation with exactly one trailing slash (like 'http://examp
         @classmethod
         def mbd_meta_add_debian(cls, msglog):
             "Add internet Debian archive sources."
-            for url in ["http://ftp.debian.org/debian/",                  # Debian releases
+            for url in ["http://httpredir.debian.org/debian/",            # Debian releases
+                        "http://ftp.debian.org/debian/",                  # Debian releases
+                        "http://httpredir.debian.org/debian-backports/",  # Debian backports, <= squeeze
                         "http://backports.debian.org/debian-backports/",  # Debian backports, <= squeeze
+                        "http://httpredir.debian.org/debian-archive/",    # Archived Debian releases
                         "http://archive.debian.org/debian/",              # Archived Debian releases
                         "http://archive.debian.org/backports.org/",       # Archived (sarge, etch, lenny) backports
                         ]:
