@@ -261,9 +261,9 @@ EOF
 		# The service will not be started in that case
 		# For now, we really want to start the service anyway, so this is still usable in "traditional" chroots
 		# (Rather use a container-based environment to test)
-		sudo mv /lib/lsb/init-functions.d/40-systemd /lib/lsb/init-functions.d/40-systemd.DISABLED
+		sudo mv /lib/lsb/init-functions.d/40-systemd /lib/lsb/init-functions.d/40-systemd.DISABLED || true
 		sudo /etc/init.d/mini-buildd restart
-		sudo mv /lib/lsb/init-functions.d/40-systemd.DISABLED /lib/lsb/init-functions.d/40-systemd
+		sudo mv /lib/lsb/init-functions.d/40-systemd.DISABLED /lib/lsb/init-functions.d/40-systemd || true
 	fi
 
 	if [ "${1}" != "nocheck" ]; then
