@@ -40,6 +40,19 @@ _check_prog()
 	exit 1
 }
 
+_chroot_systemd_workaround_initd()
+{
+	if sudo ischroot && [ -d /run/systemd/system ]; then
+		# Seems we are in a chroot, and host is running systemd
+		# The service will not be started in that case
+		# For now, we really want to start the service anyway, so this is still usable in "traditional" chroots
+		# (Rather use a container-based environment to test)
+		sudo mv /lib/lsb/init-functions.d/40-systemd /lib/lsb/init-functions.d/40-systemd.DISABLED || true
+		sudo /etc/init.d/mini-buildd ${1}
+		sudo mv /lib/lsb/init-functions.d/40-systemd.DISABLED /lib/lsb/init-functions.d/40-systemd || true
+	fi
+}
+
 PYPATH="$(readlink -f $(dirname $0))"
 DJSETTINGS="doc.django_settings"
 PYLINTRC="${PYPATH}/.pylintrc"
@@ -219,6 +232,7 @@ mbd_doc()
 mbd_purge()
 {
 	_head "Purging all mini-buildd packages"
+	_chroot_systemd_workaround_initd stop || true
 	sudo dpkg --purge mini-buildd python-mini-buildd mini-buildd-common
 
 	# Also test mini-buildd's internal sbuild key workaround
@@ -255,16 +269,7 @@ mini-buildd mini-buildd/admin_password password admin
 mini-buildd mini-buildd/options string --verbose --verbose --debug=exception,http,webapp
 EOF
 	sudo debi
-
-	if sudo ischroot && [ -d /run/systemd/system ]; then
-		# Seems we are in a chroot, and host is running systemd
-		# The service will not be started in that case
-		# For now, we really want to start the service anyway, so this is still usable in "traditional" chroots
-		# (Rather use a container-based environment to test)
-		sudo mv /lib/lsb/init-functions.d/40-systemd /lib/lsb/init-functions.d/40-systemd.DISABLED || true
-		sudo /etc/init.d/mini-buildd restart
-		sudo mv /lib/lsb/init-functions.d/40-systemd.DISABLED /lib/lsb/init-functions.d/40-systemd || true
-	fi
+	_chroot_systemd_workaround_initd restart
 
 	if [ "${1}" != "nocheck" ]; then
 		_head "Checking basic mini-buildd-tool calls"
