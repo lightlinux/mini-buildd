@@ -25,6 +25,11 @@ def mbd_version():
     return mini_buildd.__version__
 
 
+@register.simple_tag
+def mbd_title():
+    return mini_buildd.daemon.get().get_title()
+
+
 @register.filter
 def mbd_daemon_is_running(dummy):
     return mini_buildd.daemon.get().is_running()
