@@ -29,6 +29,28 @@ class Daemon(object):
     def set_auto_confirm(self, confirm=True):
         self.auto_confirm = confirm
 
+    def django_pseudo_configure(self):
+        """
+        This is needed (to be called once) to properly unpickle python instances from API calls that actually deliver model instances.
+        """
+        import django
+        import django.conf
+        import django.core.management
+        import mini_buildd.models
+
+        django.conf.settings.configure(
+            DATABASES = {
+                "default": {
+                    "ENGINE": "django.db.backends.sqlite3",
+                    "NAME": ":memory:",
+                }
+            },
+            INSTALLED_APPS=["mini_buildd"])
+
+        mini_buildd.models.import_all()
+        django.setup()
+        django.core.management.call_command("syncdb", interactive=False, verbosity=0)
+
     def login(self, user):
         "Login. Use the user's mini-buildd keyring for auth, like mini-buildd-tool."
         keyring = mini_buildd.misc.Keyring("mini-buildd")
