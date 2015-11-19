@@ -23,7 +23,8 @@ class Daemon(object):
         self.host = host
         self.port = port
         self.proto = proto
-        self.api_url = "{proto}://{host}:{port}/mini_buildd/api".format(proto=proto, host=host, port=port)
+        self.url = "{proto}://{host}:{port}".format(proto=proto, host=host, port=port)
+        self.api_url = "{url}/mini_buildd/api".format(url=self.url)
         self.auto_confirm = True
 
     def set_auto_confirm(self, confirm=True):
