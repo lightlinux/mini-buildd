@@ -26,7 +26,7 @@ class WebApp(django.core.handlers.wsgi.WSGIHandler):
         mini_buildd.models.import_all()
 
         LOG.info("Migrating database (migrate)...")
-        django.core.management.call_command("migrate", interactive=False, verbosity=0)
+        django.core.management.call_command("migrate", interactive=False, run_syncdb=True, verbosity=0)
 
         LOG.info("Clean up python-registration (cleanupregistration)...")
         django.core.management.call_command("cleanupregistration", interactive=False, verbosity=0)
