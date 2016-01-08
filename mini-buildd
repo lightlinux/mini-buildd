@@ -164,14 +164,14 @@ Comma-separated list of special debugging options:
         handler.setFormatter(logging.Formatter("%(asctime)s " + self.LOG_FORMAT))
         return handler
 
-    def _setup_logging(self):
+    def _setup_logging(self, log):
         loggers = self._args.loggers.split(",")
         if self._args.foreground:
             loggers.append("console")
 
         # Clear all loggers now; this will remove the
         # preliminary console logger
-        LOG.handlers = []
+        log.handlers = []
 
         # Try to add all loggers; collect exceptions to be able
         # to do error reporting later, when hopefully one valid
@@ -180,20 +180,20 @@ Comma-separated list of special debugging options:
         for typ in loggers:
             try:
                 handler_func = getattr(self, "_log_handler_" + typ)
-                LOG.addHandler(handler_func())
+                log.addHandler(handler_func())
             except Exception as e:
                 loggers_failed[typ] = e
 
         # Set log level
         loglevel = logging.WARNING - (10 * (min(2, self._args.verbosity) - min(2, self._args.terseness)))
-        LOG.setLevel(loglevel)
+        log.setLevel(loglevel)
 
         # Global: Don't propagate exceptions that happen while logging
         logging.raiseExceptions = 0
 
         # Finally, log all errors now that occurred while setting up loggers
         for typ, err in loggers_failed.items():
-            LOG.critical("Logger {t} failed: {e}".format(t=typ, e=err))
+            log.critical("Logger {t} failed: {e}".format(t=typ, e=err))
 
         return loglevel
 
@@ -228,7 +228,10 @@ Comma-separated list of special debugging options:
         if not self._args.foreground:
             daemon.DaemonContext(working_directory=self._args.home, umask=0022).open()
         self._setup()
-        self._loglevel = self._setup_logging()
+
+        self._loglevel = self._setup_logging(LOG)
+        self._setup_logging(logging.getLogger("django"))
+
         self._setup_environment()
 
         # Configure django
