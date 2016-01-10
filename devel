@@ -305,6 +305,12 @@ mbd_testdjango()
 	[ -n "${version}" ]
 	# Note: Downgrading django versions does not work with migrate, so we need to purge 1st
 	sudo dpkg --purge mini-buildd
+	# Note: Shutting down mini-buildd may not have happened (chroot)
+	sleep 0.5
+	if sudo pkill --full /usr/sbin/mini-buildd; then
+		sleep 2
+	fi
+
 	sudo dpkg --install ../django-versions/python-django*${1}*.deb
 	./devel update_nocheck
 	# Note: Calling stop to soon will not necessarily see the pid ("bug" in init script), so sleep a bit
