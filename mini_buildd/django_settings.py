@@ -80,7 +80,6 @@ def configure(smtp_string, loglevel):
     django.conf.settings.configure(
         DEBUG=debug,
         TEMPLATE_DEBUG=debug,
-        LOGGING_CONFIG=None,
         MESSAGE_LEVEL=mini_buildd.models.msglog.MsgLog.level2django(loglevel),
 
         ALLOWED_HOSTS=["*"],
