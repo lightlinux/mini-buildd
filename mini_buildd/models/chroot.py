@@ -290,7 +290,7 @@ class DirChroot(Chroot):
         (UNION_OVERLAYFS, "overlayfs"),
         (UNION_UNIONFS, "unionfs"),
         (UNION_OVERLAY, "overlay"))
-    union_type = django.db.models.IntegerField(choices=UNION_CHOICES, default=UNION_AUFS,
+    union_type = django.db.models.IntegerField(choices=UNION_CHOICES, default=UNION_OVERLAY,
                                                help_text="""\
 See 'man 5 schroot.conf'
 """)
