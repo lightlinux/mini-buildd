@@ -50,7 +50,7 @@ class Daemon(object):
 
         mini_buildd.models.import_all()
         django.setup()
-        django.core.management.call_command("syncdb", interactive=False, verbosity=0)
+        django.core.management.call_command("migrate", interactive=False, run_syncdb=True, verbosity=0)
 
     def login(self, user):
         "Login. Use the user's mini-buildd keyring for auth, like mini-buildd-tool."
