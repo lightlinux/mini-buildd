@@ -125,3 +125,24 @@ def configure(smtp_string, loglevel):
 
     if LooseVersion(django.get_version()) >= LooseVersion("1.7.0"):
         django.setup()
+
+
+def pseudo_configure():
+    """
+    Pseudo-configure django. Use this where you need mini-buildd's model classes, but no actual instance.
+
+    Example: Sphinx doc creation, API clients for unpickling model instances.
+    """
+    django.conf.settings.configure(
+        DATABASES = {
+            "default": {
+                "ENGINE": "django.db.backends.sqlite3",
+                "NAME": ":memory:",
+            }
+        },
+        INSTALLED_APPS = (
+            "django.contrib.auth",
+            "django.contrib.contenttypes",
+            "mini_buildd"))
+
+    django.setup()

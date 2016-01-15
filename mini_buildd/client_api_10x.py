@@ -31,24 +31,11 @@ class Daemon(object):
         self.auto_confirm = confirm
 
     def django_pseudo_configure(self):
-        """
-        This is needed (to be called once) to properly unpickle python instances from API calls that actually deliver model instances.
-        """
-        import django
-        import django.conf
+        import mini_buildd.django_settings
         import django.core.management
         import mini_buildd.models
 
-        django.conf.settings.configure(
-            DATABASES = {
-                "default": {
-                    "ENGINE": "django.db.backends.sqlite3",
-                    "NAME": ":memory:",
-                }
-            },
-            INSTALLED_APPS=["django.contrib.auth", "django.contrib.contenttypes", "mini_buildd"])
-
-        django.setup()
+        mini_buildd.django_settings.pseudo_configure()
         mini_buildd.models.import_all()
         django.core.management.call_command("migrate", interactive=False, run_syncdb=True, verbosity=0)
 
