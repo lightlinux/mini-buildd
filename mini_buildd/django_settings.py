@@ -143,6 +143,7 @@ def pseudo_configure():
         INSTALLED_APPS = (
             "django.contrib.auth",
             "django.contrib.contenttypes",
+            "registration",
             "mini_buildd"))
 
     django.setup()
