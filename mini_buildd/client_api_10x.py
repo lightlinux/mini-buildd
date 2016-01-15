@@ -48,8 +48,8 @@ class Daemon(object):
             },
             INSTALLED_APPS=["mini_buildd"])
 
-        mini_buildd.models.import_all()
         django.setup()
+        mini_buildd.models.import_all()
         django.core.management.call_command("migrate", interactive=False, run_syncdb=True, verbosity=0)
 
     def login(self, user):
