@@ -46,7 +46,7 @@ class Daemon(object):
                     "NAME": ":memory:",
                 }
             },
-            INSTALLED_APPS=["mini_buildd"])
+            INSTALLED_APPS=["django.contrib.auth", "django.contrib.contenttypes", "mini_buildd"])
 
         django.setup()
         mini_buildd.models.import_all()
