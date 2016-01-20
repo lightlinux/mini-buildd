@@ -1,3 +1,14 @@
+mini-buildd (1.0.10) unstable; urgency=medium
+
+  * [6345fe9] .gitignore: Ignore paths created by new debhelper.
+  * [2231178] [devel]: Updates: +installdjango, +service, +install.
+  * [26d9291] [django] Retry 'migrate' with '--fake-initial' on
+    OperationalError (fixes daemon start on certain existing databases).
+  * [938bc1d] Update to new recommended bash completions path (/usr/share
+    /bash-completion/completions/).
+
+ -- Stephan Sürken <absurd@debian.org>  Wed, 20 Jan 2016 14:36:49 +0000
+
 mini-buildd (1.0.9) unstable; urgency=medium
 
   * [eb0fad7] [devel] chroot workaround: Don't care if the dirty workound
