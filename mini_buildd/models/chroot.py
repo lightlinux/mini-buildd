@@ -57,7 +57,7 @@ go to the default mapping.
         ordering = ["source", "architecture"]
 
     class Admin(mini_buildd.models.base.StatusModel.Admin):
-        search_fields = ["source", "architecture"]
+        search_fields = ["source__codename", "architecture__name"]
         readonly_fields = ["personality"]
         fieldsets = [
             ("Chroot identity", {"fields": (("source", "architecture"), "personality", "personality_override")}),
