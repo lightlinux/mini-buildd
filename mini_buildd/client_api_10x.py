@@ -27,22 +27,15 @@ class Daemon(object):
         self.api_url = "{url}/mini_buildd/api".format(url=self.url)
         self.auto_confirm = True
 
-    def set_auto_confirm(self, confirm=True):
-        self.auto_confirm = confirm
-
-    def django_pseudo_configure(self):
-        import mini_buildd.django_settings
-        import django.core.management
-        import mini_buildd.models
-
-        mini_buildd.django_settings.pseudo_configure()
-        mini_buildd.models.import_all()
-        django.core.management.call_command("migrate", interactive=False, run_syncdb=True, verbosity=0)
+        self._status = None
 
     def login(self, user):
         "Login. Use the user's mini-buildd keyring for auth, like mini-buildd-tool."
         keyring = mini_buildd.misc.Keyring("mini-buildd")
         mini_buildd.misc.web_login("{host}:{port}".format(host=self.host, port=self.port), user, keyring)
+
+    def set_auto_confirm(self, confirm=True):
+        self.auto_confirm = confirm
 
     def call(self, command, args={}, output="python"):
         if self.auto_confirm:
@@ -61,6 +54,20 @@ class Daemon(object):
         except urllib2.HTTPError as e:
             self._log_daemon_messages(e.headers)
 
+    # Extra functionality
+    @property
+    def status(self):
+        if self._status is None:
+            self._status = self.call("status")
+        return self._status
+
+    @property
+    def repositories(self):
+        return self.status.repositories.keys()
+
+    def get_codenames(self, repo):
+        return self.status.repositories[repo]
+
     def _bulk_migrate(self, packages, repositories=None, codenames=None, suites=None):
         status = self.call("status")
 
@@ -78,3 +85,12 @@ class Daemon(object):
                     for suite in suites:
                         dist = "{c}-{r}-{s}".format(c=codename, r=repository, s=suite)
                         self.call("migrate", {"package": package, "distribution": dist})
+
+    def django_pseudo_configure(self):
+        import mini_buildd.django_settings
+        import django.core.management
+        import mini_buildd.models
+
+        mini_buildd.django_settings.pseudo_configure()
+        mini_buildd.models.import_all()
+        django.core.management.call_command("migrate", interactive=False, run_syncdb=True, verbosity=0)
