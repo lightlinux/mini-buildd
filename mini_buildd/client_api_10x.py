@@ -27,7 +27,10 @@ class Daemon(object):
         self.api_url = "{url}/mini_buildd/api".format(url=self.url)
         self.auto_confirm = True
 
+        # Extra: status caching
         self._status = None
+        # Extra: dputconf caching (for archive identity workaround)
+        self._dputconf = None
 
     def login(self, user):
         "Login. Use the user's mini-buildd keyring for auth, like mini-buildd-tool."
@@ -55,6 +58,15 @@ class Daemon(object):
             self._log_daemon_messages(e.headers)
 
     # Extra functionality
+    @property
+    def identity(self):
+        """The Archive's Identity."""
+        # Bug 1.0.x: "status" does not give the archive id.
+        # Workaround: Parse the archive id from dput.cf
+        if self._dputconf is None:
+            self._dputconf = self.call("getdputconf")
+        return self._dputconf._plain_result.split("\n", 1)[0].rpartition("]")[0].rpartition("-")[2]
+
     @property
     def status(self):
         if self._status is None:
