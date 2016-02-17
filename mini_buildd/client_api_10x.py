@@ -5,6 +5,7 @@ from __future__ import print_function
 import sys
 import pickle
 import urllib2
+import re
 
 import mini_buildd.misc
 
@@ -79,6 +80,20 @@ class Daemon(object):
 
     def get_codenames(self, repo):
         return self.status.repositories[repo]
+
+    def get_package_versions(self, package, dist_regex=".*"):
+        """Helper: Produce a dict with all (except rollback) available versions of this package (key=distribution, value=version)."""
+        show = self.call("show", {"package": package})
+        result = {}
+        for repository in show.repositories:
+            for versions in repository[1]:
+                for version in versions[1]:
+                    dist = version["distribution"]
+                    vers = version["sourceversion"]
+                    # Note: 'vers' may be empty when only rollbacks exist
+                    if vers and re.match(dist_regex, dist):
+                        result[dist] = vers
+        return result
 
     def _bulk_migrate(self, packages, repositories=None, codenames=None, suites=None):
         status = self.call("status")
