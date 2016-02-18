@@ -5,6 +5,7 @@ from __future__ import print_function
 import sys
 import pickle
 import urllib2
+import urlparse
 import re
 
 import mini_buildd.misc
@@ -81,9 +82,13 @@ class Daemon(object):
     def get_codenames(self, repo):
         return self.status.repositories[repo]
 
-    def get_package_versions(self, package, dist_regex=".*"):
-        """Helper: Produce a dict with all (except rollback) available versions of this package (key=distribution, value=version)."""
-        show = self.call("show", {"package": package})
+    def get_package_versions(self, src_package, dist_regex=".*"):
+        """Helper: Produce a dict with all (except rollback) available versions of this package (key=distribution, value=info dict: version, dsc_url, log_url, changes_url*)."""
+        def _base_url(url):
+            url_parse = urlparse.urlparse(url)
+            return "{scheme}://{hostname}:{port}".format(scheme=url_parse.scheme, hostname=url_parse.hostname, port=url_parse.port)
+
+        show = self.call("show", {"package": src_package})
         result = {}
         for repository in show.repositories:
             for versions in repository[1]:
@@ -92,7 +97,26 @@ class Daemon(object):
                     vers = version["sourceversion"]
                     # Note: 'vers' may be empty when only rollbacks exist
                     if vers and re.match(dist_regex, dist):
-                        result[dist] = vers
+                        info = {}
+
+                        repository = mini_buildd.misc.Distribution(dist).repository
+
+                        info["version"] = vers
+                        info["dsc_url"] = version["dsc_url"]
+                        base_url = _base_url(info["dsc_url"])
+                        info["log_url"] = "{base_url}/mini_buildd/log/{repo}/{package}/{version}/".format(
+                            base_url=base_url,
+                            repo=repository,
+                            package=src_package,
+                            version=vers)
+                        # TODO/BUG: Path may also be "/source all/", not "/source/" (on non-source-only uploads?)
+                        info["changes_url"] = "{base_url}/log/{repo}/{package}/{version}/source/{package}_{version}_source.changes".format(
+                            base_url=base_url,
+                            repo=repository,
+                            package=src_package,
+                            version=vers)
+                        result[dist] = info
+
         return result
 
     def _bulk_migrate(self, packages, repositories=None, codenames=None, suites=None):
