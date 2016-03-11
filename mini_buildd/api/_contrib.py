@@ -1,3 +1,8 @@
+"""Extra, independent code, merely arbitrarily stuffed
+here. This is not part of mini-buildd.
+
+"""
+
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
@@ -6,6 +11,11 @@ import urllib2
 import bs4
 
 class DebianPackageTracker():
+    """Get (some) source package information from the Debian Package
+    Tracker. As long as there is no proper API, we do this the
+    hacky way parsing the HTML via bs4 - so this will most
+    definitely break at some point. Use at own discretion.
+    """
     def __init__(self, src_package, tracker_url="https://tracker.debian.org"):
         self.info = {}
 
