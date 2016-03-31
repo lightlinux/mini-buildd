@@ -778,7 +778,7 @@ def web_login(host, user, credentials,
         # Find "csrftoken" in cookiejar
         csrf_cookies = [c for c in cookie_handler.cookiejar if c.name == "csrftoken"]
         if len(csrf_cookies) != 1:
-            raise Exception("{n} csrftoken cookies found in login pages (need exactly 1).")
+            raise Exception("{n} csrftoken cookies found in login pages (need exactly 1).".format(n=len(csrf_cookies)))
         LOG.debug("csrftoken={c}".format(c=csrf_cookies[0].value))
 
         # Login via POST request
