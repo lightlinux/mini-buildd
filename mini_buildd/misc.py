@@ -758,6 +758,17 @@ Save password for '{k}': (Y)es, (N)o, (A)lways, Ne(v)er? """.format(c=self, k=ke
         return key, user, password, new
 
 
+def canonize_url(url):
+    "Poor man's URL canonizer: Always include the port (currently only works for 'http' and 'https' default ports)."
+    default_scheme2port = { "http": ":80", "https": ":443" }
+
+    parsed = urlparse.urlparse(url)
+    netloc = parsed.netloc
+    if parsed.port is None:
+        netloc = parsed.hostname + default_scheme2port.get(parsed.scheme, "")
+    return urlparse.urlunsplit((parsed.scheme, netloc, parsed.path, parsed.query, ""))
+
+
 def web_login(host, user, credentials,
               proto="http",
               login_loc="/accounts/login/",
