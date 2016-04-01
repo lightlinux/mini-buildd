@@ -803,7 +803,7 @@ def web_login(host, user, credentials,
                               }))
 
         # If successful, next url of the response must match
-        if response.geturl() != next_url:
+        if canonize_url(response.geturl()) != canonize_url(next_url):
             raise Exception("Wrong credentials: Please try again")
 
         # Logged in: Install opener, save credentials
