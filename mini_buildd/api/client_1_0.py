@@ -67,7 +67,9 @@ class Daemon(object):
         # Workaround: Parse the archive id from dput.cf
         if self._dputconf is None:
             self._dputconf = self.call("getdputconf")
-        return self._dputconf._plain_result.split("\n", 1)[0].rpartition("]")[0].rpartition("-")[2]
+        # 1st line looks like: "[mini-buildd-my-archive-id]"
+        dput_target = self._dputconf._plain_result.split("\n", 1)[0].rpartition("]")[0]
+        return dput_target[len("mini-buildd-")+1:]
 
     @property
     def status(self):
