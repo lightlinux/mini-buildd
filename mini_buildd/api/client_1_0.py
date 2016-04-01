@@ -34,10 +34,10 @@ class Daemon(object):
         # Extra: dputconf caching (for archive identity workaround)
         self._dputconf = None
 
-    def login(self, user):
+    def login(self, user=None):
         "Login. Use the user's mini-buildd keyring for auth, like mini-buildd-tool."
         keyring = mini_buildd.misc.Keyring("mini-buildd")
-        mini_buildd.misc.web_login("{host}:{port}".format(host=self.host, port=self.port), user, keyring)
+        mini_buildd.misc.web_login("{host}:{port}".format(host=self.host, port=self.port), user if user else raw_input("Username: "), keyring)
 
     def set_auto_confirm(self, confirm=True):
         self.auto_confirm = confirm
