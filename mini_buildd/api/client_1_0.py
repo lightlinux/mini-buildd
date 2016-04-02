@@ -25,6 +25,7 @@ class Daemon(object):
         self.host = host
         self.port = port
         self.proto = proto
+        self.dry_run = False
         self.url = "{proto}://{host}:{port}".format(proto=proto, host=host, port=port)
         self.api_url = "{url}/mini_buildd/api".format(url=self.url)
         self.auto_confirm = True
@@ -42,14 +43,23 @@ class Daemon(object):
 
     def set_auto_confirm(self, confirm=True):
         self.auto_confirm = confirm
+        return self
+
+    def set_dry_run(self, dry_run=True):
+        self.dry_run = dry_run
+        return self
 
     def call(self, command, args={}, output="python"):
         if self.auto_confirm:
             args["confirm"] = command
         http_get_args = "&".join("{k}={v}".format(k=k, v=v) for k, v in args.items())
         url = "{api_url}?command={command}&output={output}&{args}".format(api_url=self.api_url, command=command, output=output, args=http_get_args)
-        self._log("API call URL: {}".format(url))
 
+        if self.dry_run:
+            self._log("Dry Run, skipping API URL: {}".format(url))
+            return None
+
+        self._log("Calling API URL: {}".format(url))
         try:
             response = urllib2.urlopen(url)
             self._log("HTTP Status: {status}".format(status=response.getcode()))
