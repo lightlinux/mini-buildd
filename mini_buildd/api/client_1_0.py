@@ -63,10 +63,7 @@ class Daemon(object):
         try:
             response = urllib2.urlopen(url)
             self._log("HTTP Status: {status}".format(status=response.getcode()))
-            if output == "python":
-                return pickle.loads(response.read())
-            else:
-                return response.read()
+            return pickle.loads(response.read()) if output == "python" else response.read()
         except urllib2.HTTPError as e:
             self._log_daemon_messages(e.headers)
 
