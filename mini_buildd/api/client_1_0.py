@@ -21,14 +21,16 @@ class Daemon(object):
         for msg in [v for k, v in headers.items() if msgs_header == k[:len(msgs_header)]]:
             self._log("HTTP Header Message: {m}".format(host=self.host, m=mini_buildd.misc.b642u(msg)))
 
-    def __init__(self, host, port="8066", proto="http"):
+    def __init__(self, host, port="8066", proto="http",
+                 auto_confirm=False,
+                 dry_run=False):
         self.host = host
         self.port = port
         self.proto = proto
-        self.dry_run = False
         self.url = "{proto}://{host}:{port}".format(proto=proto, host=host, port=port)
         self.api_url = "{url}/mini_buildd/api".format(url=self.url)
-        self.auto_confirm = True
+        self.auto_confirm = auto_confirm
+        self.dry_run = dry_run
 
         # Extra: status caching
         self._status = None
@@ -39,14 +41,6 @@ class Daemon(object):
         "Login. Use the user's mini-buildd keyring for auth, like mini-buildd-tool."
         keyring = mini_buildd.misc.Keyring("mini-buildd")
         mini_buildd.misc.web_login("{host}:{port}".format(host=self.host, port=self.port), user if user else raw_input("Username: "), keyring, proto=self.proto)
-        return self
-
-    def set_auto_confirm(self, confirm=True):
-        self.auto_confirm = confirm
-        return self
-
-    def set_dry_run(self, dry_run=True):
-        self.dry_run = dry_run
         return self
 
     def call(self, command, args={}, output="python"):
