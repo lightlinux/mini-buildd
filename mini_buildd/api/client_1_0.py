@@ -59,6 +59,7 @@ class Daemon(object):
             self._log("HTTP Status: {status}".format(status=response.getcode()))
             return pickle.loads(response.read()) if output == "python" else response.read()
         except urllib2.HTTPError as e:
+            self._log("API call failed with HTTP Status {status}:".format(status=e.getcode()))
             self._log_daemon_messages(e.headers)
 
     # Extra functionality
