@@ -71,6 +71,7 @@ class Daemon(object):
                     elif action == "C":
                         self.auto_confirm = True
                     return self.call(command, new_args, output=output)
+            raise
 
     # Extra functionality
     @property
