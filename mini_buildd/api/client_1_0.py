@@ -56,11 +56,21 @@ class Daemon(object):
         self._log("Calling API URL: {}".format(url))
         try:
             response = urllib2.urlopen(url)
-            self._log("HTTP Status: {status}".format(status=response.getcode()))
             return pickle.loads(response.read()) if output == "python" else response.read()
         except urllib2.HTTPError as e:
             self._log("API call failed with HTTP Status {status}:".format(status=e.getcode()))
             self._log_daemon_messages(e.headers)
+            if e.getcode() == 401:
+                action = raw_input("Unauthorized retry: (l)ogin, (c)onfirm this call or (C)onfirm all future calls (anything else to just skip)? ")
+                if action and action in "lcC":
+                    new_args = args
+                    if action == "l":
+                        self.login()
+                    elif action == "c":
+                        new_args["confirm"] = command
+                    elif action == "C":
+                        self.auto_confirm = True
+                    return self.call(command, new_args, output=output)
 
     # Extra functionality
     @property
