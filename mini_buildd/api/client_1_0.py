@@ -22,10 +22,20 @@ class Daemon(object):
         for msg in [v for k, v in headers.items() if msgs_header == k[:len(msgs_header)]]:
             self._log("HTTP Header Message: {m}".format(host=self.host, m=mini_buildd.misc.b642u(msg)))
 
+    def _django_pseudo_configure(self):
+        import mini_buildd.django_settings
+        import django.core.management
+        import mini_buildd.models
+
+        mini_buildd.django_settings.pseudo_configure()
+        mini_buildd.models.import_all()
+        django.core.management.call_command("migrate", interactive=False, run_syncdb=True, verbosity=0)
+
     def __init__(self, host, port="8066", proto="http",
                  auto_confirm=False,
                  dry_run=False,
-                 batch_mode=False):
+                 batch_mode=False,
+                 django_mode=True):
         self.host = host
         self.port = port
         self.proto = proto
@@ -34,6 +44,8 @@ class Daemon(object):
         self.auto_confirm = auto_confirm
         self.dry_run = dry_run
         self.batch_mode = batch_mode
+        if django_mode:
+            self._django_pseudo_configure()
 
         # Extra: status caching
         self._status = None
@@ -172,12 +184,3 @@ class Daemon(object):
                     for suite in suites:
                         dist = "{c}-{r}-{s}".format(c=codename, r=repository, s=suite)
                         self.call("migrate", {"package": package, "distribution": dist}, raise_on_error=False)
-
-    def django_pseudo_configure(self):
-        import mini_buildd.django_settings
-        import django.core.management
-        import mini_buildd.models
-
-        mini_buildd.django_settings.pseudo_configure()
-        mini_buildd.models.import_all()
-        django.core.management.call_command("migrate", interactive=False, run_syncdb=True, verbosity=0)
