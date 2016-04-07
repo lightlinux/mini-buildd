@@ -169,6 +169,7 @@ class Daemon(object):
 
     def bulk_migrate(self, packages, repositories=None, codenames=None, suites=None):
         status = self.call("status")
+            tries += 1
 
         if repositories is None:
             repositories = list(status.repositories.keys())
