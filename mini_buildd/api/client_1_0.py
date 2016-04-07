@@ -45,7 +45,7 @@ class Daemon(object):
         mini_buildd.misc.web_login("{host}:{port}".format(host=self.host, port=self.port), user if (user or self.batch_mode) else raw_input("Username: "), keyring, proto=self.proto)
         return self
 
-    def call(self, command, args={}, output="python"):
+    def call(self, command, args={}, output="python", raise_on_error=True):
         if self.auto_confirm:
             args["confirm"] = command
         http_get_args = "&".join("{k}={v}".format(k=k, v=v) for k, v in args.items())
@@ -72,8 +72,9 @@ class Daemon(object):
                         new_args["confirm"] = command
                     elif action == "C":
                         self.auto_confirm = True
-                    return self.call(command, new_args, output=output)
-            raise
+                    return self.call(command, new_args, output=output, raise_on_error=raise_on_error)
+            if raise_on_error:
+                raise
 
     # Extra functionality
     @property
@@ -153,7 +154,7 @@ class Daemon(object):
                 for codename in iter_codenames:
                     for suite in suites:
                         dist = "{c}-{r}-{s}".format(c=codename, r=repository, s=suite)
-                        self.call("migrate", {"package": package, "distribution": dist})
+                        self.call("migrate", {"package": package, "distribution": dist}, raise_on_error=False)
 
     def django_pseudo_configure(self):
         import mini_buildd.django_settings
