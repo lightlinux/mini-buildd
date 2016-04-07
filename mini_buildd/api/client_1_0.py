@@ -162,14 +162,17 @@ class Daemon(object):
         _sleep(initial_sleep)
         while max_tries < 0 or tries < max_tries:
             pkg_info = self.get_package_versions(src_package, distribution).get(distribution, {})
-            self._log("Package versions for {p} in {d}: {v}".format(p=src_package, d=distribution, v=repr(pkg_info)))
-            if version == pkg_info.get("version", ""):
+            actual_version = pkg_info.get("version", None)
+            self._log("Package version for \"{p}\" in \"{d}\": {v}".format(p=src_package, d=distribution, v=actual_version))
+
+            if version == actual_version:
+                self._log("Found: Package {p}_{v} in {d}.".format(p=src_package, v=version, d=distribution))
                 return pkg_info
             _sleep(sleep)
+            tries += 1
 
     def bulk_migrate(self, packages, repositories=None, codenames=None, suites=None):
         status = self.call("status")
-            tries += 1
 
         if repositories is None:
             repositories = list(status.repositories.keys())
