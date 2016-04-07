@@ -23,7 +23,8 @@ class Daemon(object):
 
     def __init__(self, host, port="8066", proto="http",
                  auto_confirm=False,
-                 dry_run=False):
+                 dry_run=False,
+                 batch_mode=False):
         self.host = host
         self.port = port
         self.proto = proto
@@ -31,6 +32,7 @@ class Daemon(object):
         self.api_url = "{url}/mini_buildd/api".format(url=self.url)
         self.auto_confirm = auto_confirm
         self.dry_run = dry_run
+        self.batch_mode = batch_mode
 
         # Extra: status caching
         self._status = None
@@ -40,7 +42,7 @@ class Daemon(object):
     def login(self, user=None):
         "Login. Use the user's mini-buildd keyring for auth, like mini-buildd-tool."
         keyring = mini_buildd.misc.Keyring("mini-buildd")
-        mini_buildd.misc.web_login("{host}:{port}".format(host=self.host, port=self.port), user if user else raw_input("Username: "), keyring, proto=self.proto)
+        mini_buildd.misc.web_login("{host}:{port}".format(host=self.host, port=self.port), user if (user or self.batch_mode) else raw_input("Username: "), keyring, proto=self.proto)
         return self
 
     def call(self, command, args={}, output="python"):
@@ -60,7 +62,7 @@ class Daemon(object):
         except urllib2.HTTPError as e:
             self._log("API call failed with HTTP Status {status}:".format(status=e.getcode()))
             self._log_daemon_messages(e.headers)
-            if e.getcode() == 401:
+            if not self.batch_mode and e.getcode() == 401:
                 action = raw_input("Unauthorized retry: (l)ogin, (c)onfirm this call or (C)onfirm all future calls (anything else to just skip)? ")
                 if action and action in "lcC":
                     new_args = args
