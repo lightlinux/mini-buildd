@@ -152,10 +152,13 @@ class Daemon(object):
         return result
 
     def wait_for_package(self, src_package, distribution, version,
-                         max_tries=-1, sleep=60, initial_sleep=0):
+                         max_tries=-1, sleep=60, initial_sleep=0,
+                         raise_on_error=True):
+
+        item = "\"{p}_{v}\" in \"{d}\"".format(p=src_package, v=version, d=distribution)
 
         def _sleep(secs):
-            self._log("Waiting for {p}_{v} in {d}: Idling {s} seconds (Ctrl-C to abort)...".format(p=src_package, v=version, d=distribution, s=secs))
+            self._log("Waiting for {item}: Idling {s} seconds (Ctrl-C to abort)...".format(item=item, s=secs))
             time.sleep(secs)
 
         tries = 0
@@ -163,13 +166,18 @@ class Daemon(object):
         while max_tries < 0 or tries < max_tries:
             pkg_info = self.get_package_versions(src_package, distribution).get(distribution, {})
             actual_version = pkg_info.get("version", None)
-            self._log("Package version for \"{p}\" in \"{d}\": {v}".format(p=src_package, d=distribution, v=actual_version))
+            self._log("Actual version for {item}: {v}".format(item=item, v=actual_version))
 
             if version == actual_version:
-                self._log("Found: Package {p}_{v} in {d}.".format(p=src_package, v=version, d=distribution))
+                self._log("Found: {item}.".format(item=item))
                 return pkg_info
             _sleep(sleep)
             tries += 1
+
+        not_found_msg = "Could not find {item} within {s} seconds.".format(item=item, s=initial_sleep+tries*sleep)
+        self._log(not_found_msg)
+        if raise_on_error:
+            raise Exception(not_found_msg)
 
     def bulk_migrate(self, packages, repositories=None, codenames=None, suites=None):
         status = self.call("status")
