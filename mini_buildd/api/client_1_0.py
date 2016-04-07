@@ -52,10 +52,10 @@ class Daemon(object):
         url = "{api_url}?command={command}&output={output}&{args}".format(api_url=self.api_url, command=command, output=output, args=http_get_args)
 
         if self.dry_run:
-            self._log("Dry Run, skipping API URL: {}".format(url))
+            self._log("Dry Run, skipping API: {}".format(url))
             return None
 
-        self._log("Calling API URL: {}".format(url))
+        self._log("Calling API: {}".format(url))
         try:
             response = urllib2.urlopen(url)
             return pickle.loads(response.read()) if output == "python" else response.read()
