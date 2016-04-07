@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from __future__ import print_function
 
 import sys
+import time
 import pickle
 import urllib2
 import urlparse
@@ -137,6 +138,22 @@ class Daemon(object):
                         result[dist] = info
 
         return result
+
+    def wait_for_package(self, src_package, distribution, version,
+                         max_tries=-1, sleep=60, initial_sleep=0):
+
+        def _sleep(secs):
+            self._log("Waiting for {p}_{v} in {d}: Idling {s} seconds (Ctrl-C to abort)...".format(p=src_package, v=version, d=distribution, s=secs))
+            time.sleep(secs)
+
+        tries = 0
+        _sleep(initial_sleep)
+        while max_tries < 0 or tries < max_tries:
+            pkg_info = self.get_package_versions(src_package, distribution).get(distribution, {})
+            self._log("Package versions for {p} in {d}: {v}".format(p=src_package, d=distribution, v=repr(pkg_info)))
+            if version == pkg_info.get("version", ""):
+                return pkg_info
+            _sleep(sleep)
 
     def bulk_migrate(self, packages, repositories=None, codenames=None, suites=None):
         status = self.call("status")
