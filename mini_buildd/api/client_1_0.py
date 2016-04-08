@@ -105,7 +105,7 @@ class Daemon(object):
             self._dputconf = self.call("getdputconf")
         # 1st line looks like: "[mini-buildd-my-archive-id]"
         dput_target = self._dputconf._plain_result.split("\n", 1)[0].rpartition("]")[0]
-        return dput_target[len("mini-buildd-")+1:]
+        return dput_target[len("mini-buildd-") + 1:]
 
     @property
     def status(self):
@@ -175,14 +175,13 @@ class Daemon(object):
             self._log("Actual version for {item}: {v}".format(item=item, v=actual_version))
 
             if (version is None and actual_version) or \
-               (version is not None and \
-                (actual_version == version or or_greater and debian.debian_support.Version(actual_version) >= debian.debian_support.Version(version))):
+               (version is not None and (actual_version == version or or_greater and debian.debian_support.Version(actual_version) >= debian.debian_support.Version(version))):
                 self._log("Match found: {item}.".format(item=item))
                 return pkg_info
             _sleep(sleep)
             tries += 1
 
-        not_found_msg = "Could not find {item} within {s} seconds.".format(item=item, s=initial_sleep+tries*sleep)
+        not_found_msg = "Could not find {item} within {s} seconds.".format(item=item, s=initial_sleep + tries * sleep)
         self._log(not_found_msg)
         if raise_on_error:
             raise Exception(not_found_msg)

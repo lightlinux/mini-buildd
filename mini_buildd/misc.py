@@ -760,7 +760,7 @@ Save password for '{k}': (Y)es, (N)o, (A)lways, Ne(v)er? """.format(c=self, k=ke
 
 def canonize_url(url):
     "Poor man's URL canonizer: Always include the port (currently only works for 'http' and 'https' default ports)."
-    default_scheme2port = { "http": ":80", "https": ":443" }
+    default_scheme2port = {"http": ":80", "https": ":443"}
 
     parsed = urlparse.urlparse(url)
     netloc = parsed.netloc
