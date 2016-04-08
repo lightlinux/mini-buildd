@@ -9,6 +9,10 @@ import urllib2
 import urlparse
 import re
 
+# mini-buildd API transfers log message via HTTP headers. The default (100) is sometimes too low.
+import httplib
+httplib._MAXHEADERS = 500
+
 import mini_buildd.misc
 
 
