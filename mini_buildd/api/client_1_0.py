@@ -179,6 +179,11 @@ class Daemon(object):
         if raise_on_error:
             raise Exception(not_found_msg)
 
+    def has_package(self, src_package, distribution, version=None):
+        return self.wait_for_package(src_package, distribution, version,
+                                     max_tries=1, sleep=0, initial_sleep=0,
+                                     raise_on_error=False)
+
     def bulk_migrate(self, packages, repositories=None, codenames=None, suites=None):
         status = self.call("status")
 
