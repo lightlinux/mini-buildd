@@ -157,7 +157,7 @@ class Daemon(object):
 
         return result
 
-    def wait_for_package(self, src_package, distribution, version=None, or_greater=False,
+    def wait_for_package(self, distribution, src_package, version=None, or_greater=False,
                          max_tries=-1, sleep=60, initial_sleep=0,
                          raise_on_error=True):
 
@@ -187,8 +187,8 @@ class Daemon(object):
         if raise_on_error:
             raise Exception(not_found_msg)
 
-    def has_package(self, src_package, distribution, version=None, or_greater=False):
-        return self.wait_for_package(src_package, distribution, version, or_greater=or_greater,
+    def has_package(self, distribution, src_package, version=None, or_greater=False):
+        return self.wait_for_package(distribution, src_package, version, or_greater=or_greater,
                                      max_tries=1, sleep=0, initial_sleep=0,
                                      raise_on_error=False)
 
