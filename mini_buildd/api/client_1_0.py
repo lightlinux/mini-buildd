@@ -13,6 +13,8 @@ import re
 import httplib
 httplib._MAXHEADERS = 500
 
+import debian.debian_support
+
 import mini_buildd.misc
 
 
@@ -155,7 +157,7 @@ class Daemon(object):
 
         return result
 
-    def wait_for_package(self, src_package, distribution, version=None,
+    def wait_for_package(self, src_package, distribution, version=None, or_greater=False,
                          max_tries=-1, sleep=60, initial_sleep=0,
                          raise_on_error=True):
 
@@ -172,7 +174,9 @@ class Daemon(object):
             actual_version = pkg_info.get("version", None)
             self._log("Actual version for {item}: {v}".format(item=item, v=actual_version))
 
-            if version is None and actual_version or version is not None and version == actual_version:
+            if (version is None and actual_version) or \
+               (version is not None and \
+                (actual_version == version or or_greater and debian.debian_support.Version(actual_version) >= debian.debian_support.Version(version))):
                 self._log("Match found: {item}.".format(item=item))
                 return pkg_info
             _sleep(sleep)
@@ -183,8 +187,8 @@ class Daemon(object):
         if raise_on_error:
             raise Exception(not_found_msg)
 
-    def has_package(self, src_package, distribution, version=None):
-        return self.wait_for_package(src_package, distribution, version,
+    def has_package(self, src_package, distribution, version=None, or_greater=False):
+        return self.wait_for_package(src_package, distribution, version, or_greater=or_greater,
                                      max_tries=1, sleep=0, initial_sleep=0,
                                      raise_on_error=False)
 
