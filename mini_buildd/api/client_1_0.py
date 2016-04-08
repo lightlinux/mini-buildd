@@ -169,7 +169,7 @@ class Daemon(object):
             self._log("Actual version for {item}: {v}".format(item=item, v=actual_version))
 
             if version is None and actual_version or version is not None and version == actual_version:
-                self._log("Found: {item}.".format(item=item))
+                self._log("Match found: {item}.".format(item=item))
                 return pkg_info
             _sleep(sleep)
             tries += 1
