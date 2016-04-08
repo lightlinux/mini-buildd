@@ -274,8 +274,8 @@ class Changes(debian.deb822.Changes):
 
     def tar(self, tar_path, add_files=None):
         with contextlib.closing(tarfile.open(tar_path, "w")) as tar:
-            def tar_add(f):
-                tar.add(f, arcname=os.path.basename(f))
+            def tar_add(file_name):
+                tar.add(file_name, arcname=os.path.basename(file_name))
 
             tar_add(self._file_path)
             for f in self.get_files():

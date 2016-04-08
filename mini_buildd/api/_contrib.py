@@ -32,8 +32,8 @@ class DebianPackageTracker(object):
                                                                                                       p=src_package,
                                                                                                       v=version)}
 
-    def getInfo(self, codename):
+    def get_info(self, codename):
         return self.info[codename]
 
-    def getVersion(self, codename):
+    def get_version(self, codename):
         return self.info[codename]["version"]

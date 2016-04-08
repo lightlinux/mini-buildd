@@ -10,12 +10,24 @@ import urlparse
 import re
 
 # mini-buildd API transfers log message via HTTP headers. The default (100) is sometimes too low.
+# pylint: disable=W0212
 import httplib
 httplib._MAXHEADERS = 500
+# pylint: enable=W0212
 
 import debian.debian_support
 
 import mini_buildd.misc
+
+
+def _django_pseudo_configure():
+    import mini_buildd.django_settings
+    import django.core.management
+    import mini_buildd.models
+
+    mini_buildd.django_settings.pseudo_configure()
+    mini_buildd.models.import_all()
+    django.core.management.call_command("migrate", interactive=False, run_syncdb=True, verbosity=0)
 
 
 class Daemon(object):
@@ -26,16 +38,7 @@ class Daemon(object):
         "Stolen from mini-buildd-tool"
         msgs_header = "x-mini-buildd-message"
         for msg in [v for k, v in headers.items() if msgs_header == k[:len(msgs_header)]]:
-            self._log("HTTP Header Message: {m}".format(host=self.host, m=mini_buildd.misc.b642u(msg)))
-
-    def _django_pseudo_configure(self):
-        import mini_buildd.django_settings
-        import django.core.management
-        import mini_buildd.models
-
-        mini_buildd.django_settings.pseudo_configure()
-        mini_buildd.models.import_all()
-        django.core.management.call_command("migrate", interactive=False, run_syncdb=True, verbosity=0)
+            self._log("HTTP Header Message: {m}".format(m=mini_buildd.misc.b642u(msg)))
 
     def __init__(self, host, port="8066", proto="http",
                  auto_confirm=False,
@@ -51,7 +54,7 @@ class Daemon(object):
         self.dry_run = dry_run
         self.batch_mode = batch_mode
         if django_mode:
-            self._django_pseudo_configure()
+            _django_pseudo_configure()
 
         # Extra: status caching
         self._status = None
@@ -64,7 +67,10 @@ class Daemon(object):
         mini_buildd.misc.web_login("{host}:{port}".format(host=self.host, port=self.port), user if (user or self.batch_mode) else raw_input("Username: "), keyring, proto=self.proto)
         return self
 
-    def call(self, command, args={}, output="python", raise_on_error=True):
+    def call(self, command, args=None, output="python", raise_on_error=True):
+        if args is None:
+            args = {}
+
         if self.auto_confirm:
             args["confirm"] = command
         http_get_args = "&".join("{k}={v}".format(k=k, v=v) for k, v in args.items())
@@ -104,7 +110,9 @@ class Daemon(object):
         if self._dputconf is None:
             self._dputconf = self.call("getdputconf")
         # 1st line looks like: "[mini-buildd-my-archive-id]"
+        # pylint: disable=W0212
         dput_target = self._dputconf._plain_result.split("\n", 1)[0].rpartition("]")[0]
+        # pylint: enable=W0212
         return dput_target[len("mini-buildd-") + 1:]
 
     @property
@@ -147,7 +155,7 @@ class Daemon(object):
                             repo=repository,
                             package=src_package,
                             version=vers)
-                        # TODO/BUG: Path may also be "/source all/", not "/source/" (on non-source-only uploads?)
+                        # Note: Path may also be "/source all/", not "/source/" (on non-source-only uploads?)
                         info["changes_url"] = "{base_url}/log/{repo}/{package}/{version}/source/{package}_{version}_source.changes".format(
                             base_url=base_url,
                             repo=repository,
