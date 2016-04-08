@@ -24,6 +24,8 @@ import getpass
 import logging
 import logging.handlers
 
+import debian.debian_support
+
 # Workaround: Avoid warning 'No handlers could be found for logger "keyring"'
 KEYRING_LOG = logging.getLogger("keyring")
 KEYRING_LOG.addHandler(logging.NullHandler())
@@ -362,6 +364,18 @@ def guess_codeversion(release):
             return digit0 + digit1
     except:
         return release["Codename"].upper()
+
+
+def guess_default_dirchroot_backend(overlay, aufs):
+    try:
+        release = os.uname()[2]
+        # linux 3.18-1~exp1 in Debian removed aufs in favor of overlay
+        if debian.debian_support.Version(release) < debian.debian_support.Version("3.18"):
+            return aufs
+    except:
+        pass
+
+    return overlay
 
 
 def pkg_fmt(status, distribution, package, version, extra=None, message=None):
