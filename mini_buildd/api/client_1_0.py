@@ -151,7 +151,7 @@ class Daemon(object):
 
         return result
 
-    def wait_for_package(self, src_package, distribution, version,
+    def wait_for_package(self, src_package, distribution, version=None,
                          max_tries=-1, sleep=60, initial_sleep=0,
                          raise_on_error=True):
 
@@ -168,7 +168,7 @@ class Daemon(object):
             actual_version = pkg_info.get("version", None)
             self._log("Actual version for {item}: {v}".format(item=item, v=actual_version))
 
-            if version == actual_version:
+            if version is None and actual_version or version is not None and version == actual_version:
                 self._log("Found: {item}.".format(item=item))
                 return pkg_info
             _sleep(sleep)
