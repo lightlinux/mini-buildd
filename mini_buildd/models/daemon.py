@@ -256,7 +256,7 @@ x_mini_buildd_users =
                   "maintainer": "Your address is the maintainer of the package ('Maintainer' in changes).",
                   "subscriber": "Your user account has a matching subscription.",
                   }.get(typ, "Unknown")
-        # pylint: disable=anomalous-unicode-escape-in-string
+
         return """
 --\N{SPACE}
 mini-buildd instance '{id}' at {host} <{email}>

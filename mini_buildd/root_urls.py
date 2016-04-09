@@ -5,20 +5,17 @@ import django.views.generic.base
 import django.contrib.admin
 import django.contrib.auth.views
 
-# pylint: disable=import-error,no-name-in-module
 try:
     # django >= 1.6
     from django.conf.urls import patterns, include, url
     DJANGO_UID_HASH = "b64"
 except ImportError:
     # django 1.5
-    from django.conf.urls.defaults import patterns, include, url
+    from django.conf.urls.defaults import patterns, include, url  # pylint: disable=import-error,no-name-in-module
     DJANGO_UID_HASH = "b36"
-# pylint: enable=import-error,no-name-in-module
 
 django.contrib.admin.autodiscover()
 
-# pylint: disable=no-value-for-parameter
 urlpatterns = patterns(
     "",
     # mini_buildd
@@ -33,4 +30,3 @@ urlpatterns = patterns(
     # registration: This extra line is needed for p-d-registration since some django update...
     (r'^accounts/', include('django.contrib.auth.urls')),
 )
-# pylint: enable=no-value-for-parameter
