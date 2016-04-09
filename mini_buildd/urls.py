@@ -2,13 +2,7 @@
 from __future__ import unicode_literals
 
 import django.views.generic.detail
-
-try:
-    # django >= 1.6
-    from django.conf.urls import patterns
-except ImportError:
-    # django 1.5
-    from django.conf.urls.defaults import patterns  # pylint: disable=import-error,no-name-in-module
+from django.conf.urls import patterns
 
 import mini_buildd.views
 import mini_buildd.models.repository
