@@ -680,7 +680,7 @@ COMMANDS = [(COMMAND_GROUP, "Daemon commands"),
             (COMMAND_GROUP, "User management commands"),
             (SetUserKey.COMMAND, SetUserKey),
             (Subscription.COMMAND, Subscription),
-            ]
+           ]
 
 COMMANDS_DICT = dict(COMMANDS)
 

@@ -412,7 +412,7 @@ def run():
 class Daemon(object):
     def __init__(self):
         # Set global to ourself
-        global _INSTANCE
+        global _INSTANCE  # pylint: disable=global-statement
         _INSTANCE = self
 
         # When this is not None, daemon is running

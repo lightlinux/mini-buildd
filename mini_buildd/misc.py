@@ -812,7 +812,7 @@ def web_login(host, user, credentials,
                               "csrfmiddlewaretoken": csrf_cookies[0].value,
                               "this_is_the_login_form": "1",
                               "next": next_loc,
-                              }))
+                             }))
 
         # If successful, next url of the response must match
         if canonize_url(response.geturl()) != canonize_url(next_url):

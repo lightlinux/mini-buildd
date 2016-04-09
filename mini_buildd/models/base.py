@@ -229,7 +229,7 @@ class StatusModel(Model):
         abstract = True
 
     class Admin(Model.Admin):
-        def save_model(self, request, obj, form, change):
+        def save_model(self, request, obj, form, change):  # pylint: disable=super-on-old-class
             if change:
                 obj.mbd_set_changed(request)
             super(StatusModel.Admin, self).save_model(request, obj, form, change)
