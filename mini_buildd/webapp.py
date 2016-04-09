@@ -26,13 +26,13 @@ class WebApp(django.core.handlers.wsgi.WSGIHandler):
         mini_buildd.models.import_all()
 
         LOG.info("Migrating database (migrate)...")
-        # pylint: disable=E0712
+        # pylint: disable=catching-non-exception
         try:
             django.core.management.call_command("migrate", interactive=False, run_syncdb=True, verbosity=0)
         except django.db.OperationalError as e:
             LOG.warn("OperationalError on migrate ({}). Retrying with '--fake-initial'...".format(e))
             django.core.management.call_command("migrate", interactive=False, run_syncdb=True, fake_initial=True, verbosity=0)
-        # pylint: enable=E0712
+        # pylint: enable=catching-non-exception
 
         LOG.info("Clean up python-registration (cleanupregistration)...")
         django.core.management.call_command("cleanupregistration", interactive=False, verbosity=0)
@@ -53,9 +53,9 @@ class WebApp(django.core.handlers.wsgi.WSGIHandler):
         import django.contrib.auth
 
         try:
-            # pylint: disable=E1101
+            # pylint: disable=no-member
             user = django.contrib.auth.models.User.objects.get(username="admin")
-            # pylint: enable=E1101
+            # pylint: enable=no-member
             LOG.info("Updating 'admin' user password...")
             user.set_password(password)
             user.save()

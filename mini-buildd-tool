@@ -22,13 +22,13 @@ LOG = logging.getLogger("mini_buildd")
 mini_buildd.misc.setup_console_logging(logging.DEBUG)
 
 
-# pylint: disable=W0613
+# pylint: disable=unused-argument
 def host_completer(prefix, **kwargs):
     hosts = []
     dput_cf = ConfigParser.RawConfigParser()
     dput_cf.read(os.path.expanduser("~/.dput.cf"))
     for section in dput_cf.sections():
-        # pylint: disable=W0640
+        # pylint: disable=cell-var-from-loop
         def _join(host, user):
             if user:
                 return "{u}@{h}".format(u=user, h=host)
@@ -56,7 +56,7 @@ def host_completer(prefix, **kwargs):
         except:
             pass
     return hosts
-# pylint: enable=W0613
+# pylint: enable=unused-argument
 
 
 def host_from_dput(section):

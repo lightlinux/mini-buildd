@@ -416,7 +416,7 @@ this would mean losing all packages!
             cls.mbd_action(msglog.request, cls.mbd_model.objects.all(), "check")
             cls.mbd_action(msglog.request, cls.mbd_model.objects.all(), "activate")
 
-# pylint: disable=R0201
+# pylint: disable=no-self-use
         def colored_status(self, obj):
             return '<div style="font-weight:bold;background-color:{bc};color:{fc};padding:2px 0px 2px 5px" title="{t}">{o}</div>'.format(
                 bc=obj.STATUS_COLORS[obj.status].get("bg"),
@@ -425,7 +425,7 @@ this would mean losing all packages!
                 o=obj.mbd_get_status_display(typ="char"))
 
         colored_status.allow_tags = True
-# pylint: enable=R0201
+# pylint: enable=no-self-use
 
         actions = [mbd_action_prepare, mbd_action_check, mbd_action_pc, mbd_action_activate, mbd_action_pca, mbd_action_deactivate, mbd_action_remove]
         list_display = ["colored_status", "__unicode__"]

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # django false-positives:
-# pylint: disable=E1123,E1120
+# pylint: disable=unexpected-keyword-arg,no-value-for-parameter
 from __future__ import unicode_literals
 
 import os
@@ -759,9 +759,9 @@ Example:
     def mbd_get_uploader_keyring(self):
         gpg = mini_buildd.gnupg.TmpGnuPG()
         # Add keys from django users
-        # pylint: disable=E1101
+        # pylint: disable=no-member
         for u in django.contrib.auth.models.User.objects.filter(is_active=True):
-            # pylint: enable=E1101
+            # pylint: enable=no-member
             LOG.debug("Checking user: {u}".format(u=u))
 
             uploader = None

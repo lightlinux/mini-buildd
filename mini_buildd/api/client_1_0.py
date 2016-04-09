@@ -111,9 +111,9 @@ class Daemon(object):
         if self._dputconf is None:
             self._dputconf = self.call("getdputconf")
         # 1st line looks like: "[mini-buildd-my-archive-id]"
-        # pylint: disable=W0212
+        # pylint: disable=protected-access
         dput_target = self._dputconf._plain_result.split("\n", 1)[0].rpartition("]")[0]
-        # pylint: enable=W0212
+        # pylint: enable=protected-access
         return dput_target[len("mini-buildd-") + 1:]
 
     @property

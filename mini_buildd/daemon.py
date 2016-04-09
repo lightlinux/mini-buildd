@@ -533,7 +533,7 @@ class Daemon(object):
 
     @classmethod
     def meta(cls, model, func, msglog):
-        # pylint: disable=W0123
+        # pylint: disable=eval-used
         model_class = eval("mini_buildd.models.{m}.Admin".format(m=model))
         getattr(model_class, "mbd_meta_{f}".format(f=func))(msglog)
 
