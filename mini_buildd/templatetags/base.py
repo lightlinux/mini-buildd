@@ -68,6 +68,12 @@ def mbd_builder_status(builds):
     return {"builds": builds}
 
 
+@register.inclusion_tag("includes/mbd_manage_subscriptions.html")
+def mbd_manage_subscriptions(repositories, package=""):
+    return {"repositories": repositories,
+            "package": package}
+
+
 def _mbd_e2n(func, *args, **kwargs):
     try:
         return func(*args, **kwargs)
