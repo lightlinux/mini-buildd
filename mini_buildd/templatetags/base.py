@@ -63,6 +63,11 @@ def mbd_packager_status(packages):
     return {"packages": packages}
 
 
+@register.inclusion_tag("includes/mbd_builder_status.html")
+def mbd_builder_status(builds):
+    return {"builds": builds}
+
+
 def _mbd_e2n(func, *args, **kwargs):
     try:
         return func(*args, **kwargs)

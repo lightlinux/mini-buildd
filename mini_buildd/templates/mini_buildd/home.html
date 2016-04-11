@@ -89,7 +89,7 @@
 					Builder: {{ daemon.build_queue }} building
 				</h1>
 				{% if daemon.builds.items %}
-					{% include "mini_buildd/snippet_builder_status.html" with builds=daemon.builds.values %}
+					{% mbd_builder_status daemon.builds.values %}
 				{% endif %}
 
 				<h2>Last builds: {{ daemon.last_builds|length }}
@@ -97,7 +97,7 @@
 				</h2>
 				<div id="mbd_last_builds">
 					{% if daemon.last_builds %}
-						{% include "mini_buildd/snippet_builder_status.html" with builds=daemon.last_builds %}
+						{% mbd_builder_status daemon.last_builds %}
 					{% endif %}
 				</div>
 
