@@ -101,3 +101,31 @@ def mbd_repository_desc(repository, distribution, suite_option):
 @register.simple_tag
 def mbd_repository_mandatory_version(repository, dist, suite):
     return _mbd_e2n(repository.layout.mbd_get_mandatory_version_regex, repository, dist, suite)
+
+
+@register.simple_tag
+def mbd_build_status(success, failed):
+    result = ""
+
+    try:
+        bres = success if success else failed
+        # Uff: Currently, we need to parse bres_stat string here: "Build=status, Lintian=status"
+        bres_stat = bres.get("bres_stat")
+        sbuild_status = bres_stat.partition(",")[0].partition("=")[2]
+        lintian_status = bres_stat.partition(",")[2].partition("=")[2]
+
+        # sbuild build log stati
+        # The only real documentation on this seems to be here: https://www.debian.org/devel/buildd/wanna-build-states
+        build_colors = {"successful": "green", "skipped": "blue", "given-back": "yellow", "attempted": "magenta", "failed": "red"}
+
+        # lintian build log stati
+        lintian_colors = {"pass": "green", "fail": "red", "None": "blue"}
+
+        # return "[BL]" html-style colorized
+        result = "[<span style=\"color:{b}\">B</span><span style=\"color:{l}\">L</span>]".format(
+            b=build_colors.get(sbuild_status, "black"),
+            l=lintian_colors.get(lintian_status, "black"))
+    except:
+        pass
+
+    return django.utils.safestring.mark_safe(result)
