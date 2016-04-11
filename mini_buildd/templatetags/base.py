@@ -74,6 +74,11 @@ def mbd_manage_subscriptions(repositories, package=""):
             "package": package}
 
 
+@register.inclusion_tag("includes/mbd_admin_index_table_header.html")
+def mbd_admin_index_table_header(title):
+    return {"title": title}
+
+
 def _mbd_e2n(func, *args, **kwargs):
     try:
         return func(*args, **kwargs)
