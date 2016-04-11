@@ -58,6 +58,11 @@ def mbd_model_count(model):
     return ret
 
 
+@register.inclusion_tag("includes/mbd_packager_status.html")
+def mbd_packager_status(packages):
+    return {"packages": packages}
+
+
 def _mbd_e2n(func, *args, **kwargs):
     try:
         return func(*args, **kwargs)
