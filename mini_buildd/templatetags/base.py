@@ -79,6 +79,35 @@ def mbd_admin_index_table_header(title):
     return {"title": title}
 
 
+@register.inclusion_tag("includes/mbd_admin_index_table_row.html")
+def mbd_admin_index_table_row(app,  # pylint: disable=too-many-arguments
+                              model_name,
+                              model_path,
+                              hide_add=False,
+                              wiz0_function="",
+                              wiz0_name="",
+                              wiz0_title="",
+                              wiz1_function="",
+                              wiz1_name="",
+                              wiz1_title="",
+                              wiz2_function="",
+                              wiz2_name="",
+                              wiz2_title=""):
+    return {"app": app,
+            "model_name": model_name,
+            "model_path": model_path,
+            "hide_add": hide_add,
+            "wiz0_function": wiz0_function,
+            "wiz0_name": wiz0_name,
+            "wiz0_title": wiz0_title,
+            "wiz1_function": wiz1_function,
+            "wiz1_name": wiz1_name,
+            "wiz1_title": wiz1_title,
+            "wiz2_function": wiz2_function,
+            "wiz2_name": wiz2_name,
+            "wiz2_title": wiz2_title}
+
+
 def _mbd_e2n(func, *args, **kwargs):
     try:
         return func(*args, **kwargs)
