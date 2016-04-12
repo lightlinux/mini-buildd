@@ -277,10 +277,7 @@ mbd_install()
 	gbp buildpackage --git-ignore-new --git-ignore-branch -us -uc
 
 	_head "Installing snapshot..."
-	cat <<EOF | sudo debconf-set-selections --verbose -
-mini-buildd mini-buildd/admin_password password admin
-mini-buildd mini-buildd/options string --verbose --verbose --debug=exception,http,webapp
-EOF
+	cat ./devel.debconf.selections | sudo debconf-set-selections --verbose -
 	sudo debi
 }
 
