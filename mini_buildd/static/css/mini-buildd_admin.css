@@ -73,36 +73,9 @@
 	border: 1px solid #cccccc;
 }
 
-/* Extension of existing (default) style definitions. */
-
-/* "mini-buildd"-App Caption */
 #header
 {
-	font-size: 14px;
 	background: url("/static/img/da_header_background_gradient.png") repeat-x scroll left top;
-}
-
-#header a
-{
-	font-size: 14px;
-}
-
-#content-main table
-{
-	width: 100%;
-}
-
-#content-main caption
-{
-	font-size: 11px;
-	padding: 5px 0px 4px 4px;
-}
-
-/* "Auth"-App Caption */
-#content-main caption.mb
-{
-	font-size: 14px;
-	padding: 2px 0px 2px 5px;
 }
 
 #content-main td.right
@@ -110,13 +83,13 @@
 	text-align: right;
 }
 
-#content-main a.changelink, #content-main a.addlink
+#content-main a.mbd-changelink, #content-main a.mbd-addlink
 {
 	padding-right: 1px;
 	display: inline;
 }
 
-#content-main a.wizard
+#content-main a.mbd-wizard
 {
 	background: url("/static/img/mbd_wizard.png") no-repeat scroll 3px 50%;
 	margin: 0px 0px 0px 0px;
@@ -125,16 +98,6 @@
 	font-size: 11px;
 	font-weight: normal;
 	display: inline;
-}
-
-#content-main .module.mb
-{
-	margin-top: 12px;
-}
-
-#content-main th.overview
-{
-	width: 100%;
 }
 
 /* For 'admin colorized button hack'; see JS hack mini_buildd/templates/admin/mini_buildd/change_list.html */
