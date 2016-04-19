@@ -5,6 +5,7 @@
 #mbd_django_admin_branding h1
 {
 	color: #ffffcc;
+	display: inline;
 }
 
 #mbd_django_admin_branding img
