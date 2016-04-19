@@ -119,11 +119,6 @@ a:hover
 	color: yellow;
 }
 
-#mbd-custom-header
-{
-	margin: 10px;
-}
-
 /* PAGE_HEADER */
 
 #mbd-page-header a.button-start:link, #mbd-page-header a.button-start:visited
@@ -602,23 +597,6 @@ a:hover
 	font-style: italic;
 }
 
-#mbd-repository-portext div
-{
-	margin: 15px 15px 15px 15px;
-}
-
-#mbd-repository-misc ul
-{
-	list-style: none;
-	margin: 15px 15px 15px 15px;
-	padding: 0;
-}
-
-#mbd-repository-show-form input.package-input
-{
-	width: 300px;
-}
-
 /* API show */
 
 #mbd-api-show td.distribution
@@ -641,35 +619,14 @@ a:hover
 	padding:5px;
 }
 
-
 #mbd-last-builds
 {
 	display: none;
 }
 
-#mbd-lb-click-me
-{
-	display: inline;
-}
-
-#mbd-lb-anchor
-{
-	font-size: 12px;
-}
-
 #mbd-last-packages
 {
 	display: none;
-}
-
-#mbd-lp-click-me
-{
-	display: inline;
-}
-
-#mbd-lp-anchor
-{
-	font-size: 12px;
 }
 
 /* FOOTER */

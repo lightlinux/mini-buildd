@@ -49,31 +49,6 @@
 	text-decoration: none;
 }
 
-#mbd-box h1.mini-buildd
-{
-	background: url("/static/admin/img/default-bg.gif") repeat-x scroll left top #7CA0C7;
-	color: white;
-	margin: 0;
-	font-size: 14px;
-	padding: 2px 0px 2px 5px;
-}
-
-#mbd-box caption
-{
-	background: url("/static/img/icon_48x48.png") no-repeat scroll right top;
-	background-color: #417690;
-	border-left: 1px solid #417690;
-	border-right: 1px solid #417690;
-	font-size: 11px;
-	padding: 5px 0px 4px 4px;
-}
-
-#mbd-box .inner-box
-{
-	margin: 12px;
-	border: 1px solid #cccccc;
-}
-
 #header
 {
 	background: url("/static/img/da_header_background_gradient.png") repeat-x scroll left top;

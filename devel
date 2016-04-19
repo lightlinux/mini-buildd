@@ -223,7 +223,7 @@ mbd_css()
 mbd_check()
 {
 	# 2014 Feb: 'pydjangolint' removed: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=735199
-	local tests="pep8 pymisc pydoctests pyflakes pylint"
+	local tests="pep8 pymisc pydoctests pyflakes pylint css"
 	for t in ${tests}; do
 		printf "=> mbd_${t}\n"
 		mbd_${t}
