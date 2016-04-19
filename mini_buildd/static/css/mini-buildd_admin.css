@@ -18,12 +18,12 @@
 {
 	float: left;
 	width: 100%;
-	background: url("/static/admin/img/nav-bg-reverse.gif") repeat-x scroll 0 0px white;
+	background: url("/static/img/mbd_message_warning.png") no-repeat scroll 0 0px white;
 	border-bottom: 1px solid #cccccc;
 	border-top: 1px solid #cccccc;
 	color: #999999;
 	font-size: 11px;
-	padding: 2px 0px 3px 7px;
+	padding: 2px 0px 3px 20px;
 }
 
 #mbd-django-admin-daemon-status p
