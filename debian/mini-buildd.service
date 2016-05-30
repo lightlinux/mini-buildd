@@ -1,0 +1,10 @@
+[Unit]
+Description=custom Debian build daemon
+Documentation=man:mini-buildd(8)
+After=syslog.target
+
+[Service]
+EnvironmentFile=-/etc/default/mini-buildd
+User=mini-buildd
+ExecStart=/usr/sbin/mini-buildd $MINI_BUILDD_OPTIONS
+ExecReload=/bin/kill -HUP $MAINPID
