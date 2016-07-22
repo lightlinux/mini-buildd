@@ -1,3 +1,16 @@
+mini-buildd (1.0.13) unstable; urgency=medium
+
+  * [09793e2] Add systemd unit file: mini-buildd.service.
+  * [e76bfc0] control: Adapt dependencies to new python-django epoch in
+    version. Thanks to Lucas Nussbaum (Closes: 830359)
+  * [0fa253c] example packages: Autoconf files update.
+  * [20f9301] pt_BR.po: Add translation for "Brazilian Portuguese". Thanks
+    to Adriano Rafael Gomes (Closes: 829337)
+  * [2c9ecc7] builder.py: Install gnupg explicitly before using apt-key
+    (apt no longer depends on it). Thanks to Boyuan Yang (Closes: 831749)
+
+ -- Stephan Sürken <absurd@debian.org>  Fri, 22 Jul 2016 17:20:28 +0000
+
 mini-buildd (1.0.12) unstable; urgency=medium
 
   This release focuses on HTML/design cleanups and fixes, and makes
