@@ -1,3 +1,14 @@
+mini-buildd (1.0.14) unstable; urgency=medium
+
+  * [d487423] mini-buildd.service: Some brown paper bag fixes for the new
+    service file. Thanks to Boyuan Yang (Closes: 832167)
+  * [8971737] zh_CN.po: Add translation for "Simplified Chinese". Thanks
+    to Boyuan Yang (Closes: 832168)
+  * [a90fc43] doc/admin.rst: Improve section "Logging and Debugging".
+    Thanks to Marc Haber (Closes: 820692)
+
+ -- Stephan Sürken <absurd@debian.org>  Sat, 23 Jul 2016 19:45:19 +0000
+
 mini-buildd (1.0.13) unstable; urgency=medium
 
   * [09793e2] Add systemd unit file: mini-buildd.service.
