@@ -92,12 +92,19 @@ their logs by default.
 
 You may control the **log level** via the ``--verbose``, and
 extra **debug options** via the ``--debug`` command line flag.
+The latter allows you to *keep temporary files*, enable python
+*exception traces* or to enable debug options for *specific
+software components* used by mini-buildd. Full documentation of
+these options can be found via ``mini-buildd --help`` or the
+manual page :manpage:`mini-buildd(8)`.
 
-Just set these options by dpkg-reconfiguring mini-buildd; more
-details on the usage via ``mini-buildd --help``.
+Just use ``dpkg-reconfigure mini-buildd`` or edit
+``/etc/default/mini-buildd`` to set any of these options
+permanently.
 
-You can `view mini-buildd's log
-</mini_buildd/api?command=logcat>`_ via the API call ``logcat``::
+Being a ``staff`` user, you can also `view mini-buildd's log
+</mini_buildd/api?command=logcat>`_ via the API call ``logcat``
+-- linked on the web interface or via::
 
   $ mini-buildd-tool --host=my.ho.st:8066 logcat
 
