@@ -54,7 +54,7 @@ mbd_installdeps()
 	mk-build-deps --install --root-cmd=sudo --remove --tool="apt-get --no-install-recommends --target-release='*'" 
 
 	# Extra tools needed for checks
-	sudo apt-get install --no-install-recommends pep8 pylint pychecker pyflakes python-apt
+	sudo apt-get install --no-install-recommends pep8 pylint pychecker pyflakes python-apt python-bs4 python-keyrings.alt
 	# Extra tools needed vc and package building
 	sudo apt-get install --no-install-recommends git git-buildpackage
 	# binary package dependecies so we can just dpkg -i for testing
