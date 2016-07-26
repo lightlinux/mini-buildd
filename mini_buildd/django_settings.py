@@ -86,44 +86,47 @@ def configure(smtp_string, loglevel):
 
     smtp = SMTPCreds(smtp_string)
     debug = "webapp" in mini_buildd.setup.DEBUG
-    django.conf.settings.configure(
-        DEBUG=debug,
-        MESSAGE_LEVEL=mini_buildd.models.msglog.MsgLog.level2django(loglevel),
 
-        ALLOWED_HOSTS=["*"],
+    settings = {
+        "DEBUG": debug,
+        "MESSAGE_LEVEL": mini_buildd.models.msglog.MsgLog.level2django(loglevel),
 
-        EMAIL_HOST=smtp.host,
-        EMAIL_PORT=smtp.port,
-        EMAIL_USE_TLS=smtp.protocol == "ssmtp",
-        EMAIL_HOST_USER=smtp.user,
-        EMAIL_HOST_PASSWORD=smtp.password,
+        "ALLOWED_HOSTS": ["*"],
 
-        TEMPLATE_DEBUG=debug,
-        TEMPLATE_DIRS=["{p}/mini_buildd/templates".format(p=mini_buildd.setup.PY_PACKAGE_PATH)],
-        TEMPLATE_LOADERS=(
+        "EMAIL_HOST": smtp.host,
+        "EMAIL_PORT": smtp.port,
+        "EMAIL_USE_TLS": smtp.protocol == "ssmtp",
+        "EMAIL_HOST_USER": smtp.user,
+        "EMAIL_HOST_PASSWORD": smtp.password,
+
+        "TEMPLATE_DEBUG": debug,
+        "TEMPLATE_DIRS": ["{p}/mini_buildd/templates".format(p=mini_buildd.setup.PY_PACKAGE_PATH)],
+        "TEMPLATE_LOADERS": (
             "django.template.loaders.filesystem.Loader",
             "django.template.loaders.app_directories.Loader"),
 
-        DATABASES={"default": {"ENGINE": "django.db.backends.sqlite3",
-                               "NAME": os.path.join(mini_buildd.setup.HOME_DIR, "config.sqlite")}},
+        "DATABASES": {"default": {"ENGINE": "django.db.backends.sqlite3",
+                                  "NAME": os.path.join(mini_buildd.setup.HOME_DIR, "config.sqlite")}},
 
-        TIME_ZONE=None,
-        USE_L10N=True,
-        SECRET_KEY=get_django_secret_key(mini_buildd.setup.HOME_DIR),
-        ROOT_URLCONF="mini_buildd.root_urls",
-        STATIC_URL="/static/",
-        ACCOUNT_ACTIVATION_DAYS=3,
-        LOGIN_REDIRECT_URL="/mini_buildd/",
+        "TIME_ZONE": None,
+        "USE_L10N": True,
+        "SECRET_KEY": get_django_secret_key(mini_buildd.setup.HOME_DIR),
+        "ROOT_URLCONF": "mini_buildd.root_urls",
+        "STATIC_URL": "/static/",
+        "ACCOUNT_ACTIVATION_DAYS": 3,
+        "LOGIN_REDIRECT_URL": "/mini_buildd/",
 
-        MIDDLEWARE_CLASSES=(
+        "MIDDLEWARE_CLASSES": (
             "django.middleware.common.CommonMiddleware",
             "django.contrib.sessions.middleware.SessionMiddleware",
             "django.middleware.csrf.CsrfViewMiddleware",
             "django.contrib.auth.middleware.AuthenticationMiddleware",
             "django.contrib.messages.middleware.MessageMiddleware"),
 
-        INSTALLED_APPS=MBD_INSTALLED_APPS)
+        "INSTALLED_APPS": MBD_INSTALLED_APPS
+    }
 
+    django.conf.settings.configure(**settings)
     django.setup()
 
 
