@@ -88,7 +88,6 @@ def configure(smtp_string, loglevel):
     debug = "webapp" in mini_buildd.setup.DEBUG
     django.conf.settings.configure(
         DEBUG=debug,
-        TEMPLATE_DEBUG=debug,
         MESSAGE_LEVEL=mini_buildd.models.msglog.MsgLog.level2django(loglevel),
 
         ALLOWED_HOSTS=["*"],
@@ -99,6 +98,7 @@ def configure(smtp_string, loglevel):
         EMAIL_HOST_USER=smtp.user,
         EMAIL_HOST_PASSWORD=smtp.password,
 
+        TEMPLATE_DEBUG=debug,
         TEMPLATE_DIRS=["{p}/mini_buildd/templates".format(p=mini_buildd.setup.PY_PACKAGE_PATH)],
         TEMPLATE_LOADERS=(
             "django.template.loaders.filesystem.Loader",
