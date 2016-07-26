@@ -30,9 +30,9 @@ def mbd_version():
 @register.simple_tag
 def mbd_jquery_path():
     if LooseVersion(django.get_version()) >= LooseVersion("1.9.0"):
-        return "/admin/js/vendor/jquery/jquery.js"
+        return "admin/js/vendor/jquery/jquery.js"
     else:
-        return "/admin/js/jquery.js"
+        return "admin/js/jquery.js"
 
 
 @register.simple_tag
