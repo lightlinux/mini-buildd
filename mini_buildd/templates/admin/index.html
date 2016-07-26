@@ -28,7 +28,7 @@
 	<div id="content-main">
 		{% if app_list %}
 			{% for app in app_list %}
-				{% if app.name = "Mini_Buildd" %}
+				{% if app.name == "Mini_Buildd" %}
 					<div class="module">
 						<table>
 							<caption class="mb"><a href="{{ app.app_url }}" class="section">{% blocktrans with app.name as name %}{{ name }}{% endblocktrans %}</a></caption>
