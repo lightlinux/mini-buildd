@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import os
 import logging
 import random
+from distutils.version import LooseVersion
 
 import django
 import django.conf
@@ -99,12 +100,6 @@ def configure(smtp_string, loglevel):
         "EMAIL_HOST_USER": smtp.user,
         "EMAIL_HOST_PASSWORD": smtp.password,
 
-        "TEMPLATE_DEBUG": debug,
-        "TEMPLATE_DIRS": ["{p}/mini_buildd/templates".format(p=mini_buildd.setup.PY_PACKAGE_PATH)],
-        "TEMPLATE_LOADERS": (
-            "django.template.loaders.filesystem.Loader",
-            "django.template.loaders.app_directories.Loader"),
-
         "DATABASES": {"default": {"ENGINE": "django.db.backends.sqlite3",
                                   "NAME": os.path.join(mini_buildd.setup.HOME_DIR, "config.sqlite")}},
 
@@ -125,6 +120,42 @@ def configure(smtp_string, loglevel):
 
         "INSTALLED_APPS": MBD_INSTALLED_APPS
     }
+
+    if LooseVersion(django.get_version()) < LooseVersion("1.8"):
+        # Django <= 1.7 compat: TEMPLATE settings
+        settings.update({
+            "TEMPLATE_DEBUG": debug,
+            "TEMPLATE_DIRS": ["{p}/mini_buildd/templates".format(p=mini_buildd.setup.PY_PACKAGE_PATH)],
+            "TEMPLATE_LOADERS": (
+                "django.template.loaders.filesystem.Loader",
+                "django.template.loaders.app_directories.Loader"),
+        })
+    else:
+        settings.update({
+            "TEMPLATES": [
+                {
+                    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+                    'DIRS': [
+                        "{p}/mini_buildd/templates".format(p=mini_buildd.setup.PY_PACKAGE_PATH)
+                    ],
+                    'APP_DIRS': True,
+                    'OPTIONS': {
+                        'debug': debug,
+                        'context_processors': [
+                            # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
+                            # list if you haven't customized them:
+                            'django.contrib.auth.context_processors.auth',
+                            'django.template.context_processors.debug',
+                            'django.template.context_processors.i18n',
+                            'django.template.context_processors.media',
+                            'django.template.context_processors.static',
+                            'django.template.context_processors.tz',
+                            'django.contrib.messages.context_processors.messages',
+                        ],
+                    },
+                },
+            ],
+        })
 
     django.conf.settings.configure(**settings)
     django.setup()
