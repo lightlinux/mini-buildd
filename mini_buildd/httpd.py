@@ -189,25 +189,26 @@ def run(bind, wsgi_app):
     cherrypy.log.access_log.addHandler(handler)
 
     # Serve mini_buildd webapp's static directory
-    add_static_handler("/static",
+    add_static_handler(mini_buildd.setup.STATIC_URL,
                        "{p}/mini_buildd/static".format(p=mini_buildd.setup.PY_PACKAGE_PATH))
 
-    # Serve django admin webapp's static directory
-    add_static_handler("/static/admin",
+    # Serve django admin webapp's static directory.
+    # Note: 'STATIC_URL' has trailing "/"; cherrypy does not like double slashes inside path like add_static_handler("/my//path").
+    add_static_handler("{p}admin/".format(p=mini_buildd.setup.STATIC_URL),
                        "{p}/django/contrib/admin/static/admin".format(p=mini_buildd.setup.PY_PACKAGE_PATH))
 
     # Serve mini-buildd's HTML manual
-    add_static_handler("/doc",
+    add_static_handler("/doc/",
                        "/usr/share/doc/mini-buildd/html")
 
     # Serve repositories with index support
-    add_static_handler("/repositories",
+    add_static_handler("/repositories/",
                        mini_buildd.setup.REPOSITORIES_DIR,
                        with_index=True,
                        match=r"^/.+/(pool|dists)/.*")
 
     # Serve logs with index support
-    add_static_handler("/log",
+    add_static_handler("/log/",
                        mini_buildd.setup.LOG_DIR,
                        with_index=True,
                        match=r"^/.+/.*")
