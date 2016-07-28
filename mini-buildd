@@ -164,6 +164,9 @@ Comma-separated list of special debugging options:
         handler.setFormatter(logging.Formatter("%(asctime)s " + self.LOG_FORMAT))
         return handler
 
+    def _loglevel(self):
+        return logging.WARNING - (10 * (min(2, self._args.verbosity) - min(2, self._args.terseness)))
+
     def _setup_logging(self):
         loggers = self._args.loggers.split(",")
         if self._args.foreground:
@@ -185,8 +188,7 @@ Comma-separated list of special debugging options:
                 loggers_failed[typ] = e
 
         # Set log level
-        loglevel = logging.WARNING - (10 * (min(2, self._args.verbosity) - min(2, self._args.terseness)))
-        LOG.setLevel(loglevel)
+        LOG.setLevel(self._loglevel())
 
         # Global: Don't propagate exceptions that happen while logging
         logging.raiseExceptions = 0
@@ -194,8 +196,6 @@ Comma-separated list of special debugging options:
         # Finally, log all errors now that occurred while setting up loggers
         for typ, err in loggers_failed.items():
             LOG.critical("Logger {t} failed: {e}".format(t=typ, e=err))
-
-        return loglevel
 
     def _setup_environment(self):
         os.environ.clear()
@@ -228,11 +228,13 @@ Comma-separated list of special debugging options:
         if not self._args.foreground:
             daemon.DaemonContext(working_directory=self._args.home, umask=0022).open()
         self._setup()
-        self._loglevel = self._setup_logging()
         self._setup_environment()
 
         # Configure django
-        mini_buildd.django_settings.configure(self._args.smtp, self._loglevel)
+        mini_buildd.django_settings.configure(self._args.smtp, self._loglevel())
+
+        # Setup logging *after* django config, as the latter might overwrite global logging/warning setup.
+        self._setup_logging()
 
         # Shutdown on SIGTERM or SIGINT
         self._status = "RESTART"
