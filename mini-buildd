@@ -8,6 +8,7 @@ import pwd
 import contextlib
 import argparse
 import sys
+import warnings
 import logging
 import logging.handlers
 
@@ -22,8 +23,18 @@ import mini_buildd.setup
 import mini_buildd.httpd
 import mini_buildd.django_settings
 
+
+# Early global log config (before the actual logging config steps in):
+# - preliminary (stderr) handler
+# - capture python warnings && setup 'py.warnings' logger
+LOG_FORMAT = "%(name)-29s(%(lineno)04d): %(levelname)-8s: %(message)s"
+LOG_PRELIMINARY_HANDLER = logging.StreamHandler()
+LOG_PRELIMINARY_HANDLER.setFormatter(logging.Formatter("mini-buildd preliminary console logger: " + LOG_FORMAT))
 LOG = logging.getLogger("mini_buildd")
-LOG.addHandler(logging.StreamHandler())
+LOG.addHandler(LOG_PRELIMINARY_HANDLER)
+LOGW = logging.getLogger("py.warnings")
+LOGW.addHandler(LOG_PRELIMINARY_HANDLER)
+logging.captureWarnings(True)
 
 
 class PIDFile(object):
@@ -83,6 +94,7 @@ class Main(object):
         group_log.add_argument("-d", "--debug", action="store", default="", metavar="OPTION,..",
                                help="""\
 Comma-separated list of special debugging options:
+'warnings' (show all warnings from python's warnings module in log),
 'exception' (log tracebacks in exception handlers),
 'http' (put http server [cherrypy] in debug mode),
 'webapp' (put web application [django] in debug mode),
@@ -141,27 +153,28 @@ Comma-separated list of special debugging options:
         mini_buildd.misc.mkdirs(mini_buildd.setup.LOG_DIR)
         mini_buildd.misc.mkdirs(mini_buildd.setup.TMP_DIR)
 
-    LOG_FORMAT = "%(name)-29s(%(lineno)04d): %(levelname)-8s: %(message)s"
-
-    def _log_handler_file(self):
+    @staticmethod
+    def _log_handler_file():
         handler = logging.handlers.RotatingFileHandler(
             mini_buildd.setup.LOG_FILE,
             maxBytes=5000000,
             backupCount=9,
             encoding="UTF-8")
-        handler.setFormatter(logging.Formatter("%(asctime)s " + self.LOG_FORMAT))
+        handler.setFormatter(logging.Formatter("%(asctime)s " + LOG_FORMAT))
         return handler
 
-    def _log_handler_syslog(self):
+    @staticmethod
+    def _log_handler_syslog():
         handler = logging.handlers.SysLogHandler(
             address="/dev/log".encode("UTF-8"),
             facility=logging.handlers.SysLogHandler.LOG_USER)
-        handler.setFormatter(logging.Formatter(self.LOG_FORMAT))
+        handler.setFormatter(logging.Formatter(LOG_FORMAT))
         return handler
 
-    def _log_handler_console(self):
+    @staticmethod
+    def _log_handler_console():
         handler = logging.StreamHandler()
-        handler.setFormatter(logging.Formatter("%(asctime)s " + self.LOG_FORMAT))
+        handler.setFormatter(logging.Formatter("%(asctime)s " + LOG_FORMAT))
         return handler
 
     def _loglevel(self):
@@ -175,6 +188,7 @@ Comma-separated list of special debugging options:
         # Clear all loggers now; this will remove the
         # preliminary console logger
         LOG.handlers = []
+        LOGW.handlers = []
 
         # Try to add all loggers; collect exceptions to be able
         # to do error reporting later, when hopefully one valid
@@ -184,14 +198,19 @@ Comma-separated list of special debugging options:
             try:
                 handler_func = getattr(self, "_log_handler_" + typ)
                 LOG.addHandler(handler_func())
+                LOGW.addHandler(handler_func())
             except Exception as e:
                 loggers_failed[typ] = e
 
         # Set log level
         LOG.setLevel(self._loglevel())
+        LOGW.setLevel(self._loglevel())
 
         # Global: Don't propagate exceptions that happen while logging
         logging.raiseExceptions = 0
+
+        if "warnings" in mini_buildd.setup.DEBUG:
+            warnings.simplefilter("default")
 
         # Finally, log all errors now that occurred while setting up loggers
         for typ, err in loggers_failed.items():
