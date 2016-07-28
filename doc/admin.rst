@@ -108,6 +108,17 @@ Being a ``staff`` user, you can also `view mini-buildd's log
 
   $ mini-buildd-tool --host=my.ho.st:8066 logcat
 
+Debug run in the console
+------------------------
+
+This example gives you a full treat of logs to the console (you
+may vary with the arguments to suit your needs)::
+
+  # systemctl stop mini-buildd
+  # su - mini-buildd
+  ? PYTHONWARNINGS="default" /usr/sbin/mini-buildd --foreground --verbose --verbose --debug=exception,http,webapp
+
+
 HTTP access log
 ---------------
 Mini-buildd also keeps a standard HTTP access log in ``~/var/log/access.log``.
