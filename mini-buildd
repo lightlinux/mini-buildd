@@ -63,6 +63,11 @@ class PIDFile(object):
 
 class Main(object):
     @classmethod
+    def _reproducible_builds_home(cls):
+        """ On build time, usage is used to auto-generate man page (via help2man). """
+        return "<user-home>" if os.getenv("SOURCE_DATE_EPOCH") else os.getenv("HOME")
+
+    @classmethod
     def _parse_args(cls):
         parser = argparse.ArgumentParser(prog="mini-buildd",
                                          description="Minimal Debian build daemon.",
@@ -77,9 +82,9 @@ class Main(object):
                                 help="SMTP credentials in format '[USER]:[PASSWORD]@smtp|ssmtp://HOST:PORT'.")
         group_conf.add_argument("-U", "--dedicated-user", action="store", default="mini-buildd",
                                 help="Force a custom dedicated user name (to run as a different user than 'mini-buildd').")
-        group_conf.add_argument("-H", "--home", action="store", default=os.getenv("HOME"),
+        group_conf.add_argument("-H", "--home", action="store", default=cls._reproducible_builds_home(),
                                 help="Run with this home dir. The only use case to change this for debugging, really.")
-        group_conf.add_argument("-F", "--pidfile", action="store", default=os.path.join(os.getenv("HOME"), ".mini-buildd.pid"),
+        group_conf.add_argument("-F", "--pidfile", action="store", default=os.path.join(cls._reproducible_builds_home(), ".mini-buildd.pid"),
                                 help="Set pidfile path.")
         group_conf.add_argument("-f", "--foreground", action="store_true",
                                 help="Don't daemonize, log to console.")
