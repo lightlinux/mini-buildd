@@ -77,9 +77,9 @@ class Main(object):
                                 help="SMTP credentials in format '[USER]:[PASSWORD]@smtp|ssmtp://HOST:PORT'.")
         group_conf.add_argument("-U", "--dedicated-user", action="store", default="mini-buildd",
                                 help="Force a custom dedicated user name (to run as a different user than 'mini-buildd').")
-        group_conf.add_argument("-H", "--home", action="store", default=os.getenv("HOME"),
+        group_conf.add_argument("-H", "--home", action="store", default="~",
                                 help="Run with this home dir. The only use case to change this for debugging, really.")
-        group_conf.add_argument("-F", "--pidfile", action="store", default=os.path.join(os.getenv("HOME"), ".mini-buildd.pid"),
+        group_conf.add_argument("-F", "--pidfile", action="store", default="~/.mini-buildd.pid",
                                 help="Set pidfile path.")
         group_conf.add_argument("-f", "--foreground", action="store_true",
                                 help="Don't daemonize, log to console.")
@@ -117,6 +117,10 @@ Comma-separated list of special debugging options:
         # Arguments that imply foreground mode
         if args.set_admin_password or args.loaddata or args.dumpdata:
             args.foreground = True
+
+        # reproducible builds: Expand these for run, leave static for usage (as this is used to build man pages) (thx to Chris Lamb, see Debian Bug #833340)
+        args.home = os.path.expanduser(args.home)
+        args.pidfile = os.path.expanduser(args.pidfile)
 
         return args
 
