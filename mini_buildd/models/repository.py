@@ -225,12 +225,14 @@ packages (to unstable,experimental,..) aimed for Debian.
         def mbd_meta_create_defaults(cls, msglog):
             "Create default layouts and suites."
             stable, created = Suite.mbd_get_or_create(msglog, name="stable")
+            hotfix, created = Suite.mbd_get_or_create(msglog, name="hotfix")
             testing, created = Suite.mbd_get_or_create(msglog, name="testing")
             unstable, created = Suite.mbd_get_or_create(msglog, name="unstable")
             snapshot, created = Suite.mbd_get_or_create(msglog, name="snapshot")
             experimental, created = Suite.mbd_get_or_create(msglog, name="experimental")
 
             for name, extra_options in {"Default": {"stable": "Rollback: 6\n",
+                                                    "hotfix": "Rollback: 4\n",
                                                     "testing": "Rollback: 3\n",
                                                     "unstable": "Rollback: 9\n",
                                                     "snapshot": "Rollback: 12\n",
@@ -245,6 +247,13 @@ packages (to unstable,experimental,..) aimed for Debian.
                         uploadable=False,
                         extra_options=extra_options.get("stable", ""))
                     so_stable.save()
+
+                    so_hotfix = SuiteOption(
+                        layout=default_layout,
+                        suite=hotfix,
+                        migrates_to=so_stable,
+                        extra_options=extra_options.get("hotfix", ""))
+                    so_hotfix.save()
 
                     so_testing = SuiteOption(
                         layout=default_layout,

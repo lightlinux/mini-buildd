@@ -57,10 +57,17 @@ Suite                Flags     Version restriction Example(``test/jessie``)  Rep
 snapshot             U E 12R   ``~<R><C>+0``       ``~test80+0``             No auto, but upgrades     *Continuous integration*     Developer, beta tester.
 ``unstable``         U M 9R    ``~<R><C>+[1-9]``   ``~test80+3``             No auto, but upgrades     *Proposed for live*          Developer, beta tester.
 ``testing``          M 3R      ``~<R><C>+[1-9]``   ``~test80+2``             No auto, but upgrades     *QA testing*                 Quality Assurance.
+``hotfix``           U M 4R    ``~<R><C>+[1-9]``   ``~test80+2+hotfix1``     No auto, but upgrades     *Hotfix proposed for live*   Quality Assurance.
 ``stable``           6R        ``~<R><C>+[1-9]``   ``~test80+1``             No auto, but upgrades     *Live*                       End customer.
 ==================== ========= =================== ========================= ========================= ============================ =======================
 
 ``U``: Uploadable ``M``: Migrates ``E``: Experimental ``NR``: keeps N Rollback versions ``<R>``: Repository Identity ``<C>``: Codename version.
+
+.. note:: The ``hotfix`` suite fills the kludge in a situation
+					when a new version is in ``unstable/testing`` (but no
+					yet ready for ``stable``), but you need but to do
+					important bug fixes to what is in ``stable``
+					immediately (it does migrate to ``stable`` directly).
 
 .. _user_setup:
 
