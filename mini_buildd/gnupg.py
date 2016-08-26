@@ -52,6 +52,15 @@ class Colons(object):
 
 
 class BaseGnuPG(object):
+    @classmethod
+    def flavor(cls):
+        """Parse "1.4" ("classic"), "2.0" ("stable") or "2.1" ("modern")
+        from "gpg --version" output like "gpg (GnuPG) 2.1.14".
+        """
+        version_info = mini_buildd.misc.call(["gpg", "--version"]).splitlines()
+        version_line = version_info[0].split(" ")
+        return version_line[2][0:3]
+
     def __init__(self, home):
         self.home = home
         self.gpg_cmd = ["gpg",
