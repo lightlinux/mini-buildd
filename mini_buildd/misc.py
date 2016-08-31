@@ -542,6 +542,20 @@ def log_call_output(log, prefix, output):
         log("{p}: {l}".format(p=prefix, l=line.decode(mini_buildd.setup.CHAR_ENCODING).rstrip('\n')))
 
 
+def args2shell(args):
+    """
+    Convenience: Convert an argument sequence to a command line maybe-suitable for cut and paste to a shell.
+    """
+    result = ""
+    for a in args:
+        if " " in a:
+            result += "\"" + a + "\""
+        else:
+            result += a
+        result += " "
+    return result
+
+
 def sose_call(args):
     """
     >>> sose_call(["echo", "-n", "hallo"])
@@ -577,7 +591,7 @@ def call(args, run_as_root=False, value_on_error=None, log_output=True, error_lo
     stdout = tempfile.TemporaryFile()
     stderr = tempfile.TemporaryFile()
 
-    LOG.info("Calling: {a}".format(a=" ".join(args)))
+    LOG.info("Calling: {a}".format(a=args2shell(args)))
     try:
         olog = LOG.debug
         try:
