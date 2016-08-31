@@ -53,20 +53,29 @@ class Colons(object):
 
 class BaseGnuPG(object):
     @classmethod
-    def flavor(cls):
-        """Parse "1.4" ("classic"), "2.0" ("stable") or "2.1" ("modern")
-        from "gpg --version" output like "gpg (GnuPG) 2.1.14".
+    def get_flavor(cls):
         """
-        version_info = mini_buildd.misc.call(["gpg", "--version"]).splitlines()
-        version_line = version_info[0].split(" ")
-        return version_line[2][0:3]
+        Ugly-parse GPG binary flavor(=major.minor) "1.4"
+        ("classic"), "2.0" ("stable") or "2.1" ("modern") from
+        "gpg --version" output (like "gpg (GnuPG)
+        2.1.14"). Don't fail but return "unknown" if anything
+        nasty happens.
+        """
+        try:
+            version_info = mini_buildd.misc.call(["gpg", "--version"]).splitlines()
+            version_line = version_info[0].split(" ")
+            return version_line[2][0:3]
+        except:
+            return "unkown"
 
     def __init__(self, home):
+        self.flavor = self.get_flavor()
         self.home = home
         self.gpg_cmd = ["gpg",
                         "--homedir={h}".format(h=home),
                         "--display-charset={charset}".format(charset=mini_buildd.setup.CHAR_ENCODING),
                         "--batch"]
+        LOG.info("GPG {f}: {c}".format(f=self.flavor, c=self.gpg_cmd))
 
     def gen_secret_key(self, template):
         with tempfile.TemporaryFile() as t:
