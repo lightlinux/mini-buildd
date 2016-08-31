@@ -118,6 +118,10 @@ class BaseGnuPG(object):
     def get_first_sec_key_fingerprint(self):
         return self.get_first_sec_colon("fpr").user_id
 
+    def get_first_sec_key_user_id(self):
+        flavor_colon_id = {"2.1": "uid"}
+        return self.get_first_sec_colon(flavor_colon_id.get(self.flavor, "sec")).user_id
+
     def recv_key(self, keyserver, identity):
         return mini_buildd.misc.call(self.gpg_cmd + ["--armor", "--keyserver={ks}".format(ks=keyserver), "--recv-keys", identity])
 
@@ -192,7 +196,7 @@ class TmpGnuPG(BaseGnuPG, mini_buildd.misc.TmpDir):
 
     >>> gnupg.get_first_sec_colon("sec").type
     u'sec'
-    >>> gnupg.get_first_sec_colon("sec").user_id
+    >>> gnupg.get_first_sec_key_user_id()
     u'\\xdcdo \\xdcmlaut <test@key.org>'
     >>> gnupg.get_first_sec_key()  #doctest: +ELLIPSIS
     u'...'
