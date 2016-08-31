@@ -94,17 +94,23 @@ class BaseGnuPG(object):
     def get_sec_colons(self, type_regex="sec"):
         return self._get_colons(list_arg="--list-secret-keys", type_regex=type_regex)
 
-    def get_first_sec_key(self):
+    def _get_first_sec_key(self):
         try:
             return self.get_sec_colons().next()
         except StopIteration:
             return Colons("")
 
-    def get_first_sec_key_fingerprint(self):
+    def get_first_sec_key(self):
+        return self._get_first_sec_key().key_id
+
+    def _get_first_sec_key_fingerprint(self):
         try:
             return self.get_sec_colons(type_regex="fpr").next()
         except StopIteration:
             return Colons("")
+
+    def get_first_sec_key_fingerprint(self):
+        return self._get_first_sec_key_fingerprint().user_id
 
     def recv_key(self, keyserver, identity):
         return mini_buildd.misc.call(self.gpg_cmd + ["--armor", "--keyserver={ks}".format(ks=keyserver), "--recv-keys", identity])
@@ -178,13 +184,13 @@ class TmpGnuPG(BaseGnuPG, mini_buildd.misc.TmpDir):
     >>> gnupg = TmpGnuPG()
     >>> gnupg.gen_secret_key("Key-Type: DSA\\nKey-Length: 1024\\nName-Real: Üdo Ümlaut\\nName-Email: test@key.org")
 
-    >>> gnupg.get_first_sec_key().type
+    >>> gnupg._get_first_sec_key().type
     u'sec'
-    >>> gnupg.get_first_sec_key().user_id
+    >>> gnupg._get_first_sec_key().user_id
     u'\\xdcdo \\xdcmlaut <test@key.org>'
-    >>> gnupg.get_first_sec_key().key_id  #doctest: +ELLIPSIS
+    >>> gnupg._get_first_sec_key().key_id  #doctest: +ELLIPSIS
     u'...'
-    >>> gnupg.get_first_sec_key_fingerprint().user_id  #doctest: +ELLIPSIS
+    >>> gnupg._get_first_sec_key_fingerprint().user_id  #doctest: +ELLIPSIS
     u'...'
 
     >>> t = tempfile.NamedTemporaryFile()

@@ -200,7 +200,7 @@ class KeyringPackage(mini_buildd.misc.TmpDir):
     def __init__(self, identity, gpg, debfullname, debemail, tpl_dir="/usr/share/doc/mini-buildd/examples/packages/archive-keyring-template"):
         super(KeyringPackage, self).__init__()
 
-        self.key_id = gpg.get_first_sec_key().key_id
+        self.key_id = gpg.get_first_sec_key()
         LOG.debug("KeyringPackage using key: '{i}'".format(i=self.key_id))
 
         self.package_name = "{i}-archive-keyring".format(i=identity)

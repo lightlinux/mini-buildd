@@ -189,7 +189,7 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
                        "--chroot-setup-command=touch /etc/sudoers",
                        "--chroot-setup-command=apt-cache policy",
                        "--build-dep-resolver={r}".format(r=self._breq["Build-Dep-Resolver"]),
-                       "--keyid={k}".format(k=self._gnupg.get_first_sec_key().key_id),
+                       "--keyid={k}".format(k=self._gnupg.get_first_sec_key()),
                        "--nolog", "--log-external-command-output", "--log-external-command-error"]
 
         if "Arch-All" in self._breq:
