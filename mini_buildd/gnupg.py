@@ -78,8 +78,11 @@ class BaseGnuPG(object):
         LOG.info("GPG {f}: {c}".format(f=self.flavor, c=self.gpg_cmd))
 
     def gen_secret_key(self, template):
+        flavor_additions = {"2.1": "\n%no-protection"}
+
         with tempfile.TemporaryFile() as t:
             t.write(template.encode(mini_buildd.setup.CHAR_ENCODING))
+            t.write(flavor_additions.get(self.flavor, ""))
             t.seek(0)
             mini_buildd.misc.call(self.gpg_cmd + ["--gen-key"], stdin=t)
 
