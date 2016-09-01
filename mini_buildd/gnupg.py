@@ -78,7 +78,7 @@ class BaseGnuPG(object):
         LOG.info("GPG {f}: {c}".format(f=self.flavor, c=self.gpg_cmd))
 
     def gen_secret_key(self, template):
-        flavor_additions = {"2.1": "\n%no-protection"}
+        flavor_additions = {"2.1": "\n%no-protection\n"}
 
         with tempfile.TemporaryFile() as t:
             t.write(template.encode(mini_buildd.setup.CHAR_ENCODING))
