@@ -94,7 +94,7 @@ class BaseGnuPG(object):
         return mini_buildd.misc.call(self.gpg_cmd + ["--armor", "--export={i}".format(i=identity)])
 
     def _get_colons(self, list_arg="--list-public-keys", type_regex=".*"):
-        for line in mini_buildd.misc.call(self.gpg_cmd + [list_arg, "--with-fingerprint", "--with-colons"]).splitlines():
+        for line in mini_buildd.misc.call(self.gpg_cmd + [list_arg, "--with-colons", "--fixed-list-mode", "--with-fingerprint", "--with-fingerprint"]).splitlines():
             colons = Colons(line)
             LOG.debug("{c}".format(c=colons))
             if re.match(type_regex, colons.type):
@@ -119,8 +119,7 @@ class BaseGnuPG(object):
         return self.get_first_sec_colon("fpr").user_id
 
     def get_first_sec_key_user_id(self):
-        flavor_colon_id = {"2.1": "uid"}
-        return self.get_first_sec_colon(flavor_colon_id.get(self.flavor, "sec")).user_id
+        return self.get_first_sec_colon("uid").user_id
 
     def recv_key(self, keyserver, identity):
         return mini_buildd.misc.call(self.gpg_cmd + ["--armor", "--keyserver={ks}".format(ks=keyserver), "--recv-keys", identity])
