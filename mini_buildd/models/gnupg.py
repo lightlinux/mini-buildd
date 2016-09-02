@@ -63,13 +63,17 @@ class GnuPGPublicKey(mini_buildd.models.base.StatusModel):
                 gpg.recv_key(self.mbd_get_daemon().model.gnupg_keyserver, self.key_id)
                 self.key = gpg.get_pub_key(self.key_id)
 
-            for colons in gpg.get_pub_colons(type_regex="^(pub|fpr)$"):
-                if colons.type == "pub":
+            self.key_long_id = ""
+            self.key_name = ""
+            self.key_fingerprint = ""
+            for colons in gpg.get_pub_colons(type_regex="^(pub|fpr|uid)$"):
+                if not self.key_long_id and colons.type == "pub":
                     self.key_long_id = colons.key_id
                     self.key_created = colons.creation_date
                     self.key_expires = colons.expiration_date
+                if not self.key_name and colons.type == "uid":
                     self.key_name = colons.user_id
-                if colons.type == "fpr":
+                if not self.key_fingerprint and colons.type == "fpr":
                     self.key_fingerprint = colons.user_id
             # Update the user-given key id by it's long version
             self.key_id = self.key_long_id
