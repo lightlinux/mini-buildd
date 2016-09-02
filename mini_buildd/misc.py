@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import os
+import platform
 import copy
 import datetime
 import shutil
@@ -23,6 +24,7 @@ import urlparse
 import getpass
 import logging
 import logging.handlers
+from distutils.version import LooseVersion
 
 import debian.debian_support
 
@@ -38,6 +40,9 @@ except ImportError:
 import mini_buildd.setup  # pylint: disable=wrong-import-position
 
 LOG = logging.getLogger(__name__)
+
+# "Python 2 compat flags"
+PY2_HAS_URLLIB2_CAFILE = LooseVersion(platform.python_version()) >= LooseVersion("2.7.9")
 
 
 def open_utf8(path, mode="r", **kwargs):
@@ -790,7 +795,7 @@ def urlopen_ca_certificates(url):
     (See https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=832350).
     """
     cafile = "/etc/ssl/certs/ca-certificates.crt"
-    return urllib2.urlopen(url, cafile=cafile) if os.path.exists(cafile) else urllib2.urlopen(url)
+    return urllib2.urlopen(url, cafile=cafile) if (PY2_HAS_URLLIB2_CAFILE and os.path.exists(cafile)) else urllib2.urlopen(url)
 
 
 def canonize_url(url):
