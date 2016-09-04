@@ -166,43 +166,45 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
         with mini_buildd.misc.open_utf8(sources_list_file) as sources_list:
             for apt_line in sources_list:
                 if re.match("deb https", apt_line):
-                    apt_transports = ["--chroot-setup-command=apt-get --yes --option=APT::Install-Recommends=false install ca-certificates apt-transport-https"]
+                    apt_transports = ["--chroot-setup-command", "apt-get --yes --option=APT::Install-Recommends=false install ca-certificates apt-transport-https"]
                     LOG.info("{p}: Found https source: {l}".format(p=self.key, l=apt_line))
                     break
 
         sbuild_cmd = ["sbuild",
-                      "--dist={0}".format(self.distribution),
-                      "--arch={0}".format(self.architecture),
-                      "--chroot={c}".format(c=self._chroot)]
+                      "--dist", self.distribution,
+                      "--arch", self.architecture,
+                      "--chroot", self._chroot]
         sbuild_cmd += apt_transports
-        sbuild_cmd += ["--chroot-setup-command=cp {s} /etc/apt/sources.list".format(s=sources_list_file),
-                       "--chroot-setup-command=cat /etc/apt/sources.list",
-                       "--chroot-setup-command=cp {p}/apt_preferences /etc/apt/preferences".format(p=self._build_dir),
-                       "--chroot-setup-command=cat /etc/apt/preferences",
+        sbuild_cmd += ["--chroot-setup-command", "cp {s} /etc/apt/sources.list".format(s=sources_list_file),
+                       "--chroot-setup-command", "cat /etc/apt/sources.list",
+                       "--chroot-setup-command", "cp {p}/apt_preferences /etc/apt/preferences".format(p=self._build_dir),
+                       "--chroot-setup-command", "cat /etc/apt/preferences",
                        # We use apt-key explicitly here, so we need gnupg. https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=831749
-                       "--chroot-setup-command=apt-get --yes --option=APT::Install-Recommends=false install gnupg",
-                       "--chroot-setup-command=apt-key add {p}/apt_keys".format(p=self._build_dir),
-                       "--chroot-setup-command=apt-get --option=Acquire::Languages=none update",
-                       "--chroot-setup-command={p}/chroot_setup_script".format(p=self._build_dir),
-                       "--chroot-setup-command=cat {p}/chroot_setup_script".format(p=self._build_dir),
-                       "--chroot-setup-command=rm -v -f /etc/sudoers",
-                       "--chroot-setup-command=touch /etc/sudoers",
-                       "--chroot-setup-command=apt-cache policy",
-                       "--build-dep-resolver={r}".format(r=self._breq["Build-Dep-Resolver"]),
-                       "--keyid={k}".format(k=self._gnupg.get_first_sec_key()),
-                       "--nolog", "--log-external-command-output", "--log-external-command-error"]
+                       "--chroot-setup-command", "apt-get --yes --option=APT::Install-Recommends=false install gnupg",
+                       "--chroot-setup-command", "apt-key add {p}/apt_keys".format(p=self._build_dir),
+                       "--chroot-setup-command", "apt-get --option=Acquire::Languages=none update",
+                       "--chroot-setup-command", "{p}/chroot_setup_script".format(p=self._build_dir),
+                       "--chroot-setup-command", "cat {p}/chroot_setup_script".format(p=self._build_dir),
+                       "--chroot-setup-command", "rm -v -f /etc/sudoers",
+                       "--chroot-setup-command", "touch /etc/sudoers",
+                       "--chroot-setup-command", "apt-cache policy",
+                       "--build-dep-resolver", self._breq["Build-Dep-Resolver"],
+                       "--keyid", self._gnupg.get_first_sec_key(),
+                       "--nolog",
+                       "--log-external-command-output",
+                       "--log-external-command-error"]
 
         if "Arch-All" in self._breq:
-            sbuild_cmd.append("--arch-all")
+            sbuild_cmd += ["--arch-all"]
 
         if "Run-Lintian" in self._breq:
-            sbuild_cmd.append("--run-lintian")
+            sbuild_cmd += ["--run-lintian"]
             # Be sure not to use --suppress-tags when its not availaible (only >=squeeze).
             if mini_buildd.misc.Distribution(self.distribution).has_lintian_suppress():
-                sbuild_cmd.append("--lintian-opts=--suppress-tags=bad-distribution-in-changes-file")
-            sbuild_cmd.append("--lintian-opts={o}".format(o=self._breq["Run-Lintian"]))
+                sbuild_cmd += ["--lintian-opts", "--suppress-tags=bad-distribution-in-changes-file"]
+            sbuild_cmd += ["--lintian-opts", self._breq["Run-Lintian"]]
 
-        sbuild_cmd.append(self._breq.dsc_name)
+        sbuild_cmd += [self._breq.dsc_name]
 
         # Actually run sbuild
         mini_buildd.misc.sbuild_keys_workaround()
