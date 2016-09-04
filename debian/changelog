@@ -1,3 +1,50 @@
+mini-buildd (1.0.17) unstable; urgency=medium
+
+  gnupg 1.4/2.1 compatibility release. This also adds the new 'hotfix'
+  suite to the default layout (see docs) and various fixes...
+
+  * [b513a9e] mini-buildd: Generate reproducible mini-buildd man page.
+    (Closes: 833340)
+  * [c3969de] control: Vcs-*: Update to anonscm.debian.org. Thanks to
+    Boyuan Yang (Closes: 833338)
+  * [fd99541] Revert "mini-buildd: Generate reproducible mini-buildd man
+    page."
+  * [2194991] mini-buildd: man page/reproducible builds: Use Chris' patch
+    (which is nicer than my previous patch).
+  * [460a6e1] wizards: Add "hotfix" suite to default layout.
+  * [7ab128f] gnupg.py: Add flavor() method (compute 'gpg flavor'). Not
+    used currently.
+  * [88fc314] gnupg.py: Use extra methods to get key and fingerprint form
+    1st secret key.
+  * [2b6cb38] gnupg.py: Simplify internal impl.
+  * [9daee35] gnupg.py: Add flavor class variable (and fail-proof flavor
+    getter).
+  * [e993dc5] gnupg.py: GPG 2.1: Add '%no-protection' to key generator
+    template.
+  * [8ee94bc] gnupg.py: Add extra method to get sec user id. Fixes doctest
+    for GPG 2.1. Thanks to Santiago Vila (Closes: 834683)
+  * [2b29745] misc.py, builder.py: Try to log calls more suitable for cut-
+    and-paste debugging. Thanks to Marc Haber (Closes: 797585)
+  * [3320484] control: Add dirmngr depends for mini-buildd (needed for GPG
+    2.1 'recv-keys' functionality).
+  * [61302c6] gnupg.py: Add newline for (2.1) template flavor option
+    (needed for 'gen-key' from within mini-buildd).
+  * [3047d2f] control: Depend on sbuild >= 0.71. Fixes (1) builds in
+    chroots >= stretch (where gpg is gpg 2.1)) and (2) mini-buildd's
+    sbuild key workaround (via gpg 2.1 fixup in sbuild, and revertion of
+    ascii keyrings in sbuild 0.71). Thanks to Marc Haber (Closes: 834321,
+    834329)
+  * [969b12a] misc.py: Add compat for urlopen with python versions < 2.7.9
+    (relevant for wheezy installations only).
+  * [e149d03] gnupg.py: For '--with-colons' calls, use arguments that
+    deliver the same result for GPG 1.4 and 2.1.
+  * [a0c941d] models/gnupg.py: Fix for slightly changed GPG 2.1-style
+    colons output.
+  * [c058f99] builder.py: Cleanup subprocess sequence code for sbuild
+    call.
+
+ -- Stephan Sürken <absurd@debian.org>  Sun, 04 Sep 2016 18:06:18 +0000
+
 mini-buildd (1.0.16) unstable; urgency=medium
 
   * [9614fc9] wizards: Add support for Ubuntu "xenial".
