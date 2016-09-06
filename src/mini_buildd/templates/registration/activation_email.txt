@@ -1,8 +1,14 @@
 Dear user,
 
-you have requested a registration for a mini-buildd user at {{ site.name }}.
+a user registration has been requested via
 
-You may use this link within {{ expiration_days }} days to complete the registration:
+"{{ user.email }}"
+
+for the new mini-buildd user
+
+"{{ user.username }}" at "{{ site.name }}".
+
+Use this link to complete the registration within {{ expiration_days }} days:
 
 http://{{site.domain}}/accounts/activate/{{ activation_key }}
 

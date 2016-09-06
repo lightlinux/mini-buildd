@@ -1,1 +1,1 @@
-mini-buildd user registration request from {{ site.name }}
+[mini-buildd ({{ site.name }})] User Registration
