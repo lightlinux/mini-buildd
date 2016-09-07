@@ -9,26 +9,34 @@
 [ "${CHROOT_SESSION_SOURCE}" != "true" ] || { printf "I: Not acting on source chroots, skipping...\n"; exit 0; }
 printf "%s" "${CHROOT_NAME}" | grep -q "^mini-buildd" || { printf "I: Not a mini-buildd chroot, skipping...\n"; exit 0; }
 
-# This crude quick fix workaround for
+# '/dev/shm' might be a symlink to '/run/shm' in some
+# chroots. Depending on the system mini-buildd/sbuild runs on
+# and what chroot is being build for this may or may not lead to
+# one or both of these problems:
 #
-# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=728096
+# - shm not mounted properly in build chroot (leading to build errors when shm is used).
+# - shm mount on *the host* gets overloaded (leading to an shm mount "leaking" on the host).
 #
-# When using systemd (jessie/sid), you will need this (while the
-# bug is not fixed) to make some (i.e., those who use /run/shm
-# with /dev/shm a symlink to run like wheezy does) distribution
-# chroots work.
-mini_buildd_workarounds_shmbug728096()
+# This workaround
+#
+# - [in '/etc/schroot/mini-buildd/fstab-generic'] Removes shm form the generic sbuuod mounts (avoids the mount leaking).
+# - [here] Fixes /dev/shm to a directory in case it's not.
+# - [here] Always mounts /dev/shm itself.
+#
+# Debian Bug: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=728096
+#
+# When this is fixed (and we have added a verisoned depends on
+# schroot accordingly), all of the above may be reverted again.
+#
+mini_buildd_workarounds_shm()
 {
-	printf "I: Workaround for: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=728096\n"
+	printf "I: Workaround(shm, Bug #728096):\n"
 
-	# Skip conditions
-	[ -d "/run/systemd/system" ] || { printf "I: shmbug728096: Not using systemd (/dev/shm), skipping ...\n"; return 0; }
-	[ "$(/bin/readlink "${CHROOT_PATH}/dev/shm")" = "/run/shm" ] || { printf "I: shmbug728096: Chroot does not/no longer symlink /dev/shm to /run/shm, skipping ...\n"; return 0; }
-
-	# The actual workaround: Just make /dev/shm a directory.
-	printf "W: shmbug728096: Fixing SHM symlink in chroot (systemd?)...\n" >&2
-	rm -v "${CHROOT_PATH}/dev/shm"
-	mkdir -v "${CHROOT_PATH}/dev/shm"
+	if [ -L "${CHROOT_PATH}/dev/shm" ]; then
+		printf "W: Worakround(shm): Replacing /dev/shm symlink by directory...\n" >&2
+		rm -v "${CHROOT_PATH}/dev/shm"
+		mkdir -v "${CHROOT_PATH}/dev/shm"
+	fi
 	mount -v -ttmpfs none "${CHROOT_PATH}/dev/shm"
 }
 
@@ -38,6 +46,8 @@ mini_buildd_workarounds_shmbug728096()
 #
 mini_buildd_workarounds_archived()
 {
+	printf "I: Workaround(archived):\n"
+
 	case ${CHROOT_NAME} in
 		*-etch-*|*-lenny-*|*-squeeze-*)
 			printf "I: ${CHROOT_NAME}: Archived distribution: Disabling Valid-Until check...\n"
@@ -46,5 +56,5 @@ mini_buildd_workarounds_archived()
 	esac
 }
 
-mini_buildd_workarounds_shmbug728096
+mini_buildd_workarounds_shm
 mini_buildd_workarounds_archived
