@@ -224,3 +224,6 @@ man_pages = [('index', 'mini-buildd', u'mini-buildd Documentation',
 
 # -- Custom options ------------------------------------------------------------
 todo_include_todos = True
+
+# reproducibility: Without this option, todo will add absolute build-time document paths
+todo_link_only = True
