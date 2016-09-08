@@ -253,11 +253,16 @@ class Distribution(object):
     """
     A mini-buildd distribution string.
 
+    Normal distribution:
+
     >>> d = Distribution("squeeze-test-stable")
     >>> d.codename, d.repository, d.suite
     (u'squeeze', u'test', u'stable')
     >>> d.get()
     u'squeeze-test-stable'
+
+    Rollback distribution:
+
     >>> d = Distribution("squeeze-test-stable-rollback5")
     >>> d.is_rollback
     True
@@ -267,22 +272,46 @@ class Distribution(object):
     u'squeeze-test-stable-rollback5'
     >>> d.rollback_no
     5
+
+    Malformed distributions:
+
+    >>> Distribution("-squeeze-stable")
+    Traceback (most recent call last):
+    ...
+    Exception: Malformed distribution '-squeeze-stable': Must be '<codename>-<repoid>-<suite>[-rollback<n>]'
+
+    >>> Distribution("squeeze--stable")
+    Traceback (most recent call last):
+    ...
+    Exception: Malformed distribution 'squeeze--stable': Must be '<codename>-<repoid>-<suite>[-rollback<n>]'
+
+    >>> Distribution("squeeze-test-stable-")
+    Traceback (most recent call last):
+    ...
+    Exception: Malformed distribution 'squeeze-test-stable-': Must be '<codename>-<repoid>-<suite>[-rollback<n>]'
+
+    >>> Distribution("squeeze-test-stable-rollback")
+    Traceback (most recent call last):
+    ...
+    Exception: Malformed distribution 'squeeze-test-stable-rollback': Must be '<codename>-<repoid>-<suite>[-rollback<n>]'
+
+    >>> Distribution("squeeze-test-stable-rolback0")
+    Traceback (most recent call last):
+    ...
+    Exception: Malformed distribution 'squeeze-test-stable-rolback0': Must be '<codename>-<repoid>-<suite>[-rollback<n>]'
     """
+
+    _REGEX = re.compile(r"^\w+-\w+-\w+?(-rollback\d+)?$")
+
     def __init__(self, dist, meta_map=None):
+        if not self._REGEX.match(dist):
+            raise Exception("Malformed distribution '{d}': Must be '<codename>-<repoid>-<suite>[-rollback<n>]'".format(d=dist))
+
         self.given_dist = dist
         self.dist = meta_map.get(dist, dist) if meta_map else dist
         LOG.debug("Parsing dist {gd} (maps to {d})...".format(gd=self.given_dist, d=self.dist))
 
         self._dsplit = self.dist.split("-")
-
-        def some_empty():
-            for d in self._dsplit:
-                if not d:
-                    return True
-            return False
-
-        if (len(self._dsplit) < 3 or len(self._dsplit) > 4) or some_empty():
-            raise Exception("Malformed distribution '{d}': Must be 'CODENAME-REPOID-SUITE[-rollbackN]'".format(d=self.dist))
 
     def get(self, rollback=True):
         if rollback:
