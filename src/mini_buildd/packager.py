@@ -154,9 +154,9 @@ class Package(mini_buildd.misc.Status):
     def move_to_pkglog(self):
         # Archive build results and request
         for _arch, c in self.success.items() + self.failed.items() + self.requests.items():
-            c.move_to_pkglog(self.get_status() == self.INSTALLED)
+            c.move_to_pkglog(self.get_status() == self.INSTALLED, rejected=self.get_status() == self.REJECTED)
         # Archive incoming changes
-        self.changes.move_to_pkglog(self.get_status() == self.INSTALLED)
+        self.changes.move_to_pkglog(self.get_status() == self.INSTALLED, rejected=self.get_status() == self.REJECTED)
 
         # Purge complete package spool dir (if precheck failed, spool dir will not be present, so we need to ignore errors here)
         mini_buildd.misc.skip_if_keep_in_debug(shutil.rmtree, self.changes.get_spool_dir(), ignore_errors=True)

@@ -292,8 +292,9 @@ class Changes(debian.deb822.Changes):
         else:
             LOG.info("No tar file (skipping): {f}".format(f=tar_file))
 
-    def move_to_pkglog(self, installed):
-        logdir = self.get_pkglog_dir(installed, relative=False)
+    def move_to_pkglog(self, installed, rejected=False):
+        logdir = None if rejected else self.get_pkglog_dir(installed, relative=False)
+
         if logdir and not os.path.exists(logdir):
             os.makedirs(logdir)
 
