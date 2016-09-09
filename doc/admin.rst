@@ -498,6 +498,17 @@ On mini-buildd's home, you will find action buttons to
 create+build keyring packages, as well as running test packages.
 
 
+Cruft in ~/var/log
+==================
+
+With mini-buildd <= 1.0.17, rejected packages where logged here
+too, which may have lead to cruft that is never cleaned up. You
+may run::
+
+	~mini-buildd? /usr/share/doc/mini-buildd/examples/reject-cleanup
+
+as user ``mini-buildd`` to find and get rid of them.
+
 Migrate packages from 0.8.x
 ===========================
 
