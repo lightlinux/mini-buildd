@@ -150,6 +150,14 @@ chroots (with <tt>qemu-user-static</tt> installed).
         return []
 
     def mbd_get_sequence(self):
+        # In case a source was removed, we might not be able to get an archive URL for debootstrap.
+        # We should be able to assemble the sequence anyway to be able to remove that chroot.
+        try:
+            debootstrap_url = self.source.mbd_get_archive().url
+        except:
+            LOG.warning("{c}: Can't get archive URL from source (source removed?).".format(c=self))
+            debootstrap_url = "no_archive_url_found_maybe_source_is_removed"
+
         return [
             (["/bin/mkdir", "--verbose", self.mbd_get_tmp_dir()],
              ["/bin/rm", "--recursive", "--one-file-system", "--force", self.mbd_get_tmp_dir()])] + self.mbd_get_backend().mbd_get_pre_sequence() + [
@@ -159,7 +167,7 @@ chroots (with <tt>qemu-user-static</tt> installed).
                    "--arch={a}".format(a=self.architecture.name),
                    self.source.codename,
                    self.mbd_get_tmp_dir(),
-                   self.source.mbd_get_archive().url],
+                   debootstrap_url],
                   ["/bin/umount", "-v", os.path.join(self.mbd_get_tmp_dir(), "proc"), os.path.join(self.mbd_get_tmp_dir(), "sys")])] + self.mbd_get_backend().mbd_get_post_sequence() + [
                       (["/bin/cp", "--verbose", self.mbd_get_schroot_conf_file(), self.mbd_get_system_schroot_conf_file()],
                        ["/bin/rm", "--verbose", self.mbd_get_system_schroot_conf_file()])]
