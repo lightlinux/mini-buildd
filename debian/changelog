@@ -1,3 +1,31 @@
+mini-buildd (1.0.18) unstable; urgency=medium
+
+  This release addresses a number of pet-peeves hovering along on my
+  roadmap for some time (also fixes yet another issue for reproducible
+  builds).
+
+  * [15aa501] project structure: Add src/ subdirectory: All python source.
+  * [d230082] registration: Add custom email templates for password reset
+    (fixes per-mail password reset funcionality).
+  * [85c7be5] registration: Adapt/improve custom email templates for
+    account activation.
+  * [2e457fe] 15mini-buildd-workarounds: Improve SHM workaround: Also
+    avoid /dev/shm host 'overmount leaking'.
+  * [7d608bd] examples/packages/mbd-test-cpp: Check if SHM is working
+    inside the build.
+  * [0b49056] examples/packages/mbd-test-cpp: autotools update.
+  * [bdd88d8] misc.py: Distribution: Validate distribution string via
+    regex (improves error handling for some corner cases).
+  * [9e6c404] doc/conf.py: Set 'todo_link_only' (for reproducible builds).
+  * [0ac02be] packager: No longer log "rejected" packages (fixes possible
+    cruft in ~/var/log/ for uploads with malformed distributions).
+  * [26a0b5d] examples/reject-cleanup: Add example tool to (manually)
+    clean up possible ~/var/log cruft, and add some admin docs for it.
+  * [4392855] chroot: Make chroots removable even if source has been
+    removed.
+
+ -- Stephan Sürken <absurd@debian.org>  Sun, 11 Sep 2016 16:36:50 +0000
+
 mini-buildd (1.0.17) unstable; urgency=medium
 
   gnupg 1.4/2.1 compatibility release. This also adds the new 'hotfix'
