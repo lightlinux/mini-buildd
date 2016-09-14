@@ -190,17 +190,20 @@ Name-Email: {e}
 
 class TmpGnuPG(BaseGnuPG, mini_buildd.misc.TmpDir):
     """
-    >>> gnupg = TmpGnuPG()
-    >>> gnupg.gen_secret_key("Key-Type: DSA\\nKey-Length: 1024\\nName-Real: Üdo Ümlaut\\nName-Email: test@key.org")
+    >>> # mini_buildd.setup.DEBUG.append("keep")  # Enable 'keep' for debugging only
+    >>> gnupg_home = mini_buildd.misc.TmpDir()
+    >>> shutil.copy2("./examples/doctests/gpg/secring.gpg", gnupg_home.tmpdir)
+    >>> shutil.copy2("./examples/doctests/gpg/pubring.gpg", gnupg_home.tmpdir)
+    >>> gnupg = BaseGnuPG(home=gnupg_home.tmpdir)
 
     >>> gnupg.get_first_sec_colon("sec").type
     u'sec'
     >>> gnupg.get_first_sec_key_user_id()
     u'\\xdcdo \\xdcmlaut <test@key.org>'
     >>> gnupg.get_first_sec_key()  #doctest: +ELLIPSIS
-    u'...'
+    u'AF95FC80FC40A82E'
     >>> gnupg.get_first_sec_key_fingerprint()  #doctest: +ELLIPSIS
-    u'...'
+    u'4FB13BDD777C046D72D4E7D3AF95FC80FC40A82E'
 
     >>> t = tempfile.NamedTemporaryFile()
     >>> t.write("A test file\\n")
@@ -208,7 +211,6 @@ class TmpGnuPG(BaseGnuPG, mini_buildd.misc.TmpDir):
     >>> gnupg.sign(file_name=t.name, identity="test@key.org")
     >>> gnupg.verify(t.name)
     >>> pub_key = gnupg.get_pub_key(identity="test@key.org")
-    >>> gnupg.close()
     >>> tgnupg = TmpGnuPG()
     >>> tgnupg.add_pub_key(pub_key)
     >>> tgnupg.verify(t.name)
