@@ -7,7 +7,7 @@
 # Skip conditions
 [ "${1}" = "setup-start" ] || exit 0
 [ "${CHROOT_SESSION_SOURCE}" != "true" ] || { printf "I: Not acting on source chroots, skipping...\n"; exit 0; }
-printf "%s" "${CHROOT_NAME}" | grep -q "^mini-buildd" || { printf "I: Not a mini-buildd chroot, skipping...\n"; exit 0; }
+printf "%s" "${CHROOT_NAME}" | grep -q "^mini-buildd" || { printf "Not a mini-buildd chroot, skipping...\n"; exit 0; }
 
 # '/dev/shm' might be a symlink to '/run/shm' in some
 # chroots. Depending on the system mini-buildd/sbuild runs on
@@ -30,10 +30,10 @@ printf "%s" "${CHROOT_NAME}" | grep -q "^mini-buildd" || { printf "I: Not a mini
 #
 mini_buildd_workarounds_shm()
 {
-	printf "I: Workaround(shm, Bug #728096):\n"
+	printf "=> Fixing up /dev/shm mount (Bug #728096):\n"
 
 	if [ -L "${CHROOT_PATH}/dev/shm" ]; then
-		printf "W: Worakround(shm): Removing /dev/shm symlink...\n" >&2
+		printf "Removing ${CHROOT_PATH}/dev/shm symlink...\n"
 		rm -v "${CHROOT_PATH}/dev/shm"
 	fi
 	mkdir -v -p "${CHROOT_PATH}/dev/shm"
@@ -46,11 +46,9 @@ mini_buildd_workarounds_shm()
 #
 mini_buildd_workarounds_archived()
 {
-	printf "I: Workaround(archived):\n"
-
 	case ${CHROOT_NAME} in
 		*-etch-*|*-lenny-*|*-squeeze-*)
-			printf "I: ${CHROOT_NAME}: Archived distribution: Disabling Valid-Until check...\n"
+			printf "=> Disabling 'Check-Valid-Until' for archived distribution ${CHROOT_NAME}.\n"
 			printf "Acquire::Check-Valid-Until \"false\";\n" >"${CHROOT_PATH}/etc/apt/apt.conf.d/10disable-check-valid-until"
 			;;
 	esac
