@@ -33,10 +33,10 @@ mini_buildd_workarounds_shm()
 	printf "I: Workaround(shm, Bug #728096):\n"
 
 	if [ -L "${CHROOT_PATH}/dev/shm" ]; then
-		printf "W: Worakround(shm): Replacing /dev/shm symlink by directory...\n" >&2
+		printf "W: Worakround(shm): Removing /dev/shm symlink...\n" >&2
 		rm -v "${CHROOT_PATH}/dev/shm"
-		mkdir -v "${CHROOT_PATH}/dev/shm"
 	fi
+	mkdir -v -p "${CHROOT_PATH}/dev/shm"
 	mount -v -ttmpfs none "${CHROOT_PATH}/dev/shm"
 }
 
