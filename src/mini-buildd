@@ -98,6 +98,7 @@ Comma-separated list of special debugging options:
 'exception' (log tracebacks in exception handlers),
 'http' (put http server [cherrypy] in debug mode),
 'webapp' (put web application [django] in debug mode),
+'sbuild' (run sbuild in debug mode),
 'keep' (keep spool and temporary directories),
 'profile' (produce cProfile dump in log directory).""")
 

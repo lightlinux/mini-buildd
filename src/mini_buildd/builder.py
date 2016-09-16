@@ -204,6 +204,9 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
                 sbuild_cmd += ["--lintian-opts", "--suppress-tags=bad-distribution-in-changes-file"]
             sbuild_cmd += ["--lintian-opts", self._breq["Run-Lintian"]]
 
+        if "sbuild" in mini_buildd.setup.DEBUG:
+            sbuild_cmd += ["--debug"]
+
         sbuild_cmd += [self._breq.dsc_name]
 
         # Actually run sbuild

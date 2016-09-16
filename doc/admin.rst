@@ -98,6 +98,9 @@ software components* used by mini-buildd. Full documentation of
 these options can be found via ``mini-buildd --help`` or the
 manual page :manpage:`mini-buildd(8)`.
 
+.. versionadded:: 1.0.19
+	 Debug option *sbuild*.
+
 Just use ``dpkg-reconfigure mini-buildd`` or edit
 ``/etc/default/mini-buildd`` to set any of these options
 permanently.
