@@ -62,11 +62,15 @@ class PIDFile(object):
 
 
 class Main(object):
+    class ArgumentDefaultsRawTextHelpFormatter(argparse.RawTextHelpFormatter, argparse.ArgumentDefaultsHelpFormatter):
+        """Custom argparse help formatter (mixin): We like to use raw text, but also have default values shown."""
+        pass
+
     @classmethod
     def _parse_args(cls):
         parser = argparse.ArgumentParser(prog="mini-buildd",
                                          description="Minimal Debian build daemon.",
-                                         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+                                         formatter_class=cls.ArgumentDefaultsRawTextHelpFormatter)
 
         parser.add_argument("--version", action="version", version=mini_buildd.__version__)
 
