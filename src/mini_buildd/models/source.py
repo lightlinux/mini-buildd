@@ -235,12 +235,12 @@ codeversion is only used for base sources.""")
 
     class Meta(mini_buildd.models.base.StatusModel.Meta):
         unique_together = ("origin", "codename")
-        ordering = ["origin", "codename"]
+        ordering = ["origin", "-codeversion", "codename"]
 
     class Admin(mini_buildd.models.base.StatusModel.Admin):
-        list_display = mini_buildd.models.base.StatusModel.Admin.list_display + ["origin", "codename"]
-        search_fields = ["origin", "codename"]
-        ordering = ["origin", "codename"]
+        list_display = mini_buildd.models.base.StatusModel.Admin.list_display + ["origin", "codeversion", "codename"]
+        search_fields = ["origin", "codeversion", "codename"]
+        ordering = ["origin", "-codeversion", "codename"]
 
         readonly_fields = ["codeversion", "archives", "components", "architectures", "description"]
         fieldsets = (

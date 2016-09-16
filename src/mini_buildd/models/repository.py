@@ -505,6 +505,9 @@ $build_environment = { 'CCACHE_DIR' => '%LIBDIR%/.ccache' };
 </pre>
 """)
 
+    class Meta(mini_buildd.models.base.StatusModel.Meta):
+        ordering = ["base_source"]
+
     class Admin(mini_buildd.models.base.Model.Admin):
         fieldsets = (
             ("Basics", {"fields": ("base_source", "extra_sources", "components")}),
