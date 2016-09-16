@@ -214,7 +214,9 @@ class TmpGnuPG(BaseGnuPG, mini_buildd.misc.TmpDir):
     >>> tgnupg = TmpGnuPG()
     >>> tgnupg.add_pub_key(pub_key)
     >>> tgnupg.verify(t.name)
+
     >>> tgnupg.close()
+    >>> gnupg_home.close()
     """
     def __init__(self):
         mini_buildd.misc.TmpDir.__init__(self)
