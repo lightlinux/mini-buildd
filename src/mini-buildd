@@ -82,9 +82,9 @@ class Main(object):
         group_conf.add_argument("-U", "--dedicated-user", action="store", default="mini-buildd",
                                 help="Force a custom dedicated user name (to run as a different user than 'mini-buildd').")
         group_conf.add_argument("-H", "--home", action="store", default="~",
-                                help="Run with this home dir. The only use case to change this for debugging, really.")
+                                help="Run with this home dir (you may use '~' for user expansion). The only use case to change this for debugging, really.")
         group_conf.add_argument("-F", "--pidfile", action="store", default="~/.mini-buildd.pid",
-                                help="Set pidfile path.")
+                                help="Set pidfile path (you may use '~' for user expansion).")
         group_conf.add_argument("-f", "--foreground", action="store_true",
                                 help="Don't daemonize, log to console.")
 
