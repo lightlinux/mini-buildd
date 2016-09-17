@@ -1,3 +1,28 @@
+mini-buildd (1.0.19) unstable; urgency=medium
+
+  * [a0e7da1] gnupg.py: Modify doctest to use pre-arranged keys (make
+    testsuite not block if entropy is sparse). (Closes: 834683)
+  * [36b71b1] control: Update dep. for schroot (>= 1.6.10-2~): We need
+    'CHROOT_SESSION_SOURCE' in shm workaround.
+  * [37b8a34] control: Update debootstrap dep: >= 1.0.81~ (newest
+    available for all dists we support).
+  * [5d03cdb] schroot: 15mini-buildd-workarounds: Don't fail even if
+    /dev/shm is missing from source chroot completely.
+  * [dfe8b2b] 15mini-buildd-workarounds: Some more output cosmetics.
+  * [4603275] mini-buildd: Add 'sbuild' debug option.
+  * [5638dc0] mini-buildd --help: Improve readability (using custom
+    formatter).
+  * [b771e04] mini-buildd --help: Add note about '~-Expansion' for --home
+    and --pidfile.
+  * [22bd0e6] Sort 'Sources' by codeversion (after origin), and sort
+    Distributions by source (fixes up default sorting for all released
+    Distributions).
+  * [0308b22] gnupg.py/doctest: Also close the new gpg TmpDir.
+  * [62d81fe] control: Dep: Avoid schroot >= 1.7 for now (atm, we are not
+    compatible with schroot 1.7). Thanks to Marc Haber (Closes: 820699)
+
+ -- Stephan Sürken <absurd@debian.org>  Sat, 17 Sep 2016 08:52:25 +0000
+
 mini-buildd (1.0.18) unstable; urgency=medium
 
   This release addresses a number of pet-peeves hovering along on my
