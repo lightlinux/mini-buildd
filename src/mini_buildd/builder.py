@@ -175,12 +175,17 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
                       "--arch", self.architecture,
                       "--chroot", self._chroot]
         sbuild_cmd += apt_transports
+
+        # Workaround: We use apt-key explicitly later, so we need gnupg. https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=831749
+        # Workaround: We need to do it early (with the source chroot's base source only) to avoid apt warnings.
+        # Workaround: Maybe [trusted=yes] is an option for later (>=wheezy) (see man sources.list).
+        sbuild_cmd += ["--chroot-setup-command", "apt-get update",
+                       "--chroot-setup-command", "apt-get --yes --option=APT::Install-Recommends=false install gnupg"]
+
         sbuild_cmd += ["--chroot-setup-command", "cp {s} /etc/apt/sources.list".format(s=sources_list_file),
                        "--chroot-setup-command", "cat /etc/apt/sources.list",
                        "--chroot-setup-command", "cp {p}/apt_preferences /etc/apt/preferences".format(p=self._build_dir),
                        "--chroot-setup-command", "cat /etc/apt/preferences",
-                       # We use apt-key explicitly here, so we need gnupg. https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=831749
-                       "--chroot-setup-command", "apt-get --yes --option=APT::Install-Recommends=false install gnupg",
                        "--chroot-setup-command", "apt-key add {p}/apt_keys".format(p=self._build_dir),
                        "--chroot-setup-command", "apt-get --option=Acquire::Languages=none update",
                        "--chroot-setup-command", "{p}/chroot_setup_script".format(p=self._build_dir),
