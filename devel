@@ -324,29 +324,6 @@ mbd_installdjango()
 	dpkg -s python-django | grep "^Version"
 }
 
-mbd_testdjango()
-{
-	local version="${1}"
-	[ -n "${version}" ]
-	# Note: Downgrading django versions does not work with migrate, so we need to purge 1st
-	sudo dpkg --purge mini-buildd
-
-	# Note: Shutting down mini-buildd may not have happened (chroot)
-	sleep 1.0
-	if sudo pkill --full /usr/sbin/mini-buildd; then
-		sleep 5
-		sudo pkill --signal=9 --full /usr/sbin/mini-buildd || true
-	fi
-
-	mbd_installdjango "${1}"
-	./devel update_nocheck
-	# Note: Calling stop to soon will not necessarily see the pid ("bug" in init script), so sleep a bit
-	sleep 2
-	mbd_service stop
-	# Note: Only running in foreground mode with resp. --debug will actually show the warnings of django and cherrypy atm
-	sudo su - mini-buildd --command="/usr/sbin/mini-buildd --foreground --verbose --verbose --debug=httpd,webapp"
-}
-
 sep=" "
 for c in $(compgen -A function | grep '^mbd_'); do
 	ACTIONS+="${sep}${c:4}"
