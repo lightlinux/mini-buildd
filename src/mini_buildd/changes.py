@@ -6,6 +6,7 @@ from __future__ import unicode_literals
 import os
 import stat
 import glob
+import fnmatch
 import logging
 import tarfile
 import socket
@@ -272,10 +273,13 @@ class Changes(debian.deb822.Changes):
 
         raise Exception("Buildrequest upload failed for {a}/{c}".format(a=arch, c=codename))
 
-    def tar(self, tar_path, add_files=None):
+    def tar(self, tar_path, add_files=None, exclude_glob=None):
         with contextlib.closing(tarfile.open(tar_path, "w")) as tar:
             def tar_add(file_name):
-                tar.add(file_name, arcname=os.path.basename(file_name))
+                if exclude_glob and fnmatch.fnmatch(file_name, exclude_glob):
+                    LOG.info("Excluding \"{f}\" from tar archive \"{tar}\".".format(f=file_name, tar=tar_path))
+                else:
+                    tar.add(file_name, arcname=os.path.basename(file_name))
 
             tar_add(self._file_path)
             for f in self.get_files():
@@ -373,7 +377,8 @@ class Changes(debian.deb822.Changes):
                                     os.path.join(path, "apt_preferences"),
                                     os.path.join(path, "apt_keys"),
                                     chroot_setup_script,
-                                    os.path.join(path, "sbuildrc_snippet")] + files_from_pool)
+                                    os.path.join(path, "sbuildrc_snippet")] + files_from_pool,
+                         exclude_glob="*.deb")
                 breq.add_file(breq.file_path + ".tar")
 
                 breq["Upload-Result-To"] = daemon.mbd_get_ftp_hopo().string
