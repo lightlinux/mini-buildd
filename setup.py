@@ -41,6 +41,7 @@ with open("./src/mini_buildd/__init__.py", "wb") as version_py:
     version_py.write("""\
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from __future__ import absolute_import
 
 __version__ = "{version}"
 """.format(version=__version__))

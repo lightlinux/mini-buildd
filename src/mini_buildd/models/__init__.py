@@ -5,6 +5,7 @@ Django modules package.
 All models must provide a an admin meta class as 'Model.Admin'.
 """
 from __future__ import unicode_literals
+from __future__ import absolute_import
 
 
 def import_all():

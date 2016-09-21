@@ -2,6 +2,7 @@
 # django false-positives:
 # pylint: disable=unexpected-keyword-arg,no-value-for-parameter
 from __future__ import unicode_literals
+from __future__ import absolute_import
 
 import os
 import copy
