@@ -247,8 +247,8 @@ class KeyringPackage(mini_buildd.misc.TmpDir):
         # Generate changelog entry
         mini_buildd.misc.call(["debchange",
                                "--create",
-                               "--package={p}".format(p=self.package_name),
-                               "--newversion={v}".format(v=self.version),
+                               "--package", self.package_name,
+                               "--newversion", self.version,
                                "Automatic keyring package for archive '{i}'.".format(i=identity)],
                               cwd=p,
                               env=self.environment)
@@ -273,7 +273,7 @@ class DSTPackage(mini_buildd.misc.TmpDir):
         shutil.copytree(tpl_dir, dst_dir)
         if version:
             mini_buildd.misc.call(["debchange",
-                                   "--newversion={v}".format(v=version),
+                                   "--newversion", version,
                                    "Version update '{v}'.".format(v=version)],
                                   cwd=dst_dir)
         mini_buildd.misc.call(["dpkg-source", "-b", "package"], cwd=self.tmpdir)
@@ -658,11 +658,11 @@ class Daemon(object):
 
             # Change changelog in DST
             mini_buildd.misc.call(["debchange",
-                                   "--newversion={v}".format(v=version),
+                                   "--newversion", version,
                                    "--force-distribution",
                                    "--force-bad-version",
                                    "--preserve",
-                                   "--dist={d}".format(d=dist),
+                                   "--dist", dist,
                                    "Automated port via mini-buildd (no changes). Original DSC's SHA1: {s}.".format(s=original_dsc_sha1sum)],
                                   cwd=dst_path,
                                   env=env)
@@ -690,6 +690,7 @@ class Daemon(object):
             # Generate Changes file
             with tempfile.TemporaryFile() as err:
                 with mini_buildd.misc.open_utf8(changes, "w") as out:
+                    # Note: dpkg-genchanges has a home-brewed options parser. It does not allow, for example, "-v 1.2.3", only "-v1.2.3", so we need to use *one* sequence item fo that.
                     subprocess.check_call(["dpkg-genchanges",
                                            "-S",
                                            "-sa",

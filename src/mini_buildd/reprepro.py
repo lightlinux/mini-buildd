@@ -34,7 +34,7 @@ class Reprepro(object):
     """
     def __init__(self, basedir):
         self._basedir = basedir
-        self._cmd = ["reprepro", "--verbose", "--waitforlock=10", "--basedir={b}".format(b=basedir)]
+        self._cmd = ["reprepro", "--verbose", "--waitforlock", "10", "--basedir", "{b}".format(b=basedir)]
         # Seems dict.setdefault 'should' be atomic, but it may be not the case in all versions >=2.6
         # See: http://bugs.python.org/issue13521
         with _LOCKS_LOCK:
@@ -65,9 +65,9 @@ class Reprepro(object):
 
     def list(self, pattern, distribution, typ=None, list_max=50):
         result = []
-        for item in self._call_locked(["--list-format=${package}|${$type}|${architecture}|${version}|${$source}|${$sourceversion}|${$codename}|${$component};",
-                                       "--list-max={m}".format(m=list_max)] +
-                                      (["--type={t}".format(t=typ)] if typ else []) +
+        for item in self._call_locked(["--list-format", "${package}|${$type}|${architecture}|${version}|${$source}|${$sourceversion}|${$codename}|${$component};",
+                                       "--list-max", "{m}".format(m=list_max)] +
+                                      (["--type", "{t}".format(t=typ)] if typ else []) +
                                       ["listmatched",
                                        distribution,
                                        pattern]).split(";"):
@@ -87,7 +87,7 @@ class Reprepro(object):
     def show(self, package):
         result = []
         # reprepro ls format: "${$source} | ${$sourceversion} |    ${$codename} | source\n"
-        for item in self._call_locked(["--type=dsc",
+        for item in self._call_locked(["--type", "dsc",
                                        "ls",
                                        package]).split("\n"):
             LOG.debug("ls: {i}".format(i=item))

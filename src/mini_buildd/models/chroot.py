@@ -162,9 +162,9 @@ chroots (with <tt>qemu-user-static</tt> installed).
             (["/bin/mkdir", "--verbose", self.mbd_get_tmp_dir()],
              ["/bin/rm", "--recursive", "--one-file-system", "--force", self.mbd_get_tmp_dir()])] + self.mbd_get_backend().mbd_get_pre_sequence() + [
                  ([self.mbd_get_extra_option("Debootstrap-Command", "/usr/sbin/debootstrap"),
-                   "--variant=buildd",
-                   "--keyring={k}".format(k=self.mbd_get_keyring_file()),
-                   "--arch={a}".format(a=self.architecture.name),
+                   "--variant", "buildd",
+                   "--keyring", self.mbd_get_keyring_file(),
+                   "--arch", self.architecture.name,
                    self.source.codename,
                    self.mbd_get_tmp_dir(),
                    debootstrap_url],
@@ -224,8 +224,8 @@ personality={p}
 
     def _mbd_schroot_run(self, args, namespace="chroot", user="root"):
         return mini_buildd.misc.sose_call(["/usr/bin/schroot",
-                                           "--chroot={n}:{c}".format(n=namespace, c=self.mbd_get_name()),
-                                           "--user={u}".format(u=user)] +
+                                           "--chroot", "{n}:{c}".format(n=namespace, c=self.mbd_get_name()),
+                                           "--user", user] +
                                           args)
 
     def mbd_check_sudo_workaround(self, request):
@@ -237,7 +237,7 @@ personality={p}
         """
         has_sudo_workaround = False
         try:
-            self._mbd_schroot_run(["--directory=/", "--", "grep", "^{u}".format(u=os.getenv("USER")), "/etc/sudoers"])
+            self._mbd_schroot_run(["--directory", "/", "--", "grep", "^{u}".format(u=os.getenv("USER")), "/etc/sudoers"])
             has_sudo_workaround = True
         except:
             MsgLog(LOG, request).info("{c}: Ok, no sudo workaround found.".format(c=self))
@@ -262,7 +262,7 @@ personality={p}
         # '/var/lib/schroot/mount/mini-buildd-wheezy-amd64-aaba77f3-4cba-423e-b34f-2b2bbb9789e1: device is busy.'
         # making this fail _and_ leave schroot cruft around.
         # Wtf! Hence we now just skip this ls test for now.
-        #  self._mbd_schroot_run(["--directory=/", "--", "/bin/ls"])
+        #  self._mbd_schroot_run(["--directory", "/", "--", "/bin/ls"])
 
         # Backend checks
         MsgLog(LOG, request).info("{c}: Running backend check.".format(c=self))
@@ -276,7 +276,7 @@ personality={p}
             try:
                 MsgLog(LOG, request).info("=> Running: apt-get {args}:".format(args=" ".join(args)))
                 MsgLog(LOG, request).log_text(
-                    self._mbd_schroot_run(["--directory=/", "--", "/usr/bin/apt-get", "-q", "-o APT::Install-Recommends=false", "--yes"] + args,
+                    self._mbd_schroot_run(["--directory", "/", "--", "/usr/bin/apt-get", "-q", "-o", "APT::Install-Recommends=false", "--yes"] + args,
                                           namespace="source"))
             except:
                 MsgLog(LOG, request).warn("'apt-get {args}' not supported in this chroot.".format(args=" ".join(args)))
@@ -389,8 +389,8 @@ file={t}
         return [
             (["/bin/tar",
               "--create",
-              "--directory={d}".format(d=self.mbd_get_tmp_dir()),
-              "--file={f}".format(f=self.mbd_get_tar_file())] +
+              "--directory", self.mbd_get_tmp_dir(),
+              "--file", self.mbd_get_tar_file()] +
              self.TAR_ARGS[self.compression] +
              ["."],
              []),
@@ -438,13 +438,13 @@ lvm-snapshot-options=--size {s}G
 
     def mbd_get_pre_sequence(self):
         return [
-            (["/sbin/lvcreate", "--size={s}G".format(s=self.snapshot_size), "--name={n}".format(n=self.mbd_get_name()), self.mbd_get_volume_group()],
+            (["/sbin/lvcreate", "--size", "{s}G".format(s=self.snapshot_size), "--name", self.mbd_get_name(), self.mbd_get_volume_group()],
              ["/sbin/lvremove", "--verbose", "--force", self.mbd_get_lvm_device()]),
 
-            (["/sbin/mkfs", "-t{f}".format(f=self.filesystem), self.mbd_get_lvm_device()],
+            (["/sbin/mkfs", "-t", self.filesystem, self.mbd_get_lvm_device()],
              []),
 
-            (["/bin/mount", "-v", "-t{f}".format(f=self.filesystem), self.mbd_get_lvm_device(), self.mbd_get_tmp_dir()],
+            (["/bin/mount", "-v", "-t", self.filesystem, self.mbd_get_lvm_device(), self.mbd_get_tmp_dir()],
              ["/bin/umount", "-v", self.mbd_get_tmp_dir()])]
 
     def mbd_get_post_sequence(self):
@@ -452,7 +452,7 @@ lvm-snapshot-options=--size {s}G
 
     def mbd_backend_check(self, request):
         MsgLog(LOG, request).info("{c}: Running file system check...".format(c=self))
-        mini_buildd.misc.call(["/sbin/fsck", "-a", "-t{t}".format(t=self.filesystem), self.mbd_get_lvm_device()],
+        mini_buildd.misc.call(["/sbin/fsck", "-a", "-t", self.filesystem, self.mbd_get_lvm_device()],
                               run_as_root=True)
 
 

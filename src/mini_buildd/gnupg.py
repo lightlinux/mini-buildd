@@ -72,8 +72,8 @@ class BaseGnuPG(object):
         self.flavor = self.get_flavor()
         self.home = home
         self.gpg_cmd = ["gpg",
-                        "--homedir={h}".format(h=home),
-                        "--display-charset={charset}".format(charset=mini_buildd.setup.CHAR_ENCODING),
+                        "--homedir", home,
+                        "--display-charset", mini_buildd.setup.CHAR_ENCODING,
                         "--batch"]
         LOG.info("GPG {f}: {c}".format(f=self.flavor, c=self.gpg_cmd))
 
@@ -88,10 +88,10 @@ class BaseGnuPG(object):
 
     def export(self, dest_file, identity=""):
         with mini_buildd.misc.open_utf8(dest_file, "w") as f:
-            subprocess.check_call(self.gpg_cmd + ["--export={i}".format(i=identity)], stdout=f)
+            subprocess.check_call(self.gpg_cmd + ["--export"] + ([identity] if identity else []), stdout=f)
 
     def get_pub_key(self, identity):
-        return mini_buildd.misc.call(self.gpg_cmd + ["--armor", "--export={i}".format(i=identity)])
+        return mini_buildd.misc.call(self.gpg_cmd + ["--armor", "--export", identity])
 
     def _get_colons(self, list_arg="--list-public-keys", type_regex=".*"):
         for line in mini_buildd.misc.call(self.gpg_cmd + [list_arg, "--with-colons", "--fixed-list-mode", "--with-fingerprint", "--with-fingerprint"]).splitlines():
@@ -122,7 +122,7 @@ class BaseGnuPG(object):
         return self.get_first_sec_colon("uid").user_id
 
     def recv_key(self, keyserver, identity):
-        return mini_buildd.misc.call(self.gpg_cmd + ["--armor", "--keyserver={ks}".format(ks=keyserver), "--recv-keys", identity])
+        return mini_buildd.misc.call(self.gpg_cmd + ["--armor", "--keyserver", keyserver, "--recv-keys", identity])
 
     def add_pub_key(self, key):
         with tempfile.TemporaryFile() as t:
@@ -132,7 +132,7 @@ class BaseGnuPG(object):
 
     def add_keyring(self, keyring):
         if os.path.exists(keyring):
-            self.gpg_cmd.append("--keyring={k}".format(k=keyring))
+            self.gpg_cmd += ["--keyring", keyring]
         else:
             LOG.warn("Skipping non-existing keyring file: {k}".format(k=keyring))
 
@@ -153,8 +153,8 @@ class BaseGnuPG(object):
         # 2nd: Sign the file copy
         signed_file = file_name + ".signed"
         mini_buildd.misc.call(self.gpg_cmd +
-                              ["--armor", "--textmode", "--clearsign", "--output={f}".format(f=signed_file)] +
-                              (["--local-user={i}".format(i=identity)] if identity else []) +
+                              ["--armor", "--textmode", "--clearsign", "--output", signed_file] +
+                              (["--local-user", identity] if identity else []) +
                               [unsigned_file])
 
         # 3rd: Success, move to orig file and cleanup
@@ -204,6 +204,9 @@ class TmpGnuPG(BaseGnuPG, mini_buildd.misc.TmpDir):
     u'AF95FC80FC40A82E'
     >>> gnupg.get_first_sec_key_fingerprint()  #doctest: +ELLIPSIS
     u'4FB13BDD777C046D72D4E7D3AF95FC80FC40A82E'
+
+    >>> export = tempfile.NamedTemporaryFile()
+    >>> gnupg.export(export.name)
 
     >>> t = tempfile.NamedTemporaryFile()
     >>> t.write("A test file\\n")
