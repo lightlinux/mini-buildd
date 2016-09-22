@@ -10,6 +10,7 @@ import subprocess
 import logging
 
 import mini_buildd.misc
+import mini_buildd.call
 import mini_buildd.setup
 
 LOG = logging.getLogger(__name__)
@@ -63,7 +64,7 @@ class BaseGnuPG(object):
         nasty happens.
         """
         try:
-            version_info = mini_buildd.misc.call(["gpg", "--version"]).splitlines()
+            version_info = mini_buildd.call.call(["gpg", "--version"]).splitlines()
             version_line = version_info[0].split(" ")
             return version_line[2][0:3]
         except:
@@ -85,17 +86,17 @@ class BaseGnuPG(object):
             t.write(template.encode(mini_buildd.setup.CHAR_ENCODING))
             t.write(flavor_additions.get(self.flavor, ""))
             t.seek(0)
-            mini_buildd.misc.call(self.gpg_cmd + ["--gen-key"], stdin=t)
+            mini_buildd.call.call(self.gpg_cmd + ["--gen-key"], stdin=t)
 
     def export(self, dest_file, identity=""):
         with mini_buildd.misc.open_utf8(dest_file, "w") as f:
             subprocess.check_call(self.gpg_cmd + ["--export"] + ([identity] if identity else []), stdout=f)
 
     def get_pub_key(self, identity):
-        return mini_buildd.misc.call(self.gpg_cmd + ["--armor", "--export", identity])
+        return mini_buildd.call.call(self.gpg_cmd + ["--armor", "--export", identity])
 
     def _get_colons(self, list_arg="--list-public-keys", type_regex=".*"):
-        for line in mini_buildd.misc.call(self.gpg_cmd + [list_arg, "--with-colons", "--fixed-list-mode", "--with-fingerprint", "--with-fingerprint"]).splitlines():
+        for line in mini_buildd.call.call(self.gpg_cmd + [list_arg, "--with-colons", "--fixed-list-mode", "--with-fingerprint", "--with-fingerprint"]).splitlines():
             colons = Colons(line)
             LOG.debug("{c}".format(c=colons))
             if re.match(type_regex, colons.type):
@@ -123,13 +124,13 @@ class BaseGnuPG(object):
         return self.get_first_sec_colon("uid").user_id
 
     def recv_key(self, keyserver, identity):
-        return mini_buildd.misc.call(self.gpg_cmd + ["--armor", "--keyserver", keyserver, "--recv-keys", identity])
+        return mini_buildd.call.call(self.gpg_cmd + ["--armor", "--keyserver", keyserver, "--recv-keys", identity])
 
     def add_pub_key(self, key):
         with tempfile.TemporaryFile() as t:
             t.write(key.encode(mini_buildd.setup.CHAR_ENCODING))
             t.seek(0)
-            mini_buildd.misc.call(self.gpg_cmd + ["--import"], stdin=t)
+            mini_buildd.call.call(self.gpg_cmd + ["--import"], stdin=t)
 
     def add_keyring(self, keyring):
         if os.path.exists(keyring):
@@ -139,7 +140,7 @@ class BaseGnuPG(object):
 
     def verify(self, signature, data=None):
         try:
-            mini_buildd.misc.call(self.gpg_cmd + ["--verify", signature] + ([data] if data else []), error_log_on_fail=False)
+            mini_buildd.call.call(self.gpg_cmd + ["--verify", signature] + ([data] if data else []), error_log_on_fail=False)
         except:
             raise Exception("GnuPG authorization failed.")
 
@@ -153,7 +154,7 @@ class BaseGnuPG(object):
 
         # 2nd: Sign the file copy
         signed_file = file_name + ".signed"
-        mini_buildd.misc.call(self.gpg_cmd +
+        mini_buildd.call.call(self.gpg_cmd +
                               ["--armor", "--textmode", "--clearsign", "--output", signed_file] +
                               (["--local-user", identity] if identity else []) +
                               [unsigned_file])

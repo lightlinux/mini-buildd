@@ -22,6 +22,7 @@ import debian.debian_support
 import django.conf
 
 import mini_buildd.misc
+import mini_buildd.call
 import mini_buildd.changes
 import mini_buildd.gnupg
 import mini_buildd.api
@@ -205,7 +206,7 @@ class KeyringPackage(mini_buildd.misc.TmpDir):
         LOG.debug("KeyringPackage using key: '{i}'".format(i=self.key_id))
 
         self.package_name = "{i}-archive-keyring".format(i=identity)
-        self.environment = mini_buildd.misc.taint_env(
+        self.environment = mini_buildd.call.taint_env(
             {"DEBEMAIL": debemail,
              "DEBFULLNAME": debfullname,
              "GNUPGHOME": gpg.home})
@@ -246,7 +247,7 @@ class KeyringPackage(mini_buildd.misc.TmpDir):
                             mini_buildd.misc.open_utf8(os.path.join(p, file_name), "w").write(apt_line + "\n")
 
         # Generate changelog entry
-        mini_buildd.misc.call(["debchange",
+        mini_buildd.call.call(["debchange",
                                "--create",
                                "--package", self.package_name,
                                "--newversion", self.version,
@@ -254,7 +255,7 @@ class KeyringPackage(mini_buildd.misc.TmpDir):
                               cwd=p,
                               env=self.environment)
 
-        mini_buildd.misc.call(["dpkg-source",
+        mini_buildd.call.call(["dpkg-source",
                                "-b",
                                "package"],
                               cwd=self.tmpdir,
@@ -273,11 +274,11 @@ class DSTPackage(mini_buildd.misc.TmpDir):
         dst_dir = os.path.join(self.tmpdir, "package")
         shutil.copytree(tpl_dir, dst_dir)
         if version:
-            mini_buildd.misc.call(["debchange",
+            mini_buildd.call.call(["debchange",
                                    "--newversion", version,
                                    "Version update '{v}'.".format(v=version)],
                                   cwd=dst_dir)
-        mini_buildd.misc.call(["dpkg-source", "-b", "package"], cwd=self.tmpdir)
+        mini_buildd.call.call(["dpkg-source", "-b", "package"], cwd=self.tmpdir)
         self.dsc = glob.glob(os.path.join(self.tmpdir, "*.dsc"))[0]
 
 
@@ -626,12 +627,12 @@ class Daemon(object):
     def _port(self, dsc_url, package, dist, version, extra_cl_entries=None):
         t = mini_buildd.misc.TmpDir()
         try:
-            env = mini_buildd.misc.taint_env({"DEBEMAIL": self.model.email_address,
+            env = mini_buildd.call.taint_env({"DEBEMAIL": self.model.email_address,
                                               "DEBFULLNAME": self.model.mbd_fullname,
                                               "GNUPGHOME": self.model.mbd_gnupg.home})
 
             # Download DSC via dget.
-            mini_buildd.misc.call(["dget",
+            mini_buildd.call.call(["dget",
                                    "--allow-unauthenticated",
                                    "--download-only",
                                    dsc_url],
@@ -643,7 +644,7 @@ class Daemon(object):
 
             # Unpack DSC (note: dget does not support -x to a dedcicated dir).
             dst = "debian_source_tree"
-            mini_buildd.misc.call(["dpkg-source",
+            mini_buildd.call.call(["dpkg-source",
                                    "-x",
                                    os.path.basename(dsc_url),
                                    dst],
@@ -658,7 +659,7 @@ class Daemon(object):
             LOG.debug("Port: Found original version/author: {v}/{a}".format(v=original_version, a=original_author))
 
             # Change changelog in DST
-            mini_buildd.misc.call(["debchange",
+            mini_buildd.call.call(["debchange",
                                    "--newversion", version,
                                    "--force-distribution",
                                    "--force-bad-version",
@@ -669,14 +670,14 @@ class Daemon(object):
                                   env=env)
 
             for entry in (extra_cl_entries or []) + ["MINI_BUILDD: BACKPORT_MODE"]:
-                mini_buildd.misc.call(["debchange",
+                mini_buildd.call.call(["debchange",
                                        "--append",
                                        entry],
                                       cwd=dst_path,
                                       env=env)
 
             # Repack DST
-            mini_buildd.misc.call(["dpkg-source", "-b", dst], cwd=t.tmpdir, env=env)
+            mini_buildd.call.call(["dpkg-source", "-b", dst], cwd=t.tmpdir, env=env)
             dsc = os.path.join(t.tmpdir,
                                mini_buildd.changes.Changes.gen_dsc_file_name(package,
                                                                              version))
@@ -701,7 +702,7 @@ class Daemon(object):
                                           env=env,
                                           stdout=out,
                                           stderr=err)
-                    mini_buildd.misc.log_call_output(LOG.warn, "dpkg-genchanges warning:", err)
+                    mini_buildd.call.log_call_output(LOG.warn, "dpkg-genchanges warning:", err)
 
             # Sign and add to incoming queue
             self.model.mbd_gnupg.sign(changes)

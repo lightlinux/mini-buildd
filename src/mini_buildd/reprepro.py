@@ -11,7 +11,7 @@ import threading
 
 import logging
 
-import mini_buildd.misc
+import mini_buildd.call
 
 LOG = logging.getLogger(__name__)
 
@@ -44,7 +44,7 @@ class Reprepro(object):
 
     def _call(self, args, show_command=False):
         return "{command}{output}".format(command="Running {command}\n".format(command=" ".join(self._cmd + args)) if show_command else "",
-                                          output=mini_buildd.misc.sose_call(self._cmd + args))
+                                          output=mini_buildd.call.sose_call(self._cmd + args))
 
     def _call_locked(self, args, show_command=False):
         with self._lock:

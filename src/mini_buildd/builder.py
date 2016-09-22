@@ -11,6 +11,7 @@ import logging
 
 import mini_buildd.setup
 import mini_buildd.misc
+import mini_buildd.call
 import mini_buildd.changes
 
 LOG = logging.getLogger(__name__)
@@ -216,13 +217,13 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
         sbuild_cmd += [self._breq.dsc_name]
 
         # Actually run sbuild
-        mini_buildd.misc.sbuild_keys_workaround()
+        mini_buildd.call.sbuild_keys_workaround()
         buildlog = os.path.join(self._build_dir, self._breq.buildlog_name)
-        LOG.info("{p}: Running sbuild: {c}".format(p=self.key, c=mini_buildd.misc.args2shell(sbuild_cmd)))
+        LOG.info("{p}: Running sbuild: {c}".format(p=self.key, c=mini_buildd.call.args2shell(sbuild_cmd)))
         with open(buildlog, "w") as l:
             retval = subprocess.call(sbuild_cmd,
                                      cwd=self._build_dir,
-                                     env=mini_buildd.misc.taint_env({"HOME": self._build_dir,
+                                     env=mini_buildd.call.taint_env({"HOME": self._build_dir,
                                                                      "GNUPGHOME": os.path.join(mini_buildd.setup.HOME_DIR, ".gnupg"),
                                                                      "DEB_BUILD_OPTIONS": "parallel={j}".format(j=self._sbuild_jobs)}),
                                      stdout=l, stderr=subprocess.STDOUT)

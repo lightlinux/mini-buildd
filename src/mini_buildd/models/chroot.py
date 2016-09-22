@@ -15,6 +15,7 @@ import django.contrib.messages
 
 import mini_buildd.setup
 import mini_buildd.misc
+import mini_buildd.call
 
 import mini_buildd.models.base
 import mini_buildd.models.source
@@ -86,7 +87,7 @@ chroots (with <tt>qemu-user-static</tt> installed).
 
         @classmethod
         def mbd_host_architecture(cls):
-            return mini_buildd.misc.sose_call(["dpkg", "--print-architecture"]).strip()
+            return mini_buildd.call.sose_call(["dpkg", "--print-architecture"]).strip()
 
         @classmethod
         def _mbd_get_supported_archs(cls, arch):
@@ -209,11 +210,11 @@ personality={p}
                 gpg.add_pub_key(k.key)
             gpg.export(self.mbd_get_keyring_file())
 
-        mini_buildd.misc.call_sequence(self.mbd_get_sequence(), run_as_root=True)
+        mini_buildd.call.call_sequence(self.mbd_get_sequence(), run_as_root=True)
         MsgLog(LOG, request).info("{c}: Prepared on system for schroot.".format(c=self))
 
     def mbd_remove(self, request):
-        mini_buildd.misc.call_sequence(self.mbd_get_sequence(), rollback_only=True, run_as_root=True)
+        mini_buildd.call.call_sequence(self.mbd_get_sequence(), rollback_only=True, run_as_root=True)
         shutil.rmtree(self.mbd_get_path(),
                       onerror=lambda f, p, e: MsgLog(LOG, request).warn("{c}: Failure removing data dir '{p}' (ignoring): {e}".format(c=self,
                                                                                                                                       p=self.mbd_get_path(),
@@ -224,7 +225,7 @@ personality={p}
         self._mbd_remove_and_prepare(request)
 
     def _mbd_schroot_run(self, args, namespace="chroot", user="root"):
-        return mini_buildd.misc.sose_call(["/usr/bin/schroot",
+        return mini_buildd.call.sose_call(["/usr/bin/schroot",
                                            "--chroot", "{n}:{c}".format(n=namespace, c=self.mbd_get_name()),
                                            "--user", user] +
                                           args)
@@ -453,7 +454,7 @@ lvm-snapshot-options=--size {s}G
 
     def mbd_backend_check(self, request):
         MsgLog(LOG, request).info("{c}: Running file system check...".format(c=self))
-        mini_buildd.misc.call(["/sbin/fsck", "-a", "-t", self.filesystem, self.mbd_get_lvm_device()],
+        mini_buildd.call.call(["/sbin/fsck", "-a", "-t", self.filesystem, self.mbd_get_lvm_device()],
                               run_as_root=True)
 
 
@@ -487,7 +488,7 @@ class LoopLVMChroot(LVMChroot):
             if os.path.realpath(mini_buildd.misc.open_utf8(f).read().strip()) == os.path.realpath(self.mbd_get_backing_file()):
                 return "/dev/" + f.split("/")[3]
         LOG.debug("No existing loop device for {b}, searching for free device".format(b=self.mbd_get_backing_file()))
-        return mini_buildd.misc.call(["/sbin/losetup", "--find"], run_as_root=True).rstrip()
+        return mini_buildd.call.call(["/sbin/losetup", "--find"], run_as_root=True).rstrip()
 
     def mbd_get_pre_sequence(self):
         loop_device = self.mbd_get_loop_device()

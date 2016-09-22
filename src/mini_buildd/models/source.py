@@ -15,6 +15,8 @@ import django.contrib.messages
 
 import debian.deb822
 
+import mini_buildd.misc
+import mini_buildd.call
 import mini_buildd.gnupg
 
 import mini_buildd.models.base
@@ -165,7 +167,7 @@ class Architecture(mini_buildd.models.base.Model):
 
     @classmethod
     def mbd_host_architecture(cls):
-        return mini_buildd.misc.sose_call(["dpkg", "--print-architecture"]).strip()
+        return mini_buildd.call.sose_call(["dpkg", "--print-architecture"]).strip()
 
     @classmethod
     def mbd_supported_architectures(cls, arch=None):
