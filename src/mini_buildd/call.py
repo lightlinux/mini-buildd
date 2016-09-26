@@ -78,14 +78,22 @@ def call(args, run_as_root=False, value_on_error=None, log_output=True, error_lo
     if run_as_root:
         args = ["sudo", "-n"] + args
 
-    stdout = tempfile.TemporaryFile()
-    stderr = tempfile.TemporaryFile()
+    def _set_stream(name):
+        if name in kwargs:
+            return kwargs[name]
+        else:
+            stream = tempfile.TemporaryFile()
+            kwargs[name] = stream
+            return stream
+
+    stdout = _set_stream("stdout")
+    stderr = _set_stream("stderr")
 
     LOG.info("Calling: {a}".format(a=args2shell(args)))
     try:
         olog = LOG.debug
         try:
-            subprocess.check_call(args, stdout=stdout, stderr=stderr, **kwargs)
+            subprocess.check_call(args, **kwargs)
         except:
             if error_log_on_fail:
                 olog = LOG.error
