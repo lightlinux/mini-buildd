@@ -9,7 +9,6 @@ import shutil
 import glob
 import tempfile
 import threading
-import subprocess
 import Queue
 import collections
 import urllib2
@@ -691,9 +690,9 @@ class Daemon(object):
 
             # Generate Changes file
             with tempfile.TemporaryFile() as err:
-                with mini_buildd.misc.open_utf8(changes, "w") as out:
+                with mini_buildd.call.create_and_open(changes, "r+") as out:
                     # Note: dpkg-genchanges has a home-brewed options parser. It does not allow, for example, "-v 1.2.3", only "-v1.2.3", so we need to use *one* sequence item fo that.
-                    subprocess.check_call(["dpkg-genchanges",
+                    mini_buildd.call.call(["dpkg-genchanges",
                                            "-S",
                                            "-sa",
                                            "-v{v}".format(v=original_version),
@@ -702,7 +701,6 @@ class Daemon(object):
                                           env=env,
                                           stdout=out,
                                           stderr=err)
-                    mini_buildd.call.log_call_output(LOG.warn, "dpkg-genchanges warning:", err)
 
             # Sign and add to incoming queue
             self.model.mbd_gnupg.sign(changes)
