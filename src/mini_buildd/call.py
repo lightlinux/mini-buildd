@@ -46,26 +46,6 @@ def args2shell(args):
     return result
 
 
-def sose_call(args):
-    """
-    >>> sose_call(["echo", "-n", "hallo"])
-    u'hallo'
-    >>> sose_call(["ls", "__no_such_file__"])
-    Traceback (most recent call last):
-    ...
-    Exception: SoSe call failed (ret=2): ls __no_such_file__
-    """
-    result = tempfile.TemporaryFile()
-    ret = subprocess.call(args,
-                          stdout=result,
-                          stderr=subprocess.STDOUT)
-    if ret != 0:
-        log_call_output(LOG.error, "SoSe call failed", result)
-        raise Exception("SoSe call failed (ret={r}): {s}".format(r=ret, s=" ".join(args)))
-    result.seek(0)
-    return result.read().decode(mini_buildd.setup.CHAR_ENCODING)
-
-
 def call(args, run_as_root=False, value_on_error=None, log_output=True, error_log_on_fail=True, **kwargs):
     """Wrapper around subprocess.call().
 
@@ -115,6 +95,21 @@ def call(args, run_as_root=False, value_on_error=None, log_output=True, error_lo
     LOG.debug("Call successful: {a}".format(a=" ".join(args)))
     stdout.seek(0)
     return stdout.read().decode(mini_buildd.setup.CHAR_ENCODING)
+
+
+def sose(*args, **kwargs):
+    """
+    >>> sose(["echo", "-n", "hallo"])
+    u'hallo'
+    >>> sose(["ls", "__no_such_file__"])
+    Traceback (most recent call last):
+    ...
+    CalledProcessError: Command '[u'ls', u'__no_such_file__']' returned non-zero exit status 2
+
+    >>> sose(["printf stdin; printf stderr >&2"], shell=True)
+    u'stdinstderr'
+    """
+    return call(*args, stderr=subprocess.STDOUT, **kwargs)
 
 
 def call_sequence(calls, run_as_root=False, value_on_error=None, log_output=True, rollback_only=False, **kwargs):
