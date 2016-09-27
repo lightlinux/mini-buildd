@@ -87,12 +87,12 @@ def call(args, run_as_root=False, value_on_error=None, log_output=True, error_lo
                 mini_buildd.setup.log_exception(LOG, "Output logging failed (char enc?)", e)
     except:
         if error_log_on_fail:
-            LOG.error("Call failed: {a}".format(a=" ".join(args)))
+            LOG.error("Call failed: {a}".format(a=args2shell(args)))
         if value_on_error is not None:
             return value_on_error
         else:
             raise
-    LOG.debug("Call successful: {a}".format(a=" ".join(args)))
+    LOG.debug("Call successful: {a}".format(a=args2shell(args)))
     stdout.seek(0)
     return stdout.read().decode(mini_buildd.setup.CHAR_ENCODING)
 
