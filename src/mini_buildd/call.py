@@ -46,6 +46,67 @@ def args2shell(args):
     return result
 
 
+class Call(object):
+    """
+    Wrapper around subprocess.
+    """
+    @classmethod
+    def _call2shell(cls, call):
+        """
+        Convenience: Convert an argument sequence ("call") to a command line maybe-suitable for cut and paste to a shell.
+        """
+        result = ""
+        for a in call:
+            if " " in a:
+                result += "\"" + a + "\""
+            else:
+                result += a
+            result += " "
+        return result
+
+    @classmethod
+    def _log_call_output(cls, log, prefix, output):
+        for line in output.splitlines():
+            log("{p}: {l}".format(p=prefix, l=line.decode(mini_buildd.setup.CHAR_ENCODING).rstrip('\n')))
+
+    def __init__(self, call, run_as_root=False, **kwargs):
+        self.call = ["sudo", "-n"] + call if run_as_root else call
+        self.kwargs = kwargs.copy()
+
+        # Generate stdout and stderr streams in kwargs, if not given explicitly
+        for stream in ["stdout", "stderr"]:
+            if stream not in self.kwargs:
+                self.kwargs[stream] = tempfile.TemporaryFile()
+
+        self.retval = subprocess.call(self.call, **self.kwargs)
+        LOG.info("Called with retval {r}: {c}".format(r=self.retval, c=self._call2shell(self.call)))
+
+    @property
+    def stdout(self):
+        self.kwargs["stdout"].seek(0)
+        return self.kwargs["stdout"].read().decode(mini_buildd.setup.CHAR_ENCODING)
+
+    @property
+    def stderr(self):
+        if self.kwargs["stderr"] == subprocess.STDOUT:
+            return ""
+        else:
+            self.kwargs["stderr"].seek(0)
+            return self.kwargs["stderr"].read().decode(mini_buildd.setup.CHAR_ENCODING)
+
+    def log(self, always=True):
+        olog = LOG.info if self.retval == 0 else LOG.warning
+        if self.retval != 0 or always:
+            self._log_call_output(olog, "Call stdout", self.stdout)
+            self._log_call_output(olog, "Call stderr", self.stderr)
+        return self
+
+    def check(self):
+        if self.retval != 0:
+            raise Exception("Call failed with retval {r}: '{c}'".format(r=self.retval, c=self._call2shell(self.call)))
+        return self
+
+
 def call(args, run_as_root=False, value_on_error=None, log_output=True, error_log_on_fail=True, **kwargs):
     """Wrapper around subprocess.call().
 
