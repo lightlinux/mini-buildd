@@ -158,19 +158,19 @@ def call(args, run_as_root=False, value_on_error=None, log_output=True, error_lo
     return stdout.read().decode(mini_buildd.setup.CHAR_ENCODING)
 
 
-def sose(*args, **kwargs):
+def sose(call, **kwargs):
     """
     >>> sose(["echo", "-n", "hallo"])
     u'hallo'
     >>> sose(["ls", "__no_such_file__"])
     Traceback (most recent call last):
     ...
-    CalledProcessError: Command '[u'ls', u'__no_such_file__']' returned non-zero exit status 2
+    Exception: Call failed with retval 2: 'ls __no_such_file__ '
 
     >>> sose(["printf stdin; printf stderr >&2"], shell=True)
     u'stdinstderr'
     """
-    return call(*args, stderr=subprocess.STDOUT, **kwargs)
+    return Call(call, stderr=subprocess.STDOUT, **kwargs).log().check().stdout
 
 
 def call_sequence(calls, run_as_root=False, value_on_error=None, log_output=True, rollback_only=False, **kwargs):
