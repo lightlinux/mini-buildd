@@ -122,7 +122,7 @@ class Call(object):
         return self
 
 
-def call(args, run_as_root=False, value_on_error=None, log_output=True, error_log_on_fail=True, **kwargs):
+def call(args, run_as_root=False, **kwargs):
     """Wrapper around subprocess.call().
 
     >>> call(["echo", "-n", "hallo"])
@@ -150,7 +150,7 @@ def sose(call, **kwargs):
     return Call(call, stderr=subprocess.STDOUT, **kwargs).log().check().ustdout
 
 
-def call_sequence(calls, run_as_root=False, value_on_error=None, log_output=True, rollback_only=False, **kwargs):
+def call_sequence(calls, run_as_root=False, rollback_only=False, **kwargs):
     """Run sequences of calls with rollback support.
 
     >>> call_sequence([(["echo", "-n", "cmd0"], ["echo", "-n", "rollback cmd0"])])
@@ -160,7 +160,7 @@ def call_sequence(calls, run_as_root=False, value_on_error=None, log_output=True
     def rollback(pos):
         for i in range(pos, -1, -1):
             if calls[i][1]:
-                call(calls[i][1], run_as_root=run_as_root, value_on_error="", log_output=log_output, **kwargs)
+                Call(calls[i][1], run_as_root=run_as_root, **kwargs).log()
             else:
                 LOG.debug("Skipping empty rollback call sequent {i}".format(i=i))
 
@@ -171,7 +171,7 @@ def call_sequence(calls, run_as_root=False, value_on_error=None, log_output=True
         try:
             for l in calls:
                 if l[0]:
-                    call(l[0], run_as_root=run_as_root, value_on_error=value_on_error, log_output=log_output, **kwargs)
+                    Call(l[0], run_as_root=run_as_root, **kwargs).log().check()
                 else:
                     LOG.debug("Skipping empty call sequent {i}".format(i=i))
                 i += 1
