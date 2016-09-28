@@ -29,6 +29,16 @@ def taint_env(taint):
 class Call(object):
     """
     Wrapper around subprocess.
+
+    >>> Call(["echo", "-n", "hallo"]).check().ustdout
+    u'hallo'
+    >>> Call(["ls", "__no_such_file__"]).check()
+    Traceback (most recent call last):
+    ...
+    Exception: Call failed with retval 2: 'ls __no_such_file__ '
+
+    >>> Call(["printf stdin; printf stderr >&2"], stderr=subprocess.STDOUT, shell=True).ustdout
+    u'stdinstderr'
     """
     @classmethod
     def _call2shell(cls, call):
@@ -113,21 +123,6 @@ def call(args, run_as_root=False, **kwargs):
     Exception: Call failed with retval 1: 'id -syntax-error '
     """
     return Call(args, run_as_root=run_as_root, **kwargs).log().check().ustdout
-
-
-def sose(call, **kwargs):
-    """
-    >>> sose(["echo", "-n", "hallo"])
-    u'hallo'
-    >>> sose(["ls", "__no_such_file__"])
-    Traceback (most recent call last):
-    ...
-    Exception: Call failed with retval 2: 'ls __no_such_file__ '
-
-    >>> sose(["printf stdin; printf stderr >&2"], shell=True)
-    u'stdinstderr'
-    """
-    return Call(call, stderr=subprocess.STDOUT, **kwargs).log().check().ustdout
 
 
 def call_sequence(calls, run_as_root=False, rollback_only=False, **kwargs):

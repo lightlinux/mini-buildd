@@ -87,7 +87,7 @@ chroots (with <tt>qemu-user-static</tt> installed).
 
         @classmethod
         def mbd_host_architecture(cls):
-            return mini_buildd.call.sose(["dpkg", "--print-architecture"]).strip()
+            return mini_buildd.models.source.Architecture.mbd_host_architecture()
 
         @classmethod
         def _mbd_get_supported_archs(cls, arch):
@@ -225,10 +225,10 @@ personality={p}
         self._mbd_remove_and_prepare(request)
 
     def _mbd_schroot_run(self, args, namespace="chroot", user="root"):
-        return mini_buildd.call.sose(["/usr/bin/schroot",
+        return mini_buildd.call.Call(["/usr/bin/schroot",
                                       "--chroot", "{n}:{c}".format(n=namespace, c=self.mbd_get_name()),
                                       "--user", user] +
-                                     args)
+                                     args).log().check().ustdout
 
     def mbd_check_sudo_workaround(self, request):
         """

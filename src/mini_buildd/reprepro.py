@@ -44,7 +44,7 @@ class Reprepro(object):
 
     def _call(self, args, show_command=False):
         return "{command}{output}".format(command="Running {command}\n".format(command=" ".join(self._cmd + args)) if show_command else "",
-                                          output=mini_buildd.call.sose(self._cmd + args))
+                                          output=mini_buildd.call.Call(self._cmd + args).log().check().ustdout)
 
     def _call_locked(self, args, show_command=False):
         with self._lock:
