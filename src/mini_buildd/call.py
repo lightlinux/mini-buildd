@@ -67,7 +67,7 @@ class Call(object):
     @classmethod
     def _log_call_output(cls, log, prefix, output):
         for line in output.splitlines():
-            log("{p}: {l}".format(p=prefix, l=line.decode(mini_buildd.setup.CHAR_ENCODING).rstrip('\n')))
+            log("{p}: {l}".format(p=prefix, l=line.rstrip('\n')))
 
     def __init__(self, call, run_as_root=False, **kwargs):
         self.call = ["sudo", "-n"] + call if run_as_root else call
@@ -83,22 +83,34 @@ class Call(object):
 
     @property
     def stdout(self):
+        """Raw value as str."""
         self.kwargs["stdout"].seek(0)
-        return self.kwargs["stdout"].read().decode(mini_buildd.setup.CHAR_ENCODING)
+        return self.kwargs["stdout"].read()
 
     @property
     def stderr(self):
+        """Raw value as str."""
         if self.kwargs["stderr"] == subprocess.STDOUT:
-            return ""
+            return str("")
         else:
             self.kwargs["stderr"].seek(0)
-            return self.kwargs["stderr"].read().decode(mini_buildd.setup.CHAR_ENCODING)
+            return self.kwargs["stderr"].read()
+
+    @property
+    def ustdout(self):
+        """Unicode value as unicode (assuming raw string is UTF-8)."""
+        return self.stdout.decode(mini_buildd.setup.CHAR_ENCODING)
+
+    @property
+    def ustderr(self):
+        """Value of stderr as unicode."""
+        return self.stderr.decode(mini_buildd.setup.CHAR_ENCODING)
 
     def log(self, always=True):
         olog = LOG.info if self.retval == 0 else LOG.warning
         if self.retval != 0 or always:
-            self._log_call_output(olog, "Call stdout", self.stdout)
-            self._log_call_output(olog, "Call stderr", self.stderr)
+            self._log_call_output(olog, "Call stdout", self.ustdout)
+            self._log_call_output(olog, "Call stderr", self.ustderr)
         return self
 
     def check(self):
