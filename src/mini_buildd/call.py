@@ -112,19 +112,6 @@ class Call(object):
         return self
 
 
-def call(args, run_as_root=False, **kwargs):
-    """Wrapper around subprocess.call().
-
-    >>> call(["echo", "-n", "hallo"])
-    u'hallo'
-    >>> call(["id", "-syntax-error"])
-    Traceback (most recent call last):
-    ...
-    Exception: Call failed with retval 1: 'id -syntax-error '
-    """
-    return Call(args, run_as_root=run_as_root, **kwargs).log().check().ustdout
-
-
 def call_sequence(calls, run_as_root=False, rollback_only=False, **kwargs):
     """Run sequences of calls with rollback support.
 
@@ -167,6 +154,6 @@ def sbuild_keys_workaround():
         else:
             t = tempfile.mkdtemp()
             LOG.warn("One-time generation of sbuild keys (may take some time)...")
-            call(["sbuild-update", "--keygen"], env=taint_env({"HOME": t}))
+            Call(["sbuild-update", "--keygen"], env=taint_env({"HOME": t})).log().check()
             shutil.rmtree(t)
             LOG.info("One-time generation of sbuild keys done")

@@ -454,8 +454,8 @@ lvm-snapshot-options=--size {s}G
 
     def mbd_backend_check(self, request):
         MsgLog(LOG, request).info("{c}: Running file system check...".format(c=self))
-        mini_buildd.call.call(["/sbin/fsck", "-a", "-t", self.filesystem, self.mbd_get_lvm_device()],
-                              run_as_root=True)
+        mini_buildd.call.Call(["/sbin/fsck", "-a", "-t", self.filesystem, self.mbd_get_lvm_device()],
+                              run_as_root=True).log().check()
 
 
 class LoopLVMChroot(LVMChroot):
@@ -488,7 +488,7 @@ class LoopLVMChroot(LVMChroot):
             if os.path.realpath(mini_buildd.misc.open_utf8(f).read().strip()) == os.path.realpath(self.mbd_get_backing_file()):
                 return "/dev/" + f.split("/")[3]
         LOG.debug("No existing loop device for {b}, searching for free device".format(b=self.mbd_get_backing_file()))
-        return mini_buildd.call.call(["/sbin/losetup", "--find"], run_as_root=True).rstrip()
+        return mini_buildd.call.Call(["/sbin/losetup", "--find"], run_as_root=True).log().check().ustdout.rstrip()
 
     def mbd_get_pre_sequence(self):
         loop_device = self.mbd_get_loop_device()

@@ -7,7 +7,6 @@ import re
 import time
 import shutil
 import glob
-import tempfile
 import threading
 import Queue
 import collections
@@ -246,19 +245,19 @@ class KeyringPackage(mini_buildd.misc.TmpDir):
                             mini_buildd.misc.open_utf8(os.path.join(p, file_name), "w").write(apt_line + "\n")
 
         # Generate changelog entry
-        mini_buildd.call.call(["debchange",
+        mini_buildd.call.Call(["debchange",
                                "--create",
                                "--package", self.package_name,
                                "--newversion", self.version,
                                "Automatic keyring package for archive '{i}'.".format(i=identity)],
                               cwd=p,
-                              env=self.environment)
+                              env=self.environment).log().check()
 
-        mini_buildd.call.call(["dpkg-source",
+        mini_buildd.call.Call(["dpkg-source",
                                "-b",
                                "package"],
                               cwd=self.tmpdir,
-                              env=self.environment)
+                              env=self.environment).log().check()
 
         # Compute DSC file name
         self.dsc = os.path.join(self.tmpdir,
@@ -273,11 +272,11 @@ class DSTPackage(mini_buildd.misc.TmpDir):
         dst_dir = os.path.join(self.tmpdir, "package")
         shutil.copytree(tpl_dir, dst_dir)
         if version:
-            mini_buildd.call.call(["debchange",
+            mini_buildd.call.Call(["debchange",
                                    "--newversion", version,
                                    "Version update '{v}'.".format(v=version)],
-                                  cwd=dst_dir)
-        mini_buildd.call.call(["dpkg-source", "-b", "package"], cwd=self.tmpdir)
+                                  cwd=dst_dir).log().check()
+        mini_buildd.call.Call(["dpkg-source", "-b", "package"], cwd=self.tmpdir).log().check()
         self.dsc = glob.glob(os.path.join(self.tmpdir, "*.dsc"))[0]
 
 
@@ -631,24 +630,24 @@ class Daemon(object):
                                               "GNUPGHOME": self.model.mbd_gnupg.home})
 
             # Download DSC via dget.
-            mini_buildd.call.call(["dget",
+            mini_buildd.call.Call(["dget",
                                    "--allow-unauthenticated",
                                    "--download-only",
                                    dsc_url],
                                   cwd=t.tmpdir,
-                                  env=env)
+                                  env=env).log().check()
 
             # Get SHA1 of original dsc file
             original_dsc_sha1sum = mini_buildd.misc.sha1_of_file(os.path.join(t.tmpdir, os.path.basename(dsc_url)))
 
             # Unpack DSC (note: dget does not support -x to a dedcicated dir).
             dst = "debian_source_tree"
-            mini_buildd.call.call(["dpkg-source",
+            mini_buildd.call.Call(["dpkg-source",
                                    "-x",
                                    os.path.basename(dsc_url),
                                    dst],
                                   cwd=t.tmpdir,
-                                  env=env)
+                                  env=env).log().check()
 
             dst_path = os.path.join(t.tmpdir, dst)
 
@@ -658,7 +657,7 @@ class Daemon(object):
             LOG.debug("Port: Found original version/author: {v}/{a}".format(v=original_version, a=original_author))
 
             # Change changelog in DST
-            mini_buildd.call.call(["debchange",
+            mini_buildd.call.Call(["debchange",
                                    "--newversion", version,
                                    "--force-distribution",
                                    "--force-bad-version",
@@ -666,17 +665,17 @@ class Daemon(object):
                                    "--dist", dist,
                                    "Automated port via mini-buildd (no changes). Original DSC's SHA1: {s}.".format(s=original_dsc_sha1sum)],
                                   cwd=dst_path,
-                                  env=env)
+                                  env=env).log().check()
 
             for entry in (extra_cl_entries or []) + ["MINI_BUILDD: BACKPORT_MODE"]:
-                mini_buildd.call.call(["debchange",
+                mini_buildd.call.Call(["debchange",
                                        "--append",
                                        entry],
                                       cwd=dst_path,
-                                      env=env)
+                                      env=env).log().check()
 
             # Repack DST
-            mini_buildd.call.call(["dpkg-source", "-b", dst], cwd=t.tmpdir, env=env)
+            mini_buildd.call.Call(["dpkg-source", "-b", dst], cwd=t.tmpdir, env=env).log().check()
             dsc = os.path.join(t.tmpdir,
                                mini_buildd.changes.Changes.gen_dsc_file_name(package,
                                                                              version))
@@ -689,18 +688,16 @@ class Daemon(object):
                                                                                      "source"))
 
             # Generate Changes file
-            with tempfile.TemporaryFile() as err:
-                with mini_buildd.call.create_and_open(changes, "r+") as out:
-                    # Note: dpkg-genchanges has a home-brewed options parser. It does not allow, for example, "-v 1.2.3", only "-v1.2.3", so we need to use *one* sequence item fo that.
-                    mini_buildd.call.call(["dpkg-genchanges",
-                                           "-S",
-                                           "-sa",
-                                           "-v{v}".format(v=original_version),
-                                           "-DX-Mini-Buildd-Originally-Changed-By={a}".format(a=original_author).encode(mini_buildd.setup.CHAR_ENCODING)],
-                                          cwd=dst_path,
-                                          env=env,
-                                          stdout=out,
-                                          stderr=err)
+            with mini_buildd.call.create_and_open(changes, "r+") as out:
+                # Note: dpkg-genchanges has a home-brewed options parser. It does not allow, for example, "-v 1.2.3", only "-v1.2.3", so we need to use *one* sequence item fo that.
+                mini_buildd.call.Call(["dpkg-genchanges",
+                                       "-S",
+                                       "-sa",
+                                       "-v{v}".format(v=original_version),
+                                       "-DX-Mini-Buildd-Originally-Changed-By={a}".format(a=original_author).encode(mini_buildd.setup.CHAR_ENCODING)],
+                                      cwd=dst_path,
+                                      env=env,
+                                      stdout=out).log().check()
 
             # Sign and add to incoming queue
             self.model.mbd_gnupg.sign(changes)
