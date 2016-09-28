@@ -17,7 +17,7 @@
 
 namespace MBD_TEST_CPP
 {
-	// Test that SHM works in build environment
+	// Test: /dev/shm in build environment
 	void mbd_test_cpp_shm()
 	{
 		int shm_fd(::shm_open("mbd-test-cpp", O_RDWR | O_CREAT, S_IRWXU));
@@ -29,9 +29,17 @@ namespace MBD_TEST_CPP
 		std::cout << "OK: shm_open works." << std::endl;
 	}
 
+	// Test: Buildlog with (some) non-UTF-8 encoding
+	void mbd_test_cpp_non_utf8_output()
+	{
+		std::cout << "UTF-8 : Ã¶Ã¤" << std::endl;
+		std::cout << "Latin1: öä" << std::endl;
+	}
+
 	void mbd_test_cpp()
 	{
 		std::cout << "Test project mbd-test-cpp." << std::endl;
 		mbd_test_cpp_shm();
+		mbd_test_cpp_non_utf8_output();
 	}
 }
