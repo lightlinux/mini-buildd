@@ -6,7 +6,6 @@ import os
 import re
 import tempfile
 import shutil
-import subprocess
 import logging
 
 import mini_buildd.misc
@@ -89,8 +88,8 @@ class BaseGnuPG(object):
             mini_buildd.call.call(self.gpg_cmd + ["--gen-key"], stdin=t)
 
     def export(self, dest_file, identity=""):
-        with mini_buildd.misc.open_utf8(dest_file, "w") as f:
-            subprocess.check_call(self.gpg_cmd + ["--export"] + ([identity] if identity else []), stdout=f)
+        with open(dest_file, "w") as f:
+            mini_buildd.call.Call(self.gpg_cmd + ["--export"] + ([identity] if identity else []), stdout=f).check()
 
     def get_pub_key(self, identity):
         return mini_buildd.call.call(self.gpg_cmd + ["--armor", "--export", identity])
