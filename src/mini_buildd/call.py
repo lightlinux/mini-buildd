@@ -26,26 +26,6 @@ def taint_env(taint):
     return env
 
 
-def log_call_output(log, prefix, output):
-    output.seek(0)
-    for line in output:
-        log("{p}: {l}".format(p=prefix, l=line.decode(mini_buildd.setup.CHAR_ENCODING).rstrip('\n')))
-
-
-def args2shell(args):
-    """
-    Convenience: Convert an argument sequence to a command line maybe-suitable for cut and paste to a shell.
-    """
-    result = ""
-    for a in args:
-        if " " in a:
-            result += "\"" + a + "\""
-        else:
-            result += a
-        result += " "
-    return result
-
-
 class Call(object):
     """
     Wrapper around subprocess.
