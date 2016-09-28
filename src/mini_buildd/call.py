@@ -124,50 +124,12 @@ def call(args, run_as_root=False, value_on_error=None, log_output=True, error_lo
 
     >>> call(["echo", "-n", "hallo"])
     u'hallo'
-    >>> call(["id", "-syntax-error"], value_on_error="Kapott")
-    u'Kapott'
+    >>> call(["id", "-syntax-error"])
+    Traceback (most recent call last):
+    ...
+    Exception: Call failed with retval 1: 'id -syntax-error '
     """
-
-    if run_as_root:
-        args = ["sudo", "-n"] + args
-
-    def _set_stream(name):
-        if name in kwargs:
-            return kwargs[name]
-        else:
-            stream = tempfile.TemporaryFile()
-            kwargs[name] = stream
-            return stream
-
-    stdout = _set_stream("stdout")
-    stderr = _set_stream("stderr")
-
-    LOG.info("Calling: {a}".format(a=args2shell(args)))
-    try:
-        olog = LOG.debug
-        try:
-            subprocess.check_call(args, **kwargs)
-        except:
-            if error_log_on_fail:
-                olog = LOG.error
-            raise
-        finally:
-            try:
-                if log_output:
-                    log_call_output(olog, "Call stdout", stdout)
-                    log_call_output(olog, "Call stderr", stderr)
-            except Exception as e:
-                mini_buildd.setup.log_exception(LOG, "Output logging failed (char enc?)", e)
-    except:
-        if error_log_on_fail:
-            LOG.error("Call failed: {a}".format(a=args2shell(args)))
-        if value_on_error is not None:
-            return value_on_error
-        else:
-            raise
-    LOG.debug("Call successful: {a}".format(a=args2shell(args)))
-    stdout.seek(0)
-    return stdout.read().decode(mini_buildd.setup.CHAR_ENCODING)
+    return Call(args, run_as_root=run_as_root, **kwargs).log().check().ustdout
 
 
 def sose(call, **kwargs):
@@ -182,7 +144,7 @@ def sose(call, **kwargs):
     >>> sose(["printf stdin; printf stderr >&2"], shell=True)
     u'stdinstderr'
     """
-    return Call(call, stderr=subprocess.STDOUT, **kwargs).log().check().stdout
+    return Call(call, stderr=subprocess.STDOUT, **kwargs).log().check().ustdout
 
 
 def call_sequence(calls, run_as_root=False, value_on_error=None, log_output=True, rollback_only=False, **kwargs):
