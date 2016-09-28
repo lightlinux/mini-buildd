@@ -81,6 +81,9 @@ class Call(object):
         self.retval = subprocess.call(self.call, **self.kwargs)
         LOG.info("Called with retval {r}: {c}".format(r=self.retval, c=self._call2shell(self.call)))
 
+        # Convenience 'label' for log output
+        self.label = "{p} {c}..".format(p="#" if run_as_root else "?", c=call[0])
+
     @property
     def stdout(self):
         """Raw value as str."""
@@ -109,8 +112,8 @@ class Call(object):
     def log(self, always=True):
         olog = LOG.info if self.retval == 0 else LOG.warning
         if self.retval != 0 or always:
-            self._log_call_output(olog, "Call stdout", self.ustdout)
-            self._log_call_output(olog, "Call stderr", self.ustderr)
+            self._log_call_output(olog, "{l} (stdout)".format(l=self.label), self.ustdout)
+            self._log_call_output(olog, "{l} (stderr)".format(l=self.label), self.ustderr)
         return self
 
     def check(self):
