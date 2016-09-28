@@ -221,12 +221,13 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
         buildlog = os.path.join(self._build_dir, self._breq.buildlog_name)
         LOG.info("{p}: Running sbuild: {c}".format(p=self.key, c=mini_buildd.call.args2shell(sbuild_cmd)))
         with open(buildlog, "w") as l:
-            retval = subprocess.call(sbuild_cmd,
-                                     cwd=self._build_dir,
-                                     env=mini_buildd.call.taint_env({"HOME": self._build_dir,
-                                                                     "GNUPGHOME": os.path.join(mini_buildd.setup.HOME_DIR, ".gnupg"),
-                                                                     "DEB_BUILD_OPTIONS": "parallel={j}".format(j=self._sbuild_jobs)}),
-                                     stdout=l, stderr=subprocess.STDOUT)
+            sbuild_call = mini_buildd.call.Call(sbuild_cmd,
+                                                cwd=self._build_dir,
+                                                env=mini_buildd.call.taint_env({"HOME": self._build_dir,
+                                                                                "GNUPGHOME": os.path.join(mini_buildd.setup.HOME_DIR, ".gnupg"),
+                                                                                "DEB_BUILD_OPTIONS": "parallel={j}".format(j=self._sbuild_jobs)}),
+                                                stdout=l, stderr=subprocess.STDOUT).check()
+            retval = sbuild_call.retval
 
         # Add build results to build request object
         self._bres["Sbuildretval"] = unicode(retval)
