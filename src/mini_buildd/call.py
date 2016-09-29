@@ -22,8 +22,13 @@ def taint_env(taint):
 
 
 class Call(object):
-    """
-    Wrapper around subprocess.
+    """Wrapper around python subprocess.
+
+    When supplying ``stdout`` or ``stderr``, provide raw and
+    'seekable' file-like object; i.e., use "w+" and standard
+    python ``open`` like::
+
+      mystdout = open(myoutputfile, "w+")
 
     >>> Call(["echo", "-n", "hallo"]).check().ustdout
     u'hallo'
@@ -31,7 +36,6 @@ class Call(object):
     Traceback (most recent call last):
     ...
     Exception: Call failed with retval 2: 'ls __no_such_file__ '
-
     >>> Call(["printf stdin; printf stderr >&2"], stderr=subprocess.STDOUT, shell=True).ustdout
     u'stdinstderr'
     """
@@ -81,7 +85,7 @@ class Call(object):
 
     @property
     def ustdout(self):
-        """Unicode value as unicode (assuming raw string is UTF-8)."""
+        """Value of stdout as unicode."""
         return self.stdout.decode(mini_buildd.setup.CHAR_ENCODING)
 
     @property
@@ -104,6 +108,7 @@ class Call(object):
         return self
 
     def check(self):
+        """Raise on unsuccessful (retval != 0) call."""
         if self.retval != 0:
             raise Exception("Call failed with retval {r}: '{c}'".format(r=self.retval, c=self._call2shell(self.call)))
         return self
