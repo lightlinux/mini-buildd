@@ -49,11 +49,6 @@ class Call(object):
             result += " "
         return result
 
-    @classmethod
-    def _log_call_output(cls, log, prefix, output):
-        for line in output.splitlines():
-            log("{p}: {l}".format(p=prefix, l=line.rstrip('\n')))
-
     def __init__(self, call, run_as_root=False, **kwargs):
         self.call = ["sudo", "-n"] + call if run_as_root else call
         self.kwargs = kwargs.copy()
@@ -94,11 +89,18 @@ class Call(object):
         """Value of stderr as unicode."""
         return self.stderr.decode(mini_buildd.setup.CHAR_ENCODING)
 
-    def log(self, always=True):
-        olog = LOG.info if self.retval == 0 else LOG.warning
-        if self.retval != 0 or always:
-            self._log_call_output(olog, "{l} (stdout)".format(l=self.label), self.ustdout)
-            self._log_call_output(olog, "{l} (stderr)".format(l=self.label), self.ustderr)
+    def log(self):
+        """Log calls output to mini-buildd's logging for debugging.
+
+        On error, this logs with level ``warning``. On sucesss,
+        this logs with level ``debug``.
+
+        """
+        olog = LOG.debug if self.retval == 0 else LOG.warning
+        for prefix, output in [("stdout", self.ustdout), ("stderr", self.ustderr)]:
+            for line in output.splitlines():
+                olog("{label} ({p}): {l}".format(label=self.label, p=prefix, l=line.rstrip('\n')))
+
         return self
 
     def check(self):
