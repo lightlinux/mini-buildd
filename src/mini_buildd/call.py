@@ -14,11 +14,6 @@ import mini_buildd.setup
 LOG = logging.getLogger(__name__)
 
 
-def create_and_open(file_name, *args, **kwargs):
-    """Helper to open  a new file for writing and reading."""
-    return os.fdopen(os.open(file_name, os.O_RDWR | os.O_CREAT), *args, **kwargs)
-
-
 def taint_env(taint):
     env = os.environ.copy()
     for name in taint:

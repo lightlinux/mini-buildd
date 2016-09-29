@@ -688,7 +688,7 @@ class Daemon(object):
                                                                                      "source"))
 
             # Generate Changes file
-            with mini_buildd.call.create_and_open(changes, "r+") as out:
+            with open(changes, "w+") as out:
                 # Note: dpkg-genchanges has a home-brewed options parser. It does not allow, for example, "-v 1.2.3", only "-v1.2.3", so we need to use *one* sequence item fo that.
                 mini_buildd.call.Call(["dpkg-genchanges",
                                        "-S",
