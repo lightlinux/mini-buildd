@@ -40,6 +40,7 @@ def import_all():
         chroot.FileChroot,
         chroot.LVMChroot,
         chroot.LoopLVMChroot,
+        chroot.BtrfsSnapshotChroot,
         daemon.Daemon,
         subscription.Subscription]
 

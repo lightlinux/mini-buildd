@@ -118,7 +118,7 @@ chroots (with <tt>qemu-user-static</tt> installed).
                                             f=self.mbd_get_backend().mbd_backend_flavor())
 
     def mbd_get_backend(self):
-        for cls, sub in {"filechroot": [], "dirchroot": [], "lvmchroot": ["looplvmchroot"]}.items():
+        for cls, sub in {"filechroot": [], "dirchroot": [], "lvmchroot": ["looplvmchroot"], "btrfssnapshotchroot": []}.items():
             if hasattr(self, cls):
                 c = getattr(self, cls)
                 for s in sub:
@@ -508,3 +508,48 @@ class LoopLVMChroot(LVMChroot):
 
             (["/sbin/vgcreate", "--verbose", self.mbd_get_volume_group(), loop_device],
              ["/sbin/vgremove", "--verbose", "--force", self.mbd_get_volume_group()])] + super(LoopLVMChroot, self).mbd_get_pre_sequence()
+
+
+class BtrfsSnapshotChroot(Chroot):
+    """ Btrfs Snapshot chroot backend. """
+    class Meta(Chroot.Meta):
+        pass
+
+    class Admin(Chroot.Admin):
+        fieldsets = Chroot.Admin.fieldsets
+
+        @classmethod
+        def mbd_meta_add_base_sources(cls, msglog):
+            cls._mbd_meta_add_base_sources(BtrfsSnapshotChroot, msglog)
+
+    @classmethod
+    def mbd_backend_flavor(cls):
+        return "btrfs_snapshot"
+
+    def mbd_get_chroot_dir(self):
+        return os.path.join(self.mbd_get_path(), "source")
+
+    def mbd_get_snapshot_dir(self):
+        return os.path.join(self.mbd_get_path(), "snapshot")
+
+    def mbd_get_schroot_conf(self):
+        return """\
+type=btrfs-snapshot
+btrfs-source-subvolume={source}
+btrfs-snapshot-directory={snapshot}
+""".format(source=self.mbd_get_chroot_dir(),
+           snapshot=self.mbd_get_snapshot_dir())
+
+    def mbd_get_pre_sequence(self):
+        return [
+            (["/sbin/btrfs", "subvolume", "create", self.mbd_get_chroot_dir()],
+             ["/sbin/btrfs", "subvolume", "delete", self.mbd_get_chroot_dir()]),
+
+            (["/bin/mount", "-v", "-o", "bind", self.mbd_get_chroot_dir(), self.mbd_get_tmp_dir()],
+             ["/bin/umount", "-v", "-o", "bind", self.mbd_get_tmp_dir()]),
+
+            (["/bin/mkdir", "--verbose", self.mbd_get_snapshot_dir()],
+             ["/bin/rm", "--recursive", "--one-file-system", "--force", self.mbd_get_snapshot_dir()])]
+
+    def mbd_get_post_sequence(self):
+        return [(["/bin/umount", "-v", self.mbd_get_tmp_dir()], [])]
