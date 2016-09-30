@@ -542,8 +542,8 @@ btrfs-snapshot-directory={snapshot}
 
     def mbd_get_pre_sequence(self):
         return [
-            (["/sbin/btrfs", "subvolume", "create", self.mbd_get_chroot_dir()],
-             ["/sbin/btrfs", "subvolume", "delete", self.mbd_get_chroot_dir()]),
+            (["/bin/btrfs", "subvolume", "create", self.mbd_get_chroot_dir()],
+             ["/bin/btrfs", "subvolume", "delete", self.mbd_get_chroot_dir()]),
 
             (["/bin/mount", "-v", "-o", "bind", self.mbd_get_chroot_dir(), self.mbd_get_tmp_dir()],
              ["/bin/umount", "-v", "-o", "bind", self.mbd_get_tmp_dir()]),
