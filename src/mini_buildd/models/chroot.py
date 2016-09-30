@@ -248,7 +248,7 @@ personality={p}
             raise Exception("Chroot has sudo workaround (created with versions <= 1.0.4): Please run 'Remove' + 'PCA' on this chroot to re-create!")
 
     def mbd_backend_check(self, request):
-        "Subclasses may implement this to do extra backend checks."
+        "Subclasses may implement this to do extra backend-specific checks."
         MsgLog(LOG, request).info("{c}: No backend check implemented.".format(c=self))
 
     def mbd_check(self, request):
