@@ -85,13 +85,16 @@ class Call(object):
 
     @property
     def ustdout(self):
-        """Value of stdout as unicode."""
-        return self.stdout.decode(mini_buildd.setup.CHAR_ENCODING)
+        """
+        .. |docstr_uout| replace:: Value as unicode (decoding from :py:data:`mini_buildd.setup.CHAR_ENCODING`, replacing on error).
+        |docstr_uout|
+        """
+        return self.stdout.decode(mini_buildd.setup.CHAR_ENCODING, errors="replace")
 
     @property
     def ustderr(self):
-        """Value of stderr as unicode."""
-        return self.stderr.decode(mini_buildd.setup.CHAR_ENCODING)
+        """|docstr_uout|"""
+        return self.stderr.decode(mini_buildd.setup.CHAR_ENCODING, errors="replace")
 
     def log(self):
         """Log calls output to mini-buildd's logging for debugging.

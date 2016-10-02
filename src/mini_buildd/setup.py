@@ -10,7 +10,7 @@ FOREGROUND = False
 
 HTTPD_BIND = None
 
-# Global directory paths
+#: Global directory paths
 HOME_DIR = None
 
 INCOMING_DIR = None
@@ -26,7 +26,7 @@ CHROOT_LIBDIR = None
 
 MANUAL_DIR = None
 
-# This should never ever be changed
+#: This should never ever be changed
 CHAR_ENCODING = "UTF-8"
 
 # Compute python-version dependent install path
