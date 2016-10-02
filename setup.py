@@ -6,7 +6,6 @@ import subprocess
 import distutils.core
 import debian.changelog
 import setuptools
-import doc.apidoc
 
 print "I: Using setuptools: {v}".format(v=setuptools.__version__)
 
@@ -17,10 +16,8 @@ def sphinx_build_workaround(build_dir="./build/sphinx"):
     shutil.copytree("./doc", build_dir)
     shutil.copytree("./src/mini_buildd/static", os.path.join(build_dir, "_static"))
 
-    # Call apidoc (local script for sphinx < 1.1)
-    apidoc = "/usr/bin/sphinx-apidoc" if os.path.exists("/usr/bin/sphinx-apidoc") else "./doc/apidoc.py"
-    apidoc_arguments = [apidoc, "--force", "--output-dir", build_dir, "./src/mini_buildd/"]
-    doc.apidoc.main(apidoc_arguments)
+    # Generate API documentation
+    subprocess.check_call(["/usr/bin/sphinx-apidoc", "--force", "--output-dir", build_dir, "./src/mini_buildd/"])
 
     # Generate man pages via help2man
     subprocess.check_call(["help2man",
