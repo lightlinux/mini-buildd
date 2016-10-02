@@ -524,7 +524,7 @@ def u2b64(unicode_string):
 
 def b642u(base64_bytestream):
     """
-    Convert base46 string to unicode.
+    Convert base64 string (in :py:data:`mini_buildd.setup.CHAR_ENCODING`) to unicode.
 
     >>> u = b642u('w5xuaWNvZGUgc3Ryw7xuZw==')
     >>> u.__class__.__name__
