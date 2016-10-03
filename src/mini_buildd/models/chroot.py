@@ -546,7 +546,7 @@ btrfs-snapshot-directory={snapshot}
              ["/bin/btrfs", "subvolume", "delete", self.mbd_get_chroot_dir()]),
 
             (["/bin/mount", "-v", "-o", "bind", self.mbd_get_chroot_dir(), self.mbd_get_tmp_dir()],
-             ["/bin/umount", "-v", "-o", "bind", self.mbd_get_tmp_dir()]),
+             ["/bin/umount", "-v", self.mbd_get_tmp_dir()]),
 
             (["/bin/mkdir", "--verbose", self.mbd_get_snapshot_dir()],
              ["/bin/rm", "--recursive", "--one-file-system", "--force", self.mbd_get_snapshot_dir()])]
