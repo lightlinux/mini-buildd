@@ -1,3 +1,68 @@
+mini-buildd (1.0.21) unstable; urgency=medium
+
+  This release mainly features code refactoring around the internal
+  subprocess warpper and the addition of the BTRFS chroot backend.
+
+  Subprocess wrapper refactoring. While this mostly cleans up code, it
+  should also provide a nicer "log experience" for the administrator:
+
+  * [7797f73] call.py: Add helper to open a new file rw.
+  * [a1e9172] call.py: call(): Use stdin and stderr when given explicitly.
+  * [c9005dc] daemon.py: Use call.py (for genchanges), not subprocess
+    directly.
+  * [9ee1134] call.py: Rename call.sose_call -> call.sose, and make it
+    just a wrapper for call().
+  * [2893b89] call.py: Use shell-like output of command for all such logs.
+  * [aec91a8] call.py: Initial implementation of new class 'Call'.
+  * [165d91f] call.py: Update 'sose' function to use new class.
+  * [01d9fc6] call.py: Call(): Separate raw && unicode properties for
+    stderr/stdout.
+  * [95dd481] call.py: Use new Call() class in call().
+  * [b7103a9] call.py: Call(): Add "human-readable label" for nicer
+    logging.
+  * [651deba] gnupg.py: Update to new call.py for "export" subprocess
+    call.
+  * [fdf80e8] builder.py: Update sbuild call to new call.py.
+  * [85129d2] call.py/gnupg.py: Bulk-remove obsoleted call arguments.
+  * [077d1a7] builder.py: Remove now-obsoleted extra sbuild call log.
+  * [aaf2b70] call.py: Remove obsoleted functions: log_call_output,
+    args2shell.
+  * [5324fad] call: Bulk-replace obsolete "sose" call.
+  * [ae72eb6] call: Bulk-replace obsoleted call() function.
+  * [6f158be] call.py: Obsolete create_and_open().
+  * [8c18b62] call.py: Call().log(): Clean up code and document.
+  * [8f835e9] call.py: Call(): Class doc update.
+  * [6974148] builder.py: Don't log the build log.
+  * [6144e17] call.py: Make the magic "sequence2shell" convenience
+    converter work for mixed (str+unicode) sequences.
+  * [d07b9c6] call.py: ustdout|err: Replace on decoding error.
+  * [2999869] builder.py: sbuild call: Call log(), not check() (call
+    refactor regression).
+
+  BTRFS backend (thx again Katsuhiko):
+
+  * [3329a2b] [btrfs chroot backend]: Incorporate Katsuhiko Nishimra's
+    patch (mostly as-is). Thanks Katsuhiko! Thanks to Katsuhiko Nishimra,
+    Marc Haber (Closes: 673443)
+  * [f743188] [btrfs chroot backend] Update btrfs program path and package
+    name (btrfs-tools is deprecated now).
+  * [1546053] [btrfs chroot backend] Don't use '-o' for umount.
+
+  Other changes:
+
+  * [8c1015c] [test] mbd-test-cpp: Modify changelog so it tests non-ASCII
+    "original_author" string on ports.
+  * [ace2a62] packages/mbd-test-cpp: Add test for buildlog with non-UTF8
+    chars.
+  * [b013a7d] [devel] devel.debconf.selections: Don't have sbuild debug on
+    by default.
+  * [892d0c0] [doc] chroot: Minor wording fix for mbd_check_backend().
+  * [6fa5061] Remove compat/workaround for sphinx < 1.1 (obsoleted for
+    quite some time).
+  * [fb58a7f] misc.py: API doc fixes.
+
+ -- Stephan Sürken <absurd@debian.org>  Mon, 03 Oct 2016 13:20:20 +0000
+
 mini-buildd (1.0.20) unstable; urgency=medium
 
   * [1e262bb] changes.py: Don't add *.deb-Files to build requests. Thanks
