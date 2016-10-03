@@ -42,10 +42,15 @@ class Call(object):
     @classmethod
     def _call2shell(cls, call):
         """
-        Convenience: Convert an argument sequence ("call") to a command line maybe-suitable for cut and paste to a shell.
+        Convenience: Convert an argument sequence ("call") to a
+        command line more human-readable and "likely-suitable"
+        for cut and paste to a shell.
         """
         result = ""
-        for a in call:
+        for arg in call:
+            # Sequences might need a properly encoded plain 'str' argument for the call to work (see genchanges in daemon.py).
+            # So make sure 'a' is 'unicode'.
+            a = arg.decode(mini_buildd.setup.CHAR_ENCODING, errors="replace") if isinstance(arg, str) else arg
             if " " in a:
                 result += "\"" + a + "\""
             else:
