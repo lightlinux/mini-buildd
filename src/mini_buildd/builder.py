@@ -225,7 +225,7 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
                                                 env=mini_buildd.call.taint_env({"HOME": self._build_dir,
                                                                                 "GNUPGHOME": os.path.join(mini_buildd.setup.HOME_DIR, ".gnupg"),
                                                                                 "DEB_BUILD_OPTIONS": "parallel={j}".format(j=self._sbuild_jobs)}),
-                                                stdout=l, stderr=subprocess.STDOUT).log()
+                                                stdout=l, stderr=subprocess.STDOUT)
             retval = sbuild_call.retval
 
         # Add build results to build request object
