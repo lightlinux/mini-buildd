@@ -224,11 +224,11 @@ personality={p}
     def mbd_sync(self, request):
         self._mbd_remove_and_prepare(request)
 
-    def _mbd_schroot_run(self, args, namespace="chroot", user="root"):
+    def _mbd_schroot_run(self, call, namespace="chroot", user="root"):
         return mini_buildd.call.Call(["/usr/bin/schroot",
                                       "--chroot", "{n}:{c}".format(n=namespace, c=self.mbd_get_name()),
                                       "--user", user] +
-                                     args).log().check().ustdout
+                                     call).log().check().ustdout
 
     def mbd_check_sudo_workaround(self, request):
         """
