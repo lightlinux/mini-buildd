@@ -352,7 +352,7 @@ You can chose amongst a number of schroot backends; to be able
 to be supported by mini-buildd, the backend must support
 *snapshots* (compare ``man 5 schroot.conf``).
 
-At the time (Jan 2015) of this writing, mini-buildd supports
+At the time (Oct 2016) of this writing, mini-buildd supports
 these backends:
 
 ============ ========================================= ================ ======== ======== ========================================================= ===============
@@ -361,6 +361,7 @@ Type         Options                                   Build size limit Speed   
 Dir          **aufs**, overlayfs, unionfs, **overlay** No               Medium   No       Kernel support (aufs <= jessie, overlay >= stretch)       **Recommended**
 File         compression                               No               Low      No       No
 LVM          loop, given LVM setup                     Yes              Fast     Yes      LVM tools, Kernel support (dm, in Debian standard kernel)
+BTRFS        none                                      No               ???      Yes      btrfs host file system, btrfs-progs
 ============ ========================================= ================ ======== ======== ========================================================= ===============
 
 In short, we **recommend directory based chroots via aufs**
