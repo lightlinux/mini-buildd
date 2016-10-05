@@ -270,6 +270,11 @@ personality={p}
         MsgLog(LOG, request).info("{c}: Running backend check.".format(c=self))
         self.mbd_get_backend().mbd_backend_check(request)
 
+        # Update base apt line (source might have switched to another archive).
+        apt_line = self.source.mbd_get_apt_line_raw(["main"])
+        self._mbd_schroot_run(["--", "/bin/sh", "-c", "echo '{apt_line}' >/etc/apt/sources.list".format(apt_line=apt_line)], namespace="source")
+        MsgLog(LOG, request).info("{c}: '/etc/apt/sources.list' updated: '{a}'.".format(c=self, a=apt_line))
+
         # "apt update/upgrade" check
         for args, fatal in [(["update"], True),
                             (["--ignore-missing", "dist-upgrade"], True),
