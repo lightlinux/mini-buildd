@@ -423,14 +423,17 @@ codeversion is only used for base sources.""")
         else:
             raise Exception("{s}: No archive found. Please add appropriate archive and/or check network setup.".format(s=self))
 
-    def mbd_get_apt_line(self, distribution, prefix="deb "):
-        allowed_components = [c.name for c in distribution.components.all()]
-        components = sorted([c for c in self.components.all() if c.name in allowed_components], cmp=cmp_components)
+    def mbd_get_apt_line_raw(self, components, prefix="deb "):
         return "{p}{u} {d} {c}".format(
             p=prefix,
             u=self.mbd_get_archive().url,
             d=self.codename + ("" if components else "/"),
-            c=" ".join([c.name for c in components]))
+            c=" ".join(components))
+
+    def mbd_get_apt_line(self, distribution, prefix="deb "):
+        allowed_components = [c.name for c in distribution.components.all()]
+        components = sorted([c for c in self.components.all() if c.name in allowed_components], cmp=cmp_components)
+        return self.mbd_get_apt_line_raw([c.name for c in components], prefix=prefix)
 
     def mbd_get_apt_pin(self):
         "Apt 'pin line' (for use in a apt 'preference' file)."
