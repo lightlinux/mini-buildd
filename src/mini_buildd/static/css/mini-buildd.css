@@ -654,21 +654,21 @@ a:hover
 	margin: 4px 15px 0 0;
 }
 
-#mbd-footer span.page-footer
-{
-	font-size: 11px;
-	font-weight: bold;
-	color: #81a2ae;
-	float: right;
-}
-
-#mbd-footer a.homelink:link, #mbd-footer a.homelink:visited, #mbd-footer a.homelink:hover
+#mbd-footer span.version-info
 {
 	color: #878787;
 	margin: 0px 0px 0px 0px;
 	padding: 0px 0px 0px 0px;
 	border: 0;
 	text-decoration: none;
+}
+
+#mbd-footer span.page-footer
+{
+	font-size: 11px;
+	font-weight: bold;
+	color: #81a2ae;
+	float: right;
 }
 
 /* API */

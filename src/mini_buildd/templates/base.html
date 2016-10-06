@@ -67,7 +67,10 @@
 
 		<!-- Footer -->
 		<div id="mbd-footer">
-			<p><a class="homelink" title="mini-buildd Home" href="/mini_buildd/">{% mbd_version %}</a><span class="page-footer">{% block mbd_page_footer %}{% endblock %}</span></p>
+			<p>
+				<span class="version-info" title="{% for package, version in mbd_components.items %}{{ package }}-{{ version }}&#013;&#010;{% endfor %}">{{ mbd_version }}</span>
+				<span class="page-footer">{% block mbd_page_footer %}{% endblock %}</span>
+			</p>
 		</div>
 	</body>
 </html>

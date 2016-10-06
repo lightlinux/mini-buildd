@@ -23,11 +23,6 @@ def mbd_dirname(path):
     return os.path.dirname(path)
 
 
-@register.simple_tag
-def mbd_version():
-    return mini_buildd.__version__
-
-
 # Use assignment_tag form campat 1.7, 1.8. django >= 1.9 allows this to be a simple_tag
 @register.assignment_tag
 def mbd_jquery_path():
