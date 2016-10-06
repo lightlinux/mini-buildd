@@ -99,6 +99,11 @@ a:hover
 	border-left: 0;
 }
 
+#mbd-navigation a.homepage
+{
+	color: lightgrey;
+}
+
 #mbd-navigation ul.left
 {
 	float: left;
