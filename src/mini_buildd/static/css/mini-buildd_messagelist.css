@@ -21,7 +21,7 @@ ul.messagelist li.debug
 	color: blue;
 }
 
-ul.messagelist li.info
+ul.messagelist li.info, ul.messagelist li.success
 {
 	background: #ffc url(../img/mbd_message_info.png) 5px .3em no-repeat;
 	color: green;
