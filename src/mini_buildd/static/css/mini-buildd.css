@@ -13,6 +13,11 @@ body
 	padding: 0;
 }
 
+a
+{
+	font-weight: bold;
+}
+
 a:link, a:visited
 {
 	color: #5b80b2;
@@ -189,7 +194,6 @@ a:hover
 #mbd-content .status.Active
 {
 	color: green;
-	font-weight: bold;
 }
 
 /* BUILDER+PACKAGER+BRES STATUS DISPLAYS */
@@ -254,12 +258,10 @@ a:hover
 	background: url("../img/icon_48x48.png") no-repeat scroll right top;
 	background-color: #57859a;
 	color: white;
-	font-size: 12px;
 	font-weight: bold;
 	margin: 0;
 	padding: 3px 0px 3px 5px;
 	font-size: 14px;
-	font-weight: bold;
 	margin: 0;
 	padding: 2px 0px 3px 5px;
 	border-top: 2px solid #57859a;
