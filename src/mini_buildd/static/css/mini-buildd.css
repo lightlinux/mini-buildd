@@ -215,6 +215,12 @@ a:hover
 	color: yellow;
 }
 
+#mbd-content .status.DESCRIPTION
+{
+	color: grey;
+	font-size: smaller;
+}
+
 #mbd-content .box
 {
 	border: 1px solid #aec1c3;
