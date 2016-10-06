@@ -7,6 +7,11 @@ import logging
 import random
 from distutils.version import LooseVersion
 
+from platform import python_version
+from cherrypy import __version__ as cherrypy_version
+from pyftpdlib import __ver__ as pyftpdlib_version
+from registration import get_version as registration_version
+
 import django
 import django.conf
 
@@ -24,6 +29,20 @@ MBD_INSTALLED_APPS = (
     "django.contrib.staticfiles",
     "registration",
     "mini_buildd")
+
+
+MBD_STATIC_CONTEXT = {
+    "mbd_version": mini_buildd.__version__,
+    "mbd_components": {
+        "python": python_version(),
+        "django": django.get_version(),
+        "django-registration": registration_version(),
+        "cherrypy": cherrypy_version,
+        "pyftpdlib": pyftpdlib_version}}
+
+
+def context_processor(_request):
+    return MBD_STATIC_CONTEXT
 
 
 class SMTPCreds(object):
@@ -152,6 +171,7 @@ def configure(smtp_string, loglevel):
                             'django.template.context_processors.static',
                             'django.template.context_processors.tz',
                             'django.contrib.messages.context_processors.messages',
+                            'mini_buildd.django_settings.context_processor'
                         ],
                     },
                 },
