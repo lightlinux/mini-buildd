@@ -162,6 +162,8 @@ Comma-separated list of special debugging options:
         mini_buildd.misc.mkdirs(mini_buildd.setup.REPOSITORIES_DIR)
         mini_buildd.misc.mkdirs(mini_buildd.setup.LOG_DIR)
         mini_buildd.misc.mkdirs(mini_buildd.setup.TMP_DIR)
+        mini_buildd.misc.mkdirs(mini_buildd.setup.SPOOL_DIR)
+        mini_buildd.misc.mkdirs(mini_buildd.setup.CHROOTS_LIBDIR)
 
     @staticmethod
     def _log_handler_file():
