@@ -4,6 +4,7 @@ Documentation=man:mini-buildd(8)
 After=remote-fs.target
 
 [Service]
+Environment=MINI_BUILDD_OPTIONS="--verbose"
 EnvironmentFile=-/etc/default/mini-buildd
 User=mini-buildd
 ExecStart=/usr/sbin/mini-buildd $MINI_BUILDD_OPTIONS
