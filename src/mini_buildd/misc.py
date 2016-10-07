@@ -551,7 +551,9 @@ def list_get(list_, index, default=None):
 
 def mkdirs(path):
     """
-    .. note:: Needed for python 2.x only. For 3.x, just use 'exist_ok' parameter.
+    Make path and any parents needed. Succeed even if it does already exist in the first place.
+
+    .. note:: Needed for python 2.x only. For 3.x, just use 'exist_ok' parameter for os.makedirs().
     """
     try:
         os.makedirs(path)
@@ -561,6 +563,14 @@ def mkdirs(path):
             raise
         else:
             LOG.debug("Directory already exists, ignoring; {d}".format(d=path))
+
+
+def rmdirs(path):
+    """
+    Remove path recursively. Succeed even if it does not exist in the first place.
+    """
+    if os.path.exists(path):
+        shutil.rmtree(path)
 
 
 def tail(file_object, lines, line_chars=160):
