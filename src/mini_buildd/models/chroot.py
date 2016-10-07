@@ -4,7 +4,6 @@ from __future__ import absolute_import
 
 import copy
 import os
-import shutil
 import contextlib
 import glob
 import logging
@@ -130,6 +129,9 @@ chroots (with <tt>qemu-user-static</tt> installed).
     def mbd_get_path(self):
         return os.path.join(mini_buildd.setup.CHROOTS_DIR, self.source.codename, self.architecture.name)
 
+    def mbd_get_libdir_path(self):
+        return os.path.join(mini_buildd.setup.CHROOTS_LIBDIR, self.source.codename, self.architecture.name)
+
     def mbd_get_name(self):
         return "mini-buildd-{d}-{a}".format(d=self.source.codename, a=self.architecture.name)
 
@@ -175,7 +177,8 @@ chroots (with <tt>qemu-user-static</tt> installed).
                        ["/bin/rm", "--verbose", self.mbd_get_system_schroot_conf_file()])]
 
     def mbd_prepare(self, request):
-        mini_buildd.misc.mkdirs(os.path.join(self.mbd_get_path(), mini_buildd.setup.CHROOT_LIBDIR))
+        mini_buildd.misc.mkdirs(self.mbd_get_path())
+        mini_buildd.misc.mkdirs(self.mbd_get_libdir_path())
 
         # Set personality
         self.personality = ""
@@ -215,10 +218,10 @@ personality={p}
 
     def mbd_remove(self, request):
         mini_buildd.call.call_sequence(self.mbd_get_sequence(), rollback_only=True, run_as_root=True)
-        shutil.rmtree(self.mbd_get_path(),
-                      onerror=lambda f, p, e: MsgLog(LOG, request).warn("{c}: Failure removing data dir '{p}' (ignoring): {e}".format(c=self,
-                                                                                                                                      p=self.mbd_get_path(),
-                                                                                                                                      e=e)))
+
+        mini_buildd.misc.rmdirs(self.mbd_get_libdir_path())
+        mini_buildd.misc.rmdirs(self.mbd_get_path())
+
         MsgLog(LOG, request).info("{c}: Removed from system.".format(c=self))
 
     def mbd_sync(self, request):

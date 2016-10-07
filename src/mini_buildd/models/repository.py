@@ -635,10 +635,12 @@ pimp the internal priority up here.
 
         return result
 
+    def mbd_get_libdir_path(self, arch):
+        return os.path.join(mini_buildd.setup.CHROOTS_LIBDIR, self.base_source.codename, arch)
+
     def mbd_get_sbuildrc_snippet(self, arch):
-        libdir = os.path.join(mini_buildd.setup.CHROOTS_DIR, self.base_source.codename, arch, mini_buildd.setup.CHROOT_LIBDIR)
         # Note: For some reason (python, django sqlite, browser?) the text field may be in DOS mode.
-        return mini_buildd.misc.fromdos(mini_buildd.misc.subst_placeholders(self.sbuildrc_snippet, {"LIBDIR": libdir}))
+        return mini_buildd.misc.fromdos(mini_buildd.misc.subst_placeholders(self.sbuildrc_snippet, {"LIBDIR": self.mbd_get_libdir_path(arch)}))
 
     def mbd_get_reverse_dependencies(self):
         "When the distribution changes, all repos that use that distribution also change."
