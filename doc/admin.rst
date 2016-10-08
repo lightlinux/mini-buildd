@@ -502,6 +502,22 @@ On mini-buildd's home, you will find action buttons to
 create+build keyring packages, as well as running test packages.
 
 
+django: Avoid downgrades (does not start after downgrade)
+=========================================================
+
+mini-buildd usually is compatible with several django main
+versions (see control file). This, package-wise, allows for
+downgrading django (maybe you want to go back from backports to
+stable for some reason).
+
+This, however, will mostly always cause problems as the SQL
+database scheme of your app has already been updated.
+
+In case this already has happened, you can only upgrade django
+again (or somehow try to manually downgrade mini-buildd's SQL
+(~/config.sqlite) if you dare).
+
+
 Cruft in ~/var/log
 ==================
 
