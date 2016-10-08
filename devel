@@ -62,22 +62,31 @@ mbd_installdeps()
 	sudo apt-get install --no-install-recommends --target-release='*' sbuild schroot reprepro debootstrap lintian
 }
 
+# grml: The only thing I want here is that my manual test rig can do non-interactive API calls
 mbd_pythonkeyringtestconfig()
 {
-	sudo apt-get install python-keyrings.alt || true   # for the PlainTextKeyring
-	sudo apt-get remove python-secretstorage || true  # posible delay/timeout when trying to contact dbus
-	local configDir="$(python -c "import keyring.util.platform_; print(keyring.util.platform_.config_root())")" || local configDir="${HOME}/.local/share/python_keyring"
+	sudo apt-get install python-keyrings.alt || true   # for the PlainTextKeyring (newer versions only)
+	sudo apt-get remove python-secretstorage || true   # posible delay/timeout when trying to contact dbus
+	local configDir="$(python -c "import keyring.util.platform_; print(keyring.util.platform_.config_root())")" || true
+	[ -n "${configDir}" ] || configDir="${HOME}/.local/share/python_keyring"
+	mkdir -p "${configDir}"
 
 	local configFile="${configDir}/keyringrc.cfg"
-	cat <<EOF >"${configFile}"
+	local pkVersion=$(dpkg-query --show --showformat='${Version}' python-keyring)
+	if dpkg --compare-versions ${pkVersion} gt 7; then
+		cat <<EOF >"${configFile}"
 [backend]
-# stretch (p-k 8.5)
+# stretch (p-k > 8)
 default-keyring=keyrings.alt.file.PlaintextKeyring
-# jessie (p-k 4.0)
-##default-keyring=keyring.backends.file.PlaintextKeyring
 EOF
+	else
+		cat <<EOF >"${configFile}"
+[backend]
+# jessie (p-k 4.0)
+default-keyring=keyring.backends.file.PlaintextKeyring
+EOF
+	fi
 	cat "${configFile}"
-	printf "W: %s overwritten for testing, unencrypted password store! You might need to adapt that file for older p-k versions!\n" "${configFile}"
 }
 
 mbd_pyenv()
@@ -310,6 +319,8 @@ mbd_all()
 {
 	mbd_purge
 	mbd_update
+	mbd_pythonkeyringtestconfig
+
 	time /usr/share/doc/mini-buildd/examples/auto-setup
 }
 
