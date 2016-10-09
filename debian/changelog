@@ -1,3 +1,45 @@
+mini-buildd (1.0.22) unstable; urgency=medium
+
+  Odds & Ends: Some more items from the roadmap, HTML
+  improvements, misc fixes:
+
+  * [e94d25d] doc/admin.rst: Add BTRFS to table of chroot backend options.
+  * [502aa4f] models/chroot.py: Call 'args' 'call' like in Call from
+    call.py...
+  * [6a975f8] models/source.py: Add get_apt_line_raw() (give components
+    explicitly).
+  * [a1c8e27] chroot.py: Update source chroot's apt line on check().
+  * [53ddbc8] [devel] Cosmetic fix: Don't double-issue version.
+  * [c2e1f38] [html] Last package status: Span buildlog link over all text
+    (less confusing).
+  * [1072d70] [html] Last package status: Always show status description
+    (instead of "hovering tooltip").
+  * [32415ed] [html] Add "homepage on the web" link to index.
+  * [cd5f797] [html] mini-buildd_messagelist.css: Also customize
+    'li.success' (fixes layout glitch on messages when deleting
+    instances).
+  * [0df352c] django_settings.py: Add static content; initially, add
+    static version info here.
+  * [4142ce1] [html]: Add component version information to footer
+    (tooltip).
+  * [c2be2b6] [html] Emphasize anchors (links) as bold.
+  * [305e4db] mini-buildd.service: Add default value for mini-buildd
+    options (Fixes: Would not run with default args (--verbose) when
+    debconf unchanged).
+  * [c95d4de] misc.py: Add rmdirs() (analogous to mkdirs()) function &&
+    update docs.
+  * [1eeece7] Move per-chroot 'libdir' to extra directory '~var/chroots-
+    libdir', and restrict build-time mounts. Thanks to Marc Haber (Closes:
+    802681)
+  * [8be71c5] control: Add b-d on dh-python.
+  * [3edabb9] mini-buildd: Make sure spool and chroot lib dirs exist (now
+    needed by schroot setup).
+  * [6779f39] [devel]: Update p-k test config magic to be even more magic
+    (and call it before testing).
+  * [5f2d923] doc/admin.rst: Add hint about avoiding django downgrades.
+
+ -- Stephan Sürken <absurd@debian.org>  Sun, 09 Oct 2016 08:14:49 +0000
+
 mini-buildd (1.0.21) unstable; urgency=medium
 
   This release mainly features code refactoring around the internal
