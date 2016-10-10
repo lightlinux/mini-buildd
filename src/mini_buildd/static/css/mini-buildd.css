@@ -29,6 +29,11 @@ a:hover
 	color: #003366;
 }
 
+a.hover-underline:hover
+{
+	text-decoration:underline;
+}
+
 #mbd-branding a.image:link, #mbd-branding a.image:visited, #mbd-branding a.image:hover
 {
 	margin: 0px 0px 0px 0px;
@@ -211,7 +216,6 @@ a:hover
 #mbd-content .status.BUILDING
 {
 	color: blue;
-	text-decoration: blink;
 }
 
 #mbd-content .status.INSTALLED, .status.UPLOADED, .status.SUCCESS
