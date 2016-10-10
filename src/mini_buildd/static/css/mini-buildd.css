@@ -178,6 +178,11 @@ a:hover
 	margin: 15px 15px 15px 15px;
 }
 
+#mbd-content .smaller
+{
+	font-size: smaller;
+}
+
 /* MODEL STATUS DISPLAYS */
 
 #mbd-content .status.Removed
@@ -197,6 +202,11 @@ a:hover
 }
 
 /* BUILDER+PACKAGER+BRES STATUS DISPLAYS */
+
+#mbd-content .status.nowrap
+{
+	white-space: nowrap;
+}
 
 #mbd-content .status.BUILDING
 {
@@ -227,7 +237,6 @@ a:hover
 #mbd-content .status.DESCRIPTION
 {
 	color: grey;
-	font-size: smaller;
 }
 
 #mbd-content .box

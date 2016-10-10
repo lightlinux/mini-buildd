@@ -12,17 +12,17 @@
 	</tr>
 	{% for p in packages %}
 		<tr>
-			<td>{{ p.started|date:"r" }}</td>
-			<td><a href="/mini_buildd/api?command=show&amp;package={{ p.changes.source|urlencode }}" title="Show package">{{ p.changes.source }}</a></td>
-			<td>{{ p.changes.distribution }}</td>
-			<td>
+			<td class="status nowrap smaller">{{ p.started|date:"r" }}</td>
+			<td class="status nowrap"><a href="/mini_buildd/api?command=show&amp;package={{ p.changes.source|urlencode }}" title="Show package">{{ p.changes.source }}</a></td>
+			<td class="status nowrap">{{ p.changes.distribution }}</td>
+			<td class="status nowrap">
 				{% if p.log %}
 					<a href="{{ p.log }}/" title="Go to log page">{{ p.changes.version }}</a>
 				{% else %}
 					{{ p.changes.version }}
 				{%endif %}
 			</td>
-			<td>
+			<td class="status nowrap">
 				{% for arch, breq in p.requests.items %}
 					{% with success=p.success|mbd_dict_get:arch failed=p.failed|mbd_dict_get:arch %}
 						<a class="status {% if success %}SUCCESS{% elif failed %}FAILED{% else %}BUILDING{% endif %}"
@@ -34,9 +34,9 @@
 					{% endwith %}
 				{% endfor %}
 			</td>
-			<td>{{ p.took }}</td>
-			<td class="status {{ p.status }}">{{ p.status }}</td>
-			<td class="status DESCRIPTION">{{ p.status_desc }}</td>
+			<td class="status nowrap">{{ p.took }}</td>
+			<td class="status nowrap {{ p.status }}">{{ p.status }}</td>
+			<td class="status DESCRIPTION smaller">{{ p.status_desc }}</td>
 		</tr>
 	{% endfor %}
 </table>

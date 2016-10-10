@@ -7,18 +7,19 @@
 		<th>Architecture</th>
 		<th title="in seconds">Took</th>
 		<th>Upload to</th>
-		<th>Status</th>
+		<th colspan="2">Status</th>
 	</tr>
 	{% for b in builds %}
 		<tr>
-			<td>{{ b.started|date:"r" }}</td>
-			<td>{{ b.package }}</td>
-			<td>{{ b.distribution }}</td>
-			<td>{{ b.version }}</td>
-			<td>{{ b.architecture }}</td>
-			<td>{{ b.took }}</td>
-			<td title="Uploaded on: {{ b.uploaded|date:"r" }}">{{ b.upload_result_to }}</td>
-			<td class="status {{ b.status }}" title="{{ b.status_desc }}">{{ b.status }}</td>
+			<td class="status nowrap smaller">{{ b.started|date:"r" }}</td>
+			<td class="status nowrap">{{ b.package }}</td>
+			<td class="status nowrap">{{ b.distribution }}</td>
+			<td class="status nowrap">{{ b.version }}</td>
+			<td class="status nowrap">{{ b.architecture }}</td>
+			<td class="status nowrap">{{ b.took }}</td>
+			<td class="status nowrap" title="Uploaded on: {{ b.uploaded|date:"r" }}">{{ b.upload_result_to }}</td>
+			<td class="status nowrap {{ b.status }}">{{ b.status }}</td>
+			<td class="status DESCRIPTION smaller">{{ b.status_desc }}</td>
 		</tr>
 	{% endfor %}
 </table>
