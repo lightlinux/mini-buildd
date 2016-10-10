@@ -27,7 +27,7 @@
 					{% with success=p.success|mbd_dict_get:arch failed=p.failed|mbd_dict_get:arch %}
 						<a class="status {% if success %}SUCCESS{% elif failed %}FAILED{% else %}BUILDING{% endif %}"
 							 href="{% firstof success.log failed.log breq.remote_http_url "no_remote_found"%}"
-							 title="{{ breq.remote_http_url }}: {% firstof success.bres_stat failed.bres_stat "Go to remote" %}">
+							 title="{{ arch }} build: {% firstof success.bres_stat failed.bres_stat "in progress (jump to builder host)" %}">
 							{{ arch }}
 							{% mbd_build_status success failed %}
 						</a>
