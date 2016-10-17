@@ -39,11 +39,15 @@ class Changes(debian.deb822.Changes):
     BUILDREQUEST_RE = re.compile("^.+" + TYPE2FILENAME_ID[TYPE_BREQ] + "_[^_]+.changes$")
     BUILDRESULT_RE = re.compile("^.+" + TYPE2FILENAME_ID[TYPE_BRES] + "_[^_]+.changes$")
 
+    def _spool_hash_from_file(self):
+        return None if not os.path.exists(self._file_path) else mini_buildd.misc.sha1_of_file(self._file_path)
+
     def __init__(self, file_path):
         self._file_path = file_path
         self._file_name = os.path.basename(file_path)
         self._new = not os.path.exists(file_path)
-        self._sha1 = None if self._new else mini_buildd.misc.sha1_of_file(file_path)
+        # Instance might be produced from a temporary file, so we need to save the hash now.
+        self._spool_hash = self._spool_hash_from_file()
 
         if self.BUILDREQUEST_RE.match(self._file_name):
             self._type = self.TYPE_BREQ
@@ -174,8 +178,11 @@ class Changes(debian.deb822.Changes):
     def magic_backport_mode(self):
         return bool(re.search(r"\*\s*MINI_BUILDD:\s*BACKPORT_MODE", self._magic_get_changes()))
 
+    def get_spool_id(self):
+        return None if not os.path.exists(self._file_path) else mini_buildd.misc.sha1_of_file(self._file_path)
+
     def get_spool_dir(self):
-        return os.path.join(mini_buildd.setup.SPOOL_DIR, self._sha1)
+        return os.path.join(mini_buildd.setup.SPOOL_DIR, self.get_spool_id())
 
     def get_pkg_id(self, with_arch=False, arch_separator=":"):
         pkg_id = "{s}_{v}".format(s=self["Source"], v=self["Version"])
@@ -212,7 +219,7 @@ class Changes(debian.deb822.Changes):
             LOG.info("Signing changes: {f}".format(f=self._file_path))
             if gnupg:
                 gnupg.sign(self._file_path)
-            self._sha1 = mini_buildd.misc.sha1_of_file(self._file_path)
+            self._spool_hash = self._spool_hash_from_file()
         except:
             # Existence of the file name is used as flag
             if os.path.exists(self._file_path):
