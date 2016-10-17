@@ -32,12 +32,12 @@ class Changes(debian.deb822.Changes):
     TYPE_DEFAULT = 0
     TYPE_BREQ = 1
     TYPE_BRES = 2
-    TYPES = {TYPE_DEFAULT: "",
-             TYPE_BREQ: "_mini-buildd-buildrequest",
-             TYPE_BRES: "_mini-buildd-buildresult"}
+    TYPE2FILENAME_ID = {TYPE_DEFAULT: "",
+                        TYPE_BREQ: "_mini-buildd-buildrequest",
+                        TYPE_BRES: "_mini-buildd-buildresult"}
 
-    BUILDREQUEST_RE = re.compile("^.+" + TYPES[TYPE_BREQ] + "_[^_]+.changes$")
-    BUILDRESULT_RE = re.compile("^.+" + TYPES[TYPE_BRES] + "_[^_]+.changes$")
+    BUILDREQUEST_RE = re.compile("^.+" + TYPE2FILENAME_ID[TYPE_BREQ] + "_[^_]+.changes$")
+    BUILDRESULT_RE = re.compile("^.+" + TYPE2FILENAME_ID[TYPE_BRES] + "_[^_]+.changes$")
 
     def __init__(self, file_path):
         self._file_path = file_path
@@ -91,7 +91,7 @@ class Changes(debian.deb822.Changes):
         return "{p}_{v}{x}_{a}.changes".format(p=package,
                                                v=mini_buildd.misc.strip_epoch(version),
                                                a=arch,
-                                               x=cls.TYPES[mbd_type])
+                                               x=cls.TYPE2FILENAME_ID[mbd_type])
 
     def gen_file_name(self, arch, mbd_type):
         return self.gen_changes_file_name(self["Source"], self["Version"], arch, mbd_type)
