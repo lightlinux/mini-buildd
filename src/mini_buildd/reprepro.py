@@ -91,7 +91,6 @@ class Reprepro(object):
         for item in self._call_locked(["--type", "dsc",
                                        "ls",
                                        package]).split("\n"):
-            LOG.debug("ls: {i}".format(i=item))
             if item:
                 item_split = item.split("|")
                 result.append({"source": item_split[0].strip(),
