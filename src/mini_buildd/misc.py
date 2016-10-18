@@ -571,6 +571,7 @@ def rmdirs(path):
     """
     if os.path.exists(path):
         shutil.rmtree(path)
+        LOG.info("Directory removed recursively: {p}".format(p=path))
 
 
 def tail(file_object, lines, line_chars=160):

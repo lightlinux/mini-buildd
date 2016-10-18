@@ -160,7 +160,7 @@ class Package(mini_buildd.misc.Status):
         self.changes.move_to_pkglog(self.get_status() == self.INSTALLED, rejected=self.get_status() == self.REJECTED)
 
         # Purge complete package spool dir (if precheck failed, spool dir will not be present, so we need to ignore errors here)
-        mini_buildd.misc.skip_if_keep_in_debug(shutil.rmtree, self.changes.get_spool_dir(), ignore_errors=True)
+        mini_buildd.misc.skip_if_keep_in_debug(mini_buildd.misc.rmdirs, self.changes.get_spool_dir())
 
         # Hack: In case the changes comes from a temporary directory (ports!), we take care of purging that tmpdir here
         tmpdir = mini_buildd.misc.TmpDir.file_dir(self.changes.file_path)
