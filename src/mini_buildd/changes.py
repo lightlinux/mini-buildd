@@ -36,6 +36,10 @@ class Changes(debian.deb822.Changes):
                         TYPE_BREQ: "_mini-buildd-buildrequest",
                         TYPE_BRES: "_mini-buildd-buildresult"}
 
+    TYPE2NAME = {TYPE_DEFAULT: "upload",
+                 TYPE_BREQ: "buildrequest",
+                 TYPE_BRES: "buildresult"}
+
     BUILDREQUEST_RE = re.compile("^.+" + TYPE2FILENAME_ID[TYPE_BREQ] + "_[^_]+.changes$")
     BUILDRESULT_RE = re.compile("^.+" + TYPE2FILENAME_ID[TYPE_BRES] + "_[^_]+.changes$")
 
@@ -179,7 +183,7 @@ class Changes(debian.deb822.Changes):
         return bool(re.search(r"\*\s*MINI_BUILDD:\s*BACKPORT_MODE", self._magic_get_changes()))
 
     def get_spool_id(self):
-        return None if not os.path.exists(self._file_path) else mini_buildd.misc.sha1_of_file(self._file_path)
+        return "{type}-{hash}".format(type=self.TYPE2NAME[self._type], hash=self._spool_hash)
 
     def get_spool_dir(self):
         return os.path.join(mini_buildd.setup.SPOOL_DIR, self.get_spool_id())
