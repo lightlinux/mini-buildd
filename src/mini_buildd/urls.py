@@ -11,6 +11,7 @@ import mini_buildd.models.repository
 urlpatterns = [
     url(r"^$", mini_buildd.views.home),
     url(r"^log/(.+)/(.+)/(.+)/$", mini_buildd.views.log),
+    url(r"^live-buildlogs/(.+\.buildlog)$", mini_buildd.views.live_buildlogs),
     url(r"^repositories/(?P<pk>.+)/$", django.views.generic.detail.DetailView.as_view(model=mini_buildd.models.repository.Repository)),
     url(r"^api$", mini_buildd.views.api),
     url(r"^accounts/profile/$", mini_buildd.views.AccountProfileView.as_view(template_name="mini_buildd/account_profile.html")),

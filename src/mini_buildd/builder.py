@@ -51,6 +51,8 @@ class Build(mini_buildd.misc.Status):
 
         self.uploaded = None
 
+        self.live_buildlog_url = breq.get_live_buildlog_loc()
+
     def __unicode__(self):
         date_format = "%Y-%b-%d %H:%M:%S"
         return "{s}: [{h}] {k} ({c}): Started {start} ({took} seconds), uploaded {uploaded}: {desc}".format(
@@ -219,7 +221,9 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
         # Actually run sbuild
         mini_buildd.call.sbuild_keys_workaround()
         buildlog = os.path.join(self._build_dir, self._breq.buildlog_name)
+        live_buildlog = os.path.join(mini_buildd.setup.SPOOL_DIR, self._breq.live_buildlog_name)
         with open(buildlog, "w+") as l:
+            os.link(buildlog, live_buildlog)
             sbuild_call = mini_buildd.call.Call(sbuild_cmd,
                                                 cwd=self._build_dir,
                                                 env=mini_buildd.call.taint_env({"HOME": self._build_dir,
@@ -276,6 +280,7 @@ class LastBuild(mini_buildd.misc.API):
         self.architecture = build.architecture
         self.uploaded = build.uploaded
         self.upload_result_to = build.upload_result_to
+        self.live_buildlog_url = build.live_buildlog_url
 
     def __unicode__(self):
         return self.identity

@@ -132,6 +132,16 @@ class Changes(debian.deb822.Changes):
     def buildlog_name(self):
         return "{s}_{v}_{a}.buildlog".format(s=self["Source"], v=self["Version"], a=self["Architecture"])
 
+    @property
+    def live_buildlog_name(self):
+        return "{spool_id}.buildlog".format(spool_id=self.get_spool_id())
+
+    def get_live_buildlog_loc(self):
+        return "/mini_buildd/live-buildlogs/{logfile}".format(logfile=self.live_buildlog_name)
+
+    def get_live_buildlog_url(self, base_url):
+        return "{base_url}/{loc}".format(base_url=base_url, loc=self.get_live_buildlog_loc())
+
     def get_pkglog_dir(self, installed, relative=True):
         """
         Package log path for this changes file: REPOID/[_failed]/PACKAGE/VERSION/ARCH
@@ -278,7 +288,7 @@ class Changes(debian.deb822.Changes):
         for _load, remote in sorted(remotes.items()):
             try:
                 self.upload(mini_buildd.misc.HoPo(remote.ftp))
-                self.remote_http_url = "http://{r}".format(r=remote.http)
+                self.remote_http_url = self.get_live_buildlog_url(base_url="http://" + remote.http)
                 return
             except Exception as e:
                 mini_buildd.setup.log_exception(LOG, "Uploading to '{h}' failed".format(h=remote.ftp), e, logging.WARNING)
