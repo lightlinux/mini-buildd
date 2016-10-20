@@ -224,6 +224,11 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
         buildlog = os.path.join(self._build_dir, self._breq.buildlog_name)
         live_buildlog = os.path.join(mini_buildd.setup.SPOOL_DIR, self._breq.live_buildlog_name)
         with open(buildlog, "w+") as l:
+            LOG.info("Adding live buildlog: {b}".format(b=live_buildlog))
+            # The spool id/hash might the very same (retry a failed build, for example) as a previous one. So we need to be sure to remove before linking.
+            # Note that this currently should never really happen as python's tarball abstraction cannot produce reproducible tarballs (https://bugs.python.org/issue24465).
+            if os.path.exists(live_buildlog):
+                os.remove(live_buildlog)
             os.link(buildlog, live_buildlog)
             sbuild_call = mini_buildd.call.Call(sbuild_cmd,
                                                 cwd=self._build_dir,
