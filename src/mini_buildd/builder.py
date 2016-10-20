@@ -5,6 +5,7 @@ from __future__ import absolute_import
 import os
 import datetime
 import shutil
+import glob
 import re
 import subprocess
 import logging
@@ -286,6 +287,18 @@ class LastBuild(mini_buildd.misc.API):
         return self.identity
 
 
+def _expire_live_buildlogs(**kwargs):
+    """
+    Expire live buildlogs older than timedelta. Arguments are given as-is to the datetime.timedelta constructor.
+    """
+    valid_until = datetime.datetime.now() - datetime.timedelta(**kwargs)
+    for buildlog in glob.glob(os.path.join(mini_buildd.setup.SPOOL_DIR, "*.buildlog")):
+        LOG.debug("Checking if live build log is older than {d}: {logfile}".format(d=valid_until, logfile=buildlog))
+        if datetime.datetime.fromtimestamp(os.path.getmtime(buildlog)) < valid_until:
+            LOG.info("Expiring live build log: {logfile}".format(logfile=buildlog))
+            os.unlink(buildlog)
+
+
 def build_close(daemon, build):
     """
     Close build. Just continue on errors, but log them; guarantee to remove it from the builds dict.
@@ -293,6 +306,7 @@ def build_close(daemon, build):
     try:
         build.clean()
         daemon.last_builds.appendleft(LastBuild(build))
+        _expire_live_buildlogs(days=5)
     except Exception as e:
         mini_buildd.setup.log_exception(LOG, "Error closing build '{p}'".format(p=build.key), e, level=logging.CRITICAL)
     finally:
