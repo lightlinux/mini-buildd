@@ -1,3 +1,37 @@
+mini-buildd (1.0.23) unstable; urgency=medium
+
+  This release brings the live buildlog feature && some:
+
+  * [e24769c] [html] "Sync" last packages+builder status templates; only
+    allow description column to wrap.
+  * [5641406] [html] Arch status tooltip: Remove confusing URL, clarify
+    text when building is in progress.
+  * [9493933] [html] Last packages: Use standard hover style for arch
+    stati links.
+  * [822f7b4] changes.py: "Changes" class: Internal rename:
+    TYPES->TYPE2FILENAME_ID.
+  * [915aa9d] changes.py: "Changes" class: Add get_spool_id() (and
+    somewhat renice hash code).
+  * [5e38795] reprepro.py: Remove extra debug log (call.py now already
+    logs this suficently).
+  * [505ab4e] packager.py: Use new misc.rmdirs to purge spool dir instead
+    of shutils.rmtree directly (should improves error handling here).
+  * [14dd7af] changes.py: Prefix changes type ("upload" or "buildrequest")
+    to spool id.
+  * [8710070] Live buildlogs: Initial implementation: On webhome, access
+    live buildlogs from active "Packager" list or from active or last
+    "Builder" list. Thanks to Marc Haber (Closes: 809127)
+  * [3a5b17a] builder.py: Live buildlogs: Add support to expire live
+    buildlog files from spool (5 days).
+  * [a40aa1a] views.py: live buildlogs: Rather use plain text/HTTP 200
+    message when not available.
+  * [58085b9] builder.py: live buildlogs: Guard code against prossibly
+    pre-existing buildlog files.
+  * [10190f9] packager.py: live buidlogs: Rather use new live_buildlog_url
+    var, and put traditional 'http_remote_url' to old use.
+
+ -- Stephan Sürken <absurd@debian.org>  Thu, 20 Oct 2016 15:29:45 +0000
+
 mini-buildd (1.0.22) unstable; urgency=medium
 
   Odds & Ends: Some more items from the roadmap, HTML
