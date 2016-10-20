@@ -66,6 +66,7 @@ class Changes(debian.deb822.Changes):
 
         # This is just for stat/display purposes
         self.remote_http_url = None
+        self.live_buildlog_url = None
 
     def __unicode__(self):
         if self.type == self.TYPE_BREQ:
@@ -288,7 +289,9 @@ class Changes(debian.deb822.Changes):
         for _load, remote in sorted(remotes.items()):
             try:
                 self.upload(mini_buildd.misc.HoPo(remote.ftp))
-                self.remote_http_url = self.get_live_buildlog_url(base_url="http://" + remote.http)
+                remote_url = "http://" + remote.http
+                self.remote_http_url = remote_url
+                self.live_buildlog_url = self.get_live_buildlog_url(base_url=remote_url)
                 return
             except Exception as e:
                 mini_buildd.setup.log_exception(LOG, "Uploading to '{h}' failed".format(h=remote.ftp), e, logging.WARNING)
