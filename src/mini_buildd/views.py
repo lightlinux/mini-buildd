@@ -136,12 +136,17 @@ def log(request, repository, package, version):
                                              ("Failed", get_logs(installed=False))]})
 
 
-def live_buildlogs(request, logfile):
+LIVE_BUILDLOGS_404 = """\
+This live buildlog is not yet (or no longer) available.
+
+Please just retry later if this build is currently pending.
+"""
+
+
+def live_buildlogs(_request, logfile):
     buildlog = os.path.join(mini_buildd.setup.SPOOL_DIR, logfile)
     if not os.path.exists(buildlog):
-        return error404_not_found(request,
-                                  "Build has not started yet (pending -- please try later) or this live buildlog has expired.")
-
+        return django.http.HttpResponse(LIVE_BUILDLOGS_404, content_type="text/plain")
     return django.http.FileResponse(open(buildlog, "rb"), content_type="text/plain")
 
 
