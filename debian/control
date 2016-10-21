@@ -50,6 +50,7 @@ Architecture: all
 Depends: ${misc:Depends},
          ${python:Depends},
          ${sphinxdoc:Depends},
+         lsb-base (>= 3.0-6),
          python-mini-buildd (= ${binary:Version}),
          mini-buildd-common (= ${binary:Version}),
          python-daemon (>= 2.0.5),
