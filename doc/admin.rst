@@ -550,6 +550,28 @@ may run::
 
 as user ``mini-buildd`` to find and get rid of them.
 
+
+Import a foreign archive key to an existing mini-buildd instance
+================================================================
+
+1. Stop the mini-buildd service.
+2. Become the mini-buildd user.
+3. Manipulate the user's GPG keyring
+	 * Be sure it contains exactly one key (pub+sec) when done.
+4. (Re)start the mini-buildd service.
+	 * Check that the Daemon key has actually changed (f.e., on the web home, right bottom).
+5. Make a pseudo change to all repository instances.
+	 * Just enter the repo editor, don't actually change anything, but do "save".
+	 * This fixes the status to "Prepared (Changed)" (matching the external manipulation).
+6. "PCA" ((re)prepare, check, create) all repositories.
+	 * This should bring the new key to the reprepro indices.
+7. Re-create keyring packages.
+
+.. note:: The Daemon instance does not touch the GPG setup once
+          it's created -- *unless you do an explicit remove* on
+          the instance.
+
+
 Migrate packages from 0.8.x
 ===========================
 
