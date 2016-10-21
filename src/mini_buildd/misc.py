@@ -410,6 +410,10 @@ def guess_default_dirchroot_backend(overlay, aufs):
     return overlay
 
 
+def chroot_libdir_path(codename, architecture):
+    return os.path.join(mini_buildd.setup.CHROOTS_LIBDIR, codename, architecture)
+
+
 def pkg_fmt(status, distribution, package, version, extra=None, message=None):
     "Generate a package status line."
     fmt = "{status} ({distribution}): {package} {version}".format(status=status,

@@ -129,9 +129,6 @@ chroots (with <tt>qemu-user-static</tt> installed).
     def mbd_get_path(self):
         return os.path.join(mini_buildd.setup.CHROOTS_DIR, self.source.codename, self.architecture.name)
 
-    def mbd_get_libdir_path(self):
-        return os.path.join(mini_buildd.setup.CHROOTS_LIBDIR, self.source.codename, self.architecture.name)
-
     def mbd_get_name(self):
         return "mini-buildd-{d}-{a}".format(d=self.source.codename, a=self.architecture.name)
 
@@ -178,7 +175,6 @@ chroots (with <tt>qemu-user-static</tt> installed).
 
     def mbd_prepare(self, request):
         mini_buildd.misc.mkdirs(self.mbd_get_path())
-        mini_buildd.misc.mkdirs(self.mbd_get_libdir_path())
 
         # Set personality
         self.personality = ""
@@ -219,7 +215,6 @@ personality={p}
     def mbd_remove(self, request):
         mini_buildd.call.call_sequence(self.mbd_get_sequence(), rollback_only=True, run_as_root=True)
 
-        mini_buildd.misc.rmdirs(self.mbd_get_libdir_path())
         mini_buildd.misc.rmdirs(self.mbd_get_path())
 
         MsgLog(LOG, request).info("{c}: Removed from system.".format(c=self))
