@@ -279,6 +279,27 @@ FAQ
 Repositories
 ************
 
+On the System
+=============
+
+The actual repositories are managed via ``reprepro``, and live
+in ``~/repositories`` -- each repository in its own subdir.
+
+You normally don't need to, but it's technically perfectly fine
+to manually do package manipulations (on the shell, as user
+``mini-buildd``) using ``reprepro`` commands. I this case, of
+corse, it's in your power to meet or loosen restrictions that
+otherwise mini-buildd inflicts on the repository.
+
+You **must not** manually change any repository's
+*configuration* though, as these are handled/written by
+mini-buildd's configuration.
+
+.. note:: To be able cope with multiple versions (``reprepro``
+					does only allow one package version per dist) each
+					distribution also has several additional `*-rollbackN`
+					distributions configured.
+
 Layouts
 =======
 
@@ -532,19 +553,32 @@ as user ``mini-buildd`` to find and get rid of them.
 Migrate packages from 0.8.x
 ===========================
 
-1. Upgrade the Debian packages from 0.8.x to 1.0.
+.. note:: A much simpler solution might be to just serve the old
+					repository directory (``~/rep``) via some standard web
+					server, and just continue to use it along with your
+					new repo as long as needed.
+
+This roughly explains the steps needed to upgrade a mini-buildd
+0.8.x installation to 1.0.x with **transferring the packages
+from the old 0.8.x repositories over**, so you can continue with
+the new 1.0.x repos only:
+
+1. Upgrade mini-buildd from 0.8.x to 1.0.
+
+	 Chances are this might have already implicitely happened,
+	 with some update.
 
 	 You will then have 1.0 up and running, and ye olde 0.8.x
 	 repositories still available as read-only apt repositories.
 
-	 Just be sure you don't purge the old package, and then
+	 Just be sure you don't **purge** the old package, and then
 	 install 1.0, as this will remove the whole old repository.
 
 2. Configure mini-buildd 1.0.
 
 	 This means you should, in the end, have a 1.0 repository with
-	 the same identity as the old 0.8.x repository, and with all
-	 distributions you want to migrate.
+	 the **same identity** as the old 0.8.x repository, and with
+	 all distributions you want to migrate.
 
 3. Import packages.
 
@@ -560,11 +594,13 @@ Migrate packages from 0.8.x
 	 This example is for squeeze; repeat the imports for all base
 	 distributions you want to migrate.
 
-	 Thusly, ye olde ``*-experimental`` distribution will be migrated
-	 to the distribution with the same name in 1.0. Ye olde
-	 'squeeze-REPOID' goes to squeeze-REPOID-unstable. For the
-	 latter, multiple package version will be automatically
-	 installed to rollback distributions.
+	 Thusly, ye olde ``*-experimental`` distribution will be
+	 migrated to the distribution with the same name in 1.0. Ye
+	 olde ``squeeze-REPOID`` goes to
+	 ``squeeze-REPOID-unstable``. For the latter, multiple package
+	 version will be automatically installed to the new *rollback
+	 distributions* (which are needed with reprepro to support
+	 multiple package versions).
 
 4. (Optional) Fix up package status.
 
@@ -576,6 +612,7 @@ Migrate packages from 0.8.x
 Eventually, when everything is updated, you may of course
 (re)move the old 0.8.x directory ``~/rep/``.
 
+.. seealso:: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=790292
 
 **********
 References
