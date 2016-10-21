@@ -44,6 +44,11 @@
 								<li>Building with APT sources.list:<div class="pre-block"><pre>{% mbd_distribution_apt_sources_list d object s %}</pre></div></li>
 								<li>Building with APT preferences:<div class="pre-block"><pre>{% mbd_distribution_apt_preferences d object s %}</pre></div></li>
 							{% endif %}
+							<li>Direct links:
+								<a href="/repositories/{{ object.identity }}/pool/">pool/</a>
+								<a href="/repositories/{{ object.identity }}/dists/{{ d.base_source.codename }}-{{ object.identity }}-{{ s.suite.name }}/">dists/</a>
+								<a href="/mini_buildd/api?command=getkey&output=plain">apt key</a>
+							</li>
 						</ul>
 					{% endfor %}
 				</div>
