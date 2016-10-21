@@ -86,6 +86,7 @@ Description: minimal build daemon - daemon
 
 Package: mini-buildd-common
 Architecture: all
+Multi-Arch: foreign
 Depends: ${misc:Depends}
 Description: minimal build daemon - 08x upgrade dummy package
  This is a dummy package assuring mini-buildd-common is
