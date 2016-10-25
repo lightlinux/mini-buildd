@@ -382,7 +382,9 @@ class Changes(debian.deb822.Changes):
                                         self.gen_file_name(ao.architecture.name, self.TYPE_BREQ)))
 
             if breq.is_new():
-                for v in ["Distribution", "Source", "Version"]:
+                distribution = mini_buildd.misc.Distribution(self["Distribution"], mini_buildd.models.repository.get_meta_distribution_map())
+                breq["Distribution"] = distribution.get()
+                for v in ["Source", "Version"]:
                     breq[v] = self[v]
 
                 # Generate sources.list et.al. to be used
