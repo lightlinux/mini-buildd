@@ -304,12 +304,12 @@ class Distribution(object):
     _REGEX = re.compile(r"^\w+-\w+-\w+?(-rollback\d+)?$")
 
     def __init__(self, dist, meta_map=None):
-        if not self._REGEX.match(dist):
-            raise Exception("Malformed distribution '{d}': Must be '<codename>-<repoid>-<suite>[-rollback<n>]'".format(d=dist))
-
         self.given_dist = dist
         self.dist = meta_map.get(dist, dist) if meta_map else dist
         LOG.debug("Parsing dist {gd} (maps to {d})...".format(gd=self.given_dist, d=self.dist))
+
+        if not self._REGEX.match(self.dist):
+            raise Exception("Malformed distribution '{d}': Must be '<codename>-<repoid>-<suite>[-rollback<n>]'".format(d=dist))
 
         self._dsplit = self.dist.split("-")
 
