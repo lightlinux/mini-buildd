@@ -294,7 +294,7 @@ Manage your account : {url}accounts/login/
             if real_distribution is None:
                 # If distribution was not given explicitely, try from changes, resolving meta dists if needed.
                 changes_dist = changes.get("Distribution", "")
-                real_distribution = mini_buildd.models.repository.get_meta_distribution_map().get(changes_dist, changes_dist)
+                real_distribution = mini_buildd.models.repository.map_incoming_distribution(changes_dist)
             return self.mbd_get_daemon().get_subscription_objects().filter(package__in=[package, ""], distribution__in=[real_distribution, ""])
 
         # Add hardcoded addresses from daemon

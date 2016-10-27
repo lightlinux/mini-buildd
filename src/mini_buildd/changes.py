@@ -152,8 +152,7 @@ class Changes(debian.deb822.Changes):
         returned.
         """
         try:
-            return mini_buildd.misc.PkgLog.get_path(mini_buildd.misc.Distribution(self["Distribution"],
-                                                                                  mini_buildd.models.repository.get_meta_distribution_map()).repository,
+            return mini_buildd.misc.PkgLog.get_path(mini_buildd.misc.Distribution(mini_buildd.models.repository.map_incoming_distribution(self["Distribution"])).repository,
                                                     installed,
                                                     self["Source"],
                                                     self["Version"],
@@ -382,7 +381,7 @@ class Changes(debian.deb822.Changes):
                                         self.gen_file_name(ao.architecture.name, self.TYPE_BREQ)))
 
             if breq.is_new():
-                distribution = mini_buildd.misc.Distribution(self["Distribution"], mini_buildd.models.repository.get_meta_distribution_map())
+                distribution = mini_buildd.misc.Distribution(mini_buildd.models.repository.map_incoming_distribution(self["Distribution"]))
                 breq["Distribution"] = distribution.get()
                 for v in ["Source", "Version"]:
                     breq[v] = self[v]

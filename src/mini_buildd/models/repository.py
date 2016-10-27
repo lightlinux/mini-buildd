@@ -1296,3 +1296,8 @@ def get_meta_distribution_map():
                     result[m] = s.mbd_get_distribution_string(r, d)
     LOG.debug("Got meta distribution map: {m}".format(m=result))
     return result
+
+
+def map_incoming_distribution(incoming_dist):
+    " Map incoming distribution to internal. "
+    return get_meta_distribution_map().get(incoming_dist, incoming_dist)
