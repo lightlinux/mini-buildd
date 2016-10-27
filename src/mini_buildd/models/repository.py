@@ -293,7 +293,7 @@ packages (to unstable,experimental,..) aimed for Debian.
                 name="Debian Developer",
                 defaults={"mandatory_version_regex": ".*",
                           "experimental_mandatory_version_regex": ".*",
-                          "extra_options": "Meta-Distributions: stable=squeeze-unstable unstable=sid-unstable experimental=sid-experimental\n"})
+                          "extra_options": "Meta-Distributions: unstable=sid-unstable experimental=sid-experimental\n"})
 
             if created:
                 debdev_unstable = SuiteOption(
