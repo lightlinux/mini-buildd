@@ -1298,7 +1298,10 @@ def get_meta_distribution_map():
                 for m in r.mbd_get_meta_distributions(d, s):
                     distribution = s.mbd_get_distribution_string(r, d)
                     if m in result:
-                        raise Exception("Ambiguous meta distributions ({m0}={d0} or {d1}). Please check Repositories and Layouts.".format(m0=m, d0=distribution, d1=result[m]))
+                        raise Exception("Ambiguous Meta-Distributions ({m0}={d0} or {d1}). "
+                                        "Please check Repositories and Layouts (see Layouts/Meta-Distributions in Administrators Manual).".format(m0=m,
+                                                                                                                                                  d0=distribution,
+                                                                                                                                                  d1=result[m]))
                     result[m] = distribution
 
     LOG.debug("Got meta distribution map: {m}".format(m=result))
