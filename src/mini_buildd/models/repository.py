@@ -1278,6 +1278,9 @@ gnupghome {h}
         # better place.
         self.mbd_package_purge_orphaned_logs(msglog=MsgLog(LOG, request))
 
+        # Check for ambiguity with other repos in meta distribution maps
+        get_meta_distribution_map()
+
     def mbd_get_dependencies(self):
         result = []
         for d in self.distributions.all():
@@ -1293,7 +1296,11 @@ def get_meta_distribution_map():
         for d in r.distributions.all():
             for s in r.layout.suiteoption_set.all():
                 for m in r.mbd_get_meta_distributions(d, s):
-                    result[m] = s.mbd_get_distribution_string(r, d)
+                    distribution = s.mbd_get_distribution_string(r, d)
+                    if m in result:
+                        raise Exception("Ambiguous meta distributions ({m0}={d0} or {d1}). Please check Repositories and Layouts.".format(m0=m, d0=distribution, d1=result[m]))
+                    result[m] = distribution
+
     LOG.debug("Got meta distribution map: {m}".format(m=result))
     return result
 
