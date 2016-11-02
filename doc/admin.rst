@@ -322,6 +322,33 @@ suites (and rollback distributions) are available, which suites
 are uploadable, and which suites migrate, etc...
 
 
+Meta-Distributions
+------------------
+
+``Meta-Distributions`` can be set in a Layout's "Extra Options".
+
+Meta-Distributions may be seen as workaround to be able to
+upload (i.e., via ``debian/changelog``) to other distributions
+than to the generic ``<codename>-<repoid>-<suite>`` format.
+
+For example, the built-in "Debian Developers" Layout has
+mappings for ``unstable`` and ``experimental`` by default.
+
+Note that these mappings are per Layout (and then, eventually,
+per Repository), but the final overall mapping must still be
+unique for the whole mini-buildd instance (as we only have *one*
+incoming, and the incoming change's distribution must be
+unambigious).
+
+So, when using this feature, this usually means:
+
+* Make sure only *one* repository uses a Layout with Meta-Distributions configured (**recommended**).
+* Make any meta mapping key appear only once in each used Layout.
+
+.. versionchanged:: 1.0.25
+	 Ambiguity of the global meta distribution map is now checked for (on repository checks and implicitly on package builds).
+
+
 Distributions
 =============
 
