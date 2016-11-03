@@ -213,6 +213,22 @@ mbd_css()
 	return ${errors}
 }
 
+mbd_tidy()
+{
+	local url
+	for url in \
+		http://localhost:8066/mini_buildd \
+		http://localhost:8066/mini_buildd/api \
+		http://localhost:8066/mini_buildd/api?command=getdputconf \
+		http://localhost:8066/accounts/login/ \
+		http://localhost:8066/repositories/test/dists/ \
+		http://localhost:8066/repositories/test/pool/ \
+		; do
+		printf "\n=> Testing HTML: ${url}\n"
+		wget --output-document=- "${url}" | tidy -output /dev/null
+	done
+}
+
 mbd_check()
 {
 	local tests="pep8 pymisc pydoctests pyflakes pylint css"
@@ -309,6 +325,9 @@ mbd_update()
 		${mbd} getkey
 		${mbd} getdputconf
 		${mbd} getsourceslist wheezy
+
+		# Some HTML checks.
+		mbd_tidy
 	fi
 
 	printf "Ok, update successful.\n"
