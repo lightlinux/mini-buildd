@@ -66,7 +66,6 @@ mbd_installdeps()
 mbd_pythonkeyringtestconfig()
 {
 	sudo apt-get install python-keyrings.alt || true   # for the PlainTextKeyring (newer versions only)
-	sudo apt-get remove python-secretstorage || true   # posible delay/timeout when trying to contact dbus
 	local configDir="$(python -c "import keyring.util.platform_; print(keyring.util.platform_.config_root())")" || true
 	[ -n "${configDir}" ] || configDir="${HOME}/.local/share/python_keyring"
 	mkdir -p "${configDir}"
