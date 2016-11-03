@@ -214,7 +214,7 @@ only be used by at most one repository.
 </p>
 <p>
 <em>Example</em>:
-<tt>Meta-Distributions: unstable=sid-unstable experimental=sid-experimental</tt>
+<kbd>Meta-Distributions: unstable=sid-unstable experimental=sid-experimental</kbd>
 (see standard layout 'Debian Developer'), to allow upload/testing of
 packages (to unstable,experimental,..) aimed for Debian.
 </p>
@@ -535,7 +535,7 @@ pimp the internal priority up here.
 </p>
 <p>
 <em>Example</em>:
-<tt>Internal-APT-Priority: 500</tt>: Always build against newer internal packages.
+<kbd>Internal-APT-Priority: 500</kbd>: Always build against newer internal packages.
 </p>
 """,
                                "fields": ("extra_options",)}),)

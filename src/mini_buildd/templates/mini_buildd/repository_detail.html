@@ -27,14 +27,14 @@
 								<span style="color: black">{{ d.base_source.codename }}-{{ object.identity }}-{{ s.suite.name }}</span>:
 								<span class="emphasize-headline">{% mbd_repository_desc object d s %}</span>
 								{% if s.uploadable %}
-									<tt style="font-size: 0.8em; color: purple">(U='{% mbd_repository_mandatory_version object d s %}')</tt>
+									<kbd style="font-size: 0.8em; color: purple">(U='{% mbd_repository_mandatory_version object d s %}')</kbd>
 								{% endif %}
 								{% if s.experimental %}
-									<tt style="font-size: 0.8em; color: red">(E)</tt>
+									<kbd style="font-size: 0.8em; color: red">(E)</kbd>
 								{% endif %}
 								<span id="mbd_dist_{{ d.base_source.codename }}_{{ s.suite.name }}_header" style="float: right">(show)</span>
 								{% if s.migrates_to %}
-									<tt style="font-size: 0.8em; color: green"> =&gt; {{ s.migrates_to.suite.name }}</tt>
+									<kbd style="font-size: 0.8em; color: green"> =&gt; {{ s.migrates_to.suite.name }}</kbd>
 								{% endif %}
 							</a>
 						</h2>

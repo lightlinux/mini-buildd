@@ -17,7 +17,7 @@
 	</span>
 {% endblock %}
 {% block mbd_page_footer %}
-	<a href="/mini_buildd/api?command=getkey">Archive Key</a>: <tt>{{ daemon.model.mbd_gnupg_long_id }}: {{ daemon.model.mbd_gnupg_fingerprint }}</tt>
+	<a href="/mini_buildd/api?command=getkey">Archive Key</a>: <kbd>{{ daemon.model.mbd_gnupg_long_id }}: {{ daemon.model.mbd_gnupg_fingerprint }}</kbd>
 {% endblock %}
 
 {% block content %}

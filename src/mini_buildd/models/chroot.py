@@ -68,10 +68,10 @@ go to the default mapping.
              {"classes": ("collapse",),
               "description": """
 <b>Supported extra options</b>
-<p><tt>Debootstrap-Command: ALT_COMMAND</tt>: Alternate command to run instead of standard debootstrap.</p>
+<p><kbd>Debootstrap-Command: ALT_COMMAND</kbd>: Alternate command to run instead of standard debootstrap.</p>
 <p>
-For example, <tt>Debootstrap-Command: /usr/sbin/qemu-debootstrap</tt> may be used to produce <em>armel</em>
-chroots (with <tt>qemu-user-static</tt> installed).
+For example, <kbd>Debootstrap-Command: /usr/sbin/qemu-debootstrap</kbd> may be used to produce <em>armel</em>
+chroots (with <kbd>qemu-user-static</kbd> installed).
 </p>
 """,
               "fields": ("extra_options",)})]

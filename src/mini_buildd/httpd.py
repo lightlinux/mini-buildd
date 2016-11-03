@@ -32,9 +32,9 @@ class StaticWithIndex(cherrypy._cptools.HandlerTool):  # pylint: disable=protect
 
     _TABLE_ROW = """\
 <tr>
- <td align="left"><a href="{name}" title="{name}"><tt>{name}</tt></a></td>
- <td align="left" style="padding: 0px 15px 0px 15px"><tt><em>{mod}</em></tt></td>
- <td align="right"><tt>{size}</tt></td>
+ <td align="left"><a href="{name}" title="{name}"><kbd>{name}</kbd></a></td>
+ <td align="left" style="padding: 0px 15px 0px 15px"><kbd><em>{mod}</em></kbd></td>
+ <td align="right"><kbd>{size}</kbd></td>
 </tr>"""
 
     @classmethod
