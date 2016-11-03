@@ -39,15 +39,20 @@
 							</a>
 						</h2>
 						<ul id="mbd_dist_{{ d.base_source.codename }}_{{ s.suite.name }}" style="display: none">
-							<li>APT line: <pre class="pre-block">{% mbd_distribution_apt_line d object s %}</pre></li>
+							<li>APT line
+								(Download:
+								<a href="/mini_buildd/api?command=getkey&output=plain">apt key</a>,
+								<a href="/mini_buildd/api?command=getsourceslist&suite={{ s.suite.name }}&codename={{ d.base_source.codename }}&with_extra_sources=False&repository={{ object.identity }}&with_deb_src=False&output=plain">deb</a>,
+								<a href="/mini_buildd/api?command=getsourceslist&suite={{ s.suite.name }}&codename={{ d.base_source.codename }}&with_extra_sources=False&repository={{ object.identity }}&with_deb_src=True&output=plain">deb+src</a>)
+								:
+								<pre class="pre-block">{% mbd_distribution_apt_line d object s %}</pre></li>
 							{% if s.uploadable %}
 								<li>Building with APT sources.list:<div class="pre-block"><pre>{% mbd_distribution_apt_sources_list d object s %}</pre></div></li>
 								<li>Building with APT preferences:<div class="pre-block"><pre>{% mbd_distribution_apt_preferences d object s %}</pre></div></li>
 							{% endif %}
-							<li>Direct links:
+							<li>Browse repository:
 								<a href="/repositories/{{ object.identity }}/pool/">pool/</a>
 								<a href="/repositories/{{ object.identity }}/dists/{{ d.base_source.codename }}-{{ object.identity }}-{{ s.suite.name }}/">dists/</a>
-								<a href="/mini_buildd/api?command=getkey&output=plain">apt key</a>
 							</li>
 						</ul>
 					{% endfor %}
