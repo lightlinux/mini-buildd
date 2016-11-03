@@ -22,9 +22,9 @@ LOG = logging.getLogger(__name__)
 class StaticWithIndex(cherrypy._cptools.HandlerTool):  # pylint: disable=protected-access
     _TABLE_HEADER = """\
 <tr>
- <th align="left">Name</th>
- <th align="left" style="padding: 0px 15px 0px 15px">Last modified</th>
- <th align="right">Size</th>
+ <th style="text-align: left;">Name</th>
+ <th style="text-align: left; padding: 0px 15px 0px 15px">Last modified</th>
+ <th style="text-align: right;">Size</th>
 </tr>"""
 
     _TABLE_SEPARATOR = """\
@@ -32,9 +32,9 @@ class StaticWithIndex(cherrypy._cptools.HandlerTool):  # pylint: disable=protect
 
     _TABLE_ROW = """\
 <tr>
- <td align="left"><a href="{name}" title="{name}"><kbd>{name}</kbd></a></td>
- <td align="left" style="padding: 0px 15px 0px 15px"><kbd><em>{mod}</em></kbd></td>
- <td align="right"><kbd>{size}</kbd></td>
+ <td style="text-align: left;"><a href="{name}" title="{name}"><kbd>{name}</kbd></a></td>
+ <td style="text-align: left; padding: 0px 15px 0px 15px"><kbd><em>{mod}</em></kbd></td>
+ <td style="text-align: right;"><kbd>{size}</kbd></td>
 </tr>"""
 
     @classmethod
