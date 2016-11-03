@@ -45,6 +45,7 @@ ${MBDT} meta source.Source pca_all
 ${MBDT} meta repository.Layout create_defaults
 ${MBDT} meta repository.Distribution add_base_sources
 ${MBDT} meta repository.Repository add_sandbox
+${MBDT} meta repository.Repository add_debdev
 ${MBDT} meta repository.Repository pca_all
 
 # Chroots
