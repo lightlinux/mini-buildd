@@ -129,7 +129,8 @@ def cmd_call(args):
     response = urllib2.urlopen(call_url)
 
     # Output daemon messages to stderr
-    print_daemon_messages(response.headers, args.host)
+    if LOG.getEffectiveLevel() <= logging.WARNING:
+        print_daemon_messages(response.headers, args.host)
 
     # Output result to stdout
     result = response.read()
