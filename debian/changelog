@@ -1,3 +1,42 @@
+mini-buildd (1.0.25) unstable; urgency=medium
+
+  This and that, and fixing up the meta distribution feature:
+
+  * [d255ad9] misc.py: class Distribution(): Validity check must be done
+    _after_ distribution mapping.
+  * [7b1f6cd] changes.py: In buildrequests, 'Distribution' key must be
+    mapped to internal (in case of a Meta-Distributions are configured).
+    Thanks to Boyuan Yang (Closes: 832643)
+  * [455774d] Some refactoring/code cleanup around meta distributions.
+  * [384b2c2] wizards: Developer Layout: Remove 'stable=squeeze-unstable'
+    meta distribution (this doesn't really make much sense).
+  * [9983968] models/repository.py: Add ambiguity error check in meta dist
+    generator function (and add it to Repository.check()).
+  * [2c8f80a] doc/admin.rst: Add section for "Layouts/Meta-Distributions".
+  * [d0204e9] models/repository.py: meta-dist-check: Fix wording, and hint
+    to manual.
+  * [dda651b] [devel]: We may no longer "convenience-remove" python-
+    secretstorage for testing (p-k now depends on it).
+  * [15c158e] examples/auto-setup: Also create debdev repository.
+  * [096e868] [html] repository_detail.html: Add sources.list download
+    links, and some cosmetics.
+  * [d6ad715] [html] Use HTML5 doctype.
+  * [10936d4] [devel]: Add initial (html) tidy checker.
+  * [5d013c9] [html]: HTML5: Bulk-replace <tt> by <kbd>.
+  * [3d3c5b2] [html]: HTML5: Fix cherrypy indexes.
+  * [d28bb39] mini-buildd-tool: Don't print server logs if --quiet is
+    given.
+  * [a3a0eaf] [devel]: tidy check: Don't check for repo URLs (may not be
+    ready).
+  * [c2988c9] [devel]: Also test extra packages when available.
+  * [a56b6c1] control: Update dependency for sbuild to 0.72 (has patch for
+    squeeze).
+  * [56b4d11] Update debhelper compat level: 9->10 (no changes needed).
+  * [3d612c2] rules: With dh compat 10, we no longer need to have extra
+    systemd option explicitly.
+
+ -- Stephan Sürken <absurd@debian.org>  Fri, 04 Nov 2016 21:46:25 +0000
+
 mini-buildd (1.0.24) unstable; urgency=medium
 
   This and that, and fixup regression from 1.0.22:
