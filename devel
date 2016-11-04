@@ -221,8 +221,6 @@ mbd_tidy()
 		http://localhost:8066/mini_buildd/api \
 		http://localhost:8066/mini_buildd/api?command=getdputconf \
 		http://localhost:8066/accounts/login/ \
-		http://localhost:8066/repositories/test/dists/ \
-		http://localhost:8066/repositories/test/pool/ \
 		; do
 		printf "\n=> Testing HTML: ${url}\n"
 		wget --output-document=- "${url}" | tidy -output /dev/null
