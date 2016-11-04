@@ -3,7 +3,7 @@ Section: devel
 Priority: extra
 Maintainer: Stephan Sürken <absurd@debian.org>
 X-Python-Version: >=2.7
-Build-Depends: debhelper (>= 8.1.0~),
+Build-Depends: debhelper (>= 10),
                dh-python,
                dh-systemd (>= 1.5),
                man-db (>= 2.5.1),
