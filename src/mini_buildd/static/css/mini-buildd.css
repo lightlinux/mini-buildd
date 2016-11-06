@@ -190,6 +190,14 @@ a.hover-underline:hover
 
 /* MODEL STATUS DISPLAYS */
 
+#mbd-content .status.table
+{
+	display: block;
+	overflow: scroll;
+	height: 30vh;
+	background-color: whitesmoke;
+}
+
 #mbd-content .status.Removed
 {
 	color: red;
