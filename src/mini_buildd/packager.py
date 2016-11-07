@@ -118,7 +118,7 @@ class Package(mini_buildd.misc.Status):
             return lintian == "pass" or \
                 self.suite.experimental or \
                 self.distribution.lintian_mode < self.distribution.LINTIAN_FAIL_ON_ERROR or \
-                self.changes.magic_backport_mode
+                self.changes.get_options().magic_backport_mode
 
         if retval == 0 and (status == "skipped" or check_lintian()):
             self.success[arch] = bres
@@ -141,7 +141,7 @@ class Package(mini_buildd.misc.Status):
         self.repository.mbd_package_install(self.distribution, self.suite, self.changes, self.success)
 
         # Installed. Finally, try to serve magic auto backports
-        for to_dist_str in self.changes.magic_auto_backports:
+        for to_dist_str in self.changes.get_options().magic_auto_backports:
             try:
                 self.daemon.port(self.changes["Source"],
                                  self.distribution_string,

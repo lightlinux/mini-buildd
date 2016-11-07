@@ -28,6 +28,38 @@ LOG = logging.getLogger(__name__)
 
 
 class Changes(debian.deb822.Changes):
+    class Options(object):
+        @classmethod
+        def _get_top_changes(cls, upload_changes):
+            """Filter only the first block from the changes (changelog) entry.
+
+            Upload changes may include multiple version blocks from
+            the changelog (internal porting does it, for example),
+            but we must only consider values from the top one.
+            """
+            result = ""
+            header_found = False
+            for line in upload_changes.get("Changes", "").splitlines(True):
+                if re.match(r"^ [a-z0-9]+", line):
+                    if header_found:
+                        break
+                    header_found = True
+                result += line
+            return result
+
+        @property
+        def magic_auto_backports(self):
+            mres = re.search(r"\*\s*MINI_BUILDD:\s*AUTO_BACKPORTS:\s*([^*.\[\]]+)", self._changes)
+            return (re.sub(r"\s+", "", mres.group(1))).split(",") if mres else []
+
+        @property
+        def magic_backport_mode(self):
+            return bool(re.search(r"\*\s*MINI_BUILDD:\s*BACKPORT_MODE", self._changes))
+
+        def __init__(self, upload_changes):
+            self._changes = self._get_top_changes(upload_changes)
+            LOG.debug(self._changes)
+
     # Extra mini-buildd changes file types we invent
     TYPE_DEFAULT = 0
     TYPE_BREQ = 1
@@ -164,33 +196,8 @@ class Changes(debian.deb822.Changes):
     def is_new(self):
         return self._new
 
-    def _magic_get_changes(self):
-        """
-        Filter only the first block from the changes (changelog) entry.
-
-        We need this for the 'magic' values only. Uploads may
-        include multiple blocks from the changelog (internal
-        porting does it, for example), but we must only consider
-        values from the top one.
-        """
-        result = ""
-        header_found = False
-        for line in self.get("Changes", "").splitlines(True):
-            if re.match(r"^ [a-z0-9]+", line):
-                if header_found:
-                    break
-                header_found = True
-            result += line
-        return result
-
-    @property
-    def magic_auto_backports(self):
-        mres = re.search(r"\*\s*MINI_BUILDD:\s*AUTO_BACKPORTS:\s*([^*.\[\]]+)", self._magic_get_changes())
-        return (re.sub(r"\s+", "", mres.group(1))).split(",") if mres else []
-
-    @property
-    def magic_backport_mode(self):
-        return bool(re.search(r"\*\s*MINI_BUILDD:\s*BACKPORT_MODE", self._magic_get_changes()))
+    def get_options(self):
+        return self.Options(self)
 
     def get_spool_id(self):
         return "{type}-{hash}".format(type=self.TYPE2NAME[self._type], hash=self._spool_hash)
