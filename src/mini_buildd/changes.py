@@ -49,16 +49,15 @@ class Changes(debian.deb822.Changes):
 
         @property
         def magic_auto_backports(self):
-            mres = re.search(r"\*\s*MINI_BUILDD:\s*AUTO_BACKPORTS:\s*([^*.\[\]]+)", self._changes)
+            mres = re.search(r"\*\s*MINI_BUILDD:\s*AUTO_BACKPORTS:\s*([^*.\[\]]+)", self._top_changes)
             return (re.sub(r"\s+", "", mres.group(1))).split(",") if mres else []
 
         @property
         def magic_backport_mode(self):
-            return bool(re.search(r"\*\s*MINI_BUILDD:\s*BACKPORT_MODE", self._changes))
+            return bool(re.search(r"\*\s*MINI_BUILDD:\s*BACKPORT_MODE", self._top_changes))
 
         def __init__(self, upload_changes):
-            self._changes = self._get_top_changes(upload_changes)
-            LOG.debug(self._changes)
+            self._top_changes = self._get_top_changes(upload_changes)
 
     # Extra mini-buildd changes file types we invent
     TYPE_DEFAULT = 0
