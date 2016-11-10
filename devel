@@ -55,7 +55,7 @@ mbd_installdeps()
 	mk-build-deps --install --root-cmd=sudo --remove --tool="apt-get --no-install-recommends --target-release='*'" 
 
 	# Extra tools needed for checks
-	sudo apt-get install --no-install-recommends pep8 pylint pychecker pyflakes python-apt python-bs4 python-keyrings.alt
+	sudo apt-get install --no-install-recommends pycodestyle pylint pychecker pyflakes python-apt python-bs4 python-keyrings.alt
 	# Extra tools needed vc and package building
 	sudo apt-get install --no-install-recommends git git-buildpackage
 	# binary package dependecies so we can just dpkg -i for testing
@@ -103,12 +103,12 @@ pyenv()
 	python ./setup.py --version >/dev/null
 }
 
-mbd_pep8()
+mbd_pycodestyle()
 {
-	_check_prog pep8
+	_check_prog pycodestyle
 	(
 		pyenv
-		pep8 --config=${PJPATH}/.pep8 doc/conf.py setup.py src/mini-buildd src/mini-buildd-tool src/mini_buildd/
+		pycodestyle --config=${PJPATH}/.pycodestyle doc/conf.py setup.py src/mini-buildd src/mini-buildd-tool src/mini_buildd/
 	)
 }
 
@@ -229,7 +229,7 @@ mbd_tidy()
 
 mbd_check()
 {
-	local tests="pep8 pymisc pydoctests pyflakes pylint css"
+	local tests="pycodestyle pymisc pydoctests pyflakes pylint css"
 	for t in ${tests}; do
 		printf "=> mbd_${t}\n"
 		mbd_${t}
