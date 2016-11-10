@@ -669,6 +669,7 @@ class Subscription(Command):
         if not self._plain_result:
             self._plain_result = "No matching subscriptions ({s}).".format(s=self.args["subscription"])
 
+
 COMMAND_GROUP = "__GROUP__"
 COMMANDS = [(COMMAND_GROUP, "Daemon commands"),
             (Status.COMMAND, Status),

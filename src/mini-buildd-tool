@@ -66,6 +66,7 @@ def host_from_dput(section):
     except:
         return dput_cf.get(section, "x_mini_buildd_host")
 
+
 PARSER = argparse.ArgumentParser(prog="mini-buildd-tool",
                                  description="Command line tool to run API calls.",
                                  epilog="Note: Uses 'python-keyring' to persist passwords (see '~/.local/share/python_keyring/')",

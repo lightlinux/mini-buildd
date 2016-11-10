@@ -157,6 +157,8 @@ def cb_create_user_profile(sender, instance, created, **kwargs):
     "Automatically create a user profile with every user that is created"
     if created:
         Uploader.objects.create(user=instance)
+
+
 django.db.models.signals.post_save.connect(cb_create_user_profile, sender=django.contrib.auth.models.User)
 
 
