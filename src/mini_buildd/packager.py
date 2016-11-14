@@ -34,6 +34,7 @@ class Package(mini_buildd.misc.Status):
 
         self.daemon = daemon
         self.changes = changes
+        self.changes_options = changes.get_options()
         self.pid = changes.get_pkg_id()
         self.repository, self.distribution, self.suite, self.distribution_string = None, None, None, None
         self.requests, self.success, self.failed = {}, {}, {}
@@ -114,13 +115,13 @@ class Package(mini_buildd.misc.Status):
 
         LOG.info("{p}: Got build result for '{a}': {r}={s}, lintian={l}".format(p=self.pid, a=arch, r=retval, s=status, l=lintian))
 
-        def check_lintian():
+        def check_lintian(arch):
             return lintian == "pass" or \
                 self.suite.experimental or \
                 self.distribution.lintian_mode < self.distribution.LINTIAN_FAIL_ON_ERROR or \
-                self.changes.get_options().magic_backport_mode
+                self.changes_options.get("ignore-lintian", alt=arch, default=False)
 
-        if retval == 0 and (status == "skipped" or check_lintian()):
+        if retval == 0 and (status == "skipped" or check_lintian(arch)):
             self.success[arch] = bres
         else:
             self.failed[arch] = bres
@@ -140,8 +141,8 @@ class Package(mini_buildd.misc.Status):
         # Install to reprepro repository
         self.repository.mbd_package_install(self.distribution, self.suite, self.changes, self.success)
 
-        # Installed. Finally, try to serve magic auto backports
-        for to_dist_str in self.changes.get_options().magic_auto_backports:
+        # Installed. Finally, try to serve auto ports
+        for to_dist_str in self.changes_options.get("auto-ports", default=[]):
             try:
                 self.daemon.port(self.changes["Source"],
                                  self.distribution_string,

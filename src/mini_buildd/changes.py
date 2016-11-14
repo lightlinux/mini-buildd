@@ -29,6 +29,37 @@ LOG = logging.getLogger(__name__)
 
 class Changes(debian.deb822.Changes):
     class Options(object):
+        """
+        Uploader options in changes.
+
+        >>> "{}".format(Changes("./examples/doctests/changes.options").get_options())
+        u"auto-ports=[u'jessie-test-unstable', u'squeeze-test-snasphot'], ignore-lintian=True, ignore-lintian[i386]=False, internal-apt-priority=543, run-lintian=True, run-lintian[i386]=False"
+
+        >>> "{}".format(Changes("./examples/doctests/changes.magic").get_options())
+        u"auto-ports=[u'jessie-test-unstable', u'squeeze-test-snasphot'], ignore-lintian=True"
+        """
+        class Bool(object):
+            _VALID = ["true", "1", "false", "0"]
+            _TRUE = ["true", "1"]
+
+            def __init__(self, raw_value):
+                if raw_value.lower() not in self._VALID:
+                    raise Exception("Bool value must be one of {}".format(",".join(self._VALID)))
+                self.value = raw_value.lower() in self._TRUE
+
+        class Int(object):
+            def __init__(self, raw_value):
+                self.value = int(raw_value)
+
+        class CSV(object):
+            def __init__(self, raw_value):
+                self.value = raw_value.split(",")
+
+        _OPTIONS = {"ignore-lintian": Bool,
+                    "run-lintian": Bool,
+                    "internal-apt-priority": Int,
+                    "auto-ports": CSV}
+
         @classmethod
         def _get_top_changes(cls, upload_changes):
             """Filter only the first block from the changes (changelog) entry.
@@ -50,7 +81,7 @@ class Changes(debian.deb822.Changes):
         @property
         def magic_auto_backports(self):
             mres = re.search(r"\*\s*MINI_BUILDD:\s*AUTO_BACKPORTS:\s*([^*.\[\]]+)", self._top_changes)
-            return (re.sub(r"\s+", "", mres.group(1))).split(",") if mres else []
+            return mres.group(1) if mres else ""
 
         @property
         def magic_backport_mode(self):
@@ -58,6 +89,55 @@ class Changes(debian.deb822.Changes):
 
         def __init__(self, upload_changes):
             self._top_changes = self._get_top_changes(upload_changes)
+
+            matches = re.findall(r"\*\s*MINI_BUILDD_OPTION:\s*([^*.]+)=([^*.]+)", self._top_changes)
+            self._options = {}
+            for m in matches:
+                self._set(m[0], m[1])
+
+            def set_compat_magic(key, compat_key, value):
+                if value:
+                    LOG.warn("Deprecated \"magic\" option used: {c}".format(c=compat_key))
+                    self._set(key, value)
+
+            set_compat_magic("auto-ports", "AUTO_BACKPORTS", self.magic_auto_backports)
+            if self.magic_backport_mode:
+                set_compat_magic("ignore-lintian", "BACKPORT_MODE", "true")
+
+        def __unicode__(self):
+            return ", ".join("{k}={v}".format(k=key, v=value) for key, value in sorted(self._options.items()))
+
+        def _set(self, key, raw_value):
+            base_key = key.partition("[")[0]
+            value = re.sub(r"\s+", "", raw_value)
+
+            # Validity check for key
+            if base_key not in self._OPTIONS.keys():
+                raise Exception("Unknown option key: \"{k}\".".format(k=key))
+
+            # Duplicity check
+            if key in self._options.keys():
+                raise Exception("Duplicate option key: \"{k}\".".format(k=key))
+
+            # Value conversion check
+            converted_value = None
+            try:
+                converted_value = self._OPTIONS[base_key](value)
+            except Exception as e:
+                raise Exception("Invalid value for {k}: {v} ({e})".format(k=key, v=value, e=e))
+
+            self._options[key] = converted_value.value
+            LOG.debug("Changes option set: {k}={v}".format(k=key, v=value))
+
+        def get(self, key, alt=None, default=None):
+            """
+            Get first existing option value in this order: key[a], key, default.
+            """
+            if alt:
+                m_key = "{k}[{a}]".format(k=key, a=alt)
+                if m_key in self._options:
+                    return self._options.get(m_key, default)
+            return self._options.get(key, default)
 
     # Extra mini-buildd changes file types we invent
     TYPE_DEFAULT = 0
