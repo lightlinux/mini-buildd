@@ -39,8 +39,9 @@ class Changes(debian.deb822.Changes):
         u"auto-ports=[u'jessie-test-unstable', u'squeeze-test-snasphot'], ignore-lintian=True"
         """
         class Bool(object):
-            _VALID = ["true", "1", "false", "0"]
             _TRUE = ["true", "1"]
+            _FALSE = ["false", "0"]
+            _VALID = _TRUE + _FALSE
 
             def __init__(self, raw_value):
                 if raw_value.lower() not in self._VALID:
