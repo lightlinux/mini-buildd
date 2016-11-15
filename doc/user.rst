@@ -116,8 +116,57 @@ Using the repository
 Upload a package
 ****************
 
-Changelog Magic Lines (per-upload control)
-==========================================
+Upload Options
+==============
+
+.. versionadded:: 1.0.26
+
+An `Upload Option` is some value induced to mini-buildd via
+special entries in the ``changelog`` of an upload. Thus, an upload
+may overwrite some defaults, or request special handling.
+
+For example, consider an upload with this ``debian/changelog``::
+
+	mini-buildd (1.0.25~test80+1) jessie-test-unstable; urgency=medium
+
+	  * Adds this.
+	  * Adds that.
+	  * Fixes something else.
+	  * MINI_BUILDD_OPTION: ignore-lintian=true
+	  * MINI_BUILDD_OPTION: run-lintian[armel]=false
+	  * MINI_BUILDD_OPTION: auto-ports=wheezy-test-unstable
+
+This would
+
+* ignore lintian errors for this upload,
+* not run lintian at all for builds on arch ``armel``
+* and finally (after successful install) do an automated port to ``wheezy``.
+
+Changelog entries denoting such an ``upload option`` need to be of the form::
+
+	* MINI_BUILDD_OPTION: <key>[[<alt>]]=<value>
+
+For options that support alternate values, values without an ``<alt>`` denote the default for that option.
+
+These ``Upload Options`` are known:
+
+========================= ===================== ========== =============================================================
+  Upload Options
+------------------------------------------------------------------------------------------------------------------------
+Key                       Alt                   Value      Description
+========================= ===================== ========== =============================================================
+**ignore-lintian**        [``arch``]            Bool       Ignore lintian failures (install anyway).
+**run-lintian**           [``arch``]            Bool       Don't run lintian on build.
+**internal-apt-priority**                       Int        APT prio for internal repos on build.
+**auto-ports**                                  CSV        List of distributions to run ports after successful install.
+========================= ===================== ========== =============================================================
+
+
+Changelog Magic Lines (deprecated)
+----------------------------------
+
+.. deprecated:: 1.0.26
+	 Please use `upload options` ``auto-ports`` (for ``AUTO_BACKPORTS``) or ``ignore-lintian`` (for ``BACKPORT_MODE``) instead.
 
 ``mini-buildd`` currently supports these so called ``magic
 lines`` as changelog entry to control it on a per-upload basis::

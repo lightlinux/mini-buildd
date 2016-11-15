@@ -114,21 +114,22 @@ class Changes(debian.deb822.Changes):
 
             # Validity check for key
             if base_key not in self._OPTIONS.keys():
-                raise Exception("Unknown option key: \"{k}\".".format(k=key))
+                raise Exception("Unknown upload option: {k}.".format(k=key))
 
             # Duplicity check
             if key in self._options.keys():
-                raise Exception("Duplicate option key: \"{k}\".".format(k=key))
+                raise Exception("Duplicate upload option: {k}.".format(k=key))
 
             # Value conversion check
             converted_value = None
             try:
                 converted_value = self._OPTIONS[base_key](value)
             except Exception as e:
-                raise Exception("Invalid value for {k}: {v} ({e})".format(k=key, v=value, e=e))
+                raise Exception("Invalid upload option value: {k}=\"{v}\" ({e})".format(k=key, v=value, e=e))
 
             self._options[key] = converted_value.value
-            LOG.debug("Changes option set: {k}={v}".format(k=key, v=value))
+
+            LOG.debug("Upload option set: {k}=\"{v}\"".format(k=key, v=value))
 
         def get(self, key, alt=None, default=None):
             """
