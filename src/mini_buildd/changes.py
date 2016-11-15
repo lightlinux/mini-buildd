@@ -79,31 +79,31 @@ class Changes(debian.deb822.Changes):
                 result += line
             return result
 
-        @property
-        def magic_auto_backports(self):
-            mres = re.search(r"\*\s*MINI_BUILDD:\s*AUTO_BACKPORTS:\s*([^*.\[\]]+)", self._top_changes)
-            return mres.group(1) if mres else ""
+        def _compat_parse_magic(self):
+            """
+            Compat parse support for old style "magic" options.
+            """
+            def warning(magic, option):
+                LOG.warn("Deprecated \"magic\" option \"{m}\" found. Please use new-style option \"{o}\" instead (see user manual).".format(m=magic, o=option))
 
-        @property
-        def magic_backport_mode(self):
-            return bool(re.search(r"\*\s*MINI_BUILDD:\s*BACKPORT_MODE", self._top_changes))
+            magic_auto_backports = re.search(r"\*\s*MINI_BUILDD:\s*AUTO_BACKPORTS:\s*([^*.\[\]]+)", self._top_changes)
+            if magic_auto_backports:
+                warning("AUTO_BACKPORTS", "auto-ports")
+                self._set("auto-ports", magic_auto_backports.group(1))
+
+            magic_backport_mode = re.search(r"\*\s*MINI_BUILDD:\s*BACKPORT_MODE", self._top_changes)
+            if magic_backport_mode:
+                warning("BACKPORT_MODE", "ignore-lintian")
+                self._set("ignore-lintian", "true")
 
         def __init__(self, upload_changes):
             self._top_changes = self._get_top_changes(upload_changes)
-
-            matches = re.findall(r"\*\s*MINI_BUILDD_OPTION:\s*([^*.]+)=([^*.]+)", self._top_changes)
             self._options = {}
+            matches = re.findall(r"\*\s*MINI_BUILDD_OPTION:\s*([^*.]+)=([^*.]+)", self._top_changes)
             for m in matches:
                 self._set(m[0], m[1])
 
-            def set_compat_magic(key, compat_key, value):
-                if value:
-                    LOG.warn("Deprecated \"magic\" option used: {c}".format(c=compat_key))
-                    self._set(key, value)
-
-            set_compat_magic("auto-ports", "AUTO_BACKPORTS", self.magic_auto_backports)
-            if self.magic_backport_mode:
-                set_compat_magic("ignore-lintian", "BACKPORT_MODE", "true")
+            self._compat_parse_magic()
 
         def __unicode__(self):
             return ", ".join("{k}={v}".format(k=key, v=value) for key, value in sorted(self._options.items()))
