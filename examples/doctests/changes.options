@@ -34,10 +34,10 @@ Changes:
      ccache fail on pre-existing chroots due to missing 'libdir'.
 .
    New style options:
-   * MINI_BUILDD_OPTION: ignore-lintian=True
-   * MINI_BUILDD_OPTION: ignore-lintian[i386]=False
-   * MINI_BUILDD_OPTION: run-lintian=True
-   * MINI_BUILDD_OPTION: run-lintian[i386]=False
+   * MINI_BUILDD_OPTION: ignore-lintian=true
+   * MINI_BUILDD_OPTION: ignore-lintian[i386]=false
+   * MINI_BUILDD_OPTION: run-lintian=true
+   * MINI_BUILDD_OPTION: run-lintian[i386]=false
    * MINI_BUILDD_OPTION: internal-apt-priority=543
    * MINI_BUILDD_OPTION: auto-ports=jessie-test-unstable,
    squeeze-test-snasphot

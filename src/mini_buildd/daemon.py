@@ -667,7 +667,7 @@ class Daemon(object):
                                   cwd=dst_path,
                                   env=env).log().check()
 
-            for entry in (extra_cl_entries or []) + ["MINI_BUILDD: BACKPORT_MODE"]:
+            for entry in (extra_cl_entries or []) + ["MINI_BUILDD_OPTION: ignore-lintian=true"]:
                 mini_buildd.call.Call(["debchange",
                                        "--append",
                                        entry],
