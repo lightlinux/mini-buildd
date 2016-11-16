@@ -135,6 +135,10 @@ class Changes(debian.deb822.Changes):
             """
             Get first existing option value in this order: key[a], key, default.
             """
+            # Validity check for key
+            if key not in self._OPTIONS.keys():
+                raise Exception("Internal error: Upload Options: Unknown key used for get(): {k}.".format(k=key))
+
             if alt:
                 m_key = "{k}[{a}]".format(k=key, a=alt)
                 if m_key in self._options:
