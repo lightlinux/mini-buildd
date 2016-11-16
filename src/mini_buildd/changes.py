@@ -32,10 +32,10 @@ class Changes(debian.deb822.Changes):
         """
         Uploader options in changes.
 
-        >>> "{}".format(Changes("./examples/doctests/changes.options").get_options())
+        >>> "{}".format(Changes("./examples/doctests/changes.options").options)
         u"auto-ports=[u'jessie-test-unstable', u'squeeze-test-snasphot'], ignore-lintian=True, ignore-lintian[i386]=False, internal-apt-priority=543, run-lintian=True, run-lintian[i386]=False"
 
-        >>> "{}".format(Changes("./examples/doctests/changes.magic").get_options())
+        >>> "{}".format(Changes("./examples/doctests/changes.magic").options)
         u"auto-ports=[u'jessie-test-unstable', u'squeeze-test-snasphot'], ignore-lintian=True"
         """
         class Bool(object):
@@ -166,6 +166,9 @@ class Changes(debian.deb822.Changes):
         # Instance might be produced from a temporary file, so we need to save the hash now.
         self._spool_hash = self._spool_hash_from_file()
 
+        super(Changes, self).__init__([] if self._new else open(file_path))
+
+        self._options = None
         if self.BUILDREQUEST_RE.match(self._file_name):
             self._type = self.TYPE_BREQ
         elif self.BUILDRESULT_RE.match(self._file_name):
@@ -173,7 +176,6 @@ class Changes(debian.deb822.Changes):
         else:
             self._type = self.TYPE_DEFAULT
 
-        super(Changes, self).__init__([] if self._new else open(file_path))
         # Be sure base dir is always available
         mini_buildd.misc.mkdirs(os.path.dirname(file_path))
 
@@ -188,6 +190,15 @@ class Changes(debian.deb822.Changes):
             return "Buildresult from '{h}': {i}".format(h=self.get("Built-By"), i=self.get_pkg_id(with_arch=True))
         else:
             return "User upload: {i}".format(i=self.get_pkg_id())
+
+    @property
+    def options(self):
+        """
+        .. note:: We can't parse this in constructor currently: Upload option error handling won't work properly, exceptions triggered too early in packager.py.
+        """
+        if not self._options:
+            self._options = self.Options(self)
+        return self._options
 
     @property
     def type(self):
@@ -276,9 +287,6 @@ class Changes(debian.deb822.Changes):
 
     def is_new(self):
         return self._new
-
-    def get_options(self):
-        return self.Options(self)
 
     def get_spool_id(self):
         return "{type}-{hash}".format(type=self.TYPE2NAME[self._type], hash=self._spool_hash)

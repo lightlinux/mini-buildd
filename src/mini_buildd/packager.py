@@ -34,7 +34,6 @@ class Package(mini_buildd.misc.Status):
 
         self.daemon = daemon
         self.changes = changes
-        self.changes_options = changes.get_options()
         self.pid = changes.get_pkg_id()
         self.repository, self.distribution, self.suite, self.distribution_string = None, None, None, None
         self.requests, self.success, self.failed = {}, {}, {}
@@ -119,7 +118,7 @@ class Package(mini_buildd.misc.Status):
             return lintian == "pass" or \
                 self.suite.experimental or \
                 self.distribution.lintian_mode < self.distribution.LINTIAN_FAIL_ON_ERROR or \
-                self.changes_options.get("ignore-lintian", alt=arch, default=False)
+                self.changes.options.get("ignore-lintian", alt=arch, default=False)
 
         if retval == 0 and (status == "skipped" or check_lintian(arch)):
             self.success[arch] = bres
@@ -142,7 +141,7 @@ class Package(mini_buildd.misc.Status):
         self.repository.mbd_package_install(self.distribution, self.suite, self.changes, self.success)
 
         # Installed. Finally, try to serve auto ports
-        for to_dist_str in self.changes_options.get("auto-ports", default=[]):
+        for to_dist_str in self.changes.options.get("auto-ports", default=[]):
             try:
                 self.daemon.port(self.changes["Source"],
                                  self.distribution_string,
