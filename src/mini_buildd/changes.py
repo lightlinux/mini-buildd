@@ -510,7 +510,7 @@ class Changes(debian.deb822.Changes):
                     breq["Arch-All"] = "Yes"
                 breq["Build-Dep-Resolver"] = dist.get_build_dep_resolver_display()
                 breq["Apt-Allow-Unauthenticated"] = "1" if dist.apt_allow_unauthenticated else "0"
-                if dist.lintian_mode != dist.LINTIAN_DISABLED:
+                if dist.lintian_mode != dist.LINTIAN_DISABLED and self.options.get("run-lintian", alt=ao.architecture.name, default=True):
                     # Generate lintian options
                     modeargs = {
                         dist.LINTIAN_DISABLED: "",

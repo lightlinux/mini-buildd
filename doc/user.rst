@@ -156,11 +156,12 @@ These ``Upload Options`` are known:
 Key                       Alt                   Value      Description
 ========================= ===================== ========== =============================================================
 **ignore-lintian**        [``arch``]            Bool       Ignore lintian failures (install anyway).
-**run-lintian**           [``arch``]            Bool       Don't run lintian on build.
+**run-lintian**           [``arch``]            Bool       Run lintian on build [#run-lintian-note]_.
 **internal-apt-priority**                       Int        APT prio for internal repos on build.
 **auto-ports**                                  CSV        List of distributions to run ports after successful install.
 ========================= ===================== ========== =============================================================
 
+.. [#run-lintian-note] You cannot currently enable lintian run when it's disabled in the resp. Distribution. So for the time being, only "false" makes sense here.
 
 Changelog Magic Lines (deprecated)
 ----------------------------------
