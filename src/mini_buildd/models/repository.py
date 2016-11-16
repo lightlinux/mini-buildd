@@ -621,7 +621,7 @@ pimp the internal priority up here.
         result += "\n"
         return result
 
-    def mbd_get_apt_preferences(self, repository, suite_option):
+    def mbd_get_apt_preferences(self, repository, suite_option, internal_apt_priority_override=None):
         result = ""
 
         # Get preferences for all extra (prioritized) sources
@@ -629,7 +629,7 @@ pimp the internal priority up here.
             result += e.mbd_get_apt_preferences() + "\n"
 
         # Get preferences for all internal sources
-        internal_prio = self.mbd_get_extra_option("Internal-APT-Priority", 1)
+        internal_prio = internal_apt_priority_override if internal_apt_priority_override else self.mbd_get_extra_option("Internal-APT-Priority", 1)
         for s in repository.mbd_get_internal_suite_dependencies(suite_option):
             result += s.mbd_get_apt_preferences(repository, self, prio=internal_prio) + "\n"
 

@@ -488,7 +488,7 @@ class Changes(debian.deb822.Changes):
 
                 # Generate sources.list et.al. to be used
                 mini_buildd.misc.open_utf8(os.path.join(path, "apt_sources.list"), "w").write(dist.mbd_get_apt_sources_list(repository, suite_option))
-                mini_buildd.misc.open_utf8(os.path.join(path, "apt_preferences"), "w").write(dist.mbd_get_apt_preferences(repository, suite_option))
+                mini_buildd.misc.open_utf8(os.path.join(path, "apt_preferences"), "w").write(dist.mbd_get_apt_preferences(repository, suite_option, self.options.get("internal-apt-priority")))
                 mini_buildd.misc.open_utf8(os.path.join(path, "apt_keys"), "w").write(repository.mbd_get_apt_keys(dist))
                 chroot_setup_script = os.path.join(path, "chroot_setup_script")
                 # Note: For some reason (python, django sqlite, browser?) the text field may be in DOS mode.
