@@ -56,6 +56,7 @@ class Changes(debian.deb822.Changes):
             def __init__(self, raw_value):
                 self.value = raw_value.split(",")
 
+        KEYWORD = "MINI_BUILDD_OPTION"
         _OPTIONS = {"ignore-lintian": Bool,
                     "run-lintian": Bool,
                     "internal-apt-priority": Int,
@@ -99,7 +100,7 @@ class Changes(debian.deb822.Changes):
         def __init__(self, upload_changes):
             self._top_changes = self._get_top_changes(upload_changes)
             self._options = {}
-            matches = re.findall(r"\*\s*MINI_BUILDD_OPTION:\s*([^*.]+)=([^*.]+)", self._top_changes)
+            matches = re.findall(r"\*\s*{keyword}:\s*([^*.]+)=([^*.]+)".format(keyword=self.KEYWORD), self._top_changes)
             for m in matches:
                 self._set(m[0], m[1])
 
