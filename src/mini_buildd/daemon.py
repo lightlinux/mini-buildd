@@ -576,7 +576,14 @@ class Daemon(object):
 
         return repository, distribution, suite, dist_parsed.rollback_no
 
-    def _port(self, dsc_url, package, dist, version, extra_cl_entries=None):
+    def _port(self, dsc_url, package, dist, version, comments=None, options=None):
+        def changelog_entries():
+            "Merge comments and options into plain changelog_entries."
+            changelog_entries = comments or []
+            for o in options or []:
+                changelog_entries.append("{keyword}: {option}".format(keyword=mini_buildd.changes.Changes.Options.KEYWORD, option=o))
+            return changelog_entries
+
         t = mini_buildd.misc.TmpDir()
         try:
             env = mini_buildd.call.taint_env({"DEBEMAIL": self.model.email_address,
@@ -621,7 +628,7 @@ class Daemon(object):
                                   cwd=dst_path,
                                   env=env).log().check()
 
-            for entry in (extra_cl_entries or []) + ["MINI_BUILDD_OPTION: ignore-lintian=true"]:
+            for entry in changelog_entries():
                 mini_buildd.call.Call(["debchange",
                                        "--append",
                                        entry],
@@ -686,7 +693,7 @@ class Daemon(object):
         if not url:
             raise Exception("Port failed: Can't find DSC for {p}-{v} in pool".format(p=package, v=p["sourceversion"]))
 
-        self._port(url, package, to_dist, port_version)
+        self._port(url, package, to_dist, port_version, options=["ignore-lintian=true"])
 
     def portext(self, dsc_url, to_dist):
         # check to_dist
@@ -704,7 +711,8 @@ class Daemon(object):
                    dsc["Source"],
                    to_dist,
                    v.gen_external_port(to_repository.layout.mbd_get_default_version(to_repository, to_distribution, to_suite)),
-                   extra_cl_entries=["External port from: {u}".format(u=dsc_url)])
+                   comments=["External port from: {u}".format(u=dsc_url)],
+                   options=["ignore-lintian=true"])
 
     def get_keyring_package(self):
         return KeyringPackage(self.model.identity,
