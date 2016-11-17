@@ -576,52 +576,6 @@ class Daemon(object):
 
         return repository, distribution, suite, dist_parsed.rollback_no
 
-    def port(self, package, from_dist, to_dist, version):
-        # check from_dist
-        from_repository, from_distribution, from_suite, _from_rollback = self.parse_distribution(from_dist)
-        p = from_repository.mbd_package_find(package, distribution=from_dist, version=version)
-        if not p:
-            raise Exception("Port failed: Package (version) for '{p}' not found in '{d}'".format(p=package, d=from_dist))
-
-        # check to_dist
-        to_repository, to_distribution, to_suite, to_rollback = self.parse_distribution(to_dist)
-        if not to_suite.uploadable:
-            raise Exception("Port failed: Non-upload distribution requested: '{d}'".format(d=to_dist))
-        if to_rollback:
-            raise Exception("Port failed: Rollback distribution requested: '{d}'".format(d=to_dist))
-
-        # Ponder version to use
-        v = DebianVersion(p["sourceversion"])
-        if to_dist == from_dist:
-            port_version = v.gen_internal_rebuild()
-        else:
-            port_version = v.gen_internal_port(from_repository.layout.mbd_get_mandatory_version_regex(from_repository, from_distribution, from_suite),
-                                               to_repository.layout.mbd_get_default_version(to_repository, to_distribution, to_suite))
-
-        _component, url = from_repository.mbd_get_dsc_url(from_distribution, package, p["sourceversion"])
-        if not url:
-            raise Exception("Port failed: Can't find DSC for {p}-{v} in pool".format(p=package, v=p["sourceversion"]))
-
-        self._port(url, package, to_dist, port_version)
-
-    def portext(self, dsc_url, to_dist):
-        # check to_dist
-        to_repository, to_distribution, to_suite, to_rollback = self.parse_distribution(to_dist)
-
-        if not to_suite.uploadable:
-            raise Exception("Port failed: Non-upload distribution requested: '{d}'".format(d=to_dist))
-
-        if to_rollback:
-            raise Exception("Port failed: Rollback distribution requested: '{d}'".format(d=to_dist))
-
-        dsc = debian.deb822.Dsc(urllib2.urlopen(dsc_url))
-        v = DebianVersion(dsc["Version"])
-        self._port(dsc_url,
-                   dsc["Source"],
-                   to_dist,
-                   v.gen_external_port(to_repository.layout.mbd_get_default_version(to_repository, to_distribution, to_suite)),
-                   extra_cl_entries=["External port from: {u}".format(u=dsc_url)])
-
     def _port(self, dsc_url, package, dist, version, extra_cl_entries=None):
         t = mini_buildd.misc.TmpDir()
         try:
@@ -705,6 +659,52 @@ class Daemon(object):
         except:
             t.close()
             raise
+
+    def port(self, package, from_dist, to_dist, version):
+        # check from_dist
+        from_repository, from_distribution, from_suite, _from_rollback = self.parse_distribution(from_dist)
+        p = from_repository.mbd_package_find(package, distribution=from_dist, version=version)
+        if not p:
+            raise Exception("Port failed: Package (version) for '{p}' not found in '{d}'".format(p=package, d=from_dist))
+
+        # check to_dist
+        to_repository, to_distribution, to_suite, to_rollback = self.parse_distribution(to_dist)
+        if not to_suite.uploadable:
+            raise Exception("Port failed: Non-upload distribution requested: '{d}'".format(d=to_dist))
+        if to_rollback:
+            raise Exception("Port failed: Rollback distribution requested: '{d}'".format(d=to_dist))
+
+        # Ponder version to use
+        v = DebianVersion(p["sourceversion"])
+        if to_dist == from_dist:
+            port_version = v.gen_internal_rebuild()
+        else:
+            port_version = v.gen_internal_port(from_repository.layout.mbd_get_mandatory_version_regex(from_repository, from_distribution, from_suite),
+                                               to_repository.layout.mbd_get_default_version(to_repository, to_distribution, to_suite))
+
+        _component, url = from_repository.mbd_get_dsc_url(from_distribution, package, p["sourceversion"])
+        if not url:
+            raise Exception("Port failed: Can't find DSC for {p}-{v} in pool".format(p=package, v=p["sourceversion"]))
+
+        self._port(url, package, to_dist, port_version)
+
+    def portext(self, dsc_url, to_dist):
+        # check to_dist
+        to_repository, to_distribution, to_suite, to_rollback = self.parse_distribution(to_dist)
+
+        if not to_suite.uploadable:
+            raise Exception("Port failed: Non-upload distribution requested: '{d}'".format(d=to_dist))
+
+        if to_rollback:
+            raise Exception("Port failed: Rollback distribution requested: '{d}'".format(d=to_dist))
+
+        dsc = debian.deb822.Dsc(urllib2.urlopen(dsc_url))
+        v = DebianVersion(dsc["Version"])
+        self._port(dsc_url,
+                   dsc["Source"],
+                   to_dist,
+                   v.gen_external_port(to_repository.layout.mbd_get_default_version(to_repository, to_distribution, to_suite)),
+                   extra_cl_entries=["External port from: {u}".format(u=dsc_url)])
 
     def get_keyring_package(self):
         return KeyringPackage(self.model.identity,
