@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load mini_buildd_tags %}
 
 {% block page_header %}
 	<div class="left">
@@ -47,15 +48,23 @@
 
 	{% if api_cmd.args %}
 		<div class="right">
-			<form action="/mini_buildd/api" method="get">
-				<div>
-					<input type="hidden" name="command" value="{{ api_cmd.COMMAND }}" />
-					{% for k, v in api_cmd.args.items %}
-						<input type="text" title="{{ k }}" size="8" name="{{ k }}" value="{{ v }}" />
-					{% endfor %}
-					<input type="submit" value="Refine" title="Refined API call" style="width: 4em" />
-				</div>
-			</form>
+			<b>{{ api_cmd.COMMAND }}</b> API call (<a id="mbd-current-api-command_header" href="javascript:mbdToggleElement('mbd-current-api-command','mbd-current-api-command_header','hide parameter','show parameter')">show parameter</a>)
+			<div id="mbd-current-api-command">
+				<form action="/mini_buildd/api" method="get">
+					<div>
+						<input type="hidden" name="command" value="{{ api_cmd.COMMAND }}" />
+						{% for k, v in api_cmd.args.items %}
+							<p>
+								{% with help=api_cmd.args_help|mbd_dict_get:k %}
+									<kbd>{{ k }}</kbd>=<input type="text" size="{{ v | length}}" name="{{ k }}" value="{{ v }}" />
+									<kbd><small>{{ help }}</small></kbd>
+								{% endwith %}
+							</p>
+						{% endfor %}
+						<input type="submit" value="Refine" title="Refined API call" style="width: 4em" />
+					</div>
+				</form>
+			</div>
 		</div>
 	{% endif %}
 
