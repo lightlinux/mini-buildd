@@ -36,13 +36,21 @@ class Command(object):
     NEEDS_RUNNING_DAEMON = False
     ARGUMENTS = []
 
-    COMMON_ARG_VERSION = (["--version", "-V"], {"action": "store", "metavar": "VERSION",
+    # Used in: migrate, remove, port
+    COMMON_ARG_VERSION = (["--version", "-V"], {"action": "store",
+                                                "metavar": "VERSION",
                                                 "default": "",
                                                 "help": """
 limit command to that version. Use it for the rare case of
 multiple version of the same package in one distribution (in
 different components), or just as safeguard
 """})
+
+    # Used in: port, portext
+    COMMON_ARG_OPTIONS = (["--options", "-O"], {"action": "store",
+                                                "metavar": "OPTIONS",
+                                                "default": "ignore-lintian=true",
+                                                "help": "upload options (see user manual); separate multiple options by '|'"})
 
     @classmethod
     def _filter_api_args(cls, args, args_help, set_if_missing=False):
@@ -532,7 +540,8 @@ class Port(Command):
         (["package"], {"help": "source package name"}),
         (["from_distribution"], {"help": "distribution to port from"}),
         (["to_distributions"], {"help": "comma-separated list of distributions to port to (when this equals the from-distribution, a rebuild will be done)"}),
-        Command.COMMON_ARG_VERSION]
+        Command.COMMON_ARG_VERSION,
+        Command.COMMON_ARG_OPTIONS]
 
     def run(self, daemon):
         # Parse and pre-check all dists
@@ -542,7 +551,8 @@ class Port(Command):
             daemon.port(self.args["package"],
                         self.args["from_distribution"],
                         to_distribution,
-                        version=self.arg_false2none("version"))
+                        version=self.arg_false2none("version"),
+                        options=self.args["options"].split("|"))
             self.msglog.info("Requested: {i}".format(i=info))
             self._plain_result += to_distribution + " "
 
@@ -559,14 +569,15 @@ class PortExt(Command):
     CONFIRM = True
     ARGUMENTS = [
         (["dsc"], {"help": "URL of any Debian source package (dsc) to port"}),
-        (["distributions"], {"help": "comma-separated list of distributions to port to"})]
+        (["distributions"], {"help": "comma-separated list of distributions to port to"}),
+        Command.COMMON_ARG_OPTIONS]
 
     def run(self, daemon):
         # Parse and pre-check all dists
         for d in self.args["distributions"].split(","):
             info = "External port {dsc} -> {d}".format(dsc=self.args["dsc"], d=d)
             self.msglog.info("Trying: {i}".format(i=info))
-            daemon.portext(self.args["dsc"], d)
+            daemon.portext(self.args["dsc"], d, options=self.args["options"].split("|"))
             self.msglog.info("Requested: {i}".format(i=info))
             self._plain_result += d + " "
 
