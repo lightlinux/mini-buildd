@@ -1,3 +1,56 @@
+mini-buildd (1.0.26) unstable; urgency=medium
+
+  Besides the usual various fixes, this release adds new (per cl)
+  "Upload Options": Nicer notation and some *new* options:
+   - ignore lintian now optionally per arch.
+   - run lintian, optionally per arch.
+   - set apt priority for internal packages.
+  See user manual for more information on this.
+
+  * [79f529d] [html] Improve packager/builder status table design (partly
+    as suggested in #843396, thx Boyuan)
+  * [446ba1a] changes.py: Move "magic" code to new subclass "Options".
+  * [96258ed] control: "Harden" dep on dpkg-dev (>= 1.7.27~) for sbuild.
+  * [0e80bc6] changes.py: Options: Better name for private class var.
+  * [25a0eee] devel: 'pep8' has been renamed to 'pycodestyle'.
+  * [0d275c3] pycodestyle: Fixup some new warnings.
+  * [f9fbe15] .pycodestyle: Ignore new check E741 for now && add clear
+    text description for our exceptions.
+  * [0c98a82] [devel]: Fix pycodestyle args to give error source &&
+    description.
+  * [3e0555d] changes.py: Initial new impl of Changes.Options() (replacing
+    "magic options").
+  * [a92732b] [devel]: Remove extra test against explicit unicode literals
+    (we need that notation for doctest expect strings).
+  * [55dcdc3] test packages: Update config.* (new autotools).
+  * [442691b] changes.py: Options: Imporove Bool class.
+  * [31dc434] changes.py: Options: Improve/cleanup "magic" options compat.
+  * [03e3107] user doc/changes.py: Update exception wording, and add
+    documentation for new "Upload Options".
+  * [5d7136d] New upload options: Remove any internal reference to now-
+    deprecated magic style.
+  * [9b8f0f1] Rm .ui-auto.conf: Not used for a long time, and has
+    confusing vintage content.
+  * [3a4f9de] changes.py: Changes: Make 'options' a (on demand, cached)
+    property.
+  * [04f27c7] changes.py: Options: Implement "run-lintian".
+  * [8078012] changes.py: Options.get(): Add check against internal code
+    using unknown key.
+  * [cdd7a34] changes.py: Options: Implement "internal-apt-priority".
+  * [e370c1e] daemon.py: Move private general _port() method before
+    specializations (port, portext).
+  * [5e5c4e2] changes.py: Options: Use class attr. for "keyword" string so
+    we do not (so we don't need to duplicate this later).
+  * [f3a25e5] user.rst: Improve description for auto-ports.
+  * [28fb995] daemon.py: *port*(): Refactor soemwhat so we can give
+    comments and options separately.
+  * [ac55b85] daemon.py: port(), portext(): Add optional "options"
+    argument.
+  * [7840616] api: port, portext: Add extra "options" argument.
+  * [0a987ad] [html] Improve 'current API cmd' display/refine.
+
+ -- Stephan Sürken <absurd@debian.org>  Sun, 27 Nov 2016 12:21:49 +0000
+
 mini-buildd (1.0.25) unstable; urgency=medium
 
   This and that, and fixing up the meta distribution feature:
