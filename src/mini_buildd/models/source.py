@@ -312,26 +312,6 @@ codeversion is only used for base sources.""")
         @classmethod
         def mbd_meta_add_ubuntu(cls, msglog):
             "Add well-known Ubuntu sources"
-            cls._mbd_get_or_create(msglog, "Ubuntu", "precise",
-                                   ["40976EAF437D05B5", "3B4FE6ACC0B21F32"])
-            cls._mbd_get_or_create(msglog, "Ubuntu", "precise-backports",
-                                   ["40976EAF437D05B5", "3B4FE6ACC0B21F32"],
-                                   "Codename: precise\nSuite: precise-backports")
-            cls._mbd_get_or_create(msglog, "Ubuntu", "quantal",
-                                   ["40976EAF437D05B5", "3B4FE6ACC0B21F32"])
-            cls._mbd_get_or_create(msglog, "Ubuntu", "quantal-backports",
-                                   ["40976EAF437D05B5", "3B4FE6ACC0B21F32"],
-                                   "Codename: quantal\nSuite: quantal-backports")
-            cls._mbd_get_or_create(msglog, "Ubuntu", "raring",
-                                   ["40976EAF437D05B5", "3B4FE6ACC0B21F32"])
-            cls._mbd_get_or_create(msglog, "Ubuntu", "raring-backports",
-                                   ["40976EAF437D05B5", "3B4FE6ACC0B21F32"],
-                                   "Codename: raring\nSuite: raring-backports")
-            cls._mbd_get_or_create(msglog, "Ubuntu", "saucy",
-                                   ["40976EAF437D05B5", "3B4FE6ACC0B21F32"])
-            cls._mbd_get_or_create(msglog, "Ubuntu", "saucy-backports",
-                                   ["40976EAF437D05B5", "3B4FE6ACC0B21F32"],
-                                   "Codename: saucy\nSuite: saucy-backports")
             cls._mbd_get_or_create(msglog, "Ubuntu", "trusty",
                                    ["40976EAF437D05B5", "3B4FE6ACC0B21F32"])
             cls._mbd_get_or_create(msglog, "Ubuntu", "trusty-backports",
