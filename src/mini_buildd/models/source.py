@@ -337,6 +337,11 @@ codeversion is only used for base sources.""")
             cls._mbd_get_or_create(msglog, "Ubuntu", "xenial-backports",
                                    ["40976EAF437D05B5", "3B4FE6ACC0B21F32"],
                                    "Codename: xenial\nSuite: xenial-backports")
+            cls._mbd_get_or_create(msglog, "Ubuntu", "yakkety",
+                                   ["40976EAF437D05B5", "3B4FE6ACC0B21F32"])
+            cls._mbd_get_or_create(msglog, "Ubuntu", "yakkety-backports",
+                                   ["40976EAF437D05B5", "3B4FE6ACC0B21F32"],
+                                   "Codename: yakkety\nSuite: yakkety-backports")
 
         @classmethod
         def mbd_filter_active_base_sources(cls):
