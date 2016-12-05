@@ -364,13 +364,13 @@ class List(Command):
     COMMAND = "list"
     AUTH = Command.LOGIN
     ARGUMENTS = [
-        (["pattern"], {"help": "list source packages matching pattern"}),
+        (["pattern"], {"help": "limit packages by name (glob pattern)"}),
         (["--with-rollbacks", "-r"], {"action": "store_true",
                                       "default": False,
                                       "help": "also list packages on rollback distributions"}),
         (["--distribution", "-D"], {"action": "store", "metavar": "DIST",
                                     "default": "",
-                                    "help": "limit distributions to those matching this regex"}),
+                                    "help": "limit distributions by name (regex)"}),
         (["--type", "-T"], {"action": "store", "metavar": "TYPE",
                             "default": "",
                             "help": "package type: dsc, deb or udeb (like reprepo --type)"})]
