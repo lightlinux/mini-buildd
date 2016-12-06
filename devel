@@ -334,7 +334,7 @@ mbd_all()
 	time /usr/share/doc/mini-buildd/examples/auto-setup
 
 	# Extra test packages when available
-	[ ! -d ../test-packages/ ] || dput -u -f mini-buildd-$(hostname) ../test-packages/*.changes
+	[ ! -d ../test-packages/ ] || dput --unchecked --no-upload-log mini-buildd-$(hostname) ../test-packages/*.changes
 }
 
 mbd_doc()
