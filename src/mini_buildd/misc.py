@@ -28,15 +28,6 @@ from distutils.version import LooseVersion
 
 import debian.debian_support
 
-# Workaround: Avoid warning 'No handlers could be found for logger "keyring"'
-KEYRING_LOG = logging.getLogger("keyring")
-KEYRING_LOG.addHandler(logging.NullHandler())
-import keyring  # pylint: disable=wrong-import-position
-try:
-    from keyring.util.platform_ import data_root as keyring_data_root  # pylint: disable=wrong-import-position,wrong-import-order,import-error,no-name-in-module
-except ImportError:
-    from keyring.util.platform import data_root as keyring_data_root  # pylint: disable=wrong-import-position,wrong-import-order,import-error,no-name-in-module
-
 import mini_buildd.setup  # pylint: disable=wrong-import-position
 
 LOG = logging.getLogger(__name__)
@@ -656,13 +647,36 @@ def qualname(obj):
 class Keyring(object):
     _SAVE_POLICY_KEY = "save_policy"
 
-    def __init__(self, service):
-        self._service = service
-        self._keyring = keyring.get_keyring()
-        self._save_policy = self._keyring.get_password(service, self._SAVE_POLICY_KEY)
+    @classmethod
+    def _get_python_keyring(cls):
+        """
+        Import wrapper for keyring module.
+
+        Only by importing the ``keyring`` module, the module peruses the default backend
+        and tries to initialize it. This might fail, depending from what environment
+        ``mini_buildd.misc`` was imported. Doing the import here puts that code to
+        the time when the keyring is actually used.
+        """
+        # Workaround: Avoid warning 'No handlers could be found for logger "keyring"'
+        keyring_log = logging.getLogger("keyring")
+        keyring_log.addHandler(logging.NullHandler())
+
+        import keyring  # pylint: disable=wrong-import-position
+        try:
+            from keyring.util.platform_ import data_root as keyring_data_root  # pylint: disable=wrong-import-position,wrong-import-order,import-error,no-name-in-module
+        except ImportError:
+            from keyring.util.platform import data_root as keyring_data_root  # pylint: disable=wrong-import-position,wrong-import-order,import-error,no-name-in-module
+
         LOG.info("Viable keyring backends: {b}".format(b=" ".join([qualname(o) for o in keyring.backend.get_all_keyring()])))
         LOG.info("Hint: You may set up '{r}/keyringrc.cfg' to force a backend.".format(r=keyring_data_root()))
         LOG.info("Hint: See 'keyringrc.cfg' in the package's docs 'examples' directory for a sample file.")
+
+        return keyring.get_keyring()
+
+    def __init__(self, service):
+        self._service = service
+        self._keyring = self._get_python_keyring()
+        self._save_policy = self._keyring.get_password(service, self._SAVE_POLICY_KEY)
 
     def __unicode__(self):
         return "Saving '{s}' passwords to '{k}' with policy '{p}'".format(
