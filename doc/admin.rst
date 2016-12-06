@@ -550,6 +550,25 @@ On mini-buildd's home, you will find action buttons to
 create+build keyring packages, as well as running test packages.
 
 
+linux.deb >= 4.8.5: You may need to re-enable vsyscall
+======================================================
+
+In Debian kernel packages since ``4.8.4-1~exp1``::
+
+  [ Ben Hutchings ]
+  * [amd64] Enable LEGACY_VSYSCALL_NONE instead of LEGACY_VSYSCALL_EMULATE.
+    This breaks (e)glibc 2.13 and earlier, and can be reverted using the kernel
+    parameter: vsyscall=emulate
+
+I.e.: When running the Debian standard kernel and your mini-buildd instance needs
+to support ``wheezy`` or earlier, you need to re-enable this (in ``/etc/default/grub``).
+
+On any running kernel, this is a poor man's check to see if
+vsyscall is still enabled on your system::
+
+	grep "\[vsyscall\]" /proc/self/maps
+
+
 django: Avoid downgrades (does not start after downgrade)
 =========================================================
 
