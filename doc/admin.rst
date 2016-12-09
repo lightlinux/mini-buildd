@@ -321,6 +321,35 @@ You will interface with Layouts in Repositories, determining what
 suites (and rollback distributions) are available, which suites
 are uploadable, and which suites migrate, etc...
 
+Stay In Sync With Default Layout Changes
+----------------------------------------
+
+In general, all the ``wizards`` never touch existing
+objects. This means, on existing systems, there is currently
+(``1.0.x``) no way (unfortunately) to *stay on* or easily
+*upgrade to* the defaults as provided by mini-buildd wizards.
+
+For those who deliberately want to upgrade to these
+(recommended) defaults, here are instructions how to do this
+manually:
+
+1.0.17: New Hotfix Suite
+````````````````````````
+.. versionadded:: 1.0.17
+
+#. Enter the `web application's configuration section </admin/mini_buildd/>`_ and login as superuser ``admin``.
+#. For Layouts ``Default`` and ``Default (no rollbacks)``
+	 #. Enter the editor for that layout.
+	 #. Add a new ``Suite Option`` (note: last entry shown in the list is for that purpose).
+			- Extra Options: ``Rollback: 4``
+			- Suite: ``hotfix`` (note: you may need to add this; look for the green "+" sign below suite name.)
+			- Uploadable: ``yes``
+			- Experimental: ``no``
+			- Migrates to: ``stable``
+			- Not Automatic: ``yes``
+			- But Automatic Upgrades: ``yes``
+#. Re-index (PCA) all affected repositories.
+
 
 Meta-Distributions
 ------------------
