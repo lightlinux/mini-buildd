@@ -597,6 +597,8 @@ vsyscall is still enabled on your system::
 
 	grep "\[vsyscall\]" /proc/self/maps
 
+.. seealso:: [#debbug847154]_, linux package's ``NEWS`` file.
+
 
 django: Avoid downgrades (does not start after downgrade)
 =========================================================
@@ -722,3 +724,4 @@ References
 .. [#debbug706086] http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=706086
 .. [#debbug705238] http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=705238
 .. [#debbug733281] http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=733281
+.. [#debbug847154] http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=847154
