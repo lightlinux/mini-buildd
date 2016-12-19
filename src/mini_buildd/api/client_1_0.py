@@ -25,7 +25,9 @@ class Daemon(object):
         print("{host}: {m}".format(host=self.host, m=message), file=sys.stderr)
 
     def _log_daemon_messages(self, headers):
-        "Stolen from mini-buildd-tool"
+        """
+        Stolen from mini-buildd-tool
+        """
         msgs_header = "x-mini-buildd-message"
         for msg in [v for k, v in headers.items() if msgs_header == k[:len(msgs_header)]]:
             self._log("HTTP Header Message: {m}".format(m=mini_buildd.misc.b642u(msg)))
@@ -52,7 +54,9 @@ class Daemon(object):
         self._dputconf = None
 
     def login(self, user=None):
-        "Login. Use the user's mini-buildd keyring for auth, like mini-buildd-tool."
+        """
+        Login. Use the user's mini-buildd keyring for auth, like mini-buildd-tool.
+        """
         keyring = mini_buildd.misc.Keyring("mini-buildd")
         mini_buildd.misc.web_login("{host}:{port}".format(host=self.host, port=self.port), user if (user or self.batch_mode) else raw_input("Username: "), keyring, proto=self.proto)
         return self
@@ -94,7 +98,9 @@ class Daemon(object):
     # Extra functionality
     @property
     def identity(self):
-        """The Archive's Identity."""
+        """
+        The Archive's Identity.
+        """
         # Bug 1.0.x: "status" does not give the archive id.
         # Workaround: Parse the archive id from dput.cf
         if self._dputconf is None:
@@ -117,7 +123,9 @@ class Daemon(object):
         return self.status.repositories[repo]
 
     def get_package_versions(self, src_package, dist_regex=".*"):
-        """Helper: Produce a dict with all (except rollback) available versions of this package (key=distribution, value=info dict: version, dsc_url, log_url, changes_url*)."""
+        """
+        Produce a dict with all (except rollback) available versions of this package (key=distribution, value=info dict: version, dsc_url, log_url, changes_url*).
+        """
         def _base_url(url):
             url_parse = urlparse.urlparse(url)
             return "{scheme}://{hostname}:{port}".format(scheme=url_parse.scheme, hostname=url_parse.hostname, port=url_parse.port)
@@ -156,7 +164,9 @@ class Daemon(object):
     def wait_for_package(self, distribution, src_package, version=None, or_greater=False,
                          max_tries=-1, sleep=60, initial_sleep=0,
                          raise_on_error=True):
-
+        """
+        Block until a specific package is in repository.
+        """
         item = "\"{p}_{v}\" in \"{d}\"".format(p=src_package, v=version, d=distribution)
 
         def _sleep(secs):
@@ -183,11 +193,17 @@ class Daemon(object):
             raise Exception(not_found_msg)
 
     def has_package(self, distribution, src_package, version=None, or_greater=False):
+        """
+        Check if a specific package is in repository.
+        """
         return self.wait_for_package(distribution, src_package, version, or_greater=or_greater,
                                      max_tries=1, sleep=0, initial_sleep=0,
                                      raise_on_error=False)
 
     def bulk_migrate(self, packages, repositories=None, codenames=None, suites=None):
+        """
+        Bulk-migrate a package over repositories, base distributions and suites.
+        """
         status = self.call("status")
 
         if repositories is None:
