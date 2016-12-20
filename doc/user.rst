@@ -203,6 +203,68 @@ FAQ
 Using the API
 *************
 
+The ``API`` consists of several commands with optional arguments
+(authentity and authority protected via django's user management).
+
+On the web interface, you can see a list of all commands via the `API menu </mini_buildd/api>`_.
+
+There are several ways to access the API:
+
+Via the Web Interface
+=====================
+
+API calls are integrated in the web interface at appropriate
+places. Credentials are handled by whatever your browser uses.
+
+Chances are that this is all you need, and ``no extra packages``
+need to be installed on your system.
+
+Via the Command Line
+====================
+
+This needs extra package ``python-mini-buildd`` for the command
+line tool ``mini-buildd-tool``. Credentials are handled via
+``python-keyring``.
+
+Via Python Code
+===============
+
+This needs extra package ``python-mini-buildd`` for the client
+API python module ``client_1_0``. Credentials are handled via
+``python-keyring``.
+
+Over the mere API calls, this also currently adds some extra
+functionality (like *bulk migration*, or *blocking until package
+availability*).
+
+For example, one can have configuration-like little python
+helper scripts, like for bulk migrating a package::
+
+	#!/usr/bin/python
+	from mini_buildd.api.client_1_0 import Daemon
+	Daemon("myhost.some.where").login("myuser").bulk_migrate(["mypkg1", "mypkg2"], ["myrepoid"], ["jessie"], ["unstable", "testing"])
+
+You might find some more information in the API doc `here
+</doc/mini_buildd.api.html>`_, or directly in the source code.
+
+Access via https proxy
+----------------------
+
+If you happen to have setup an https proxy for your mini-buildd
+instance (see examples), the above example could be written as::
+
+	#!/usr/bin/python
+	from mini_buildd.api.client_1_0 import Daemon
+	Daemon("myhost.some.where", port=443, proto="https").login("myuser").bulk_migrate(["mypkg1", "mypkg2"], ["myrepoid"], ["jessie"], ["unstable", "testing"])
+
+In case you use a self-signed certificate, you will also need to make this known
+for python's ``urllib2``, for example like so on a Debian system::
+
+	# apt-get install ca-certificates
+	# cp your_self_signed_cert.crt /usr/local/share/ca-certificates/
+	# update-ca-certificates
+
+
 .. _user_ports:
 
 ***************
