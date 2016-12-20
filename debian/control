@@ -37,7 +37,10 @@ Depends: ${misc:Depends},
          python-argparse,
          python-argcomplete (>= 0.5.4),
          python-keyring (>= 1.6),
-         python-debian (>= 0.1.25~)
+         python-debian (>= 0.1.25~),
+         python-django (>= 1.7),
+         python-django (<< 1:1.11),
+         python-django-registration (>= 2.0.4)
 Description: minimal build daemon - python library and user tool
  Mini-buildd is an easy-to-configure autobuilder and
  repository for deb packages.
@@ -56,9 +59,6 @@ Depends: ${misc:Depends},
          python-daemon (>= 2.0.5),
          python-cherrypy3,
          python-pyftpdlib (>= 1.2.0),
-         python-django (>= 1.7),
-         python-django (<< 1:1.11),
-         python-django-registration (>= 2.0.4),
          libjs-jquery,
          adduser,
          sudo,
