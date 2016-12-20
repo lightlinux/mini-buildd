@@ -7,11 +7,6 @@ import logging
 import random
 from distutils.version import LooseVersion
 
-from platform import python_version
-from cherrypy import __version__ as cherrypy_version
-from pyftpdlib import __ver__ as pyftpdlib_version
-from registration import get_version as registration_version
-
 import django
 import django.conf
 
@@ -30,18 +25,28 @@ MBD_INSTALLED_APPS = (
     "registration",
     "mini_buildd")
 
-
-MBD_STATIC_CONTEXT = {
-    "mbd_version": mini_buildd.__version__,
-    "mbd_components": {
-        "python": python_version(),
-        "django": django.get_version(),
-        "django-registration": registration_version(),
-        "cherrypy": cherrypy_version,
-        "pyftpdlib": pyftpdlib_version}}
+MBD_STATIC_CONTEXT = None
 
 
 def context_processor(_request):
+    if MBD_STATIC_CONTEXT is None:
+        global MBD_STATIC_CONTEXT  # pylint: disable=global-statement
+        MBD_STATIC_CONTEXT = {"mbd_version": mini_buildd.__version__}
+        try:
+            from platform import python_version
+            from cherrypy import __version__ as cherrypy_version
+            from pyftpdlib import __ver__ as pyftpdlib_version
+            from registration import get_version as registration_version
+
+            MBD_STATIC_CONTEXT["mbd_components"] = {
+                "python": python_version(),
+                "django": django.get_version(),
+                "django-registration": registration_version(),
+                "cherrypy": cherrypy_version,
+                "pyftpdlib": pyftpdlib_version}
+        except:
+            pass
+
     return MBD_STATIC_CONTEXT
 
 
