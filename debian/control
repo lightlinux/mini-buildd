@@ -38,7 +38,7 @@ Depends: ${misc:Depends},
          python-argcomplete (>= 0.5.4),
          python-keyring (>= 1.6),
          python-debian (>= 0.1.25~),
-         python-django (>= 1.7),
+         python-django (>= 1.7.4),
          python-django (<< 1:1.11),
          python-django-registration (>= 2.0.4)
 Description: minimal build daemon - python library and user tool
