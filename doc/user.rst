@@ -229,6 +229,10 @@ line tool ``mini-buildd-tool``. Credentials are handled via
 Via Python Code
 ===============
 
+.. note:: Unfortunately, some functionality may not work if you
+          are using different main django versions on the
+          mini-buildd instance and the client system.
+
 This needs extra package ``python-mini-buildd`` for the client
 API python module ``client_1_0``. Credentials are handled via
 ``python-keyring``.
