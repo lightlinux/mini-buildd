@@ -1,3 +1,37 @@
+mini-buildd (1.0.27) unstable; urgency=medium
+
+  Misc cleanups, minor fixes and documentation improvements:
+
+  * [24e1e48] wizards: Remove support for etch, lenny (no longer work with
+    current sbuild).
+  * [593edef] wizards: Remove support for Ubuntu sources < trusty (14.04):
+    saucy, raring, quantal, precise.
+  * [d145b23] wizards: Add support for Ubuntu yakkety (16.10).
+  * [6a3344c] API "list": Fixup some wrong wording in help strings.
+  * [95b55de] [devel]: Don't write *.upload file on test package upload.
+  * [1a75207] misc.py: Use import wrapper method for keyring module
+    (instead of importing on module level).
+  * [40ffada] doc/admin.rst: Add note about "vsyscall removal" from Debian
+    kernel.
+  * [e4b4321] doc/user.rst: Add extra section for default layout.
+  * [c209e99] doc/admin.rst: Add notes/instructions about default layout
+    changes.
+  * [fc628d0] doc/admin.rst: Improve note about vsyscall.
+  * [ccff09d] api/client_1_0.py: Improve and complement API doc.
+  * [d4659d4] django_settings.py: Move version info code/imports to
+    functions (this makes pseudo settings no longer depend on cherrypy and
+    pyftpd).
+  * [72c1d8f] control: Move deps for p-d and p-d-r to module package
+    (needed by py client API and partly by mini-buildd-tool).
+  * [68e3d94] doc/user.rst: At least add some initial human-readable
+    documentation about the API.
+  * [1193d48] doc/user.rst: Client API: Add note about problems when using
+    different django versions.
+  * [964f571] control: Update dep on django: We need >= 1.7.4 (live build
+    logs need 'FileResponse' class).
+
+ -- Stephan Sürken <absurd@debian.org>  Thu, 22 Dec 2016 09:35:19 +0000
+
 mini-buildd (1.0.26) unstable; urgency=medium
 
   Besides the usual various fixes, this release adds new (per cl)
