@@ -368,6 +368,7 @@ def run(daemon_):
 
         mini_buildd.misc.run_as_thread(
             build,
+            name="building {pkg}".format(pkg=os.path.basename(event)),
             daemon=True,
             daemon_=daemon_,
             breq=mini_buildd.changes.Changes(event))

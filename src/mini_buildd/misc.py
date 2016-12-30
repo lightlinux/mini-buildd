@@ -463,19 +463,19 @@ def fromdos(string):
     return string.replace('\r\n', '\n').replace('\r', '')
 
 
-def run_as_thread(thread_func, daemon=False, **kwargs):
+def run_as_thread(thread_func, name, daemon=False, **kwargs):
     def run(**kwargs):
-        tid = thread_func.__module__ + "." + thread_func.__name__
+        qual_thread_func = thread_func.__module__ + "." + thread_func.__name__
         try:
-            LOG.info("{i}: Starting...".format(i=tid))
+            LOG.debug("Thread function started: {f}.".format(f=qual_thread_func))
             thread_func(**kwargs)
-            LOG.info("{i}: Finished.".format(i=tid))
+            LOG.debug("Thread function finished: {f}.".format(f=qual_thread_func))
         except Exception as e:
-            mini_buildd.setup.log_exception(LOG, "Thread '{i}' error".format(i=tid), e)
+            mini_buildd.setup.log_exception(LOG, "Error in thread function: {f}".format(f=qual_thread_func), e)
         except:
-            LOG.exception("{i}: Non-standard exception".format(i=tid))
+            LOG.exception("Non-standard exception in thread function: {f}".format(f=qual_thread_func))
 
-    thread = threading.Thread(target=run, kwargs=kwargs)
+    thread = threading.Thread(target=run, name=name, kwargs=kwargs)
     thread.setDaemon(daemon)
     thread.start()
     return thread

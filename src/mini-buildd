@@ -28,7 +28,7 @@ import mini_buildd.django_settings
 # Early global log config (before the actual logging config steps in):
 # - preliminary (stderr) handler
 # - capture python warnings && setup 'py.warnings' logger
-LOG_FORMAT = "%(name)-29s(%(lineno)04d): %(levelname)-8s: %(message)s"
+LOG_FORMAT = "[%(threadName)-19s] %(levelname)-8s: %(message)s [%(name)s:%(lineno)d]"
 LOG_PRELIMINARY_HANDLER = logging.StreamHandler()
 LOG_PRELIMINARY_HANDLER.setFormatter(logging.Formatter("mini-buildd preliminary console logger: " + LOG_FORMAT))
 LOG = logging.getLogger("mini_buildd")
@@ -282,7 +282,7 @@ Comma-separated list of special debugging options:
 
     def run_daemon(self, webapp):
         # Start httpd webapp
-        mini_buildd.misc.run_as_thread(mini_buildd.httpd.run, daemon=True, bind=self._args.httpd_bind, wsgi_app=webapp)
+        mini_buildd.misc.run_as_thread(mini_buildd.httpd.run, name="httpd", daemon=True, bind=self._args.httpd_bind, wsgi_app=webapp)
 
         # Get the daemon manager instance (import here: We cannot import anything 'django' prior to django's configuration)
         from mini_buildd.daemon import Daemon

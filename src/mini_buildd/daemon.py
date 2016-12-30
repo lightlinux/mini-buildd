@@ -340,11 +340,13 @@ def run():
 
     ftpd_thread = mini_buildd.misc.run_as_thread(
         mini_buildd.ftpd.run,
+        name="ftpd",
         bind=get().model.ftpd_bind,
         queue=get().incoming_queue)
 
     builder_thread = mini_buildd.misc.run_as_thread(
         mini_buildd.builder.run,
+        name="builder",
         daemon_=get())
 
     while True:
@@ -365,7 +367,7 @@ def run():
                 def queue_buildrequest(event):
                     "Queue in extra thread so we don't block here in case builder is busy."
                     get().build_queue.put(event)
-                mini_buildd.misc.run_as_thread(queue_buildrequest, daemon=True, event=event)
+                mini_buildd.misc.run_as_thread(queue_buildrequest, name="build queuer", daemon=True, event=event)
 
             else:
                 # User upload or build result: packager
@@ -488,7 +490,7 @@ class Daemon(object):
                 msglog.info("Checking daemon (force={f}).".format(f=force_check))
                 mini_buildd.models.daemon.Daemon.Admin.mbd_action(None, (self.model,), "check", force=force_check)
                 if self.model.mbd_is_active():
-                    self.thread = mini_buildd.misc.run_as_thread(run)
+                    self.thread = mini_buildd.misc.run_as_thread(run, name="packager")
                     msglog.info("Daemon started.")
                 else:
                     msglog.warn("Daemon is deactivated (won't start). Please (re)configure your instance as superuser.")
