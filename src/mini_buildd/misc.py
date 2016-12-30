@@ -463,7 +463,7 @@ def fromdos(string):
     return string.replace('\r\n', '\n').replace('\r', '')
 
 
-def run_as_thread(thread_func=None, daemon=False, **kwargs):
+def run_as_thread(thread_func, daemon=False, **kwargs):
     def run(**kwargs):
         tid = thread_func.__module__ + "." + thread_func.__name__
         try:
