@@ -1,3 +1,14 @@
+mini-buildd (1.0.28) unstable; urgency=medium
+
+  * [de458eb] control: Depend on reprepro >=5 (buildinfo files). (Closes:
+    843608)
+  * [f4f6951] misc.py: run_as_thread(): thread_func arg should not be
+    optional.
+  * [0885291] Add human readable thread naming, and add thread names to
+    logging.
+
+ -- Stephan Sürken <absurd@debian.org>  Mon, 02 Jan 2017 10:20:08 +0000
+
 mini-buildd (1.0.27) unstable; urgency=medium
 
   Misc cleanups, minor fixes and documentation improvements:
