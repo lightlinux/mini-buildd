@@ -40,12 +40,10 @@ logging.captureWarnings(True)
 
 class PIDFile(object):
     """
-    Pidfile with automtic stale fixup.
+    Pidfile with automatic stale fixup.
 
     This uses code from the PEP 3143 reference
     implementation.
-
-    .. note:: Creates an extra empty file HOST-MainThread-PID in the same directory as the pidfile (what's this for?).
     """
 
     @classmethod
