@@ -45,12 +45,33 @@ class PIDFile(object):
     This uses code from the PEP 3143 reference
     implementation.
 
-    .. note:: Stale recognition does not work when another unrelated process has reclaimed the pid from the stale pidfile.
     .. note:: Creates an extra empty file HOST-MainThread-PID in the same directory as the pidfile (what's this for?).
     """
+
+    @classmethod
+    def _is_pidfile_stale(cls, pidfile, name=None):
+        """
+        Improvement (linux specific) of daemon.runner.is_pidfile_stale: Also checks the name of the process.
+
+        Fixes situations when another unrelated process has reclaimed the pid from the stale pidfile.
+        """
+        is_stale = False
+        pidfile_pid = pidfile.read_pid()
+        if pidfile_pid is not None:
+            is_stale = daemon.runner.is_pidfile_stale(pidfile)
+            if name and not is_stale:
+                try:
+                    pidfile_name = open("/proc/{}/comm".format(pidfile_pid)).read()
+                    is_stale = pidfile_name != name
+                except:
+                    # Ignore errors: Avoid any possible startup issues due to above code.
+                    pass
+
+        return is_stale
+
     def __init__(self, pidfile_path, acquire_timeout=5):
         self.pidfile = daemon.runner.make_pidlockfile(pidfile_path, acquire_timeout)
-        if daemon.runner.is_pidfile_stale(self.pidfile):
+        if self._is_pidfile_stale(self.pidfile, name="mini-buildd"):
             LOG.warn("Fixing STALE PID file: {p}".format(p=self))
             self.pidfile.break_lock()
         self.pidfile.acquire(timeout=acquire_timeout)
