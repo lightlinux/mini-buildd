@@ -223,7 +223,7 @@ mbd_tidy()
 
 mbd_check()
 {
-	local tests="pycodestyle pymisc pydoctests pyflakes pylint css"
+	local tests="pycodestyle pymisc pyflakes pylint css pydoctests"
 	for t in ${tests}; do
 		printf "=> mbd_${t}\n"
 		mbd_${t}
