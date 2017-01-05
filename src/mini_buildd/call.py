@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from __future__ import absolute_import
 
 import subprocess
+import time
 import tempfile
 import threading
 import os
@@ -151,6 +152,20 @@ def call_sequence(calls, run_as_root=False, rollback_only=False, **kwargs):
             LOG.error("Sequence failed at: {i} (rolling back)".format(i=i))
             rollback(i)
             raise
+
+
+def call_with_retry(call, retry_max_tries=5, retry_sleep=1, retry_failed_cleanup=None, **kwargs):
+    for t in range(retry_max_tries):
+        try:
+            Call(call, **kwargs).log().check()
+            break
+        except Exception as e:
+            if t > retry_max_tries:
+                raise
+            LOG.error("Retrying call in {s} seconds [retry #{t}]: {e}".format(s=retry_sleep, t=t, e=e))
+            if retry_failed_cleanup:
+                retry_failed_cleanup()
+            time.sleep(retry_sleep)
 
 
 SBUILD_KEYS_WORKAROUND_LOCK = threading.Lock()
