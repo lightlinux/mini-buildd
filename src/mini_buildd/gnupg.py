@@ -153,10 +153,18 @@ class BaseGnuPG(object):
 
         # 2nd: Sign the file copy
         signed_file = file_name + ".signed"
-        mini_buildd.call.Call(self.gpg_cmd +
-                              ["--armor", "--textmode", "--clearsign", "--output", signed_file] +
-                              (["--local-user", identity] if identity else []) +
-                              [unsigned_file]).log().check()
+
+        def failed_cleanup():
+            if os.path.exists(signed_file):
+                os.remove(signed_file)
+
+        # Retrying sign call; workaround for mystery https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=849551
+        mini_buildd.call.call_with_retry(self.gpg_cmd +
+                                         ["--armor", "--textmode", "--clearsign", "--output", signed_file] +
+                                         (["--local-user", identity] if identity else []) + [unsigned_file],
+                                         retry_max_tries=5,
+                                         retry_sleep=1,
+                                         retry_failed_cleanup=failed_cleanup)
 
         # 3rd: Success, move to orig file and cleanup
         os.rename(signed_file, file_name)
