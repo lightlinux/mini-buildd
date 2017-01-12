@@ -93,6 +93,7 @@ class Call(object):
     def ustdout(self):
         """
         .. |docstr_uout| replace:: Value as unicode (decoding from :py:data:`mini_buildd.setup.CHAR_ENCODING`, replacing on error).
+
         |docstr_uout|
         """
         return self.stdout.decode(mini_buildd.setup.CHAR_ENCODING, errors="replace")
