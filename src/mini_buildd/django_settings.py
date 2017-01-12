@@ -29,8 +29,8 @@ MBD_STATIC_CONTEXT = None
 
 
 def context_processor(_request):
+    global MBD_STATIC_CONTEXT  # pylint: disable=global-statement
     if MBD_STATIC_CONTEXT is None:
-        global MBD_STATIC_CONTEXT  # pylint: disable=global-statement
         MBD_STATIC_CONTEXT = {"mbd_version": mini_buildd.__version__}
         try:
             from platform import python_version
