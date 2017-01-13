@@ -92,7 +92,9 @@ class Main(object):
                                          description="Minimal Debian build daemon.",
                                          formatter_class=cls.ArgumentDefaultsRawTextHelpFormatter)
 
-        parser.add_argument("--version", action="version", version=mini_buildd.__version__)
+        # parser.add_argument("--version", action="version", version=mini_buildd.__version__)
+        # python 2 compat (just use above for python 3)
+        parser.add_argument("--version", nargs=0, action=mini_buildd.misc.ArgparseVersion2StdoutAction)
 
         group_conf = parser.add_argument_group("daemon arguments")
         group_conf.add_argument("-W", "--httpd-bind", action="store", default="0.0.0.0:8066",

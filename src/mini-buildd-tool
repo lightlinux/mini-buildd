@@ -72,7 +72,11 @@ PARSER = argparse.ArgumentParser(prog="mini-buildd-tool",
                                  epilog="Note: Uses 'python-keyring' to persist passwords (see '~/.local/share/python_keyring/')",
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-PARSER.add_argument("--version", action="version", version=mini_buildd.__version__)
+
+# PARSER.add_argument("--version", action="version", version=mini_buildd.__version__)
+# python 2 compat (just use above for python 3)
+PARSER.add_argument("--version", nargs=0, action=mini_buildd.misc.ArgparseVersion2StdoutAction)
+
 PARSER.add_argument("-v", "--verbose", dest="verbosity", action="count", default=0,
                     help="lower log level. Give twice for max logs")
 PARSER.add_argument("-q", "--quiet", dest="terseness", action="count", default=0,
