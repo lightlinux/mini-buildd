@@ -21,11 +21,11 @@ def sphinx_build_workaround(build_dir="./build/sphinx"):
 
     # Generate man pages via help2man
     subprocess.check_call(["help2man",
-                           "--no-info", "--no-discard-stderr",
+                           "--no-info",
                            "--output=" + build_dir + "/mini-buildd.8", "--section=8",
                            "--include=doc/mini-buildd.help2man.include", "./src/mini-buildd"])
     subprocess.check_call(["help2man",
-                           "--no-info", "--no-discard-stderr",
+                           "--no-info",
                            "--output=" + build_dir + "/mini-buildd-tool.1", "--section=1",
                            r"--name=mini-buildd-tool \- User/client tool box for mini-buildd instances.", "./src/mini-buildd-tool"])
 
