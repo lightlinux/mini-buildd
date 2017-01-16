@@ -323,7 +323,7 @@ mbd_update()
 		${mbd} getdputconf
 		${mbd} getsourceslist wheezy
 
-		# Some HTML checks.
+		# Some (live) HTML checks.
 		mbd_tidy
 	fi
 
