@@ -221,9 +221,14 @@ mbd_tidy()
 	done
 }
 
+mbd_repro()
+{
+	debrepro
+}
+
 mbd_check()
 {
-	local tests="pycodestyle pymisc pyflakes pylint css pydoctests"
+	local tests="pycodestyle pymisc pyflakes pylint css pydoctests repro"
 	for t in ${tests}; do
 		printf "=> mbd_${t}\n"
 		mbd_${t}
