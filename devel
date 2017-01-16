@@ -278,20 +278,6 @@ mbd_purge()
 
 mbd_install()
 {
-	if [ "${1}" = "nocheck" ]; then
-		export DEB_BUILD_OPTIONS+=" nocheck"
-	else
-		# Run mbd_check, but with option to continue on error
-		set +e
-		(
-			set -e
-			mbd_check
-		)
-		ret=$?
-		[ ${ret} -eq 0 ] || read -p "Check failed. Continue anyway? [R]" dummy
-		set -e
-	fi
-
 	_head "Checking changelog (must be unchanged)..."
 	git diff-index --exit-code HEAD debian/changelog
 	trap "git checkout debian/changelog" EXIT
@@ -307,6 +293,20 @@ mbd_install()
 
 mbd_update()
 {
+	if [ "${1}" = "nocheck" ]; then
+		export DEB_BUILD_OPTIONS+=" nocheck"
+	else
+		# Run mbd_check, but with option to continue on error
+		set +e
+		(
+			set -e
+			mbd_check
+		)
+		ret=$?
+		[ ${ret} -eq 0 ] || read -p "Check failed. Continue anyway? [R]" dummy
+		set -e
+	fi
+
 	mbd_install "${@}"
 
 	mbd_service restart
