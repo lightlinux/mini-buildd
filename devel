@@ -293,41 +293,36 @@ mbd_install()
 
 mbd_update()
 {
-	if [ "${1}" = "nocheck" ]; then
-		export DEB_BUILD_OPTIONS+=" nocheck"
-	else
-		# Run mbd_check, but with option to continue on error
-		set +e
-		(
-			set -e
-			mbd_check
-		)
-		ret=$?
-		[ ${ret} -eq 0 ] || read -p "Check failed. Continue anyway? [R]" dummy
-		set -e
-	fi
+	export DEB_BUILD_OPTIONS+=" nocheck"
+	mbd_install "${@}"
+	mbd_service restart
+	printf "Ok, updated (NO checks).\n"
+}
+
+mbd_updatecheck()
+{
+	# Non-live checks
+	mbd_check
 
 	mbd_install "${@}"
-
 	mbd_service restart
 
-	if [ "${1}" != "nocheck" ]; then
-		_head "Checking basic src/mini-buildd-tool calls"
-		local mbd="/usr/bin/mini-buildd-tool localhost:8066"
+	# Live checks
+	_head "Checking basic src/mini-buildd-tool calls"
+	local mbd="/usr/bin/mini-buildd-tool localhost:8066"
 
-		# Wait a while to be sure the network service is ready
-		sleep 3
+	# Wait a while to be sure the network service is ready
+	sleep 3
 
-		${mbd} status
-		${mbd} getkey
-		${mbd} getdputconf
-		${mbd} getsourceslist wheezy
+	${mbd} status
+	${mbd} getkey
+	${mbd} getdputconf
+	${mbd} getsourceslist wheezy
 
-		# Some (live) HTML checks.
-		mbd_tidy
-	fi
+	# Some (live) HTML checks.
+	mbd_tidy
 
-	printf "Ok, update successful.\n"
+	printf "Ok, updated (checked).\n"
 }
 
 mbd_all()
