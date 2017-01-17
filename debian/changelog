@@ -1,3 +1,24 @@
+mini-buildd (1.0.29) unstable; urgency=medium
+
+  * [cc636fa] mini-buildd: Improve stale pidfile recognition (when pid has
+    been re-used by other programs).
+  * [fd69be4] [doc] mini-buildd.PIDFile: Typo fix, and remove note about
+    HOST-MainThread-PID extra file (no longer happening).
+  * [dea3aa9] call.py: Add general functionality to retry calls.
+  * [937ad97] gnupg.py: Retry the gpg sign call. This aims to be a
+    workaround (not fix) for unclear behaviour described in #849551.
+  * [ad73073] call.py: Add newline in docstr (avoid warning).
+  * [cbf53f6] django_settings.py: Fix py warning in context_precessor()
+    (Fixes: Warning string in man page (breaking repr. builds)).
+  * [005532d] mini-buildd[-tool]: Make '--version' print to stdout
+    (workaround for py2 issue18920).
+  * [7c3c46e] setup.py: help2man: No longer use "--no-discard-stderr" (may
+    result in corrupt man pages).
+  * [96f079d] home.html: Fix tidy warnings (duplicate ids).
+  * [devel]: Several changes to internal dev helper script (see git).
+
+ -- Stephan Sürken <absurd@debian.org>  Tue, 17 Jan 2017 11:18:43 +0000
+
 mini-buildd (1.0.28) unstable; urgency=medium
 
   * [de458eb] control: Depend on reprepro >=5 (buildinfo files). (Closes:
