@@ -265,6 +265,13 @@ mbd_doc()
 	python setup.py build_sphinx --source-dir=build/sphinx
 }
 
+mbd_installdjango()
+{
+	dpkg -s python-django | grep "^Version" || true
+	sudo dpkg --install ../django-versions/python-django*${1}*.deb
+	dpkg -s python-django | grep "^Version"
+}
+
 mbd_service()
 {
 	if sudo ischroot && [ -d /run/systemd/system ]; then
@@ -323,28 +330,16 @@ mbd_updatecheck()
 	printf "Ok, updated (checked).\n"
 }
 
-mbd_all()
+mbd_checkall()
 {
 	mbd_purge
-	mbd_update
+	mbd_updatecheck
 	mbd_pythonkeyringtestconfig
 
 	time /usr/share/doc/mini-buildd/examples/auto-setup
 
 	# Extra test packages when available
 	[ ! -d ../test-packages/ ] || dput --unchecked --no-upload-log mini-buildd-$(hostname) ../test-packages/*.changes
-}
-
-mbd_doc()
-{
-	python setup.py build_sphinx --source-dir=build/sphinx
-}
-
-mbd_installdjango()
-{
-	dpkg -s python-django | grep "^Version" || true
-	sudo dpkg --install ../django-versions/python-django*${1}*.deb
-	dpkg -s python-django | grep "^Version"
 }
 
 sep=" "
