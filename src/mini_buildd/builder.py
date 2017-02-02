@@ -190,7 +190,6 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
                        "--nolog",
                        "--log-external-command-output",
                        "--log-external-command-error"]
->>>>>>> 1.0.x:src/mini_buildd/builder.py
 
         if "Arch-All" in self._breq:
             sbuild_cmd += ["--arch-all"]
