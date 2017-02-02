@@ -11,4 +11,5 @@
 /proc           /proc           none    rw,bind         0       0
 /sys            /sys            none    rw,bind         0       0
 /dev/pts        /dev/pts        none    rw,bind         0       0
-tmpfs           /dev/shm        tmpfs   defaults        0       0
+# Not mounting shm her for now. See /etc/schroot/setup.d/15mini-buildd-workarounds
+#tmpfs           /dev/shm        tmpfs   defaults        0       0

@@ -1,0 +1,7 @@
+[pycodestyle]
+# E122 continuation line missing indentation or outdented
+# E124 closing bracket does not match visual indentation
+# E402 module level import not at top of file
+# E741 do not use variables named ‘l’, ‘O’, or ‘I’
+ignore = E122,E124,E402,E741
+max-line-length = 200

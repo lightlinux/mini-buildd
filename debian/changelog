@@ -1,33 +1,888 @@
-mini-buildd (1.1.0) UNRELEASED; urgency=medium
+mini-buildd (1.0.29) unstable; urgency=medium
 
-  * [d85d2d4] Add all available sources.lists to keyring packages for easy
-    integration.
-  * [de66ac4] debian/changelog: Fix up pseudo header for 1.1.x.
-  * [fb0d6a3] Revert "debian/changelog: Pseudo entry to pimp version to
-    1.1.x."
-  * [928dbfa] debian/changelog: Include all changes sine 1.0.0 to make git
-    dch happy.
-  * [33be1bd] examples/ssh-uploader-command: Add workaround to make it
-    work for squeeze's dput (0.9.6).
-  * [71b9e6f] wizards: Add support for Ubuntu "trusty".
-  * [c3b3a4f] Prepare 1.0.1
-  * [f374128] keyring package, 'APT sources library': Support the rollback
-    distributions, too.
-  * [8dd7f26] port, portext (web): Add support to 'regex-bulk-select'
-    distributions.
-  * [a23346e] Never use '/usr/share/pyshared', always use computed 'dist-
-    packages' path (Fixes builds with newer dh_python2).
-  * [316de91] Add example 'migrate-keyring-packages': Bulk-migrate keyring
-    packages.
-  * [b61a4eb] debian/changelog: Prepare 1.0.2.
-  * [5100f3a] doc/quickstart: Update for the new keyring's "sources.list
-    library".
-  * [6de2b52] examples/ssh-uploader-command: Improve error output when 0
-    changes files are uploaded.
-  * [d39e93f] examples: Add auth logging support for ssh wrapper scripts.
-  * [62cd2be] [devel] Update setup/code for new pylint >= 1.2 (Fixes:
-    pylint check).
-  * [f187b97] Preparing 1.0.3.
+  * [cc636fa] mini-buildd: Improve stale pidfile recognition (when pid has
+    been re-used by other programs).
+  * [fd69be4] [doc] mini-buildd.PIDFile: Typo fix, and remove note about
+    HOST-MainThread-PID extra file (no longer happening).
+  * [dea3aa9] call.py: Add general functionality to retry calls.
+  * [937ad97] gnupg.py: Retry the gpg sign call. This aims to be a
+    workaround (not fix) for unclear behaviour described in #849551.
+  * [ad73073] call.py: Add newline in docstr (avoid warning).
+  * [cbf53f6] django_settings.py: Fix py warning in context_precessor()
+    (Fixes: Warning string in man page (breaking repr. builds)).
+  * [005532d] mini-buildd[-tool]: Make '--version' print to stdout
+    (workaround for py2 issue18920).
+  * [7c3c46e] setup.py: help2man: No longer use "--no-discard-stderr" (may
+    result in corrupt man pages).
+  * [96f079d] home.html: Fix tidy warnings (duplicate ids).
+  * [devel]: Several changes to internal dev helper script (see git).
+
+ -- Stephan Sürken <absurd@debian.org>  Tue, 17 Jan 2017 11:18:43 +0000
+
+mini-buildd (1.0.28) unstable; urgency=medium
+
+  * [de458eb] control: Depend on reprepro >=5 (buildinfo files). (Closes:
+    843608)
+  * [f4f6951] misc.py: run_as_thread(): thread_func arg should not be
+    optional.
+  * [0885291] Add human readable thread naming, and add thread names to
+    logging.
+
+ -- Stephan Sürken <absurd@debian.org>  Mon, 02 Jan 2017 10:20:08 +0000
+
+mini-buildd (1.0.27) unstable; urgency=medium
+
+  Misc cleanups, minor fixes and documentation improvements:
+
+  * [24e1e48] wizards: Remove support for etch, lenny (no longer work with
+    current sbuild).
+  * [593edef] wizards: Remove support for Ubuntu sources < trusty (14.04):
+    saucy, raring, quantal, precise.
+  * [d145b23] wizards: Add support for Ubuntu yakkety (16.10).
+  * [6a3344c] API "list": Fixup some wrong wording in help strings.
+  * [95b55de] [devel]: Don't write *.upload file on test package upload.
+  * [1a75207] misc.py: Use import wrapper method for keyring module
+    (instead of importing on module level).
+  * [40ffada] doc/admin.rst: Add note about "vsyscall removal" from Debian
+    kernel.
+  * [e4b4321] doc/user.rst: Add extra section for default layout.
+  * [c209e99] doc/admin.rst: Add notes/instructions about default layout
+    changes.
+  * [fc628d0] doc/admin.rst: Improve note about vsyscall.
+  * [ccff09d] api/client_1_0.py: Improve and complement API doc.
+  * [d4659d4] django_settings.py: Move version info code/imports to
+    functions (this makes pseudo settings no longer depend on cherrypy and
+    pyftpd).
+  * [72c1d8f] control: Move deps for p-d and p-d-r to module package
+    (needed by py client API and partly by mini-buildd-tool).
+  * [68e3d94] doc/user.rst: At least add some initial human-readable
+    documentation about the API.
+  * [1193d48] doc/user.rst: Client API: Add note about problems when using
+    different django versions.
+  * [964f571] control: Update dep on django: We need >= 1.7.4 (live build
+    logs need 'FileResponse' class).
+
+ -- Stephan Sürken <absurd@debian.org>  Thu, 22 Dec 2016 09:35:19 +0000
+
+mini-buildd (1.0.26) unstable; urgency=medium
+
+  Besides the usual various fixes, this release adds new (per cl)
+  "Upload Options": Nicer notation and some *new* options:
+   - ignore lintian now optionally per arch.
+   - run lintian, optionally per arch.
+   - set apt priority for internal packages.
+  See user manual for more information on this.
+
+  * [79f529d] [html] Improve packager/builder status table design (partly
+    as suggested in #843396, thx Boyuan)
+  * [446ba1a] changes.py: Move "magic" code to new subclass "Options".
+  * [96258ed] control: "Harden" dep on dpkg-dev (>= 1.7.27~) for sbuild.
+  * [0e80bc6] changes.py: Options: Better name for private class var.
+  * [25a0eee] devel: 'pep8' has been renamed to 'pycodestyle'.
+  * [0d275c3] pycodestyle: Fixup some new warnings.
+  * [f9fbe15] .pycodestyle: Ignore new check E741 for now && add clear
+    text description for our exceptions.
+  * [0c98a82] [devel]: Fix pycodestyle args to give error source &&
+    description.
+  * [3e0555d] changes.py: Initial new impl of Changes.Options() (replacing
+    "magic options").
+  * [a92732b] [devel]: Remove extra test against explicit unicode literals
+    (we need that notation for doctest expect strings).
+  * [55dcdc3] test packages: Update config.* (new autotools).
+  * [442691b] changes.py: Options: Imporove Bool class.
+  * [31dc434] changes.py: Options: Improve/cleanup "magic" options compat.
+  * [03e3107] user doc/changes.py: Update exception wording, and add
+    documentation for new "Upload Options".
+  * [5d7136d] New upload options: Remove any internal reference to now-
+    deprecated magic style.
+  * [9b8f0f1] Rm .ui-auto.conf: Not used for a long time, and has
+    confusing vintage content.
+  * [3a4f9de] changes.py: Changes: Make 'options' a (on demand, cached)
+    property.
+  * [04f27c7] changes.py: Options: Implement "run-lintian".
+  * [8078012] changes.py: Options.get(): Add check against internal code
+    using unknown key.
+  * [cdd7a34] changes.py: Options: Implement "internal-apt-priority".
+  * [e370c1e] daemon.py: Move private general _port() method before
+    specializations (port, portext).
+  * [5e5c4e2] changes.py: Options: Use class attr. for "keyword" string so
+    we do not (so we don't need to duplicate this later).
+  * [f3a25e5] user.rst: Improve description for auto-ports.
+  * [28fb995] daemon.py: *port*(): Refactor soemwhat so we can give
+    comments and options separately.
+  * [ac55b85] daemon.py: port(), portext(): Add optional "options"
+    argument.
+  * [7840616] api: port, portext: Add extra "options" argument.
+  * [0a987ad] [html] Improve 'current API cmd' display/refine.
+
+ -- Stephan Sürken <absurd@debian.org>  Sun, 27 Nov 2016 12:21:49 +0000
+
+mini-buildd (1.0.25) unstable; urgency=medium
+
+  This and that, and fixing up the meta distribution feature:
+
+  * [d255ad9] misc.py: class Distribution(): Validity check must be done
+    _after_ distribution mapping.
+  * [7b1f6cd] changes.py: In buildrequests, 'Distribution' key must be
+    mapped to internal (in case of a Meta-Distributions are configured).
+    Thanks to Boyuan Yang (Closes: 832643)
+  * [455774d] Some refactoring/code cleanup around meta distributions.
+  * [384b2c2] wizards: Developer Layout: Remove 'stable=squeeze-unstable'
+    meta distribution (this doesn't really make much sense).
+  * [9983968] models/repository.py: Add ambiguity error check in meta dist
+    generator function (and add it to Repository.check()).
+  * [2c8f80a] doc/admin.rst: Add section for "Layouts/Meta-Distributions".
+  * [d0204e9] models/repository.py: meta-dist-check: Fix wording, and hint
+    to manual.
+  * [dda651b] [devel]: We may no longer "convenience-remove" python-
+    secretstorage for testing (p-k now depends on it).
+  * [15c158e] examples/auto-setup: Also create debdev repository.
+  * [096e868] [html] repository_detail.html: Add sources.list download
+    links, and some cosmetics.
+  * [d6ad715] [html] Use HTML5 doctype.
+  * [10936d4] [devel]: Add initial (html) tidy checker.
+  * [5d013c9] [html]: HTML5: Bulk-replace <tt> by <kbd>.
+  * [3d3c5b2] [html]: HTML5: Fix cherrypy indexes.
+  * [d28bb39] mini-buildd-tool: Don't print server logs if --quiet is
+    given.
+  * [a3a0eaf] [devel]: tidy check: Don't check for repo URLs (may not be
+    ready).
+  * [c2988c9] [devel]: Also test extra packages when available.
+  * [a56b6c1] control: Update dependency for sbuild to 0.72 (has patch for
+    squeeze).
+  * [56b4d11] Update debhelper compat level: 9->10 (no changes needed).
+  * [3d612c2] rules: With dh compat 10, we no longer need to have extra
+    systemd option explicitly.
+
+ -- Stephan Sürken <absurd@debian.org>  Fri, 04 Nov 2016 21:46:25 +0000
+
+mini-buildd (1.0.24) unstable; urgency=medium
+
+  This and that, and fixup regression from 1.0.22:
+
+  * [64615bd] compat: Update dh compat from 7 to 9 (no other changes
+    required).
+  * [415c691] control: mini-buildd: Add missing dep on lsb-base (init
+    script).
+  * [5391c86] repository overview: Add "Direct links" convenience section.
+    Thanks to Marc Haber (Closes: 790059)
+  * [74363c7] doc/admin.rst: Improve docs about 0.8.x migration and
+    reprepro. Thanks to Marc Haber (Closes: 790292)
+  * [4edbf1f] doc/admin.rst: Add doc how to manually use an external
+    archive key. Thanks to Marc Haber (Closes: 790775)
+  * [4d1256c] control: mini-buildd-common: This may be 'Multi-Arch:
+    foreign' (as hinted)
+  * [33f214b] Fix regression introduced in 1.0.22 (1eeece7): Builds using
+    ccache fail on pre-existing chroots due to missing 'libdir'.
+
+ -- Stephan Sürken <absurd@debian.org>  Sat, 22 Oct 2016 07:54:13 +0000
+
+mini-buildd (1.0.23) unstable; urgency=medium
+
+  This release brings the live buildlog feature && some:
+
+  * [e24769c] [html] "Sync" last packages+builder status templates; only
+    allow description column to wrap.
+  * [5641406] [html] Arch status tooltip: Remove confusing URL, clarify
+    text when building is in progress.
+  * [9493933] [html] Last packages: Use standard hover style for arch
+    stati links.
+  * [822f7b4] changes.py: "Changes" class: Internal rename:
+    TYPES->TYPE2FILENAME_ID.
+  * [915aa9d] changes.py: "Changes" class: Add get_spool_id() (and
+    somewhat renice hash code).
+  * [5e38795] reprepro.py: Remove extra debug log (call.py now already
+    logs this suficently).
+  * [505ab4e] packager.py: Use new misc.rmdirs to purge spool dir instead
+    of shutils.rmtree directly (should improves error handling here).
+  * [14dd7af] changes.py: Prefix changes type ("upload" or "buildrequest")
+    to spool id.
+  * [8710070] Live buildlogs: Initial implementation: On webhome, access
+    live buildlogs from active "Packager" list or from active or last
+    "Builder" list. Thanks to Marc Haber (Closes: 809127)
+  * [3a5b17a] builder.py: Live buildlogs: Add support to expire live
+    buildlog files from spool (5 days).
+  * [a40aa1a] views.py: live buildlogs: Rather use plain text/HTTP 200
+    message when not available.
+  * [58085b9] builder.py: live buildlogs: Guard code against prossibly
+    pre-existing buildlog files.
+  * [10190f9] packager.py: live buidlogs: Rather use new live_buildlog_url
+    var, and put traditional 'http_remote_url' to old use.
+
+ -- Stephan Sürken <absurd@debian.org>  Thu, 20 Oct 2016 15:29:45 +0000
+
+mini-buildd (1.0.22) unstable; urgency=medium
+
+  Odds & Ends: Some more items from the roadmap, HTML
+  improvements, misc fixes:
+
+  * [e94d25d] doc/admin.rst: Add BTRFS to table of chroot backend options.
+  * [502aa4f] models/chroot.py: Call 'args' 'call' like in Call from
+    call.py...
+  * [6a975f8] models/source.py: Add get_apt_line_raw() (give components
+    explicitly).
+  * [a1c8e27] chroot.py: Update source chroot's apt line on check().
+  * [53ddbc8] [devel] Cosmetic fix: Don't double-issue version.
+  * [c2e1f38] [html] Last package status: Span buildlog link over all text
+    (less confusing).
+  * [1072d70] [html] Last package status: Always show status description
+    (instead of "hovering tooltip").
+  * [32415ed] [html] Add "homepage on the web" link to index.
+  * [cd5f797] [html] mini-buildd_messagelist.css: Also customize
+    'li.success' (fixes layout glitch on messages when deleting
+    instances).
+  * [0df352c] django_settings.py: Add static content; initially, add
+    static version info here.
+  * [4142ce1] [html]: Add component version information to footer
+    (tooltip).
+  * [c2be2b6] [html] Emphasize anchors (links) as bold.
+  * [305e4db] mini-buildd.service: Add default value for mini-buildd
+    options (Fixes: Would not run with default args (--verbose) when
+    debconf unchanged).
+  * [c95d4de] misc.py: Add rmdirs() (analogous to mkdirs()) function &&
+    update docs.
+  * [1eeece7] Move per-chroot 'libdir' to extra directory '~var/chroots-
+    libdir', and restrict build-time mounts. Thanks to Marc Haber (Closes:
+    802681)
+  * [8be71c5] control: Add b-d on dh-python.
+  * [3edabb9] mini-buildd: Make sure spool and chroot lib dirs exist (now
+    needed by schroot setup).
+  * [6779f39] [devel]: Update p-k test config magic to be even more magic
+    (and call it before testing).
+  * [5f2d923] doc/admin.rst: Add hint about avoiding django downgrades.
+
+ -- Stephan Sürken <absurd@debian.org>  Sun, 09 Oct 2016 08:14:49 +0000
+
+mini-buildd (1.0.21) unstable; urgency=medium
+
+  This release mainly features code refactoring around the internal
+  subprocess warpper and the addition of the BTRFS chroot backend.
+
+  Subprocess wrapper refactoring. While this mostly cleans up code, it
+  should also provide a nicer "log experience" for the administrator:
+
+  * [7797f73] call.py: Add helper to open a new file rw.
+  * [a1e9172] call.py: call(): Use stdin and stderr when given explicitly.
+  * [c9005dc] daemon.py: Use call.py (for genchanges), not subprocess
+    directly.
+  * [9ee1134] call.py: Rename call.sose_call -> call.sose, and make it
+    just a wrapper for call().
+  * [2893b89] call.py: Use shell-like output of command for all such logs.
+  * [aec91a8] call.py: Initial implementation of new class 'Call'.
+  * [165d91f] call.py: Update 'sose' function to use new class.
+  * [01d9fc6] call.py: Call(): Separate raw && unicode properties for
+    stderr/stdout.
+  * [95dd481] call.py: Use new Call() class in call().
+  * [b7103a9] call.py: Call(): Add "human-readable label" for nicer
+    logging.
+  * [651deba] gnupg.py: Update to new call.py for "export" subprocess
+    call.
+  * [fdf80e8] builder.py: Update sbuild call to new call.py.
+  * [85129d2] call.py/gnupg.py: Bulk-remove obsoleted call arguments.
+  * [077d1a7] builder.py: Remove now-obsoleted extra sbuild call log.
+  * [aaf2b70] call.py: Remove obsoleted functions: log_call_output,
+    args2shell.
+  * [5324fad] call: Bulk-replace obsolete "sose" call.
+  * [ae72eb6] call: Bulk-replace obsoleted call() function.
+  * [6f158be] call.py: Obsolete create_and_open().
+  * [8c18b62] call.py: Call().log(): Clean up code and document.
+  * [8f835e9] call.py: Call(): Class doc update.
+  * [6974148] builder.py: Don't log the build log.
+  * [6144e17] call.py: Make the magic "sequence2shell" convenience
+    converter work for mixed (str+unicode) sequences.
+  * [d07b9c6] call.py: ustdout|err: Replace on decoding error.
+  * [2999869] builder.py: sbuild call: Call log(), not check() (call
+    refactor regression).
+
+  BTRFS backend (thx again Katsuhiko):
+
+  * [3329a2b] [btrfs chroot backend]: Incorporate Katsuhiko Nishimra's
+    patch (mostly as-is). Thanks Katsuhiko! Thanks to Katsuhiko Nishimra,
+    Marc Haber (Closes: 673443)
+  * [f743188] [btrfs chroot backend] Update btrfs program path and package
+    name (btrfs-tools is deprecated now).
+  * [1546053] [btrfs chroot backend] Don't use '-o' for umount.
+
+  Other changes:
+
+  * [8c1015c] [test] mbd-test-cpp: Modify changelog so it tests non-ASCII
+    "original_author" string on ports.
+  * [ace2a62] packages/mbd-test-cpp: Add test for buildlog with non-UTF8
+    chars.
+  * [b013a7d] [devel] devel.debconf.selections: Don't have sbuild debug on
+    by default.
+  * [892d0c0] [doc] chroot: Minor wording fix for mbd_check_backend().
+  * [6fa5061] Remove compat/workaround for sphinx < 1.1 (obsoleted for
+    quite some time).
+  * [fb58a7f] misc.py: API doc fixes.
+
+ -- Stephan Sürken <absurd@debian.org>  Mon, 03 Oct 2016 13:20:20 +0000
+
+mini-buildd (1.0.20) unstable; urgency=medium
+
+  * [1e262bb] changes.py: Don't add *.deb-Files to build requests. Thanks
+    to Sam Hartman (Closes: 836156) (fixes non-source-only uploads with
+    newer sbuild).
+  * [e68807b] builder.py: "Harden" + document gnupg workaround for (bug
+    #834329) (Fixes: gnupg install may fail if chroot base source differ
+    on new apt).
+  * [a8b2356] [devel] mbd_testdjango is now obsolete (now that we log
+    django warnings).
+  * [6da0baf] code maintenance: Separate option & value in subprocess
+    sequences wherever possible.
+  * [e9127a9] Use 'absolute_import' from future for all python code.
+  * [a48eccc] Move all subprocess-related code to own module call.py.
+
+ -- Stephan Sürken <absurd@debian.org>  Sat, 24 Sep 2016 10:05:01 +0000
+
+mini-buildd (1.0.19) unstable; urgency=medium
+
+  * [a0e7da1] gnupg.py: Modify doctest to use pre-arranged keys (make
+    testsuite not block if entropy is sparse). (Closes: 834683)
+  * [36b71b1] control: Update dep. for schroot (>= 1.6.10-2~): We need
+    'CHROOT_SESSION_SOURCE' in shm workaround.
+  * [37b8a34] control: Update debootstrap dep: >= 1.0.81~ (newest
+    available for all dists we support).
+  * [5d03cdb] schroot: 15mini-buildd-workarounds: Don't fail even if
+    /dev/shm is missing from source chroot completely.
+  * [dfe8b2b] 15mini-buildd-workarounds: Some more output cosmetics.
+  * [4603275] mini-buildd: Add 'sbuild' debug option.
+  * [5638dc0] mini-buildd --help: Improve readability (using custom
+    formatter).
+  * [b771e04] mini-buildd --help: Add note about '~-Expansion' for --home
+    and --pidfile.
+  * [22bd0e6] Sort 'Sources' by codeversion (after origin), and sort
+    Distributions by source (fixes up default sorting for all released
+    Distributions).
+  * [0308b22] gnupg.py/doctest: Also close the new gpg TmpDir.
+  * [62d81fe] control: Dep: Avoid schroot >= 1.7 for now (atm, we are not
+    compatible with schroot 1.7). Thanks to Marc Haber (Closes: 820699)
+
+ -- Stephan Sürken <absurd@debian.org>  Sat, 17 Sep 2016 08:52:25 +0000
+
+mini-buildd (1.0.18) unstable; urgency=medium
+
+  This release addresses a number of pet-peeves hovering along on my
+  roadmap for some time (also fixes yet another issue for reproducible
+  builds).
+
+  * [15aa501] project structure: Add src/ subdirectory: All python source.
+  * [d230082] registration: Add custom email templates for password reset
+    (fixes per-mail password reset funcionality).
+  * [85c7be5] registration: Adapt/improve custom email templates for
+    account activation.
+  * [2e457fe] 15mini-buildd-workarounds: Improve SHM workaround: Also
+    avoid /dev/shm host 'overmount leaking'.
+  * [7d608bd] examples/packages/mbd-test-cpp: Check if SHM is working
+    inside the build.
+  * [0b49056] examples/packages/mbd-test-cpp: autotools update.
+  * [bdd88d8] misc.py: Distribution: Validate distribution string via
+    regex (improves error handling for some corner cases).
+  * [9e6c404] doc/conf.py: Set 'todo_link_only' (for reproducible builds).
+  * [0ac02be] packager: No longer log "rejected" packages (fixes possible
+    cruft in ~/var/log/ for uploads with malformed distributions).
+  * [26a0b5d] examples/reject-cleanup: Add example tool to (manually)
+    clean up possible ~/var/log cruft, and add some admin docs for it.
+  * [4392855] chroot: Make chroots removable even if source has been
+    removed.
+
+ -- Stephan Sürken <absurd@debian.org>  Sun, 11 Sep 2016 16:36:50 +0000
+
+mini-buildd (1.0.17) unstable; urgency=medium
+
+  gnupg 1.4/2.1 compatibility release. This also adds the new 'hotfix'
+  suite to the default layout (see docs) and various fixes...
+
+  * [b513a9e] mini-buildd: Generate reproducible mini-buildd man page.
+    (Closes: 833340)
+  * [c3969de] control: Vcs-*: Update to anonscm.debian.org. Thanks to
+    Boyuan Yang (Closes: 833338)
+  * [fd99541] Revert "mini-buildd: Generate reproducible mini-buildd man
+    page."
+  * [2194991] mini-buildd: man page/reproducible builds: Use Chris' patch
+    (which is nicer than my previous patch).
+  * [460a6e1] wizards: Add "hotfix" suite to default layout.
+  * [7ab128f] gnupg.py: Add flavor() method (compute 'gpg flavor'). Not
+    used currently.
+  * [88fc314] gnupg.py: Use extra methods to get key and fingerprint form
+    1st secret key.
+  * [2b6cb38] gnupg.py: Simplify internal impl.
+  * [9daee35] gnupg.py: Add flavor class variable (and fail-proof flavor
+    getter).
+  * [e993dc5] gnupg.py: GPG 2.1: Add '%no-protection' to key generator
+    template.
+  * [8ee94bc] gnupg.py: Add extra method to get sec user id. Fixes doctest
+    for GPG 2.1. Thanks to Santiago Vila (Closes: 834683)
+  * [2b29745] misc.py, builder.py: Try to log calls more suitable for cut-
+    and-paste debugging. Thanks to Marc Haber (Closes: 797585)
+  * [3320484] control: Add dirmngr depends for mini-buildd (needed for GPG
+    2.1 'recv-keys' functionality).
+  * [61302c6] gnupg.py: Add newline for (2.1) template flavor option
+    (needed for 'gen-key' from within mini-buildd).
+  * [3047d2f] control: Depend on sbuild >= 0.71. Fixes (1) builds in
+    chroots >= stretch (where gpg is gpg 2.1)) and (2) mini-buildd's
+    sbuild key workaround (via gpg 2.1 fixup in sbuild, and revertion of
+    ascii keyrings in sbuild 0.71). Thanks to Marc Haber (Closes: 834321,
+    834329)
+  * [969b12a] misc.py: Add compat for urlopen with python versions < 2.7.9
+    (relevant for wheezy installations only).
+  * [e149d03] gnupg.py: For '--with-colons' calls, use arguments that
+    deliver the same result for GPG 1.4 and 2.1.
+  * [a0c941d] models/gnupg.py: Fix for slightly changed GPG 2.1-style
+    colons output.
+  * [c058f99] builder.py: Cleanup subprocess sequence code for sbuild
+    call.
+
+ -- Stephan Sürken <absurd@debian.org>  Sun, 04 Sep 2016 18:06:18 +0000
+
+mini-buildd (1.0.16) unstable; urgency=medium
+
+  * [9614fc9] wizards: Add support for Ubuntu "xenial".
+  * [dbe0307] control: b-d: Add gnupg (build needs it for automatic tests)
+    (Fixes FTBFS in reproducible build chroots).
+  * [78c157d] models/source.py: Use ca-certificates if installed when
+    checking sources. Thanks to Klee Dienes (Closes: 832350)
+
+ -- Stephan Sürken <absurd@debian.org>  Sun, 31 Jul 2016 08:57:07 +0000
+
+mini-buildd (1.0.15) unstable; urgency=medium
+
+  Code cleanup release, mainly for django 1.10 support [mini-buildd
+  is currently compatible with django 1.7 up to 1.10].
+
+  * [dcecdad] devel(installdeps): python-bs4 && python-keyrings.alt now
+    needed for developer checks.
+  * [08aa4d5] mini_buildd/[root_]urls.py: Update from deprecated syntax
+    (tested to be compatible with django 1.7,1.8,1.9 and 1.10).
+  * [f32e474] django/templates: Use 'staticfile' app, and switch to use
+    '{% static %}' in templates.
+  * [46844b6] *.css: Use relative paths to for all static image urls.
+  * [712cf2e] django_settings.py: Move all TEMPLATE related config
+    together.
+  * [2a62aac] django_settings.py: Use extra settings dict variable for
+    configure().
+  * [26644a7] django: Update template config syntax for >=1.8, and add
+    compat for 1.7.
+  * [87ebb2c] django: templates/admin/index.html: Fix leftover
+    "="-comparison (removed in 1.10).
+  * [cb993e8] django: views.py: Replace to-be-deprecated
+    "render_to_response" by "render".
+  * [add9cb3] django: templates/base.html: Fix jquery static path.
+  * [8e4d04b] django: models/base.py(action_remove): Remove unnecessary
+    "current_app" hinting (fix for p-d 1.10).
+  * [7b0fd0e] setup.py: Move "STATIC_URL" setting here, it's used for both
+    django and cherrypy.
+  * [0528861] root_urls.py: Coherently use '"' to quote strings.
+  * [7249bcc] mini-buildd: Configure logging _after_ django configure
+    (django might overwrite some global settings).
+  * [c55a9c3] Add "python warnings support": Capture via mini-buildd's
+    logging, and add '--debug=warnings' to enable all warnings.
+  * [eed76b4] doc/admin.rst: Add section/example about a console debug
+    run.
+  * [2c76a1e] django: mini_buildd_tags.py(mbd_jquery_path): Use
+    "assignment_tag" again (stay compatible with 1.7, 1.8).
+  * [a5c2cd1] django: templates: Use explicit "on_delete" for all
+    OnoToOneField and ForeignKey (RemovedInDjango20Warning).
+  * [d0b195d] [devel] run-doctest: Issue all python warnings.
+  * [b8cd7b0] cherrypy: Update to cherrypy.lib.httputil (deprecation
+    warning).
+  * [39b6075] root_urls.py: p-d-registration: Upgrade to new (non-
+    deprecated) URLs name.
+  * [e6be7e6] [devel] Remove obsoleted django-lint code (pydjangolint is
+    no more).
+  * [2721d3a] control: deps: Allow django 1.10. Thanks to Chris Lamb
+    (Closes: 828660)
+
+ -- Stephan Sürken <absurd@debian.org>  Sat, 30 Jul 2016 09:14:26 +0000
+
+mini-buildd (1.0.14) unstable; urgency=medium
+
+  * [d487423] mini-buildd.service: Some brown paper bag fixes for the new
+    service file. Thanks to Boyuan Yang (Closes: 832167)
+  * [8971737] zh_CN.po: Add translation for "Simplified Chinese". Thanks
+    to Boyuan Yang (Closes: 832168)
+  * [a90fc43] doc/admin.rst: Improve section "Logging and Debugging".
+    Thanks to Marc Haber (Closes: 820692)
+
+ -- Stephan Sürken <absurd@debian.org>  Sat, 23 Jul 2016 19:45:19 +0000
+
+mini-buildd (1.0.13) unstable; urgency=medium
+
+  * [09793e2] Add systemd unit file: mini-buildd.service.
+  * [e76bfc0] control: Adapt dependencies to new python-django epoch in
+    version. Thanks to Lucas Nussbaum (Closes: 830359)
+  * [0fa253c] example packages: Autoconf files update.
+  * [20f9301] pt_BR.po: Add translation for "Brazilian Portuguese". Thanks
+    to Adriano Rafael Gomes (Closes: 829337)
+  * [2c9ecc7] builder.py: Install gnupg explicitly before using apt-key
+    (apt no longer depends on it). Thanks to Boyuan Yang (Closes: 831749)
+
+ -- Stephan Sürken <absurd@debian.org>  Fri, 22 Jul 2016 17:20:28 +0000
+
+mini-buildd (1.0.12) unstable; urgency=medium
+
+  This release focuses on HTML/design cleanups and fixes, and makes
+  it more compatible/maintainable across django 1.7/1.8/1.9 (and
+  hopefully future versions).
+
+  * [49f19f9] Web, "Last packages": Show sbuild- and lintian stati
+    directly, and in colors ("i386 [BL]").
+  * [44618f8] [templates] Convert 'snippet_packager_status' to inclusion
+    tag.
+  * [995193e] [templates] Convert 'snippet_builder_status' to inclusion
+    tag.
+  * [2496789] [templates] Convert 'snippet_manage_subscriptions' to
+    inclusion tag.
+  * [82e62d1] [templates] Convert 'admin/snippet_index_table_header' to
+    inclusion tag.
+  * [e328e21] [templates] Convert 'admin/snippet_index_table_row.html' to
+    inclusion tag.
+  * [e9977f1] [templatetags] Rename 'base'->'mini_buildd_tags' (possible
+    namespace pollution).
+  * [26c36a7] api: Make django_pseudo_configure() public, and move to api.
+  * [d7e9584] Add './run-doctest' tool, and re-enable all doctests for
+    modules using django.
+  * [ec4f92f] Remove "__main__ doctest run helper" from all affected
+    modules (obsoleted by ./run-doctest).
+  * [39bfbee] [devel]: Move dev testing debconf selections to extra file.
+  * [f649120] examples/auto-setup: Add "batch-mode" support (for dev
+    testing).
+  * [714dbbc] [css] Make file names "more unique", and remove some
+    redundancies.
+  * [bba1ce2] [css] mini-buildd_messagelist.css: Add custom icons for log
+    messages (we should not use django paths for that in our own CSSes).
+  * [9cc1ff6] [css] mini-buildd_admin.css: Less is more: Skip overwriting
+    most default styles (fixes some html display issues with django 1.9).
+  * [42641f1] [css] mini-buildd_admin.css: Correctly display title again
+    with django 1.9.
+  * [31b595f] [html] admin: Move "daemon running" convenience code to
+    content (displays this again this for django 1.9).
+  * [4ac61e0] [css] Style bulk fix: Class names should use hyphen, not
+    underscore.
+  * [195014d] [devel]: Add initial poor-man's check for unused CSS ids.
+  * [0f2b4ed] [css] mini-buildd.css, mini-buildd_admin.css: Remove unused
+    CSS ids.
+  * [2aade6a] [css] mini-buildd_admin.css: Fix "is running" warning image
+    and style.
+  * [2219aa0] [templates] Make all css includes use {{ STATIC_URL }}.
+
+ -- Stephan Sürken <absurd@debian.org>  Sun, 24 Apr 2016 07:39:49 +0000
+
+mini-buildd (1.0.11) unstable; urgency=medium
+
+  The "eight-legged freak" stable point release.
+
+  Crucial user-visible changes summary:
+   - python client API: This merges this long-petted feature branch.
+     Docs and examples will follow in the next release ;).
+   - schroot workarounds: Workaround for #728096 is now ootb, and a
+     (ootb) workaround for archived squeeze is added.
+   - wizards cleaned up; the recommended DirChroot backend now guesses
+     the default backend (aufs vs. overlay).
+   - no longer needs p-d-extensions.
+
+  * [eec512f] chroot wizard: Improve note when a customized chroot is
+    skipped, and make it a warning.
+  * [cd28cbb] web admin: Fix "search" function for 'Chroot' and
+    'Uploader'.
+  * [1945d13] doc/user.rst: Improve introduction/default layout
+    description.
+  * [2bebf1c] example packages: Update config.guess|sub.
+  * [adb26f8] [django 1.9] Fix jquery URI && distribution option tag.
+    Thanks to Eldon Koyle (Closes: 813720)
+  * [4b81c73] Add initial python client 'API' for 1.0.x.
+  * [f9e62c2] client API: Add django_pseudo_configure workaround.
+  * [649e4b3] misc.py: mkdirs: Add doc/note to myself (for the upcoming
+    upgrade to python 3.x).
+  * [6619511] client_api_10x.py: Daemon: Add self.url.
+  * [e02a913] [django 1.7-9] client_api_10x.py: Update "syncdb" to
+    "migrate".
+  * [8061242] [django 1.9] Call django.setup() directly after configure().
+  * [25e0931] [django 1.9] Pseudo config now also needs
+    "django.contrib.auth" and "django.contrib.contenttypes".
+  * [d0c6fed] Move pseudo configuration function to
+    "mini_buildd/django_settings.py".
+  * [1824cd5] django_settings.py: pseudo config: autodoc also needs
+    "registration".
+  * [932e994] django_settings.py: conf, pseudo conf: Use same value
+    "INSTALLED_APPS".
+  * [2a049e7] Use new pseudo config for sphinx doc (obsoletes
+    "doc/django_settings.py").
+  * [56f76ab] client_api_10x.py: Add status (caching) support.
+  * [2dd969c] client_api_10x.py: Support archive identity.
+  * [beb520f] client_api_10x.py: Add extra function: get_package_versions.
+  * [3ec7026] client_api_10x.py: get_package_version: Report a dict with
+    various infos, not just version.
+  * [6ab382f] django_settings.py: Pseudo config: Also set
+    MIDDLEWARE_CLASSES explicitly to avoid nasty warning with django 1.7.
+  * [56a3425] api: Move to own package.
+  * [3f84b08] api: Move client API to api/ package.
+  * [7782370] Add 'api/_contrib.py': Non-mini-buildd extra code; adds
+    DebianPackageTracker class.
+  * [b4d2eef] api/_contrib.py: Improve DebianPackageTracker class.
+  * [78e7cca] api/_contrib.py: Add some docs.
+  * [b437008] setup.py: Add mini_buildd/api to packages.
+  * [e1172f3] examples: migrate-keyring-packages, python-client: Update to
+    final client api location.
+  * [6b543ce] [wizard] Clean up archives && remove any old backports.org
+    archives.
+  * [a42f3f3] Add permanent schroot/setup.d workaround script; integrate
+    'shmbug728096' workaround and fix it so it "just works" (no manual
+    enabling needed any more).
+  * [388bc23] 15mini-buildd-workarounds: Add schroot workaround for
+    archived Debian distributions (disable the valid-until check).
+  * [708da60] 15mini-buildd-workarounds: Cosmetic log fix.
+  * [3b05f0b] misc.py: web_login(): Fix exception string.
+  * [d3939fd] api/client_1_0.py: login(): Ask for user if not given.
+  * [acd7e71] api/client_1_0.py: login(): Handle proto down to web-
+    login().
+  * [0865b08] api/client_1_0.py: Fix archive identity "parser" (for
+    archive ids that include a hyphen).
+  * [d8db641] misc.py: Add canonize_url() tool function.
+  * [d4775bd] misc.py: web-login(): Canonize URLs before "unauthorized"
+    check.
+  * [d7f2776] api/client_1_0.py: login(): Return instance to allow
+    convenience syntax.
+  * [9e513f6] api/client_1_0.py: Add "dry run" feature.
+  * [0872560] api/client_1_0.py: Compact/renice code.
+  * [fedd36a] api/client_1_0.py: auto_confirm, dry_run: Skip extra
+    property support.
+  * [bdda89d] api/client_1_0.py: Log HTTP status code for failed calls
+    too.
+  * [03f1ae4] api/client_1_0.py: Add "interactive retry convenience code".
+  * [72d9b29] api/client_1_0.py: call(): Fail/except when the API call
+    fails.
+  * [af7c51d] control: Update dependency on reprepro: >= 4.17 for dbgsym
+    support.
+  * [39dc9e7] api/client_1_0.py: Add batch_mode (non-interactive mode).
+  * [b537c17] api/client_1_0.py: call(): Add "raise_on_error" support.
+  * [826a847] api/client_1_0.py: Cosmetics on API call logs.
+  * [dd83414] api/client_1_0.py: Make bulk_migrate() public.
+  * [42d9521] api/client_1_0.py: wait_for_package(): Initial impl.
+  * [9b3a3eb] api/client_1_0.py: Add "django_mode" support, defaulting to
+    true.
+  * [c8c2b58] api/client_1_0.py: wait_for_package(): Fix: Actually
+    increase tries.
+  * [58dbebf] api/client_1_0.py: wait_for_package(): Simplify/improve log
+    output.
+  * [b84b45c] api/client_1_0.py: wait_for_package(): Error handling
+    support && code cosmetics.
+  * [b1b97f3] api/client_1_0.py: wait_for_package(): Support version=None
+    (any version).
+  * [fbf0111] api/client_1_0.py: has_package(): Add initial impl.
+  * [9601e59] api/client_1_0.py: wait-for_package(): Fixup logged wording
+    when match found.
+  * [dfc45e0] api/client_1_0.py: Monkey patch httplib._MAXHEADERS to 500
+    (default '100' may be too low as log messages are transferred via HTTP
+    headers).
+  * [19a361f] api/client_1_0.py: wait_for_package(): Add "or_greater
+    support" for version.
+  * [fab38f6] api/client_1_0.py: wait_for_package(), has_package(): Fixup
+    arg order.
+  * [84b1528] Bulk pep8 fixes on new code.
+  * [4a646a9] Bulk pylint fixes on new code / newer pylint.
+  * [7fd1435] models/chroot.py: DirChroot: Add guesser for the default
+    backend value ('aufs' versus 'overlay') based on kernel version.
+  * [823aaac] More code fixes and config adaptions for pylint (1.5.2).
+  * [2a46597] Remove dependency on p-d-extensions for good (only needed
+    for one graphic in the manual).
+  * [76c0be6] control: Update Stds-Ver to 3.9.8 (no changes needed).
+  * [e27d40f] pylint (1.5.2): Bulk-switch to symbolic message names.
+  * [b93a149] pylint (1.5.2): Bulk-convert inline exceptions to "one-
+    lines" where possible (and also removes some no longer needed).
+  * [986da34] urls.py+root_urls.py: Remove obsoleted compat code for
+    django 1.5/1.6 and older p-d-r.
+  * [f0be9cc] django_settings.py: Remove obsoleted compat code for django
+    < 1.7.
+  * [a1c7804] pylint (1.5.2): Phasing out some per-project exceptions:
+    super-on-old-class, bad-continuation, bad-format-string, global-
+    statement.
+  * [0e54a86] [devel] pep8: Use config file && remove old compat from call
+    code.
+  * [6de2d92] [devel] Add support for a testing (passwordless) setup of
+    p-keyring.
+
+ -- Stephan Sürken <absurd@debian.org>  Sun, 10 Apr 2016 15:57:55 +0000
+
+mini-buildd (1.0.10) unstable; urgency=medium
+
+  * [6345fe9] .gitignore: Ignore paths created by new debhelper.
+  * [2231178] [devel]: Updates: +installdjango, +service, +install.
+  * [26d9291] [django] Retry 'migrate' with '--fake-initial' on
+    OperationalError (fixes daemon start on certain existing databases).
+  * [938bc1d] Update to new recommended bash completions path (/usr/share
+    /bash-completion/completions/).
+
+ -- Stephan Sürken <absurd@debian.org>  Wed, 20 Jan 2016 14:36:49 +0000
+
+mini-buildd (1.0.9) unstable; urgency=medium
+
+  * [eb0fad7] [devel] chroot workaround: Don't care if the dirty workound
+    fails.
+  * [13ced1b] django_settings: Improve django < 1.7 compat code (make
+    mini-buildd actually fail when django.setup() fails).
+  * [dff0527] [devel] purge: Also manually stop daemon.
+  * [aaa608c] postrm: On purge, don't hide output of 'userdel'.
+  * [543d101] web && admin: Also display the daemon's hostname. Thanks to
+    Marc Haber (Closes: 796346)
+  * [f69c12b] httpd.py: Fix compat warning from cherrypy 2.3
+    (autoreload_on -> .on).
+  * [e79279c] control: Update dependency on django to >= 1.7 (will not be
+    tested under 1.5/1.6, and compat code may eventually be removed).
+  * [332996d] [devel]: Add crude macro to help locally test different
+    django versions.
+  * [7842e91] [django 1.9] Use management call 'migrate', not 'syncdb'.
+  * [235ac3b] DirChroot: Add support for now-in-linux-mainline overlayfs
+    named "overlay" (Fixes: OOB support for overlay backend for Debian
+    Kernels with aufs removed).
+  * [9b67282] [django 1.9] Add run_syncdb=True to migrate call.
+  * [cc2ea99] [django 1.9] Add app "django.contrib.sites" (p-d-r imports
+    models from there, forbidden in 1.9 w/o the app installed).
+  * [1c41bda] [django 1.8] WebApp: Manually call check() once (1.8 no
+    longer does this by default; in 1.7 you may see unharmful duplicate
+    calls).
+  * [1b5d6e8] [django 1.9] Update templatetag 'mbd_model_count' to
+    (cleaner) inclusion.tag (Fixes: configuration page).
+  * [fd94acc] [django 1.9] ./devel pydoctests: Add more exclusions for now
+    always-failing doctest runs.
+  * [2b8f5f5] [devel]: Add yet another workaround to simplify testing.
+  * [5dd2d45] Revert "[django 1.9] Add app "django.contrib.sites" (p-d-r
+    imports models from there, forbidden in 1.9 w/o the app installed).":
+    Not needed any more for new p-d-r upstream 2.0.4.
+  * [ed878cf] [django 1.8|9]: Depend on python-django-registration >=
+    2.0.4.
+  * [cd6b460] control: Harden python-django deps to those main version
+    actually tested with (1.7, 1.8, 1.9). (Closes: 808670, 806361, 806593)
+  * [cd6edec] [django 1.9] doc: Add app "registration" to django pseudo
+    conf (avoids warning on sphinx run).
+  * [542cb3c] [devel] More internal convenience hacks for testdjango.
+  * [599829b] DirChroot: Make "overlay" backend default (it's now in
+    mainline and current Debian kernels, while "aufs" has been removed).
+
+ -- Stephan Sürken <absurd@olurdix.de>  Tue, 12 Jan 2016 11:27:55 +0000
+
+mini-buildd (1.0.8) unstable; urgency=medium
+
+  * [8ecb4f1] API/DOC: Add "auth level" info to API docstrings.
+  * [ae3a5fe] doc/user.rst: Update aptitude config recommendations.
+  * [0f8e943] [devel] Add dirty workaround so testing still works in
+    "systemd chroots".
+  * [85fe189] [wizards] Add 'httpredir' Debian archive sources.
+  * [98b1181] builder: Also cat "chroot_setup_scrip" to build log. Thanks
+    to Marc Haber (Closes: 797589)
+  * [7a65be1] remotes: Use a custom exception for status updates failures
+    (improves error handling over pure urllib2 exception). Thanks to Marc
+    Haber (Closes: 796348)
+  * [7822017] [wizards] Add Ubuntu 15.10 (wily).
+
+ -- Stephan Sürken <absurd@debian.org>  Sat, 31 Oct 2015 11:40:58 +0000
+
+mini-buildd (1.0.7) unstable; urgency=medium
+
+  [ Stephan Sürken ]
+  * [44fe400] [devel]: Remove python-django-lint from installdep helper.
+  * [2bb2bbe] models: Set default "Days-Until-Recheck" value from 7 to 6
+    (works out better with cron.daily).
+  * [6a06f68] Builder: Don't expect buildlogs to be UTF-8 (Fixes: Build
+    failure with such buildlogs).
+  * [add889b] examples/09bug728096shmfixer: Make work again under jessie+
+    systems (this fixes a bug in that bug workaround which has been
+    triggered by bug fix for #674755 ;).
+  * [2e628f0] examples/09bug728096shmfixer: Harden, so it's only run when
+    really needed.
+  * [5ea7888] Add debian/mini-buildd.README.Debian (including a hint for
+    the shm workaround).
+  * [38af7d4] [devel] Update devel script to new "gbp .." call scheme.
+  * [b3eb016] misc.py: HoPo::test_bind(): Make work for IPv6. (Closes:
+    789103)
+
+  [ Ben Finney ]
+  * [307d472] Depend on ‘python-daemon’ 2.0.5 for new lockfile API.
+  * [793f229] Remove references to obsolete ‘daemon.pidlockfile’ API.
+    (Closes: 789089)
+
+  [ Stephan Sürken ]
+  * [285b0f6] Add a per-branch debian/gbp.conf, and point to 1.0.x.
+  * [ac3c6ff] debian/control: Remove obsolete Suggests on debootstrap
+    (Fixes lintian/stronger-dependency-implies-weaker).
+  * [59ec7cc] doc/quickstart.rst: Clarify the meaning of 'Uploader', and
+    describe the per-user auth workflow. (Closes: 789154)
+  * [c0956b1] models/gnupg.py: Prefer explicitly pasted key over
+    keyid/keyserver (Fixes non-intuitive behavior when keys are re-
+    prepared with no keyserver available).
+
+ -- Stephan Sürken <absurd@debian.org>  Sun, 21 Jun 2015 16:33:51 +0000
+
+mini-buildd (1.0.6) unstable; urgency=medium
+
+  The "Jessie Release" release.
+  Please also see
+    http://mini-buildd.installiert.net/blog/post_jessie_housekeeping.html
+  for some post-jessie housekeeping hints.
+  * [57e99e9] wizards: Add support for Ubuntu vivid.
+  * [1094e7a] wizards: Add support for new Debian apt keys with the jessie
+    release (Fixes: wheezy, jessie, sid).
+  * [9ffa8ef] wizards: Add support for jessie-backports and wheezy-
+    backports-sloppy.
+  * [1e43efd] wizards: Support Debian stretch (deps: needs debootstrap >=
+    1.0.65).
+
+ -- Stephan Sürken <absurd@debian.org>  Fri, 01 May 2015 19:05:34 +0000
+
+mini-buildd (1.0.5snap20150201103349) experimental; urgency=medium
+
+  Stable snasphot via 'experimental' during jessie freeze.
+  * [dcfe369] doc/user.rst: Document Bug 768046.
+  * [ebd2df4] debian/po/nl.po: Add dutch translation. (Closes: 767278)
+  * [0a2034e] debian/control: Update Stds-Ver to 3.9.6 (no changes
+    needed).
+  * [0f57f5f] control: Update debootstrap suggested version to 1.0.64.
+  * [51f6bd5] pylint 1.3.1: Fix two new warnings (indeed buggy code which
+    may lead to problems)
+  * [83ffe9e] config: Always sync the debconf "home" value with actual
+    home of an existing mini-buildd user. Thanks to Marc Haber (Closes:
+    774078)
+  * [3d1ec5f] p-d-registration: Use configured email address for outgoing
+    mails (instead of django's default).
+  * [62af2c5] p-d-registration: Workaround for p-d-registration bug
+    #775363: Uses wrong uid hash for django >= 1.6 (Fixes: Broken "reset
+    password" URLs)
+
+ -- Stephan Sürken <absurd@debian.org>  Sun, 01 Feb 2015 10:34:11 +0000
+
+mini-buildd (1.0.5) unstable; urgency=medium
+
+  * [016c59f] mini_buildd/daemon.py: Fix warning with pylint 1.3.
+  * [9f3d61a] [devel] "./devel all": Sleep a while until service becomes
+    ready.
+  * [2cdcffc] [devel] pylint: Globally disable W1302 (seems just wrong).
+  * [48d9bf7] p-d-registration: Add 'd.c.auth.urls', needed since some
+    django update. (Closes: 764736)
+  * [0aaf375] Remove the obsoleted "chroot sudo workaround". (Closes:
+    764617)
+  * [09adf78] [django 1.7] Remove "user profile" code (deprecated for good
+    in 1.7) (Closes: 765378)
+  * [a4e6e5c] sudo chroot workaround cleanup: Assure /etc/sudoers file is
+    present (else newer sudo may fail on upgrade) (Closes: 766191)
+  * [ab55bd0] control: Add dep dpkg-dev >1.17 (needed by new sbuild); also
+    update devscripts dep (relevant for wheezy port only).
+  * [e887a9a] [html] Log: Add "file browse" and PTS link for convenience.
+  * [8ae5176] Chroot::check(): Detect (and deny) "sudo workaround chroots"
+    (so they eventually become disabled automatically).
+  * [6e39fda] Update etamydata chroot setup default/example snippets to
+    also work with eatmydata >= 82. (Closes: 765641)
+  * [2149b13] mini-buildd.NEWS: Update/correct existing NEWS (for
+    upgrading 0.8.x->1.0.0)
+  * [0266352] control: Depend on python-debian (>= 0.1.25~). (Closes:
+    764595)
+  * [a6fa26f] doc: Add note about systemd/schroot bug 728096, and add
+    workaround as example script.
+  * [aa3757e] setup wizards: Add support for Ubuntu "utopic".
+
+ -- Stephan Sürken <absurd@debian.org>  Sun, 26 Oct 2014 20:12:05 +0000
+
+mini-buildd (1.0.4) unstable; urgency=medium
+
   * [14cb9e5] Ubuntu wizard: Add 'old-releases' archive (raring and
     quantal recently moved there)
   * [646f403] *.py: Some style fixes to satisfy newer pep8.
@@ -58,10 +913,43 @@ mini-buildd (1.1.0) UNRELEASED; urgency=medium
   * [4621caf] Bug fix: "[l10n:cs] Updated Czech translation of PO debconf
     template for mini-buildd 1.0.0~beta.23", thanks to Michal Šimůnek
     (Closes: #751380)
-  * [5f9ce69] Prepare 1.0.4.
-  * [79f1750] Don't sync debian/changelog on merge.
 
- -- Stephan Sürken <absurd@debian.org>  Fri, 08 Aug 2014 13:38:10 +0200
+ -- Stephan Sürken <absurd@debian.org>  Fri, 08 Aug 2014 12:40:59 +0200
+
+mini-buildd (1.0.3) unstable; urgency=medium
+
+  * [5100f3a] doc/quickstart: Update for the new keyring's "sources.list
+    library".
+  * [6de2b52] examples/ssh-uploader-command: Improve error output when 0
+    changes files are uploaded.
+  * [d39e93f] examples: Add auth logging support for ssh wrapper scripts.
+  * [62cd2be] [devel] Update setup/code for new pylint >= 1.2 (Fixes:
+    pylint check).
+
+ -- Stephan Sürken <absurd@debian.org>  Wed, 04 Jun 2014 16:45:32 +0000
+
+mini-buildd (1.0.2) unstable; urgency=medium
+
+  * [f374128] keyring package, 'APT sources library': Support the rollback
+    distributions, too.
+  * [8dd7f26] port, portext (web): Add support to 'regex-bulk-select'
+    distributions.
+  * [a23346e] Never use '/usr/share/pyshared', always use computed 'dist-
+    packages' path (Fixes builds with newer dh_python2).
+  * [316de91] Add example 'migrate-keyring-packages': Bulk-migrate keyring
+    packages.
+
+ -- Stephan Sürken <absurd@debian.org>  Sat, 17 May 2014 10:18:30 +0000
+
+mini-buildd (1.0.1) unstable; urgency=medium
+
+  * [d85d2d4] Add all available sources.lists to keyring packages for easy
+    integration.
+  * [33be1bd] examples/ssh-uploader-command: Add workaround to make it
+    work for squeeze's dput (0.9.6).
+  * [71b9e6f] wizards: Add support for Ubuntu "trusty".
+
+ -- Stephan Sürken <absurd@debian.org>  Mon, 05 May 2014 18:26:07 +0000
 
 mini-buildd (1.0.0) unstable; urgency=medium
 

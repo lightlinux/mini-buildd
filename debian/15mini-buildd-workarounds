@@ -1,0 +1,58 @@
+#!/bin/bash -e
+
+. "${SETUP_DATA_DIR}/common-data"
+. "${SETUP_DATA_DIR}/common-functions"
+. "${SETUP_DATA_DIR}/common-config"
+
+# Skip conditions
+[ "${1}" = "setup-start" ] || exit 0
+[ "${CHROOT_SESSION_SOURCE}" != "true" ] || { printf "I: Not acting on source chroots, skipping...\n"; exit 0; }
+printf "%s" "${CHROOT_NAME}" | grep -q "^mini-buildd" || { printf "Not a mini-buildd chroot, skipping...\n"; exit 0; }
+
+# '/dev/shm' might be a symlink to '/run/shm' in some
+# chroots. Depending on the system mini-buildd/sbuild runs on
+# and what chroot is being build for this may or may not lead to
+# one or both of these problems:
+#
+# - shm not mounted properly in build chroot (leading to build errors when shm is used).
+# - shm mount on *the host* gets overloaded (leading to an shm mount "leaking" on the host).
+#
+# This workaround
+#
+# - [in '/etc/schroot/mini-buildd/fstab-generic'] Removes shm form the generic sbuuod mounts (avoids the mount leaking).
+# - [here] Fixes /dev/shm to a directory in case it's not.
+# - [here] Always mounts /dev/shm itself.
+#
+# Debian Bug: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=728096
+#
+# When this is fixed (and we have added a verisoned depends on
+# schroot accordingly), all of the above may be reverted again.
+#
+mini_buildd_workarounds_shm()
+{
+	printf "=> Fixing up /dev/shm mount (Bug #728096):\n"
+
+	if [ -L "${CHROOT_PATH}/dev/shm" ]; then
+		printf "Removing ${CHROOT_PATH}/dev/shm symlink...\n"
+		rm -v "${CHROOT_PATH}/dev/shm"
+	fi
+	mkdir -v -p "${CHROOT_PATH}/dev/shm"
+	mount -v -ttmpfs none "${CHROOT_PATH}/dev/shm"
+}
+
+# (Some) archived dists have a fixed Valid-Util header.
+#
+# We still want these to work, however.
+#
+mini_buildd_workarounds_archived()
+{
+	case ${CHROOT_NAME} in
+		*-etch-*|*-lenny-*|*-squeeze-*)
+			printf "=> Disabling 'Check-Valid-Until' for archived distribution ${CHROOT_NAME}.\n"
+			printf "Acquire::Check-Valid-Until \"false\";\n" >"${CHROOT_PATH}/etc/apt/apt.conf.d/10disable-check-valid-until"
+			;;
+	esac
+}
+
+mini_buildd_workarounds_shm
+mini_buildd_workarounds_archived

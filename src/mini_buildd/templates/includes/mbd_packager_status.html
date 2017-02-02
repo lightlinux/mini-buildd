@@ -1,0 +1,45 @@
+{% load mini_buildd_tags %}
+
+<table class="status table">
+	<tr>
+		<th>Started</th>
+		<th>Package</th>
+		<th>Distribution</th>
+		<th>Version</th>
+		<th>Architectures</th>
+		<th title="in seconds">Took</th>
+		<th colspan="2">Status</th>
+	</tr>
+	{% for p in packages %}
+		<tr>
+			<td class="status nowrap smaller">{{ p.started|date:"r" }}</td>
+			<td class="status nowrap"><a href="/mini_buildd/api?command=show&amp;package={{ p.changes.source|urlencode }}" title="Show package">{{ p.changes.source }}</a></td>
+			<td class="status nowrap">{{ p.changes.distribution }}</td>
+			<td class="status nowrap">
+				{% if p.log %}
+					<a href="{{ p.log }}/" title="Go to log page">{{ p.changes.version }}</a>
+				{% else %}
+					{{ p.changes.version }}
+				{%endif %}
+			</td>
+			<td class="status nowrap">
+				{% for arch, breq in p.requests.items %}
+					{% with success=p.success|mbd_dict_get:arch failed=p.failed|mbd_dict_get:arch %}
+						<a class="status {% if success %}SUCCESS{% elif failed %}FAILED{% else %}BUILDING{% endif %} hover-underline"
+							 href="{% firstof success.log failed.log breq.live_buildlog_url "no_remote_found"%}"
+							 title="{{ arch }} build: {% firstof success.bres_stat failed.bres_stat "Live buildlog on builder host" %}">
+							{{ arch }}
+							{% mbd_build_status success failed %}
+						</a>
+						{% if breq.remote_http_url %}
+							<a class="status hover-underline" href="{{ breq.remote_http_url }}" title="Jump to builder host">➚</a>
+						{% endif %}
+					{% endwith %}
+				{% endfor %}
+			</td>
+			<td class="status nowrap">{{ p.took }}</td>
+			<td class="status nowrap {{ p.status }}">{{ p.status }}</td>
+			<td class="status DESCRIPTION smaller">{{ p.status_desc }}</td>
+		</tr>
+	{% endfor %}
+</table>

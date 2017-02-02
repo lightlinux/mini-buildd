@@ -5,3 +5,14 @@ mbd-test-cpp (0.1.0) UNRELEASED; urgency=low
   * Should build on all architectures.
 
  -- Stephan Sürken <absurd@debian.org>  Mon, 12 Aug 2013 18:13:02 +0200
+
+mbd-test-cpp (0.0.9) unstable; urgency=low
+
+  * Fake entry to test non-ASCII "original_author" magic.
+    At least for python 2.7, we need to do some magic to get
+    encoding right, which finally is prone to python encoding
+    errors later somewhere ;).
+    Code: See argument to 'genchanges' call in '_port()'
+    method from 'daemon.py'.
+
+ -- Üdo Ümlauß <uedo@uemlauss.test.org>  Mon, 12 Aug 2012 18:13:02 +0200

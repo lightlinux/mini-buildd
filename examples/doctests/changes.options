@@ -1,0 +1,52 @@
+Format: 1.8
+Date: Sat, 22 Oct 2016 07:54:13 +0000
+Source: mini-buildd
+Binary: python-mini-buildd mini-buildd mini-buildd-common
+Architecture: source
+Version: 1.0.24
+Distribution: unstable
+Urgency: medium
+Maintainer: Stephan Sürken <absurd@debian.org>
+Changed-By: Stephan Sürken <absurd@debian.org>
+Description:
+ mini-buildd - minimal build daemon - daemon
+ mini-buildd-common - minimal build daemon - 08x upgrade dummy package
+ python-mini-buildd - minimal build daemon - python library and user tool
+Closes: 790059 790292 790775
+Changes:
+ mini-buildd (1.0.24) unstable; urgency=medium
+ .
+   This and that, and fixup regression from 1.0.22:
+ .
+   * [64615bd] compat: Update dh compat from 7 to 9 (no other changes
+     required).
+   * [415c691] control: mini-buildd: Add missing dep on lsb-base (init
+     script).
+   * [5391c86] repository overview: Add "Direct links" convenience section.
+     Thanks to Marc Haber (Closes: 790059)
+   * [74363c7] doc/admin.rst: Improve docs about 0.8.x migration and
+     reprepro. Thanks to Marc Haber (Closes: 790292)
+   * [4edbf1f] doc/admin.rst: Add doc how to manually use an external
+     archive key. Thanks to Marc Haber (Closes: 790775)
+   * [4d1256c] control: mini-buildd-common: This may be 'Multi-Arch:
+     foreign' (as hinted)
+   * [33f214b] Fix regression introduced in 1.0.22 (1eeece7): Builds using
+     ccache fail on pre-existing chroots due to missing 'libdir'.
+.
+   New style options:
+   * MINI_BUILDD_OPTION: ignore-lintian=true
+   * MINI_BUILDD_OPTION: ignore-lintian[i386]=false
+   * MINI_BUILDD_OPTION: run-lintian=true
+   * MINI_BUILDD_OPTION: run-lintian[i386]=false
+   * MINI_BUILDD_OPTION: internal-apt-priority=543
+   * MINI_BUILDD_OPTION: auto-ports=jessie-test-unstable,
+   squeeze-test-snasphot
+Checksums-Sha1:
+ 4f049c211ee95f14c57dff4d2fc295e6332050d2 2160 mini-buildd_1.0.24.dsc
+ 0635ded55d9b66f6f5ad1ee3318646f91c10c47f 918848 mini-buildd_1.0.24.tar.xz
+Checksums-Sha256:
+ f9abcd847f0071b05e9783b4eefe3d7dee3f045f9df6a32b6e4da12a8a13556b 2160 mini-buildd_1.0.24.dsc
+ bed624ced9c4cc69de46c3dc586c5e080e645a062f0d259568a58d7db5fa3fac 918848 mini-buildd_1.0.24.tar.xz
+Files:
+ ccb1baa9372360d66b2a9ca49d95a143 2160 devel extra mini-buildd_1.0.24.dsc
+ 83284e5481d38166c93831b630daa404 918848 devel extra mini-buildd_1.0.24.tar.xz

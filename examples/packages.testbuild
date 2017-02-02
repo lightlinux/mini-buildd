@@ -72,7 +72,7 @@ for P in ${PACKAGES}; do
 				version+="1"
 			fi
 			debchange --force-distribution --force-bad-version --newversion "${version}" --dist "${dist}-${id}-${dest}" "test build for mini-buildd"
-			[ -z "${backports}" ] || debchange --force-distribution --force-bad-version --dist "${dist}-${id}-${dest}" --append "MINI_BUILDD: AUTO_BACKPORTS: ${backports}"
+			[ -z "${backports}" ] || debchange --force-distribution --force-bad-version --dist "${dist}-${id}-${dest}" --append "MINI_BUILDD_OPTION: auto-ports=${backports}"
 
 			dpkg-buildpackage ${SIGN_OPTS} -d -S -sa
 		)

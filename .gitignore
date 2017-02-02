@@ -1,10 +1,10 @@
 # Python
 /build/
-/mini_buildd/__init__.py
+/src/mini_buildd/__init__.py
 *.pyc
 
 # Debian package
-/mini_buildd.egg-info/
+/src/mini_buildd.egg-info/
 /debian/tmp/*
 /debian/python-mini-buildd/*
 /debian/mini-buildd/*
@@ -13,3 +13,5 @@
 /debian/*mini-buildd*.debhelper.log
 /debian/*mini-buildd*.substvars
 /debian/files
+/debian/.debhelper
+/debian/debhelper-build-stamp

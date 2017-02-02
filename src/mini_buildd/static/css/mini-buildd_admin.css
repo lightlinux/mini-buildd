@@ -1,0 +1,120 @@
+/* New mini-buildd specific style definitions. */
+
+@import url(mini-buildd_messagelist.css);
+
+#mbd-django-admin-branding h1
+{
+	color: #ffffcc;
+	display: inline;
+}
+
+#mbd-django-admin-branding img
+{
+	float: left;
+	margin: 0px 10px 8px 10px;
+}
+
+#mbd-django-admin-daemon-status
+{
+	float: left;
+	width: 100%;
+	background: url("../img/mbd_message_warning.png") no-repeat scroll 0 0px white;
+	border-bottom: 1px solid #cccccc;
+	border-top: 1px solid #cccccc;
+	color: #999999;
+	font-size: 11px;
+	padding: 2px 0px 3px 20px;
+}
+
+#mbd-django-admin-daemon-status p
+{
+	display: inline;
+}
+
+#mbd-django-admin-daemon-status span.warning
+{
+	color: red;
+	font-weight: bold;
+}
+
+#mbd-django-admin-daemon-status a:link, #mbd-django-admin-daemon-status a:visited
+{
+	font-size: 11px;
+	color: #5b80b2;
+}
+
+#mbd-django-admin-daemon-status a:hover
+{
+	color: #003366;
+	text-decoration: none;
+}
+
+#header
+{
+	background: url("../img/da_header_background_gradient.png") repeat-x scroll left top;
+}
+
+#content-main td.right
+{
+	text-align: right;
+}
+
+#content-main a.mbd-changelink, #content-main a.mbd-addlink
+{
+	padding-right: 1px;
+	display: inline;
+}
+
+#content-main a.mbd-wizard
+{
+	background: url("../img/mbd_wizard.png") no-repeat scroll 3px 50%;
+	margin: 0px 0px 0px 0px;
+	padding: 2px 6px 2px 30px;
+	text-decoration: none;
+	font-size: 11px;
+	font-weight: normal;
+	display: inline;
+}
+
+/* For 'admin colorized button hack'; see JS hack mini_buildd/templates/admin/mini_buildd/change_list.html */
+#mbd-action-prepare.button.Prepare {
+	border-color: yellow;
+	border-width: 3px;
+	font-weight: bold;
+}
+
+#mbd-action-check.button.Check {
+	border-color: blue;
+	border-width: 3px;
+	font-weight: bold;
+}
+
+#mbd-action-pc.button.PC {
+	border-color: darkblue;
+	border-width: 3px;
+	font-weight: bold;
+}
+
+#mbd-action-activate.button.Activate {
+	border-color: green;
+	border-width: 3px;
+	font-weight: bold;
+}
+
+#mbd-action-pca.button.PCA {
+	border-color: darkgreen;
+	border-width: 3px;
+	font-weight: bold;
+}
+
+#mbd-action-deactivate.button.Deactivate {
+	border-color: yellow;
+	border-width: 3px;
+	font-weight: bold;
+}
+
+#mbd-action-remove.button.Remove {
+	border-color: red;
+	border-width: 3px;
+	font-weight: bold;
+}

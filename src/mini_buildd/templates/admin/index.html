@@ -1,0 +1,136 @@
+{% extends "admin/base_site.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% load mini_buildd_tags %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/dashboard.css" %}" />{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+
+{% block bodyclass %}dashboard{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+	<div id="mbd-django-admin-daemon-status">
+		<p>
+			{% if "dummy"|mbd_daemon_is_running %}
+				<span class="warning">Warning:</span>
+				The daemon is <span style="font-weight: bold">running</span>!&nbsp;
+				It's recommended to <a class="stop-daemon" title="Stop the daemon" href="/mini_buildd/api?command=stop&amp;output=referer">stop it</a> for extensive maintenance.
+			{% else %}
+				The daemon is <span style="font-weight: bold">stopped</span>!&nbsp;
+				<a class="stop-daemon" title="Start the daemon, and return to home" href="/mini_buildd/api?command=start&amp;output=referer/mini_buildd/">Restart it</a> when done.
+			{% endif %}
+		</p>
+	</div>
+
+	<div id="content-main">
+		{% if app_list %}
+			{% for app in app_list %}
+				{% if app.name == "Mini_Buildd" %}
+					<div class="module">
+						<table>
+							<caption class="mb"><a href="{{ app.app_url }}" class="section">{% blocktrans with app.name as name %}{{ name }}{% endblocktrans %}</a></caption>
+
+							<!-- DAEMON -->
+							{% mbd_admin_index_table_header "Daemon" %}
+							{% mbd_admin_index_table_row app "Daemon" "daemon.Daemon" True %}
+
+							<!-- SOURCES -->
+							{% mbd_admin_index_table_header "Sources" %}
+							{% mbd_admin_index_table_row app "Archives" "source.Archive" False "add_from_sources_list" "Local" "Scan your local system's apt setup and add all new archives found" "add_debian" "Debian" "Add generic internet Debian archives" "add_ubuntu" "Ubuntu" "Add generic internet Ubuntu archives" %}
+
+							{% mbd_admin_index_table_row app "Sources" "source.Source" False "add_debian" "Debian" "Add well-known Debian sources" "add_ubuntu" "Ubuntu" "Add well-known Ubuntu sources" %}
+
+							{% mbd_admin_index_table_row app "Priority sources" "source.PrioritySource" False "add_extras" "Extras" "Add all non-base sources with default priority 1" %}
+							{% mbd_admin_index_table_row app "Apt keys" "gnupg.AptKey" %}
+
+							<!-- REPOSITORIES -->
+							{% mbd_admin_index_table_header "Repositories" %}
+							{% mbd_admin_index_table_row app "Layouts" "repository.Layout" False "create_defaults" "Defaults" "Create default layout and suites" %}
+							{% mbd_admin_index_table_row app "Distributions" "repository.Distribution" False "add_base_sources" "Defaults" "Create default distributions for all active base sources with the host architectures" %}
+							{% mbd_admin_index_table_row app "Repositories" "repository.Repository" False "add_sandbox" "Sandbox" "Add sandbox repository 'test'" "add_debdev" "Debdev" "Add Debian Developer sandbox repository 'debdev'" %}
+							{% mbd_admin_index_table_row app "Uploaders" "gnupg.Uploader" "True" %}
+
+							<!-- CHROOTS -->
+							{% mbd_admin_index_table_header "Chroots" %}
+							{% mbd_admin_index_table_row app "Dir chroots" "chroot.DirChroot" False "add_base_sources" "Defaults" "Add default chroots for all active base sources and host architectures" %}
+							{% mbd_admin_index_table_row app "File chroots" "chroot.FileChroot" False "add_base_sources" "Defaults" "Add default chroots for all active base sources and host architectures" %}
+							{% mbd_admin_index_table_row app "Lvm chroots" "chroot.LVMChroot" %}
+							{% mbd_admin_index_table_row app "Loop lvm chroots" "chroot.LoopLVMChroot" False "add_base_sources" "Defaults" "Add default chroots for all active base sources and host architectures" %}
+							{% mbd_admin_index_table_row app "Btrfs snapshot chroots" "chroot.BtrfsSnapshotChroot" False "add_base_sources" "Defaults" "Add default chroots for all active base sources and host architectures" %}
+
+							<!-- REMOTES -->
+							{% mbd_admin_index_table_header "Remotes" %}
+							{% mbd_admin_index_table_row app "Remotes" "gnupg.Remote" False %}
+						</table>
+					</div>
+				{% endif %}
+			{% endfor %}
+
+			{% for app in app_list %}
+				{% if app.name != "Mini_Buildd" %}
+					<div class="module">
+						<table>
+							<caption class="mb"><a href="{{ app.app_url }}" class="section">{% blocktrans with app.name as name %}{{ name }}{% endblocktrans %}</a></caption>
+							{% for model in app.models %}
+								<tr>
+									{% if model.perms.change %}
+										<th class="overview" scope="row"><a href="{{ model.admin_url }}">{{ model.name }}</a></th>
+									{% else %}
+										<th class="overview" scope="row">{{ model.name }}</th>
+									{% endif %}
+									{% if model.perms.add %}
+										<td><a href="{{ model.admin_url }}add/" class="addlink">{% trans 'Add' %}</a></td>
+									{% else %}
+										<td>&nbsp;</td>
+									{% endif %}
+									{% if model.perms.change %}
+										<td><a href="{{ model.admin_url }}" class="changelink">{% trans 'Change' %}</a></td>
+									{% else %}
+										<td>&nbsp;</td>
+									{% endif %}
+								</tr>
+							{% endfor %}
+						</table>
+					</div>
+				{% endif %}
+			{% endfor %}
+		{% else %}
+			<p>{% trans "You don't have permission to edit anything." %}</p>
+		{% endif %}
+	</div>
+{% endblock %}
+
+{% block sidebar %}
+	<div id="content-related">
+		<div class="module" id="recent-actions-module">
+			<h2>{% trans 'Recent Actions' %}</h2>
+			<h3>{% trans 'My Actions' %}</h3>
+			{% load log %}
+			{% get_admin_log 10 as admin_log for_user user %}
+			{% if not admin_log %}
+				<p>{% trans 'None available' %}</p>
+			{% else %}
+				<ul class="actionlist">
+					{% for entry in admin_log %}
+						<li class="{% if entry.is_addition %}addlink{% endif %}{% if entry.is_change %}changelink{% endif %}{% if entry.is_deletion %}deletelink{% endif %}">
+							{% if entry.is_deletion or not entry.get_admin_url %}
+								{{ entry.object_repr }}
+							{% else %}
+								<a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
+							{% endif %}
+							<br />
+							{% if entry.content_type %}
+								<span class="mini quiet">{% filter capfirst %}{% trans entry.content_type.name %}{% endfilter %}</span>
+							{% else %}
+								<span class="mini quiet">{% trans 'Unknown content' %}</span>
+							{% endif %}
+						</li>
+					{% endfor %}
+				</ul>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}

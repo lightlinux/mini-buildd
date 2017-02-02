@@ -3,27 +3,30 @@ Section: devel
 Priority: extra
 Maintainer: Stephan Sürken <absurd@debian.org>
 X-Python-Version: >=2.7
-Build-Depends: debhelper (>= 8.1.0~),
+Build-Depends: debhelper (>= 10),
+               dh-python,
+               dh-systemd (>= 1.5),
                man-db (>= 2.5.1),
                po-debconf,
                python (>= 2.7),
                python-setuptools,
-               python-sphinx (>= 1.0.7+dfsg),
+               python-sphinx (>= 1.1.3),
                python-pygraphviz,
                help2man,
                python-argparse,
                python-argcomplete (>= 0.5.4),
                python-keyring (>= 1.6),
-               python-daemon (>= 1.5.5),
+               python-daemon (>= 2.0.5),
                python-debian (>= 0.1.18~),
                python-cherrypy3,
                python-pyftpdlib (>= 1.2.0),
-               python-django (>= 1.5.2),
-               python-django-extensions (>= 1.2.5),
-               python-django-registration (>= 0.9~)
-Standards-Version: 3.9.6
-Vcs-Git: git://git.debian.org/git/collab-maint/mini-buildd.git
-Vcs-Browser: http://git.debian.org/?p=collab-maint/mini-buildd.git;a=summary
+               python-django (>= 1.7),
+               python-django (<< 1:1.11),
+               python-django-registration (>= 2.0.4),
+               gnupg
+Standards-Version: 3.9.8
+Vcs-Git: git://anonscm.debian.org/git/collab-maint/mini-buildd.git
+Vcs-Browser: https://anonscm.debian.org/git/collab-maint/mini-buildd.git
 Homepage: http://mini-buildd.installiert.net/
 
 Package: python-mini-buildd
@@ -34,7 +37,10 @@ Depends: ${misc:Depends},
          python-argparse,
          python-argcomplete (>= 0.5.4),
          python-keyring (>= 1.6),
-         python-debian (>= 0.1.25~)
+         python-debian (>= 0.1.25~),
+         python-django (>= 1.7.4),
+         python-django (<< 1:1.11),
+         python-django-registration (>= 2.0.4)
 Description: minimal build daemon - python library and user tool
  Mini-buildd is an easy-to-configure autobuilder and
  repository for deb packages.
@@ -47,27 +53,27 @@ Architecture: all
 Depends: ${misc:Depends},
          ${python:Depends},
          ${sphinxdoc:Depends},
+         lsb-base (>= 3.0-6),
          python-mini-buildd (= ${binary:Version}),
          mini-buildd-common (= ${binary:Version}),
-         python-daemon (>= 1.5.5),
+         python-daemon (>= 2.0.5),
          python-cherrypy3,
          python-pyftpdlib (>= 1.2.0),
-         python-django (>= 1.5.2),
-         python-django-extensions (>= 1.2.5),
-         python-django-registration (>= 0.9~),
          libjs-jquery,
          adduser,
          sudo,
          gnupg,
-         reprepro (>= 4.2),
-         debootstrap (>= 1.0.65~),
-         schroot (>= 1.6.3),
-         sbuild (>= 0.64.3),
-         dpkg-dev (>= 1.17),
+         dirmngr,
+         reprepro (>= 5),
+         debootstrap (>= 1.0.81~),
+         schroot (>= 1.6.10-2~),
+         schroot (<< 1.7),
+         sbuild (>= 0.72),
+         dpkg-dev (>= 1.17.27~),
          devscripts (>= 2.14.5~),
          lintian
 Recommends: python-apt
-Suggests: haveged, lvm2, qemu-user-static, binfmt-support, debootstrap (>= 1.0.64~)
+Suggests: haveged, lvm2, qemu-user-static, binfmt-support, btrfs-progs
 Breaks: mini-buildd-rep (<< 1.0.0~),
         mini-buildd-bld (<< 1.0.0~)
 Replaces: mini-buildd-rep,
@@ -80,6 +86,7 @@ Description: minimal build daemon - daemon
 
 Package: mini-buildd-common
 Architecture: all
+Multi-Arch: foreign
 Depends: ${misc:Depends}
 Description: minimal build daemon - 08x upgrade dummy package
  This is a dummy package assuring mini-buildd-common is

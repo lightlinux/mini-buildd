@@ -17,25 +17,11 @@ import os
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath('../../src'))
 
-# Dummy; needed so django does not freak out on doc building
-import django
-import django.core.management
-os.environ["DJANGO_SETTINGS_MODULE"] = "doc.django_settings"
-try:
-    # django 1.7
-    django.setup()
-except:
-    pass
-
-# Try building models graphic
-try:
-    import mini_buildd.models
-    mini_buildd.models.import_all()
-    django.core.management.call_command('graph_models', 'mini_buildd', outputfile="_static/mini_buildd_models.png")
-except Exception as e:
-    print("E: Creating models graphic failed (continuing anyway...): {e}".format(e=e))
+# Pseudo-configure django
+import mini_buildd.django_settings
+mini_buildd.django_settings.pseudo_configure()
 
 # do not import mini-buildd's version before path insertion -- otherwise
 # sphinx-build terminates with following message: "error: no such option: -b"
@@ -238,3 +224,6 @@ man_pages = [('index', 'mini-buildd', u'mini-buildd Documentation',
 
 # -- Custom options ------------------------------------------------------------
 todo_include_todos = True
+
+# reproducibility: Without this option, todo will add absolute build-time document paths
+todo_link_only = True

@@ -97,6 +97,11 @@ Configure
 
 	.. note:: Preparing chroots may take a while; if you cancel the HTTP request in your browser, preparation will continue anyway.
 
+.. note:: **Don't add or delete Uploader instances manually**; these
+          are bound to users, and come automatically when new
+          users are created. The administrator only changes
+          these instances to grant rights.
+
 
 Start and test
 ==============
@@ -112,6 +117,19 @@ Start and test
              the User's Quickstart).
 #. Optionally **build** the internal test packages.
 
+
+Epilogue
+========
+
+Going real (beyond the test repository)
+---------------------------------------
+
+When your are confident with the test repository setup, just
+create a new ``Repository`` instance with the actual ``ID`` you
+want to use for production.
+
+Think about how you want to do upload authorization for that
+production repository; see `authorization`_ below.
 
 *****************
 User's Quickstart
@@ -189,22 +207,44 @@ Install ``dput``, and setup your ``~/.dput.cf``::
 	? mini-buildd-tool HOST getdputconf >>~/.dput.cf
 
 
+.. _authorization:
+
 Authorize yourself to do package uploads
 ========================================
 
 Upload authorization works via a GnuPG ``allowed`` keyring.
+
+.. note:: For the administrator: See
+          ``/usr/share/doc/mini-buildd/examples/ssh-uploader-command``
+          should you be interested in manually setting up a
+          ssh-based authorization wrapper.
 
 As this depends on the setup of the mini-buildd instance and/or
 repository your are using, this cannot be answered generically.
 
 You will be able to upload to a repository when
 
-* your user account profile has your GnuPG key uploaded, and
-  your account was approved and enabled for the repository.
-* your key is included in the per-repository predefined GnuPG
-  keyrings.
-* the repository you upload for has authorization disabled
-  completely (like in the sandbox repository ``test``).
+1. the repository you upload for has **authorization disabled**
+   completely (like in the sandbox repository ``test``).
+2. your key is included in the **per-repository predefined GnuPG
+   keyrings**.
+3. your **django user account** profile has your GnuPG key uploaded, and
+   your account was approved and enabled for the repository.
+
+For the latter, the workflow is roughly:
+
+Workflow: Upload authorization via django user
+----------------------------------------------
+
+1. Create a new user account; either
+	 a. the user does it itself via the `web application's account manager </accounts/login/>`_, or
+	 b. the administrator creates the user via the `web application's configuration section </admin/mini_buildd/>`_.
+2. A GPG key is added to the user's Uploader instance; either
+	 a. the user uploads his GnuPG key via the `user's profile </mini_buildd/accounts/profile/>`_, or
+	 b. the administrator inserts the GnuPG key to the user's Uploader instance via the `web application's configuration section </admin/mini_buildd/>`_.
+3. The administrator (via `web application's configuration section </admin/mini_buildd/>`_)
+	 * verifies and approves the user's GnuPG key by *activating* the user's Uploader instance.
+	 * allows upload to specific repositories by *changing* the user's Uploader instance.
 
 
 Upload packages to mini-buildd

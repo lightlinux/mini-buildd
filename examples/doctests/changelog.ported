@@ -1,7 +1,7 @@
 test (1.0.1-1~test60+0) squeeze-test-snapshot; urgency=low
 
    * Automated port via mini-buildd (no changes).
-   * MINI_BUILDD: BACKPORT_MODE
+   * MINI_BUILDD_OPTION: ignore-lintian=true
 
  -- Mini Buildd <mini-buildd@buildd.intra>  Mon, 22 Apr 2013 13:35:59 +0200
 

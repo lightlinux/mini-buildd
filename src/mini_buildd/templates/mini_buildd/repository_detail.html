@@ -1,0 +1,65 @@
+{% extends "mini_buildd/base.html" %}
+{% load mini_buildd_tags %}
+
+{% block page_title %}Repository {{ object.identity }}{% endblock %}
+{% block page_sub_title %}Overview{% endblock %}
+{% block mbd_page_footer %} &raquo; {{ object.identity }}{% endblock %}
+
+{% block content %}
+
+	<div id="mbd_repository">
+		(<a title="Print uploaders" href="/mini_buildd/api?command=printuploaders&amp;repository={{ object.identity }}&amp;output=referer">Print uploaders</a>)
+
+		{% for d in object.distributions.all %}
+			<div class="inner-box">
+				<h1 class="inner-box-caption">
+					<a href="javascript:mbdToggleElement('mbd_dist_{{ d.base_source.codename }}','mbd_dist_{{ d.base_source.codename }}_header','(hide)','(show)')"
+						 style="color: white">
+						{{ d }}
+						<span id="mbd_dist_{{ d.base_source.codename }}_header" style="float: right">(show)</span>
+					</a>
+				</h1>
+
+				<div id="mbd_dist_{{ d.base_source.codename }}" style="display: none">
+					{% for s in object.layout.suiteoption_set.all %}
+						<h2>
+							<a href="javascript:mbdToggleElement('mbd_dist_{{ d.base_source.codename }}_{{ s.suite.name }}','mbd_dist_{{ d.base_source.codename }}_{{ s.suite.name }}_header','(hide)','(show)')">
+								<span style="color: black">{{ d.base_source.codename }}-{{ object.identity }}-{{ s.suite.name }}</span>:
+								<span class="emphasize-headline">{% mbd_repository_desc object d s %}</span>
+								{% if s.uploadable %}
+									<kbd style="font-size: 0.8em; color: purple">(U='{% mbd_repository_mandatory_version object d s %}')</kbd>
+								{% endif %}
+								{% if s.experimental %}
+									<kbd style="font-size: 0.8em; color: red">(E)</kbd>
+								{% endif %}
+								<span id="mbd_dist_{{ d.base_source.codename }}_{{ s.suite.name }}_header" style="float: right">(show)</span>
+								{% if s.migrates_to %}
+									<kbd style="font-size: 0.8em; color: green"> =&gt; {{ s.migrates_to.suite.name }}</kbd>
+								{% endif %}
+							</a>
+						</h2>
+						<ul id="mbd_dist_{{ d.base_source.codename }}_{{ s.suite.name }}" style="display: none">
+							<li>APT line
+								(Download:
+								<a href="/mini_buildd/api?command=getkey&output=plain">apt key</a>,
+								<a href="/mini_buildd/api?command=getsourceslist&suite={{ s.suite.name }}&codename={{ d.base_source.codename }}&with_extra_sources=False&repository={{ object.identity }}&with_deb_src=False&output=plain">deb</a>,
+								<a href="/mini_buildd/api?command=getsourceslist&suite={{ s.suite.name }}&codename={{ d.base_source.codename }}&with_extra_sources=False&repository={{ object.identity }}&with_deb_src=True&output=plain">deb+src</a>)
+								:
+								<pre class="pre-block">{% mbd_distribution_apt_line d object s %}</pre></li>
+							{% if s.uploadable %}
+								<li>Building with APT sources.list:<div class="pre-block"><pre>{% mbd_distribution_apt_sources_list d object s %}</pre></div></li>
+								<li>Building with APT preferences:<div class="pre-block"><pre>{% mbd_distribution_apt_preferences d object s %}</pre></div></li>
+							{% endif %}
+							<li>Browse repository:
+								<a href="/repositories/{{ object.identity }}/pool/">pool/</a>
+								<a href="/repositories/{{ object.identity }}/dists/{{ d.base_source.codename }}-{{ object.identity }}-{{ s.suite.name }}/">dists/</a>
+							</li>
+						</ul>
+					{% endfor %}
+				</div>
+			</div>
+		{% endfor %}
+
+	</div>
+
+{% endblock %}
