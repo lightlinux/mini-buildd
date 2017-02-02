@@ -531,8 +531,7 @@ the newest version available.
 </p>
 <p>
 So, in case you don't care about sparse dependencies, you can
-pimp the internal priority up here for all builds in this
-distribution.
+pimp the internal priority up here.
 </p>
 <p>
 <em>Example</em>:

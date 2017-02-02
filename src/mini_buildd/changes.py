@@ -296,11 +296,6 @@ class Changes(debian.deb822.Changes):
     def get_spool_id(self):
         return "{type}-{hash}".format(type=self.TYPE2NAME[self._type], hash=self._spool_hash)
 
-    @property
-    def magic_internal_apt_priority(self):
-        mres = re.search(r"\*\s*MINI_BUILDD:\s*INTERNAL_APT_PRIORITY:\s*([^*.\[\]]+)", self._magic_get_changes())
-        return int((re.sub(r"\s+", "", mres.group(1))).strip()) if mres else None
-
     def get_spool_dir(self):
         return os.path.join(mini_buildd.setup.SPOOL_DIR, self.get_spool_id())
 
