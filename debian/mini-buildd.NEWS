@@ -1,7 +1,7 @@
 mini-buildd (1.1.0) unstable; urgency=medium
 
-  mini-buildd >= 1.1.0 no longer removes '/etc/sudoers' in chroot snapshots prior
-  to builds.
+  (1) mini-buildd >= 1.1.0 no longer removes '/etc/sudoers' in chroot
+  snapshots prior to builds.
 
   This file was part of a workaround for a sbuild bug; it's present in
   chroots created with mini-buildd versions < 1.0.5.
@@ -12,7 +12,24 @@ mini-buildd (1.1.0) unstable; urgency=medium
   To re-create chroots, enter the Web configuration frontend as 'admin' user,
   and first run 'Remove' and then 'PCA' on each chroot instance.
 
- -- Stephan Sürken <absurd@debian.org>  Fri, 10 Oct 2014 16:41:50 +0000
+  (2) No by default binds to all (IPv4 and IPv6) local interfaces (for
+  both, HTTP and FTP).
+
+  Previously, only IPv4 interfaces were used by default. You can customize
+  this via the --bind option (HTTP) or in the Daemon instance config (FTP).
+
+  (3) The mandatory version appendix for rolling distributions now
+  defaults to ~CODENAME (i.e., like "~SID" or "~STRETCH").
+
+  Using 'CODENAME' alone may call for versioning trouble once you
+  convert the distribution to non-rolling (i.e., like "STRETCH" is
+  bigger for version comparison than "90" or "9").
+
+  This change does not affect existing instances; to follow this
+  recomendation in this case, you need to reconfigure the current resp.
+  rolling Distributions.
+
+ -- Stephan Sürken <absurd@olurdix.de>  Wed, 01 Feb 2017 17:05:45 +0000
 
 mini-buildd (1.0.5) unstable; urgency=medium
 
