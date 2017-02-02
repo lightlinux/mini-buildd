@@ -2,3 +2,4 @@
 #  ? git config [--global] merge.ours.driver true
 # in your repo to make it work
 debian/changelog merge=ours
+debian/gbp.conf merge=ours
