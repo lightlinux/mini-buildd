@@ -1,8 +1,23 @@
-mini-buildd (1.1.0~) UNRELEASED; urgency=medium
+mini-buildd (1.1.0) experimental; urgency=medium
 
-  * 1.1.x development kickoff.
+  1.1.x development ("python3, https, then some") kickoff.
 
- -- Stephan Sürken <absurd@debian.org>  Thu, 02 Feb 2017 10:24:22 +0000
+  This initial release merely has the 1.0.29 merge plus some initial
+  adaptions.
+
+  * [79f1750] Don't sync debian/changelog on merge.
+  * [86ac05a] Completely remove the "chroot sudo workaround".
+  * [29afa85] misc.py: codeversion guesser: Use ~CODENAME (was: CODENAME)
+    for rolling distributions.
+  * [5a87ca9] Change default bind values (http, ftp) to dual-stack
+    ":::PORT".
+  * [7c52c78] gbp.conf: Fix branch (from 1.0.x merge) to master && config
+    to merge=ours in .gitattributes.
+  * [7251b46] mini-buildd.NEWS: Add note about new default bind and new
+    default rolling dist version appendix.
+  * [2070a0a] builder.py: Delete forgotten merge marker from 1.0.x merger.
+
+ -- Stephan Sürken <absurd@debian.org>  Thu, 02 Feb 2017 15:56:22 +0000
 
 mini-buildd (1.0.29) unstable; urgency=medium
 
