@@ -119,7 +119,11 @@ def cmd_call(args):
     # Compute api call parameters
     http_args = {}
     for k in [k for k in args.__dict__.keys() if k not in ["terseness", "verbosity", "host", "reset_save_policy", "protocol", "command_class", "func"]]:
-        http_args[k] = args.__dict__[k]
+        # Under wheezy, value of version may be None if not given; urllib.urlencode() later will convert this value to string "None" (bummer).
+        # Strangely, this only happens when the ArgparseVersion2StdoutAction() workaround for --version is used (see above).
+        # So we need to check for None right here and use the empty string to make this compatible with wheezy.
+        # For 1.1.x/python3: Both the ArgparseVersion2StdoutAction() workaround above and this one must be removed.
+        http_args[k] = "" if args.__dict__[k] is None else args.__dict__[k]
 
     # Confirm if required by this call
     if args.command_class.CONFIRM:
