@@ -9,6 +9,8 @@
 #  $ ./devel update
 
 MBD_HOME=~mini-buildd
+# m-b-tool shortcut for testing calls
+MBD_TOOL="/usr/bin/mini-buildd-tool admin@localhost:8066"
 
 # Use first found mirror from sources as default
 _read_mirror()
@@ -239,12 +241,11 @@ mbd_check()
 mbd_checklive()
 {
 	_head "Checking basic src/mini-buildd-tool calls"
-	local mbd="/usr/bin/mini-buildd-tool localhost:8066"
 
-	${mbd} status
-	${mbd} getkey
-	${mbd} getdputconf
-	${mbd} getsourceslist wheezy
+	${MBD_TOOL} status
+	${MBD_TOOL} getkey
+	${MBD_TOOL} getdputconf
+	${MBD_TOOL} getsourceslist wheezy
 
 	# Some (live) HTML checks.
 	mbd_tidy
