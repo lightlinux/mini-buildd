@@ -331,6 +331,24 @@ mbd_updatecheck()
 	printf "Ok, updated (checked).\n"
 }
 
+# python API has nicer support for this.
+# Example call: MBD__PACKAGE="mbd-test-cpp" MBD__DIST="squeeze-test-unstable" [MBD__VERSION=1.2.3] ./devel wait4package
+mbd_wait4package()
+{
+	local sleep=30
+	printf "\nWaiting for ${MBD__PACKAGE}-${MBD__VERSION} to appear in ${MBD__DIST}:\n"
+	while true; do
+		# ${MBD_TOOL} show ${MBD__PACKAGE}
+		if ${MBD_TOOL} show ${MBD__PACKAGE} 2>/dev/null | grep "^${MBD__DIST}\b.*${MBD__VERSION}"; then
+			printf "\nOK, build\n"
+			break
+		else
+			printf "*"
+			sleep ${sleep}
+		fi
+	done
+}
+
 mbd_checkall()
 {
 	mbd_purge
