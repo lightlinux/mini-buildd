@@ -357,6 +357,11 @@ mbd_checkall()
 
 	time /usr/share/doc/mini-buildd/examples/auto-setup
 
+	# Migration of test packages
+	MBD__PACKAGE="mbd-test-cpp" MBD__DIST="jessie-test-unstable" mbd_wait4package
+	${MBD_TOOL} migrate mbd-test-cpp jessie-test-unstable --confirm=migrate
+	${MBD_TOOL} migrate mbd-test-cpp jessie-test-testing --confirm=migrate
+
 	# Extra test packages when available
 	[ ! -d ../test-packages/ ] || dput --unchecked --no-upload-log mini-buildd-$(hostname) ../test-packages/*.changes
 }
