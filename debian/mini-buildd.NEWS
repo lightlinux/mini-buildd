@@ -1,40 +1,54 @@
 mini-buildd (1.1.0) unstable; urgency=medium
 
-  (1) mini-buildd >= 1.1.0 no longer removes '/etc/sudoers' in chroot
-  snapshots prior to builds.
+  [1] You should "Remove && PCA" your chroots when upgrading from 1.0.x:
 
-  This file was part of a workaround for a sbuild bug; it's present in
-  chroots created with mini-buildd versions < 1.0.5.
+      mini-buildd >= 1.1.0 no longer removes '/etc/sudoers' in chroot
+      snapshots prior to builds.
 
-  In case you really have not yet re-created those chroots, you really
-  MUST DO IT NOW, else your build runs may gain root privileges.
+      This file was part of a workaround for a sbuild bug; it is present
+      in chroots created with mini-buildd versions < 1.0.5.
 
-  To re-create chroots, enter the Web configuration frontend as 'admin' user,
-  and first run 'Remove' and then 'PCA' on each chroot instance.
+      In case you really have not yet re-created those chroots, you really
+      MUST DO IT NOW, else your build runs may gain root privileges.
 
-  (2) No by default binds to all (IPv4 and IPv6) local interfaces (for
-  both, HTTP and FTP).
+      To re-create chroots, enter the Web configuration frontend as
+      'admin' user, and first run 'Remove' and then 'PCA' on each chroot
+      instance.
 
-  Previously, only IPv4 interfaces were used by default. You can customize
-  this via the --bind option (HTTP) or in the Daemon instance config (FTP).
+  [2] Now binds them all:
 
-  (3) The mandatory version appendix for rolling distributions now
-  defaults to ~CODENAME (i.e., like "~SID" or "~STRETCH").
+      mini-buildd now by default binds to all (IPv4 and IPv6) local
+      interfaces (for both, HTTP and FTP).
 
-  Using 'CODENAME' alone may call for versioning trouble once you
-  convert the distribution to non-rolling (i.e., like "STRETCH" is
-  bigger for version comparison than "90" or "9").
+      Previously, only IPv4 interfaces were used by default. You can customize
+      this via the --bind option (HTTP) or in the Daemon instance config (FTP).
 
-  This change does not affect existing instances; to follow this
-  recomendation in this case, you need to reconfigure the current resp.
-  rolling Distributions.
+  [3] Defaults: Now prefixes '~' to rolling:
 
-  (3) The default 'codename version' is now only a single number
-  for Debian distributions wheezy upwards (for example, '8'
-  instead of '80' for jessie), following the updated convention
-  in Debian.
+      The mandatory version appendix for rolling distributions now
+      defaults to ~CODENAME (i.e., like "~SID" or "~STRETCH").
 
- -- Stephan Sürken <absurd@olurdix.de>  Wed, 01 Feb 2017 17:05:45 +0000
+      Using 'CODENAME' alone may call for versioning trouble once you
+      convert the distribution to non-rolling (i.e., like "STRETCH" is
+      bigger for version comparison than "90" or "9").
+
+      This change does not affect existing instances; to follow this
+      recomendation in this case, you need to reconfigure the current resp.
+      rolling Distributions.
+
+  [4] Defaults: Adapt to '~bpo8' (one number) scheme.
+
+      The default 'codename version' is now only a single number
+      for Debian distributions wheezy upwards (for example, '8'
+      instead of '80' for jessie), following the updated convention
+      in Debian.
+
+      This change does not affect existing Source instances; to follow
+      this recomendation in this case, you need to reconfigure the current
+      resp.  Source, save and empty string for 'Codeversion override'
+      (Extras), and "PCA" the Source.
+
+ -- Stephan Sürken <absurd@debian.org>  Tue, 07 Feb 2017 17:31:27 +0000
 
 mini-buildd (1.0.5) unstable; urgency=medium
 
