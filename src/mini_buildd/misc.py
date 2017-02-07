@@ -378,9 +378,9 @@ def guess_codeversion(release):
     >>> guess_codeversion({"Origin": "Debian", "Version": "6.0.6", "Codename": "squeeze"})
     u'60'
     >>> guess_codeversion({"Origin": "Debian", "Version": "7.0", "Codename": "wheezy"})
-    u'70'
+    u'7'
     >>> guess_codeversion({"Origin": "Debian", "Version": "7.1", "Codename": "wheezy"})
-    u'70'
+    u'7'
     >>> guess_codeversion({"Origin": "Debian", "Codename": "jessie"})
     u'~JESSIE'
     >>> guess_codeversion({"Origin": "Debian", "Codename": "sid"})
@@ -391,11 +391,11 @@ def guess_codeversion(release):
     try:
         ver_split = release["Version"].split(".")
         number0 = ver_split[0]
-        number1 = ver_split[1].partition("r")[0]
+        number1 = ver_split[1].partition("r")[0]  # Some older Debian versions had an "r" in the number
         if release.get("Origin", None) == "Debian" and int(number0) >= 7:
-            return number0 + "0"
+            return number0  # Debian >= wheezy: '~testN': One number tells the codeversion
         else:
-            return number0 + number1
+            return number0 + number1  # Debian < wheezy, Ubuntu, maybe others: 1st plus 2nd number is needed
     except:
         return "~" + release["Codename"].upper()
 

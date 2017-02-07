@@ -29,6 +29,11 @@ mini-buildd (1.1.0) unstable; urgency=medium
   recomendation in this case, you need to reconfigure the current resp.
   rolling Distributions.
 
+  (3) The default 'codename version' is now only a single number
+  for Debian distributions wheezy upwards (for example, '8'
+  instead of '80' for jessie), following the updated convention
+  in Debian.
+
  -- Stephan Sürken <absurd@olurdix.de>  Wed, 01 Feb 2017 17:05:45 +0000
 
 mini-buildd (1.0.5) unstable; urgency=medium
