@@ -1084,7 +1084,7 @@ DscIndices: Sources Release . .gz .bz2
             rob_dist = suite.mbd_get_distribution_string(self, distribution, rollback=rollback)
             src_pkg = self._mbd_package_find(pkg_show, distribution=rob_dist, version=version)
             if src_pkg is None:
-                raise Exception("Package '{p}' has no such version in rollback '{r}'".format(p=package, r=rollback))
+                raise Exception("Package '{p} ({v})' has no such version in rollback '{r}'".format(p=package, v="*" if version is None else version, r=rollback))
 
             # Actually migrate package in reprepro
             reprepro_output += self._mbd_reprepro().migrate(package, rob_dist, dst_dist, version)
@@ -1097,7 +1097,7 @@ DscIndices: Sources Release . .gz .bz2
             # Check if package is in src_dst
             src_pkg = self._mbd_package_find(pkg_show, distribution=src_dist, version=version)
             if src_pkg is None:
-                raise Exception("Package '{p}' not in '{d}'".format(p=package, d=src_dist))
+                raise Exception("Package '{p} ({v})' not in '{d}'".format(p=package, v="*" if version is None else version, d=src_dist))
 
             # Check that version is not already migrated
             dst_pkg = self._mbd_package_find(pkg_show, distribution=dst_dist)

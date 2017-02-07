@@ -9,6 +9,8 @@
 #  $ ./devel update
 
 MBD_HOME=~mini-buildd
+# m-b-tool shortcut for testing calls
+MBD_TOOL="/usr/bin/mini-buildd-tool admin@localhost:8066"
 
 # Use first found mirror from sources as default
 _read_mirror()
@@ -239,12 +241,11 @@ mbd_check()
 mbd_checklive()
 {
 	_head "Checking basic src/mini-buildd-tool calls"
-	local mbd="/usr/bin/mini-buildd-tool localhost:8066"
 
-	${mbd} status
-	${mbd} getkey
-	${mbd} getdputconf
-	${mbd} getsourceslist wheezy
+	${MBD_TOOL} status
+	${MBD_TOOL} getkey
+	${MBD_TOOL} getdputconf
+	${MBD_TOOL} getsourceslist wheezy
 
 	# Some (live) HTML checks.
 	mbd_tidy
@@ -330,6 +331,24 @@ mbd_updatecheck()
 	printf "Ok, updated (checked).\n"
 }
 
+# python API has nicer support for this.
+# Example call: MBD__PACKAGE="mbd-test-cpp" MBD__DIST="squeeze-test-unstable" [MBD__VERSION=1.2.3] ./devel wait4package
+mbd_wait4package()
+{
+	local sleep=30
+	printf "\nWaiting for ${MBD__PACKAGE}-${MBD__VERSION} to appear in ${MBD__DIST}:\n"
+	while true; do
+		# ${MBD_TOOL} show ${MBD__PACKAGE}
+		if ${MBD_TOOL} show ${MBD__PACKAGE} 2>/dev/null | grep "^${MBD__DIST}\b.*${MBD__VERSION}"; then
+			printf "\nOK, build\n"
+			break
+		else
+			printf "*"
+			sleep ${sleep}
+		fi
+	done
+}
+
 mbd_checkall()
 {
 	mbd_purge
@@ -337,6 +356,11 @@ mbd_checkall()
 	mbd_pythonkeyringtestconfig
 
 	time /usr/share/doc/mini-buildd/examples/auto-setup
+
+	# Migration of test packages
+	MBD__PACKAGE="mbd-test-cpp" MBD__DIST="jessie-test-unstable" mbd_wait4package
+	${MBD_TOOL} migrate mbd-test-cpp jessie-test-unstable --confirm=migrate
+	${MBD_TOOL} migrate mbd-test-cpp jessie-test-testing --confirm=migrate
 
 	# Extra test packages when available
 	[ ! -d ../test-packages/ ] || dput --unchecked --no-upload-log mini-buildd-$(hostname) ../test-packages/*.changes
