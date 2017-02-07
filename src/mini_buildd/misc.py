@@ -390,12 +390,12 @@ def guess_codeversion(release):
     """
     try:
         ver_split = release["Version"].split(".")
-        digit0 = ver_split[0]
-        digit1 = ver_split[1].partition("r")[0]
-        if release.get("Origin", None) == "Debian" and int(digit0) >= 7:
-            return digit0 + "0"
+        number0 = ver_split[0]
+        number1 = ver_split[1].partition("r")[0]
+        if release.get("Origin", None) == "Debian" and int(number0) >= 7:
+            return number0 + "0"
         else:
-            return digit0 + digit1
+            return number0 + number1
     except:
         return "~" + release["Codename"].upper()
 
