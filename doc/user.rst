@@ -244,7 +244,7 @@ availability*).
 For example, one can have configuration-like little python
 helper scripts, like for bulk migrating a package::
 
-	#!/usr/bin/python
+	#!/usr/bin/python3
 	from mini_buildd.api.client_1_0 import Daemon
 	Daemon("myhost.some.where").login("myuser").bulk_migrate(["mypkg1", "mypkg2"], ["myrepoid"], ["jessie"], ["unstable", "testing"])
 
@@ -257,7 +257,7 @@ Access via https proxy
 If you happen to have setup an https proxy for your mini-buildd
 instance (see examples), the above example could be written as::
 
-	#!/usr/bin/python
+	#!/usr/bin/python3
 	from mini_buildd.api.client_1_0 import Daemon
 	Daemon("myhost.some.where", port=443, proto="https").login("myuser").bulk_migrate(["mypkg1", "mypkg2"], ["myrepoid"], ["jessie"], ["unstable", "testing"])
 
