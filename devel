@@ -57,7 +57,7 @@ mbd_installdeps()
 	mk-build-deps --install --root-cmd=sudo --remove --tool="apt-get --no-install-recommends --target-release='*'"
 
 	# Extra tools needed for checks
-	sudo apt-get install --no-install-recommends pycodestyle pylint pychecker pyflakes python-apt python-bs4 python-keyrings.alt
+	sudo apt-get install --no-install-recommends pycodestyle pylint3 pychecker pyflakes3 python-apt python-bs4 python-keyrings.alt
 	# Extra tools needed vc and package building
 	sudo apt-get install --no-install-recommends git git-buildpackage
 	# binary package dependecies so we can just dpkg -i for testing
@@ -153,10 +153,10 @@ mbd_pydoctests()
 
 mbd_pyflakes()
 {
-	_check_prog pyflakes
+	_check_prog pyflakes3
 	(
 		pyenv
-		pyflakes src/mini-buildd src/mini_buildd/
+		pyflakes3 src/mini-buildd src/mini_buildd/
 	)
 }
 
@@ -165,7 +165,7 @@ mbd_pylintgeneratedmembers()
 	# Generate all identifiers with "has no xxx member" error. If
 	# needed, manually add those that are _actually_
 	# false-positive due to django to -> .pylintrc.
-	for o in $(${0} pylint | grep "has no.*member" | cut -d"'" -f4 | sort | uniq); do
+	for o in $(${0} pylint3 | grep "has no.*member" | cut -d"'" -f4 | sort | uniq); do
 		printf "${o},"
 	done
 	printf "\n"
@@ -174,10 +174,10 @@ mbd_pylintgeneratedmembers()
 mbd_pylint()
 {
 	[ "$(lsb_release -s -c)" != "squeeze" ] || { printf "W: Skipping pylint on squeeze\n" >&2; return; }
-	_check_prog pylint
+	_check_prog pylint3
 	(
 		pyenv
-		pylint setup.py src/mini-buildd src/mini-buildd-tool src/mini_buildd/
+		pylint3 setup.py src/mini-buildd src/mini-buildd-tool src/mini_buildd/
 	)
 }
 
