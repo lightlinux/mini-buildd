@@ -39,6 +39,8 @@ Depends: ${misc:Depends},
          python3-django (>= 1.7.4),
          python3-django (<< 1:1.11),
          python3-django-registration (>= 2.0.4)
+Conflicts: python-mini-buildd
+Replaces: python-mini-buildd
 Description: minimal build daemon - python library and user tool
  Mini-buildd is an easy-to-configure autobuilder and
  repository for deb packages.
