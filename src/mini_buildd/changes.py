@@ -328,7 +328,9 @@ class Changes(debian.deb822.Changes):
         """
         try:
             LOG.info("Saving changes: {f}".format(f=self._file_path))
-            self.dump(fd=open(self._file_path, "w+"), encoding=mini_buildd.setup.CHAR_ENCODING)
+            with open(self._file_path, "w+", encoding=mini_buildd.setup.CHAR_ENCODING) as f:
+                f.write(self.dump())
+
             LOG.info("Signing changes: {f}".format(f=self._file_path))
             if gnupg:
                 gnupg.sign(self._file_path)
