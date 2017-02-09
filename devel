@@ -125,8 +125,6 @@ mbd_pymisc()
 	local f regex
 	for f in src/mini-buildd $(find src/mini_buildd -type f -name "*.py"); do
 		for regex in \
-			^from\ __future__\ import\ unicode_literals \
-			^from\ __future__\ import\ absolute_import \
 			^\#\ -\\*-\ coding:\ utf-8\ -\\*-; do
 			printf "Checking '${f}' for '${regex}'..."
 			grep --quiet "${regex}" "${f}"
