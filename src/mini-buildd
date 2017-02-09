@@ -68,7 +68,7 @@ class PIDFile(object):
     def __init__(self, pidfile_path, acquire_timeout=5):
         self.pidfile = daemon.runner.make_pidlockfile(pidfile_path, acquire_timeout)
         if self._is_pidfile_stale(self.pidfile, name="mini-buildd"):
-            LOG.warn("Fixing STALE PID file: {p}".format(p=self))
+            LOG.warning("Fixing STALE PID file: {p}".format(p=self))
             self.pidfile.break_lock()
         self.pidfile.acquire(timeout=acquire_timeout)
 
@@ -342,7 +342,7 @@ try:
     MAIN = Main()
     if "profile" in mini_buildd.setup.DEBUG:
         PROFILE = os.path.join(mini_buildd.setup.LOG_DIR, "daemon.profile")
-        LOG.warn("PROFILE DEBUG MODE: Profiling to '{p}'".format(p=PROFILE))
+        LOG.warning("PROFILE DEBUG MODE: Profiling to '{p}'".format(p=PROFILE))
         import cProfile  # pylint: disable=wrong-import-position,wrong-import-order
         cProfile.run("MAIN.run()", PROFILE)
     else:

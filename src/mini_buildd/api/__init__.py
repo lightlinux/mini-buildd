@@ -209,7 +209,7 @@ Builder: {b_len} building
     def __test_msglog(self):
         self.msglog.debug("DEBUG USER MESSAGE")
         self.msglog.info("INFO USER MESSAGE")
-        self.msglog.warn("WARN USER MESSAGE")
+        self.msglog.warning("WARN USER MESSAGE")
         self.msglog.error("ERROR USER MESSAGE")
         self.msglog.critical("CRITICAL USER MESSAGE")
 
@@ -630,7 +630,7 @@ class SetUserKey(Command):
         uploader.Admin.mbd_prepare(self.request, uploader)
         uploader.Admin.mbd_check(self.request, uploader)
         self.msglog.info("Uploader profile changed: {u}".format(u=uploader))
-        self.msglog.warn("Your uploader profile must be (re-)activated by the mini-buildd staff before you can actually use it.")
+        self.msglog.warning("Your uploader profile must be (re-)activated by the mini-buildd staff before you can actually use it.")
 
 
 class Subscription(Command):

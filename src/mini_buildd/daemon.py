@@ -471,12 +471,12 @@ class Daemon(object):
                 if p.api_check():
                     self.last_packages.append(p)
                 else:
-                    LOG.warn("Removing (new API) from last package info: {p}".format(p=p))
+                    LOG.warning("Removing (new API) from last package info: {p}".format(p=p))
             for b in last_builds:
                 if b.api_check():
                     self.last_builds.append(b)
                 else:
-                    LOG.warn("Removing (new API) from last builds info: {b}".format(b=b))
+                    LOG.warning("Removing (new API) from last builds info: {b}".format(b=b))
         except Exception as e:
             mini_buildd.setup.log_exception(LOG, "Error adding persisted last builds/packages (ignoring)", e, logging.WARN)
 
@@ -493,7 +493,7 @@ class Daemon(object):
                     self.thread = mini_buildd.misc.run_as_thread(run, name="packager")
                     msglog.info("Daemon started.")
                 else:
-                    msglog.warn("Daemon is deactivated (won't start). Please (re)configure your instance as superuser.")
+                    msglog.warning("Daemon is deactivated (won't start). Please (re)configure your instance as superuser.")
             else:
                 msglog.info("Daemon already running.")
 

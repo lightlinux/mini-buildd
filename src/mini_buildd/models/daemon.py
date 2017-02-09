@@ -284,7 +284,7 @@ Manage your account : {url}accounts/login/
                     m_to_raw.append(address_raw)
                     msglog.info("Notify: Adding {t} address: {a}".format(t=typ, a=address))
             else:
-                msglog.warn("Notify: Skipping {t} address: {a}: Not allowed (only '{r}')".format(t=typ, a=address, r=self.allow_emails_to))
+                msglog.warning("Notify: Skipping {t} address: {a}: Not allowed (only '{r}')".format(t=typ, a=address, r=self.allow_emails_to))
 
         def get_subscriptions():
             package = changes.get("Source", None)

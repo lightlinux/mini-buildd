@@ -106,7 +106,7 @@ class Status(object):
 
 def _skip_if_in_debug(key, func, *args, **kwargs):
     if key in mini_buildd.setup.DEBUG:
-        LOG.warn("DEBUG MODE('{k}'): Skipping: {f} {args} {kwargs}".format(k=key, f=func, args=args, kwargs=kwargs))
+        LOG.warning("DEBUG MODE('{k}'): Skipping: {f} {args} {kwargs}".format(k=key, f=func, args=args, kwargs=kwargs))
     else:
         return func(*args, **kwargs)
 
@@ -694,7 +694,7 @@ class Keyring(object):
             p={"A": "Always", "V": "Never"}.get(self._save_policy, "Ask"))
 
     def reset_save_policy(self):
-        LOG.warn("Resetting save policy in '{k}' back to 'Ask'.".format(k=qualname(self._keyring)))
+        LOG.warning("Resetting save policy in '{k}' back to 'Ask'.".format(k=qualname(self._keyring)))
         if self._save_policy:
             self._keyring.delete_password(self._service, self._SAVE_POLICY_KEY)
             self._save_policy = None

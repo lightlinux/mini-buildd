@@ -174,7 +174,7 @@ def sbuild_keys_workaround():
             LOG.debug("/var/lib/sbuild/apt-keys/sbuild-key.pub: Already exists, skipping")
         else:
             t = tempfile.mkdtemp()
-            LOG.warn("One-time generation of sbuild keys (may take some time)...")
+            LOG.warning("One-time generation of sbuild keys (may take some time)...")
             Call(["sbuild-update", "--keygen"], env=taint_env({"HOME": t})).log().check()
             shutil.rmtree(t)
             LOG.info("One-time generation of sbuild keys done")

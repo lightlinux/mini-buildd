@@ -57,7 +57,7 @@ class Incoming(object):
                         shutil.rmtree(f)
                     else:
                         os.remove(f)
-                    LOG.warn("Cruft file (not in any changes file) removed: {f}".format(f=f))
+                    LOG.warning("Cruft file (not in any changes file) removed: {f}".format(f=f))
                 except Exception as e:
                     mini_buildd.setup.log_exception(LOG, "Can't remove cruft from incoming: {f}".format(f=f), e, logging.CRITICAL)
 

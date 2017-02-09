@@ -178,7 +178,7 @@ try:
     OLD_CREDS_FILE = os.path.join(os.getenv("HOME"), ".mini-buildd-tool.credentials")
     if os.path.exists(OLD_CREDS_FILE):
         os.remove(OLD_CREDS_FILE)
-        LOG.warn("Obsoleted creds file removed: {f}".format(f=OLD_CREDS_FILE))
+        LOG.warning("Obsoleted creds file removed: {f}".format(f=OLD_CREDS_FILE))
 
     # Generate global keyring object
     KEYRING = mini_buildd.misc.Keyring("mini-buildd")

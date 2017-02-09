@@ -133,7 +133,7 @@ class BaseGnuPG(object):
         if os.path.exists(keyring):
             self.gpg_cmd += ["--keyring", keyring]
         else:
-            LOG.warn("Skipping non-existing keyring file: {k}".format(k=keyring))
+            LOG.warning("Skipping non-existing keyring file: {k}".format(k=keyring))
 
     def verify(self, signature, data=None):
         try:

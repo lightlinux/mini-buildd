@@ -28,7 +28,7 @@ class WebApp(django.core.handlers.wsgi.WSGIHandler):
         try:
             django.core.management.call_command("migrate", interactive=False, run_syncdb=True, verbosity=0)
         except django.db.OperationalError as e:
-            LOG.warn("OperationalError on migrate ({}). Retrying with '--fake-initial'...".format(e))
+            LOG.warning("OperationalError on migrate ({}). Retrying with '--fake-initial'...".format(e))
             django.core.management.call_command("migrate", interactive=False, run_syncdb=True, fake_initial=True, verbosity=0)
 
         LOG.info("Clean up python-registration (cleanupregistration)...")

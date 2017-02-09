@@ -78,7 +78,7 @@ class Package(mini_buildd.misc.Status):
 
         # Authenticate
         if self.repository.allow_unauthenticated_uploads:
-            LOG.warn("Unauthenticated uploads allowed. Using '{c}' unchecked".format(c=self.changes.file_name))
+            LOG.warning("Unauthenticated uploads allowed. Using '{c}' unchecked".format(c=self.changes.file_name))
         else:
             self.daemon.keyrings.get_uploaders()[self.repository.identity].verify(self.changes.file_path)
 

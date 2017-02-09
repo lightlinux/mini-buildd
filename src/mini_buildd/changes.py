@@ -83,7 +83,7 @@ class Changes(debian.deb822.Changes):
             Compat parse support for old style "magic" options.
             """
             def warning(magic, option):
-                LOG.warn("Deprecated \"magic\" option \"{m}\" found. Please use new-style option \"{o}\" instead (see user manual).".format(m=magic, o=option))
+                LOG.warning("Deprecated \"magic\" option \"{m}\" found. Please use new-style option \"{o}\" instead (see user manual).".format(m=magic, o=option))
 
             magic_auto_backports = re.search(r"\*\s*MINI_BUILDD:\s*AUTO_BACKPORTS:\s*([^*.\[\]]+)", self._top_changes)
             if magic_auto_backports:
