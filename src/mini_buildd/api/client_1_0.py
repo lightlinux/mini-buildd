@@ -3,8 +3,9 @@
 import sys
 import time
 import pickle
-import urllib.request, urllib.error, urllib.parse
+import urllib.request
 import urllib.parse
+import urllib.error
 import re
 import http.client
 

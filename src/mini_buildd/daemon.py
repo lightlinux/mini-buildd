@@ -8,7 +8,9 @@ import glob
 import threading
 import queue
 import collections
-import urllib.request, urllib.error, urllib.parse
+import urllib.request
+import urllib.parse
+import urllib.error
 import logging
 
 import debian.deb822

@@ -18,9 +18,9 @@ import tempfile
 import hashlib
 import base64
 import re
-import urllib.request, urllib.parse, urllib.error
-import urllib.request, urllib.error, urllib.parse
+import urllib.request
 import urllib.parse
+import urllib.error
 import getpass
 import logging
 import logging.handlers

@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import tempfile
-import urllib.request, urllib.error, urllib.parse
+import urllib.request
+import urllib.parse
+import urllib.error
 import logging
 import datetime
 import contextlib
