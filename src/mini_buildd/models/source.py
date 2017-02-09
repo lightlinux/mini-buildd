@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
-
 import tempfile
 import urllib.request, urllib.error, urllib.parse
 import logging

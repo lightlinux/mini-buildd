@@ -3,8 +3,6 @@
 Run reprepro commands.
 """
 
-
-
 import os
 import shutil
 import threading

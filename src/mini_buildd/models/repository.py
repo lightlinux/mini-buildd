@@ -2,8 +2,6 @@
 # django false-positives:
 # pylint: disable=unexpected-keyword-arg,no-value-for-parameter
 
-
-
 import os
 import copy
 import contextlib

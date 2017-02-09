@@ -36,8 +36,6 @@ conflicts with method names form the django model's class, but
 still keeps the logic where it belongs.
 """
 
-
-
 import datetime
 import re
 import pickle

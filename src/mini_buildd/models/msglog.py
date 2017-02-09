@@ -25,8 +25,6 @@ Log coding idioms to be used::
   MsgLog(LOG, request).info("Dear user: blah blah")
 """
 
-
-
 import logging
 import inspect
 

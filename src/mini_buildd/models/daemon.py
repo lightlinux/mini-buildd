@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
-
 import re
 import socket
 import email.utils
