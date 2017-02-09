@@ -4,10 +4,10 @@ here. This is not part of mini-buildd.
 """
 
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-from __future__ import absolute_import
 
-import urllib2
+
+
+import urllib.request, urllib.error, urllib.parse
 
 import bs4
 
@@ -22,7 +22,7 @@ class DebianPackageTracker(object):
         self.info = {}
 
         pkg_url = "{b}/pkg/{p}".format(b=tracker_url, p=src_package)
-        soup = bs4.BeautifulSoup(urllib2.urlopen(pkg_url).read())
+        soup = bs4.BeautifulSoup(urllib.request.urlopen(pkg_url).read())
         version_tags = soup.findAll("span", {"class": "versions-repository"})
         for d in version_tags:
             codename = d['title'].split("(")[1].split(" ")[0].translate({ord(")"): None})

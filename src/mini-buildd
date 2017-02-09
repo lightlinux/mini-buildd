@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-from __future__ import absolute_import
+
+
 
 import signal
 import os
@@ -246,7 +246,7 @@ Comma-separated list of special debugging options:
             warnings.simplefilter("default")
 
         # Finally, log all errors now that occurred while setting up loggers
-        for typ, err in loggers_failed.items():
+        for typ, err in list(loggers_failed.items()):
             LOG.critical("Logger {t} failed: {e}".format(t=typ, e=err))
 
     def _setup_environment(self):
@@ -278,7 +278,7 @@ Comma-separated list of special debugging options:
 
         # Daemonize early
         if not self._args.foreground:
-            daemon.DaemonContext(working_directory=self._args.home, umask=0022).open()
+            daemon.DaemonContext(working_directory=self._args.home, umask=0o022).open()
         self._setup()
         self._setup_environment()
 

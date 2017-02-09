@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-from __future__ import absolute_import
+
+
 
 import tempfile
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import logging
 import datetime
 import contextlib
@@ -103,7 +103,7 @@ Use the 'directory' notation with exactly one trailing slash (like 'http://examp
             MsgLog(LOG, request).debug("Downloading '{u}' to '{t}'".format(u=url, t=release_file.name))
             try:
                 release_file.write(mini_buildd.misc.urlopen_ca_certificates(url).read())
-            except urllib2.HTTPError as e:
+            except urllib.error.HTTPError as e:
                 if e.code == 404:
                     MsgLog(LOG, request).debug("{a}: '404 Not Found' on '{u}'".format(a=self, u=url))
                     # Not for us
@@ -136,7 +136,7 @@ Use the 'directory' notation with exactly one trailing slash (like 'http://examp
             # (like ourselves ;). Any archive _must_ have dists/ anyway.
             try:
                 mini_buildd.misc.urlopen_ca_certificates("{u}/dists/".format(u=self.url))
-            except urllib2.HTTPError as e:
+            except urllib.error.HTTPError as e:
                 # Allow HTTP 4xx client errors through; these might be valid use cases like:
                 # 404 Usage Information: apt-cacher-ng
                 if not 400 <= e.code <= 499:
@@ -378,7 +378,7 @@ codeversion is only used for base sources.""")
 
     def mbd_is_matching_release(self, request, release):
         "Check that this release file matches us."
-        for key, value in self.mbd_release_file_values().items():
+        for key, value in list(self.mbd_release_file_values().items()):
             # Check identity: origin, codename
             MsgLog(LOG, request).debug("Checking '{k}: {v}'".format(k=key, v=value))
             if value != release[key]:
@@ -411,7 +411,7 @@ codeversion is only used for base sources.""")
         # See man apt_preferences for the field/pin mapping
         supported_fields = {"Origin": "o", "Codename": "n", "Suite": "a", "Archive": "a", "Version": "v", "Label": "l"}
         pins = []
-        for key, value in self.mbd_release_file_values().items():
+        for key, value in list(self.mbd_release_file_values().items()):
             k = supported_fields.get(key)
             if k:
                 pins.append("{k}={v}".format(k=k, v=value))

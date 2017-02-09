@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-from __future__ import absolute_import
+
+
 
 import os
 import re
@@ -109,7 +109,7 @@ class BaseGnuPG(object):
 
     def get_first_sec_colon(self, type_regex):
         try:
-            return self.get_sec_colons(type_regex=type_regex).next()
+            return next(self.get_sec_colons(type_regex=type_regex))
         except StopIteration:
             return Colons("")
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-from __future__ import absolute_import
+
+
 
 import copy
 import os
@@ -117,7 +117,7 @@ chroots (with <kbd>qemu-user-static</kbd> installed).
                                             f=self.mbd_get_backend().mbd_backend_flavor())
 
     def mbd_get_backend(self):
-        for cls, sub in {"filechroot": [], "dirchroot": [], "lvmchroot": ["looplvmchroot"], "btrfssnapshotchroot": []}.items():
+        for cls, sub in list({"filechroot": [], "dirchroot": [], "lvmchroot": ["looplvmchroot"], "btrfssnapshotchroot": []}.items()):
             if hasattr(self, cls):
                 c = getattr(self, cls)
                 for s in sub:

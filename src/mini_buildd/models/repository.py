@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # django false-positives:
 # pylint: disable=unexpected-keyword-arg,no-value-for-parameter
-from __future__ import unicode_literals
-from __future__ import absolute_import
+
+
 
 import os
 import copy
@@ -138,7 +138,7 @@ lintian) as non-lethal, and will install anyway.
         if rollback is None:
             return dist_string
         else:
-            if rollback not in range(self.rollback):
+            if rollback not in list(range(self.rollback)):
                 raise Exception("Rollback number out of range: {r} ({m})".format(r=rollback, m=self.rollback))
             return "{d}-rollback{r}".format(d=dist_string, r=rollback)
 
@@ -232,13 +232,13 @@ packages (to unstable,experimental,..) aimed for Debian.
             snapshot, created = Suite.mbd_get_or_create(msglog, name="snapshot")
             experimental, created = Suite.mbd_get_or_create(msglog, name="experimental")
 
-            for name, extra_options in {"Default": {"stable": "Rollback: 6\n",
+            for name, extra_options in list({"Default": {"stable": "Rollback: 6\n",
                                                     "hotfix": "Rollback: 4\n",
                                                     "testing": "Rollback: 3\n",
                                                     "unstable": "Rollback: 9\n",
                                                     "snapshot": "Rollback: 12\n",
                                                     "experimental": "Rollback: 6\n"},
-                                        "Default (no rollbacks)": {}}.items():
+                                        "Default (no rollbacks)": {}}.items()):
 
                 default_layout, created = Layout.mbd_get_or_create(msglog, name=name)
                 if created:
@@ -913,7 +913,7 @@ DscIndices: Sources Release . .gz .bz2
         for d in self.distributions.all():
             for s in self.layout.suiteoption_set.all():
                 rollbacks = s.rollback if with_rollbacks else 0
-                for rollback in [None] + range(rollbacks):
+                for rollback in [None] + list(range(rollbacks)):
                     dist_str = s.mbd_get_distribution_string(self, d, rollback)
                     if re.search(dist_regex, dist_str):
                         result.extend(self._mbd_reprepro().list(pattern, dist_str, typ=typ))
@@ -1006,7 +1006,7 @@ DscIndices: Sources Release . .gz .bz2
                 values["rollbacks"].append(r)
             else:
                 # Copy all reprepro values
-                for k, v in r.items():
+                for k, v in list(r.items()):
                     values[k] = v
 
                 # Extra: URL, is_migrated flag
@@ -1213,7 +1213,7 @@ DscIndices: Sources Release . .gz .bz2
         self._mbd_reprepro().install_dsc(changes.dsc_file_name, dist_str)
 
         # Second, install all build results
-        for bres in bresults.values():
+        for bres in list(bresults.values()):
             # Don't try install if skipped
             if bres.get("Sbuild-Status") == "skipped":
                 LOG.info("Skipped: {p} ({d})".format(p=bres.get_pkg_id(with_arch=True), d=bres["Distribution"]))

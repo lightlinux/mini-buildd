@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-from __future__ import absolute_import
+
+
 
 import os
 import shutil
@@ -42,7 +42,7 @@ class Package(mini_buildd.misc.Status):
     def __unicode__(self):
         def arch_status():
             result = []
-            for key, _r in self.requests.items():
+            for key, _r in list(self.requests.items()):
                 p = ""
                 if key in self.success:
                     p = "+"
@@ -91,7 +91,7 @@ class Package(mini_buildd.misc.Status):
         self.requests = self.changes.gen_buildrequests(self.daemon.model, self.repository, self.distribution, self.suite)
 
         # Upload buildrequests
-        for _key, breq in self.requests.items():
+        for _key, breq in list(self.requests.items()):
             try:
                 breq.upload_buildrequest(self.daemon.model.mbd_get_http_hopo())
             except Exception as e:
@@ -154,7 +154,7 @@ class Package(mini_buildd.misc.Status):
 
     def move_to_pkglog(self):
         # Archive build results and request
-        for _arch, c in self.success.items() + self.failed.items() + self.requests.items():
+        for _arch, c in list(self.success.items()) + list(self.failed.items()) + list(self.requests.items()):
             c.move_to_pkglog(self.get_status() == self.INSTALLED, rejected=self.get_status() == self.REJECTED)
         # Archive incoming changes
         self.changes.move_to_pkglog(self.get_status() == self.INSTALLED, rejected=self.get_status() == self.REJECTED)
@@ -184,7 +184,7 @@ class Package(mini_buildd.misc.Status):
                 s=bres.bres_stat,
                 b=os.path.join(self.daemon.model.mbd_get_http_url(),
                                "log",
-                               unicode(bres.get_pkglog_dir(self.get_status() == self.INSTALLED)),
+                               str(bres.get_pkglog_dir(self.get_status() == self.INSTALLED)),
                                bres.buildlog_name))
 
         results = header(self.__unicode__(), "=")
@@ -192,13 +192,13 @@ class Package(mini_buildd.misc.Status):
 
         if self.failed:
             results += header("Failed builds")
-            for arch, bres in self.failed.items():
+            for arch, bres in list(self.failed.items()):
                 results += bres_result(arch, bres)
             results += "\n"
 
         if self.success:
             results += header("Successful builds")
-            for arch, bres in self.success.items():
+            for arch, bres in list(self.success.items()):
                 results += bres_result(arch, bres)
             results += "\n"
 
@@ -208,7 +208,7 @@ class Package(mini_buildd.misc.Status):
         if self.port_report:
             results += "\n"
             results += header("Port Report")
-            results += "\n".join(("{d:<25}: {r}".format(d=d, r=r) for d, r in self.port_report.items()))
+            results += "\n".join(("{d:<25}: {r}".format(d=d, r=r) for d, r in list(self.port_report.items())))
 
         self.daemon.model.mbd_notify(
             self.__unicode__(),
@@ -230,7 +230,7 @@ class LastPackage(mini_buildd.misc.API):
 
         self.started = package.started
         self.took = package.took
-        self.log = os.path.join("/mini_buildd/log", os.path.dirname(unicode(package.changes.get_pkglog_dir(installed=True))))
+        self.log = os.path.join("/mini_buildd/log", os.path.dirname(str(package.changes.get_pkglog_dir(installed=True))))
 
         self.changes = {}
         for k in ["source", "distribution", "version"]:
@@ -240,13 +240,13 @@ class LastPackage(mini_buildd.misc.API):
         self.status_desc = package.status_desc
 
         self.requests = {}
-        for a, _r in package.requests.items():
+        for a, _r in list(package.requests.items()):
             self.requests[a] = {}
 
         def cp_bres(src, dst):
-            for a, r in src.items():
+            for a, r in list(src.items()):
                 dst[a] = {"bres_stat": r.bres_stat,
-                          "log": os.path.join("/log", unicode(r.get_pkglog_dir(package.get_status() == package.INSTALLED)), r.buildlog_name)}
+                          "log": os.path.join("/log", str(r.get_pkglog_dir(package.get_status() == package.INSTALLED)), r.buildlog_name)}
 
         self.success = {}
         cp_bres(package.success, self.success)
@@ -288,7 +288,7 @@ def run(daemon, changes):
                 package.set_status(package.INSTALLED)
                 package_close(daemon, package)
         except Exception as e:
-            package.set_status(package.FAILED, unicode(e))
+            package.set_status(package.FAILED, str(e))
             package_close(daemon, package)
             mini_buildd.setup.log_exception(LOG, "Package '{p}' FAILED".format(p=pid), e)
 
@@ -302,6 +302,6 @@ def run(daemon, changes):
             package.precheck()
             package.set_status(package.BUILDING)
         except Exception as e:
-            package.set_status(package.REJECTED, unicode(e))
+            package.set_status(package.REJECTED, str(e))
             package_close(daemon, package)
             mini_buildd.setup.log_exception(LOG, "Package '{p}' REJECTED".format(p=pid), e)

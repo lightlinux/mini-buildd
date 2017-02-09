@@ -35,8 +35,8 @@ models directly, but must be prefixed with "mbd\_". This avoids
 conflicts with method names form the django model's class, but
 still keeps the logic where it belongs.
 """
-from __future__ import unicode_literals
-from __future__ import absolute_import
+
+
 
 import datetime
 import re

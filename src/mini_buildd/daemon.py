@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-from __future__ import absolute_import
+
+
 
 import os
 import re
@@ -8,9 +8,9 @@ import time
 import shutil
 import glob
 import threading
-import Queue
+import queue
 import collections
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import logging
 
 import debian.deb822
@@ -61,7 +61,7 @@ class Changelog(debian.changelog.Changelog):
         "Find (author,version+1) of the first changelog block not by given author."
         def s2u(string):
             "Compat for python-debian <= 0.1.19: Author strings are of class 'str', not 'unicode'."
-            return unicode(string) if isinstance(string, str) else string
+            return str(string) if isinstance(string, str) else string
 
         result = (None, None)
         for index, block in enumerate(self._blocks):
@@ -233,7 +233,7 @@ class KeyringPackage(mini_buildd.misc.TmpDir):
         for r in mini_buildd.models.repository.Repository.objects.all():
             for d in r.distributions.all():
                 for s in r.layout.suiteoption_set.all():
-                    for rb in [None] + range(s.rollback):
+                    for rb in [None] + list(range(s.rollback)):
                         file_base = "{codename}_{archive}_{repository}_{suite}{rollback}".format(codename=d.base_source.codename,
                                                                                                  archive=daemon.model.identity,
                                                                                                  repository=r.identity,
@@ -295,7 +295,7 @@ class Keyrings(object):
 
     def close(self):
         self._remotes.close()
-        for u in self._uploaders.values():
+        for u in list(self._uploaders.values()):
             u.close()
 
     def _update(self):
@@ -456,7 +456,7 @@ class Daemon(object):
             self.keyrings = Keyrings()
         else:
             self.keyrings.set_needs_update()
-        self.incoming_queue = Queue.Queue()
+        self.incoming_queue = queue.Queue()
         self.build_queue = mini_buildd.misc.BlockQueue(maxsize=self.model.build_queue_size)
         self.packages = {}
         self.builds = {}
@@ -709,7 +709,7 @@ class Daemon(object):
         if to_rollback:
             raise Exception("Port failed: Rollback distribution requested: '{d}'".format(d=to_dist))
 
-        dsc = debian.deb822.Dsc(urllib2.urlopen(dsc_url))
+        dsc = debian.deb822.Dsc(urllib.request.urlopen(dsc_url))
         v = DebianVersion(dsc["Version"])
         self._port(dsc_url,
                    dsc["Source"],

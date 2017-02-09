@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # django false-positives:
 # pylint: disable=unexpected-keyword-arg,no-value-for-parameter
-from __future__ import unicode_literals
-from __future__ import absolute_import
+
+
 
 import os
 import stat
@@ -114,11 +114,11 @@ class Changes(debian.deb822.Changes):
             value = re.sub(r"\s+", "", raw_value)
 
             # Validity check for key
-            if base_key not in self._OPTIONS.keys():
+            if base_key not in list(self._OPTIONS.keys()):
                 raise Exception("Unknown upload option: {k}.".format(k=key))
 
             # Duplicity check
-            if key in self._options.keys():
+            if key in list(self._options.keys()):
                 raise Exception("Duplicate upload option: {k}.".format(k=key))
 
             # Value conversion check
@@ -137,7 +137,7 @@ class Changes(debian.deb822.Changes):
             Get first existing option value in this order: key[a], key, default.
             """
             # Validity check for key
-            if key not in self._OPTIONS.keys():
+            if key not in list(self._OPTIONS.keys()):
                 raise Exception("Internal error: Upload Options: Unknown key used for get(): {k}.".format(k=key))
 
             if alt:
@@ -548,7 +548,7 @@ class Changes(debian.deb822.Changes):
         with contextlib.closing(mini_buildd.misc.TmpDir()) as t:
             bres = self.gen_buildresult(path=t.tmpdir)
 
-            bres["Sbuildretval"] = unicode(retval)
+            bres["Sbuildretval"] = str(retval)
             bres["Sbuild-Status"] = status
             buildlog = os.path.join(t.tmpdir, self.buildlog_name)
             with mini_buildd.misc.open_utf8(buildlog, "w+") as l:

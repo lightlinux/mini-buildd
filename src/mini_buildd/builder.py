@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-from __future__ import absolute_import
+
+
 
 import os
 import datetime
@@ -226,7 +226,7 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
             retval = sbuild_call.retval
 
         # Add build results to build request object
-        self._bres["Sbuildretval"] = unicode(retval)
+        self._bres["Sbuildretval"] = str(retval)
         self._buildlog_to_buildresult(buildlog)
 
         LOG.info("{p}: Sbuild finished: Sbuildretval={r}, Status={s}".format(p=self.key, r=retval, s=self._bres.get("Sbuild-Status")))
@@ -328,7 +328,7 @@ def build(daemon_, breq):
             build.set_status(build.UPLOADED)
         except Exception as e:
             mini_buildd.setup.log_exception(LOG, "Upload failed (retry later)", e, logging.WARN)
-            build.set_status(build.UPLOADING, unicode(e))
+            build.set_status(build.UPLOADING, str(e))
 
     except Exception as e:
         # Try to upload failure build result to remote

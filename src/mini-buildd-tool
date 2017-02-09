@@ -1,16 +1,16 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-from __future__ import absolute_import
-from __future__ import print_function
+
+
+
 
 import sys
 import os
 import locale
-import urllib
-import urllib2
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
 import argparse
-import ConfigParser
+import configparser
 import logging
 
 import argcomplete
@@ -25,7 +25,7 @@ mini_buildd.misc.setup_console_logging(logging.DEBUG)
 
 def host_completer(prefix, **kwargs):  # pylint: disable=unused-argument
     hosts = []
-    dput_cf = ConfigParser.RawConfigParser()
+    dput_cf = configparser.RawConfigParser()
     dput_cf.read(os.path.expanduser("~/.dput.cf"))
     for section in dput_cf.sections():
         def _join(host, user):
@@ -59,7 +59,7 @@ def host_completer(prefix, **kwargs):  # pylint: disable=unused-argument
 
 
 def host_from_dput(section):
-    dput_cf = ConfigParser.RawConfigParser()
+    dput_cf = configparser.RawConfigParser()
     dput_cf.read(os.path.expanduser("~/.dput.cf"))
     try:
         return dput_cf.get("mini-buildd-" + section, "x_mini_buildd_host")
@@ -97,7 +97,7 @@ PARSER.add_argument("host", action="store",
 def print_daemon_messages(headers, host):
     "Output daemon messages to stderr"
     msgs_header = "x-mini-buildd-message"
-    for msg in [v for k, v in headers.items() if msgs_header == k[:len(msgs_header)]]:
+    for msg in [v for k, v in list(headers.items()) if msgs_header == k[:len(msgs_header)]]:
         # msg line in unicode, use preferred encoding for print only (avoid mixing unicode/str in .format)
         msg_line = "[{h}] {m}".format(h=host, m=mini_buildd.misc.b642u(msg))
         print(msg_line.encode(locale.getpreferredencoding(), "backslashreplace"), file=sys.stderr)
@@ -118,7 +118,7 @@ def cmd_call(args):
 
     # Compute api call parameters
     http_args = {}
-    for k in [k for k in args.__dict__.keys() if k not in ["terseness", "verbosity", "host", "reset_save_policy", "protocol", "command_class", "func"]]:
+    for k in [k for k in list(args.__dict__.keys()) if k not in ["terseness", "verbosity", "host", "reset_save_policy", "protocol", "command_class", "func"]]:
         # Under wheezy, value of version may be None if not given; urllib.urlencode() later will convert this value to string "None" (bummer).
         # Strangely, this only happens when the ArgparseVersion2StdoutAction() workaround for --version is used (see above).
         # So we need to check for None right here and use the empty string to make this compatible with wheezy.
@@ -128,14 +128,14 @@ def cmd_call(args):
     # Confirm if required by this call
     if args.command_class.CONFIRM:
         if not http_args["confirm"]:
-            http_args["confirm"] = raw_input("Repeat command name '{c}' to confirm: ".format(c=args.command_class.COMMAND))
+            http_args["confirm"] = input("Repeat command name '{c}' to confirm: ".format(c=args.command_class.COMMAND))
         if not http_args["confirm"]:
             raise Exception("{c}: Not confirmed, skipped.".format(c=args.command))
 
     # Do the api call
-    call_url = "{p}://{b}/mini_buildd/api?{a}".format(p=args.protocol, b=host, a=urllib.urlencode(http_args))
+    call_url = "{p}://{b}/mini_buildd/api?{a}".format(p=args.protocol, b=host, a=urllib.parse.urlencode(http_args))
     LOG.info("API call URL: {u}".format(u=call_url))
-    response = urllib2.urlopen(call_url)
+    response = urllib.request.urlopen(call_url)
 
     # Output daemon messages to stderr
     if LOG.getEffectiveLevel() <= logging.WARNING:
@@ -146,7 +146,7 @@ def cmd_call(args):
     if sys.stdout.isatty() and http_args["output"] == "plain":
         # On plain output to a tty, try to encode to the preferred locale
         encoding = response.headers["content-type"].partition("charset=")[2]
-        sys.stdout.write(unicode(result, encoding if encoding else "UTF-8").encode(locale.getpreferredencoding(), "backslashreplace"))
+        sys.stdout.write(str(result, encoding if encoding else "UTF-8").encode(locale.getpreferredencoding(), "backslashreplace"))
     else:
         sys.stdout.write(result)
 
@@ -190,7 +190,7 @@ try:
     # Run the command
     ARGS.func(ARGS)
 
-except urllib2.HTTPError as e:
+except urllib.error.HTTPError as e:
     print_daemon_messages(e.headers, ARGS.host)
     mini_buildd.setup.log_exception(LOG, ARGS.host, e)
     sys.exit(1)

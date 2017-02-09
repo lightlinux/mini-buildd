@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-from __future__ import absolute_import
-from __future__ import print_function
+
+
+
 
 import sys
 import time
 import pickle
-import urllib2
-import urlparse
+import urllib.request, urllib.error, urllib.parse
+import urllib.parse
 import re
-import httplib
+import http.client
 
 import debian.debian_support
 
@@ -17,7 +17,7 @@ import mini_buildd.misc
 import mini_buildd.api
 
 # mini-buildd API transfers log message via HTTP headers. The default (100) is sometimes too low.
-httplib._MAXHEADERS = 500  # pylint: disable=protected-access
+http.client._MAXHEADERS = 500  # pylint: disable=protected-access
 
 
 class Daemon(object):
@@ -29,7 +29,7 @@ class Daemon(object):
         Stolen from mini-buildd-tool
         """
         msgs_header = "x-mini-buildd-message"
-        for msg in [v for k, v in headers.items() if msgs_header == k[:len(msgs_header)]]:
+        for msg in [v for k, v in list(headers.items()) if msgs_header == k[:len(msgs_header)]]:
             self._log("HTTP Header Message: {m}".format(m=mini_buildd.misc.b642u(msg)))
 
     def __init__(self, host, port="8066", proto="http",
@@ -58,7 +58,7 @@ class Daemon(object):
         Login. Use the user's mini-buildd keyring for auth, like mini-buildd-tool.
         """
         keyring = mini_buildd.misc.Keyring("mini-buildd")
-        mini_buildd.misc.web_login("{host}:{port}".format(host=self.host, port=self.port), user if (user or self.batch_mode) else raw_input("Username: "), keyring, proto=self.proto)
+        mini_buildd.misc.web_login("{host}:{port}".format(host=self.host, port=self.port), user if (user or self.batch_mode) else input("Username: "), keyring, proto=self.proto)
         return self
 
     def call(self, command, args=None, output="python", raise_on_error=True):
@@ -67,7 +67,7 @@ class Daemon(object):
 
         if self.auto_confirm:
             args["confirm"] = command
-        http_get_args = "&".join("{k}={v}".format(k=k, v=v) for k, v in args.items())
+        http_get_args = "&".join("{k}={v}".format(k=k, v=v) for k, v in list(args.items()))
         url = "{api_url}?command={command}&output={output}&{args}".format(api_url=self.api_url, command=command, output=output, args=http_get_args)
 
         if self.dry_run:
@@ -76,13 +76,13 @@ class Daemon(object):
 
         self._log("Calling API: {}".format(url))
         try:
-            response = urllib2.urlopen(url)
+            response = urllib.request.urlopen(url)
             return pickle.loads(response.read()) if output == "python" else response.read()
-        except urllib2.HTTPError as e:
+        except urllib.error.HTTPError as e:
             self._log("API call failed with HTTP Status {status}:".format(status=e.getcode()))
             self._log_daemon_messages(e.headers)
             if not self.batch_mode and e.getcode() == 401:
-                action = raw_input("Unauthorized retry: (l)ogin, (c)onfirm this call or (C)onfirm all future calls (anything else to just skip)? ")
+                action = input("Unauthorized retry: (l)ogin, (c)onfirm this call or (C)onfirm all future calls (anything else to just skip)? ")
                 if action and action in "lcC":
                     new_args = args
                     if action == "l":
@@ -117,7 +117,7 @@ class Daemon(object):
 
     @property
     def repositories(self):
-        return self.status.repositories.keys()
+        return list(self.status.repositories.keys())
 
     def get_codenames(self, repo):
         return self.status.repositories[repo]
@@ -127,7 +127,7 @@ class Daemon(object):
         Produce a dict with all (except rollback) available versions of this package (key=distribution, value=info dict: version, dsc_url, log_url, changes_url*).
         """
         def _base_url(url):
-            url_parse = urlparse.urlparse(url)
+            url_parse = urllib.parse.urlparse(url)
             return "{scheme}://{hostname}:{port}".format(scheme=url_parse.scheme, hostname=url_parse.hostname, port=url_parse.port)
 
         show = self.call("show", {"package": src_package})

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-from __future__ import absolute_import
+
+
 
 import os
 import copy
@@ -171,8 +171,8 @@ class Status(Command):
         self.remotes = [r.http for r in daemon.get_active_or_auto_reactivate_remotes()]
 
         # packaging/building: string/unicode
-        self.packaging = ["{0}".format(p) for p in daemon.packages.values()]
-        self.building = ["{0}".format(b) for b in daemon.builds.values()]
+        self.packaging = ["{0}".format(p) for p in list(daemon.packages.values())]
+        self.building = ["{0}".format(b) for b in list(daemon.builds.values())]
 
         self._plain_result = """\
 http://{h} ({v}):
@@ -200,10 +200,10 @@ Builder: {b_len} building
               b="\n".join(self.building) + "\n" if self.building else "")
 
     def repositories_str(self):
-        return ", ".join(["{i}: {c}".format(i=identity, c=" ".join(codenames)) for identity, codenames in self.repositories.items()])
+        return ", ".join(["{i}: {c}".format(i=identity, c=" ".join(codenames)) for identity, codenames in list(self.repositories.items())])
 
     def chroots_str(self):
-        return ", ".join(["{a}: {c}".format(a=arch, c=" ".join(codenames)) for arch, codenames in self.chroots.items()])
+        return ", ".join(["{a}: {c}".format(a=arch, c=" ".join(codenames)) for arch, codenames in list(self.chroots.items())])
 
     def has_chroot(self, codename, arch):
         return codename in self.chroots and arch in self.chroots[codename]
@@ -341,7 +341,7 @@ class LogCat(Command):
 
 def _get_table_format(dct, cols):
     tlen = {}
-    for _r, values in dict(dct).items():
+    for _r, values in list(dict(dct).items()):
         for value in values:
             for k, v in cols:
                 if k in tlen:
@@ -416,7 +416,7 @@ class List(Command):
            s1=sep1,
            p="\n".join([fmt.format(**p) for p in values]))
 
-        return "\n".join([p_table(k, v) for k, v in self.repositories.items()])
+        return "\n".join([p_table(k, v) for k, v in list(self.repositories.items())])
 
 
 class Show(Command):

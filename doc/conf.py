@@ -49,8 +49,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'mini-buildd'
-copyright = u'2012, 2013, mini-buildd maintainers'
+project = 'mini-buildd'
+copyright = '2012, 2013, mini-buildd maintainers'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -187,8 +187,8 @@ htmlhelp_basename = 'mini-buildddoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-    ('index', 'mini-buildd.tex', u'mini-buildd Documentation',
-     u'mini-buildd maintainers', 'manual')]
+    ('index', 'mini-buildd.tex', 'mini-buildd Documentation',
+     'mini-buildd maintainers', 'manual')]
 
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
@@ -218,8 +218,8 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [('index', 'mini-buildd', u'mini-buildd Documentation',
-              [u'Stephano Vandamme'], 1)]
+man_pages = [('index', 'mini-buildd', 'mini-buildd Documentation',
+              ['Stephano Vandamme'], 1)]
 
 
 # -- Custom options ------------------------------------------------------------

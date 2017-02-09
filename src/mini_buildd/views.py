@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-from __future__ import absolute_import
+
+
 
 import os
 import pickle
@@ -125,7 +125,7 @@ def log(request, repository, package, version):
 
         return {"changes": mini_buildd.misc.open_utf8(pkg_log.changes).read() if pkg_log.changes else None,
                 "changes_path": pkg_log.make_relative(pkg_log.changes) if pkg_log.changes else None,
-                "buildlogs": dict((k, pkg_log.make_relative(v)) for k, v in pkg_log.buildlogs.iteritems())}
+                "buildlogs": dict((k, pkg_log.make_relative(v)) for k, v in pkg_log.buildlogs.items())}
 
     return django.shortcuts.render(request,
                                    "mini_buildd/log.html",

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-from __future__ import absolute_import
-from __future__ import print_function
+
+
+
 
 import os
 import platform
@@ -15,15 +15,15 @@ import glob
 import errno
 import threading
 import socket
-import Queue
+import queue
 import multiprocessing
 import tempfile
 import hashlib
 import base64
 import re
-import urllib
-import urllib2
-import urlparse
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
+import urllib.parse
 import getpass
 import logging
 import logging.handlers
@@ -162,7 +162,7 @@ class ConfFile(object):
 
     def add(self, snippet):
         if isinstance(snippet, str):
-            snippet = unicode(snippet, encoding=mini_buildd.setup.CHAR_ENCODING)
+            snippet = str(snippet, encoding=mini_buildd.setup.CHAR_ENCODING)
             LOG.error("FIX CODE: Non-unicode string detected, converting assuming '{e}'.".format(e=mini_buildd.setup.CHAR_ENCODING))
         self._content += "{s}\n".format(s=snippet)
         return self
@@ -171,7 +171,7 @@ class ConfFile(object):
         open_utf8(self._file_path, "w").write(self._content)
 
 
-class BlockQueue(Queue.Queue):
+class BlockQueue(queue.Queue):
     """
     Wrapper around Queue to get put() block until <= maxsize tasks are actually done.
     In Queue.Queue, task_done() is only used together with join().
@@ -182,8 +182,8 @@ class BlockQueue(Queue.Queue):
     def __init__(self, maxsize):
         self._maxsize = maxsize
         self._pending = 0
-        self._active = Queue.Queue(maxsize=maxsize)
-        Queue.Queue.__init__(self, maxsize=maxsize)
+        self._active = queue.Queue(maxsize=maxsize)
+        queue.Queue.__init__(self, maxsize=maxsize)
 
     def __unicode__(self):
         return "{l}: {n}/{m} ({p} pending)".format(
@@ -199,13 +199,13 @@ class BlockQueue(Queue.Queue):
     def put(self, item, **kwargs):
         self._pending += 1
         self._active.put(item)
-        Queue.Queue.put(self, item, **kwargs)
+        queue.Queue.put(self, item, **kwargs)
         self._pending -= 1
 
     def task_done(self):
         self._active.get()
         self._active.task_done()
-        return Queue.Queue.task_done(self)
+        return queue.Queue.task_done(self)
 
 
 class HoPo(object):
@@ -466,7 +466,7 @@ def subst_placeholders(template, placeholders):
     >>> subst_placeholders("Repoversionstring: %IDENTITY%%CODEVERSION%", { "IDENTITY": "test", "CODEVERSION": "60" })
     u'Repoversionstring: test60'
     """
-    for key, value in placeholders.items():
+    for key, value in list(placeholders.items()):
         template = template.replace("%{p}%".format(p=key), value)
     return template
 
@@ -538,7 +538,7 @@ def b642u(base64_bytestream):
     >>> print(u)
     Ünicode strüng
     """
-    return unicode(base64.b64decode(base64_bytestream), encoding=mini_buildd.setup.CHAR_ENCODING)
+    return str(base64.b64decode(base64_bytestream), encoding=mini_buildd.setup.CHAR_ENCODING)
 
 
 def get_cpus():
@@ -615,7 +615,7 @@ class UserURL(object):
     Exception: UserURL: Username given in twice, in URL and parameter
     """
     def __init__(self, url, username=None):
-        parsed = urlparse.urlparse(url)
+        parsed = urllib.parse.urlparse(url)
         if parsed.password:
             raise Exception("UserURL: We don't allow to give pasword in URL")
         if parsed.username and username:
@@ -639,7 +639,7 @@ class UserURL(object):
     @property
     def plain(self):
         "URL string without username."
-        return urlparse.urlunparse(self._plain)
+        return urllib.parse.urlunparse(self._plain)
 
     @property
     def full(self):
@@ -647,7 +647,7 @@ class UserURL(object):
         if self._username:
             full = copy.copy(self._plain)
             full[1] = "{u}@{l}".format(u=self._username, l=self._plain[1])
-            return urlparse.urlunparse(full)
+            return urllib.parse.urlunparse(full)
         else:
             return self.plain
 
@@ -707,7 +707,7 @@ class Keyring(object):
             answer = self._save_policy
         else:
             while True:
-                answer = raw_input("""
+                answer = input("""
 {c}:
 
 Save password for '{k}': (Y)es, (N)o, (A)lways, Ne(v)er? """.format(c=self, k=key)).upper()[:1]
@@ -723,7 +723,7 @@ Save password for '{k}': (Y)es, (N)o, (A)lways, Ne(v)er? """.format(c=self, k=ke
 
     def get(self, host, user=""):
         if not user:
-            user = raw_input("[{h}] Username: ".format(h=host))
+            user = input("[{h}] Username: ".format(h=host))
         key = "{u}@{h}".format(u=user, h=host)
 
         password = self._keyring.get_password(self._service, key)
@@ -743,18 +743,18 @@ def urlopen_ca_certificates(url):
     (See https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=832350).
     """
     cafile = "/etc/ssl/certs/ca-certificates.crt"
-    return urllib2.urlopen(url, cafile=cafile) if (PY2_HAS_URLLIB2_CAFILE and os.path.exists(cafile)) else urllib2.urlopen(url)
+    return urllib.request.urlopen(url, cafile=cafile) if (PY2_HAS_URLLIB2_CAFILE and os.path.exists(cafile)) else urllib.request.urlopen(url)
 
 
 def canonize_url(url):
     "Poor man's URL canonizer: Always include the port (currently only works for 'http' and 'https' default ports)."
     default_scheme2port = {"http": ":80", "https": ":443"}
 
-    parsed = urlparse.urlparse(url)
+    parsed = urllib.parse.urlparse(url)
     netloc = parsed.netloc
     if parsed.port is None:
         netloc = parsed.hostname + default_scheme2port.get(parsed.scheme, "")
-    return urlparse.urlunsplit((parsed.scheme, netloc, parsed.path, parsed.query, ""))
+    return urllib.parse.urlunsplit((parsed.scheme, netloc, parsed.path, parsed.query, ""))
 
 
 def web_login(host, user, credentials,
@@ -768,8 +768,8 @@ def web_login(host, user, credentials,
         next_url = plain_url + next_loc
 
         # Create cookie-enabled opener
-        cookie_handler = urllib2.HTTPCookieProcessor()
-        opener = urllib2.build_opener(urllib2.HTTPHandler(debuglevel=0), cookie_handler)
+        cookie_handler = urllib.request.HTTPCookieProcessor()
+        opener = urllib.request.build_opener(urllib.request.HTTPHandler(debuglevel=0), cookie_handler)
 
         # Retrieve login page
         opener.open(login_url)
@@ -783,7 +783,7 @@ def web_login(host, user, credentials,
         # Login via POST request
         response = opener.open(
             login_url,
-            urllib.urlencode({"username": user,
+            urllib.parse.urlencode({"username": user,
                               "password": password,
                               "csrfmiddlewaretoken": csrf_cookies[0].value,
                               "this_is_the_login_form": "1",
@@ -796,7 +796,7 @@ def web_login(host, user, credentials,
 
         # Logged in: Install opener, save credentials
         LOG.info("User logged in: {key}".format(key=key))
-        urllib2.install_opener(opener)
+        urllib.request.install_opener(opener)
         if new:
             credentials.set(key, password)
     except Exception as e:

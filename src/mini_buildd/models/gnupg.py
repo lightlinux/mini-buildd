@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-from __future__ import absolute_import
 
-import urllib2
+
+
+import urllib.request, urllib.error, urllib.parse
 import contextlib
 import logging
 
@@ -183,7 +183,7 @@ class Remote(KeyringKey):
         if update:
             try:
                 url = "http://{h}/mini_buildd/api?command=status&output=python".format(h=self.http)
-                self.mbd_set_pickled_data_pickled(urllib2.urlopen(url, timeout=10).read())
+                self.mbd_set_pickled_data_pickled(urllib.request.urlopen(url, timeout=10).read())
             except Exception as e:
                 raise Exception("Failed to update status for remote via URL '{u}': {e}".format(u=url, e=e))
         return self.mbd_get_pickled_data(default=mini_buildd.api.Status({}))
@@ -194,7 +194,7 @@ class Remote(KeyringKey):
 
         # We prepare the GPG data from downloaded key data, so key_id _must_ be empty (see super(mbd_prepare))
         self.key_id = ""
-        self.key = urllib2.urlopen(url).read()
+        self.key = urllib.request.urlopen(url).read()
 
         if self.key:
             MsgLog(LOG, request).warn("Downloaded remote key integrated: Please check key manually before activation!")
