@@ -195,7 +195,7 @@ def cmp_components(component0, component1):
     """
     if component0.name == "main":
         return -1
-    return cmp(component0.name, component1.name)
+    return (component0.name > component1.name) - (component0.name < component1.name)
 
 
 class Source(mini_buildd.models.base.StatusModel):
