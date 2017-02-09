@@ -44,7 +44,7 @@ from __future__ import unicode_literals
 from __future__ import absolute_import
 
 __version__ = "{version}"
-""".format(version=__version__))
+""".format(version=__version__).encode())
 print("I: Got version from changelog: {v}".format(v=__version__))
 
 if "build_sphinx" in sys.argv:
