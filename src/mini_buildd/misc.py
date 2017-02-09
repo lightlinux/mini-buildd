@@ -158,9 +158,6 @@ class ConfFile(object):
         self.add(snippet)
 
     def add(self, snippet):
-        if isinstance(snippet, str):
-            snippet = str(snippet, encoding=mini_buildd.setup.CHAR_ENCODING)
-            LOG.error("FIX CODE: Non-unicode string detected, converting assuming '{e}'.".format(e=mini_buildd.setup.CHAR_ENCODING))
         self._content += "{s}\n".format(s=snippet)
         return self
 
