@@ -468,7 +468,7 @@ class Show(Command):
         results = []
         for repository, codenames in self.repositories:
             # Add rollback_str
-            for k, v in codenames:
+            for _k, v in codenames:
                 for d in v:
                     d["rollbacks_str"] = "{n}/{m}".format(n=len(d["rollbacks"]), m=d["rollback"])
                     d["rollbacks_str_verbose"] = d["rollbacks_str"] + \
