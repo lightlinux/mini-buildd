@@ -3,11 +3,11 @@
 #export DH_VERBOSE = 1
 
 %:
-	dh $@ --with=python2,sphinxdoc
+	dh $@ --with=python3,sphinxdoc --buildsystem=pybuild
 
 override_dh_auto_build:
 	dh_auto_build
-	python setup.py build_sphinx --source-dir=build/sphinx
+	python3 setup.py build_sphinx --source-dir=build/sphinx
 
 	# Create bash completion scripts via python-argcomplete
 	mkdir -p ./build/bash-completions/
