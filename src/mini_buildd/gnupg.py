@@ -204,13 +204,13 @@ class TmpGnuPG(BaseGnuPG, mini_buildd.misc.TmpDir):
     >>> gnupg = BaseGnuPG(home=gnupg_home.tmpdir)
 
     >>> gnupg.get_first_sec_colon("sec").type
-    u'sec'
+    'sec'
     >>> gnupg.get_first_sec_key_user_id()
-    u'\\xdcdo \\xdcmlaut <test@key.org>'
+    '\\xdcdo \\xdcmlaut <test@key.org>'
     >>> gnupg.get_first_sec_key()  #doctest: +ELLIPSIS
-    u'AF95FC80FC40A82E'
+    'AF95FC80FC40A82E'
     >>> gnupg.get_first_sec_key_fingerprint()  #doctest: +ELLIPSIS
-    u'4FB13BDD777C046D72D4E7D3AF95FC80FC40A82E'
+    '4FB13BDD777C046D72D4E7D3AF95FC80FC40A82E'
 
     >>> export = tempfile.NamedTemporaryFile()
     >>> gnupg.export(export.name)

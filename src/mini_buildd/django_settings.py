@@ -54,10 +54,10 @@ class SMTPCreds(object):
 
     >>> d = SMTPCreds(":@smtp://localhost:25")
     >>> (d.user, d.password, d.protocol, d.host, d.port)
-    (u'', u'', u'smtp', u'localhost', 25)
+    ('', '', 'smtp', 'localhost', 25)
     >>> d = SMTPCreds("kuh:sa:ck@smtp://colahost:44")
     >>> (d.user, d.password, d.protocol, d.host, d.port)
-    (u'kuh', u'sa:ck', u'smtp', u'colahost', 44)
+    ('kuh', 'sa:ck', 'smtp', 'colahost', 44)
     """
     def __init__(self, creds):
         self.creds = creds

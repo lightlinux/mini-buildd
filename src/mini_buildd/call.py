@@ -30,13 +30,13 @@ class Call(object):
       mystdout = open(myoutputfile, "w+")
 
     >>> Call(["echo", "-n", "hallo"]).check().ustdout
-    u'hallo'
+    'hallo'
     >>> Call(["ls", "__no_such_file__"]).check()
     Traceback (most recent call last):
     ...
     Exception: Call failed with retval 2: 'ls __no_such_file__ '
     >>> Call(["printf stdin; printf stderr >&2"], stderr=subprocess.STDOUT, shell=True).ustdout
-    u'stdinstderr'
+    'stdinstderr'
     """
     @classmethod
     def _call2shell(cls, call):

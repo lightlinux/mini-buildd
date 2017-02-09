@@ -43,19 +43,19 @@ class Changelog(debian.changelog.Changelog):
 
     >>> cl = Changelog(mini_buildd.misc.open_utf8("./examples/doctests/changelog"), max_blocks=100)
     >>> cl.find_first_not("mini-buildd@buildd.intra")
-    (u'Stephan S\\xfcrken <absurd@debian.org>', u'1.0.0-2')
+    ('Stephan S\\xfcrken <absurd@debian.org>', '1.0.0-2')
 
     >>> cl = Changelog(mini_buildd.misc.open_utf8("./examples/doctests/changelog.ported"), max_blocks=100)
     >>> cl.find_first_not("mini-buildd@buildd.intra")
-    (u'Stephan S\\xfcrken <absurd@debian.org>', u'1.0.0-2')
+    ('Stephan S\\xfcrken <absurd@debian.org>', '1.0.0-2')
 
     >>> cl = Changelog(mini_buildd.misc.open_utf8("./examples/doctests/changelog.oneblock"), max_blocks=100)
     >>> cl.find_first_not("mini-buildd@buildd.intra")
-    (u'Stephan S\\xfcrken <absurd@debian.org>', u'1.0.1-1~')
+    ('Stephan S\\xfcrken <absurd@debian.org>', '1.0.1-1~')
 
     >>> cl = Changelog(mini_buildd.misc.open_utf8("./examples/doctests/changelog.oneblock.ported"), max_blocks=100)
     >>> cl.find_first_not("mini-buildd@buildd.intra")
-    (u'Mini Buildd <mini-buildd@buildd.intra>', u'1.0.1-1~')
+    ('Mini Buildd <mini-buildd@buildd.intra>', '1.0.1-1~')
     """
     def find_first_not(self, author):
         "Find (author,version+1) of the first changelog block not by given author."
@@ -159,33 +159,33 @@ class DebianVersion(debian.debian_support.Version):
         sid->wheezy ports:
 
         >>> DebianVersion("1.2.3-1~testSID+1").gen_internal_port(sid_regex, wheezy_default)
-        u'1.2.3-1~test70+1'
+        '1.2.3-1~test70+1'
         >>> DebianVersion("1.2.3-1~testSID+4").gen_internal_port(sid_regex, wheezy_default)
-        u'1.2.3-1~test70+4'
+        '1.2.3-1~test70+4'
         >>> DebianVersion("1.2.3-1~testSID+4fud15").gen_internal_port(sid_regex, wheezy_default)
-        u'1.2.3-1~test70+4fud15'
+        '1.2.3-1~test70+4fud15'
         >>> DebianVersion("1.2.3-1~testSID+0").gen_internal_port(sid_exp_regex, wheezy_exp_default)
-        u'1.2.3-1~test70+0'
+        '1.2.3-1~test70+0'
         >>> DebianVersion("1.2.3-1~testSID+0exp2").gen_internal_port(sid_exp_regex, wheezy_exp_default)
-        u'1.2.3-1~test70+0exp2'
+        '1.2.3-1~test70+0exp2'
 
         wheezy->squeeze ports:
 
         >>> DebianVersion("1.2.3-1~test70+1").gen_internal_port(wheezy_regex, squeeze_default)
-        u'1.2.3-1~test60+1'
+        '1.2.3-1~test60+1'
         >>> DebianVersion("1.2.3-1~test70+4").gen_internal_port(wheezy_regex, squeeze_default)
-        u'1.2.3-1~test60+4'
+        '1.2.3-1~test60+4'
         >>> DebianVersion("1.2.3-1~test70+4fud15").gen_internal_port(wheezy_regex, squeeze_default)
-        u'1.2.3-1~test60+4fud15'
+        '1.2.3-1~test60+4fud15'
         >>> DebianVersion("1.2.3-1~test70+0").gen_internal_port(wheezy_exp_regex, squeeze_exp_default)
-        u'1.2.3-1~test60+0'
+        '1.2.3-1~test60+0'
         >>> DebianVersion("1.2.3-1~test70+0exp2").gen_internal_port(wheezy_exp_regex, squeeze_exp_default)
-        u'1.2.3-1~test60+0exp2'
+        '1.2.3-1~test60+0exp2'
 
         No version restrictions: just add default version
 
         >>> DebianVersion("1.2.3-1").gen_internal_port(".*", "~port+1")
-        u'1.2.3-1~port+1'
+        '1.2.3-1~port+1'
         """
         from_apdx = self._get_rightmost(from_mandatory_version_regex, self.full_version)
         from_apdx_plus_revision = self._get_rightmost(r"\+[0-9]", from_apdx)

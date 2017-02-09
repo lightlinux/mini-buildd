@@ -31,10 +31,10 @@ class Changes(debian.deb822.Changes):
         Uploader options in changes.
 
         >>> "{}".format(Changes("./examples/doctests/changes.options").options)
-        u"auto-ports=[u'jessie-test-unstable', u'squeeze-test-snasphot'], ignore-lintian=True, ignore-lintian[i386]=False, internal-apt-priority=543, run-lintian=True, run-lintian[i386]=False"
+        "auto-ports=['jessie-test-unstable', 'squeeze-test-snasphot'], ignore-lintian=True, ignore-lintian[i386]=False, internal-apt-priority=543, run-lintian=True, run-lintian[i386]=False"
 
         >>> "{}".format(Changes("./examples/doctests/changes.magic").options)
-        u"auto-ports=[u'jessie-test-unstable', u'squeeze-test-snasphot'], ignore-lintian=True"
+        "auto-ports=['jessie-test-unstable', 'squeeze-test-snasphot'], ignore-lintian=True"
         """
         class Bool(object):
             _TRUE = ["true", "1"]
@@ -216,13 +216,13 @@ class Changes(debian.deb822.Changes):
         mini-buildd types.
 
         >>> Changes.gen_changes_file_name("mypkg", "1.2.3-1", "mips")
-        u'mypkg_1.2.3-1_mips.changes'
+        'mypkg_1.2.3-1_mips.changes'
         >>> Changes.gen_changes_file_name("mypkg", "7:1.2.3-1", "mips")
-        u'mypkg_1.2.3-1_mips.changes'
+        'mypkg_1.2.3-1_mips.changes'
         >>> Changes.gen_changes_file_name("mypkg", "7:1.2.3-1", "mips", mbd_type=Changes.TYPE_BREQ)
-        u'mypkg_1.2.3-1_mini-buildd-buildrequest_mips.changes'
+        'mypkg_1.2.3-1_mini-buildd-buildrequest_mips.changes'
         >>> Changes.gen_changes_file_name("mypkg", "7:1.2.3-1", "mips", mbd_type=Changes.TYPE_BRES)
-        u'mypkg_1.2.3-1_mini-buildd-buildresult_mips.changes'
+        'mypkg_1.2.3-1_mini-buildd-buildresult_mips.changes'
         """
         return "{p}_{v}{x}_{a}.changes".format(p=package,
                                                v=mini_buildd.misc.strip_epoch(version),

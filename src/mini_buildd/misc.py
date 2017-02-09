@@ -254,9 +254,9 @@ class Distribution(object):
 
     >>> d = Distribution("squeeze-test-stable")
     >>> d.codename, d.repository, d.suite
-    (u'squeeze', u'test', u'stable')
+    ('squeeze', 'test', 'stable')
     >>> d.get()
-    u'squeeze-test-stable'
+    'squeeze-test-stable'
 
     Rollback distribution:
 
@@ -264,9 +264,9 @@ class Distribution(object):
     >>> d.is_rollback
     True
     >>> d.codename, d.repository, d.suite, d.rollback
-    (u'squeeze', u'test', u'stable', u'rollback5')
+    ('squeeze', 'test', 'stable', 'rollback5')
     >>> d.get()
-    u'squeeze-test-stable-rollback5'
+    'squeeze-test-stable-rollback5'
     >>> d.rollback_no
     5
 
@@ -366,21 +366,21 @@ def guess_codeversion(release):
     Ubuntu just uses YY.MM which we can use as-is.
 
     >>> guess_codeversion({"Origin": "Debian", "Version": "3.1r8", "Codename": "sarge"})
-    u'31'
+    '31'
     >>> guess_codeversion({"Origin": "Debian", "Version": "4.0r9", "Codename": "etch"})
-    u'40'
+    '40'
     >>> guess_codeversion({"Origin": "Debian", "Version": "6.0.6", "Codename": "squeeze"})
-    u'60'
+    '60'
     >>> guess_codeversion({"Origin": "Debian", "Version": "7.0", "Codename": "wheezy"})
-    u'7'
+    '7'
     >>> guess_codeversion({"Origin": "Debian", "Version": "7.1", "Codename": "wheezy"})
-    u'7'
+    '7'
     >>> guess_codeversion({"Origin": "Debian", "Codename": "jessie"})
-    u'~JESSIE'
+    '~JESSIE'
     >>> guess_codeversion({"Origin": "Debian", "Codename": "sid"})
-    u'~SID'
+    '~SID'
     >>> guess_codeversion({"Origin": "Ubuntu", "Version": "12.10", "Codename": "quantal"})
-    u'1210'
+    '1210'
     """
     try:
         ver_split = release["Version"].split(".")
@@ -458,7 +458,7 @@ def subst_placeholders(template, placeholders):
     """Substitue placeholders in string from a dict.
 
     >>> subst_placeholders("Repoversionstring: %IDENTITY%%CODEVERSION%", { "IDENTITY": "test", "CODEVERSION": "60" })
-    u'Repoversionstring: test60'
+    'Repoversionstring: test60'
     """
     for key, value in list(placeholders.items()):
         template = template.replace("%{p}%".format(p=key), value)
@@ -592,11 +592,11 @@ class UserURL(object):
 
     >>> U = UserURL("http://admin@localhost:8066")
     >>> (U.username, U.plain, U.full)
-    (u'admin', u'http://localhost:8066', u'http://admin@localhost:8066')
+    ('admin', 'http://localhost:8066', 'http://admin@localhost:8066')
 
     >>> U = UserURL("http://example.org:8066", "admin")
     >>> (U.username, U.plain, U.full)
-    (u'admin', u'http://example.org:8066', u'http://admin@example.org:8066')
+    ('admin', 'http://example.org:8066', 'http://admin@example.org:8066')
 
     >>> UserURL("http://localhost:8066")
     Traceback (most recent call last):
