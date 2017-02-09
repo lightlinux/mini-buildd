@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
+
 import os
 import sys
 import shutil
@@ -7,7 +9,7 @@ import distutils.core
 import debian.changelog
 import setuptools
 
-print "I: Using setuptools: {v}".format(v=setuptools.__version__)
+print("I: Using setuptools: {v}".format(v=setuptools.__version__))
 
 
 def sphinx_build_workaround(build_dir="./build/sphinx"):
@@ -43,7 +45,7 @@ from __future__ import absolute_import
 
 __version__ = "{version}"
 """.format(version=__version__))
-print "I: Got version from changelog: {v}".format(v=__version__)
+print("I: Got version from changelog: {v}".format(v=__version__))
 
 if "build_sphinx" in sys.argv:
     sphinx_build_workaround()
