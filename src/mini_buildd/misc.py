@@ -515,9 +515,9 @@ def u2b64(unicode_string):
 
     >>> b64 = u2b64("Ünicode strüng")
     >>> b64.__class__.__name__
-    'str'
+    'bytes'
     >>> b64
-    'w5xuaWNvZGUgc3Ryw7xuZw=='
+    b'w5xuaWNvZGUgc3Ryw7xuZw=='
     """
     return base64.b64encode(unicode_string.encode(mini_buildd.setup.CHAR_ENCODING))
 
@@ -528,7 +528,7 @@ def b642u(base64_bytestream):
 
     >>> u = b642u('w5xuaWNvZGUgc3Ryw7xuZw==')
     >>> u.__class__.__name__
-    'unicode'
+    'str'
     >>> print(u)
     Ünicode strüng
     """
