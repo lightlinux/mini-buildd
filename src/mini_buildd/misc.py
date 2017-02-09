@@ -781,11 +781,11 @@ def web_login(host, user, credentials,
         response = opener.open(
             login_url,
             urllib.parse.urlencode({"username": user,
-                              "password": password,
-                              "csrfmiddlewaretoken": csrf_cookies[0].value,
-                              "this_is_the_login_form": "1",
-                              "next": next_loc,
-                             }))
+                                    "password": password,
+                                    "csrfmiddlewaretoken": csrf_cookies[0].value,
+                                    "this_is_the_login_form": "1",
+                                    "next": next_loc,
+                                   }))
 
         # If successful, next url of the response must match
         if canonize_url(response.geturl()) != canonize_url(next_url):

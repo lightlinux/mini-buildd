@@ -231,13 +231,12 @@ packages (to unstable,experimental,..) aimed for Debian.
             experimental, created = Suite.mbd_get_or_create(msglog, name="experimental")
 
             for name, extra_options in list({"Default": {"stable": "Rollback: 6\n",
-                                                    "hotfix": "Rollback: 4\n",
-                                                    "testing": "Rollback: 3\n",
-                                                    "unstable": "Rollback: 9\n",
-                                                    "snapshot": "Rollback: 12\n",
-                                                    "experimental": "Rollback: 6\n"},
-                                        "Default (no rollbacks)": {}}.items()):
-
+                                                         "hotfix": "Rollback: 4\n",
+                                                         "testing": "Rollback: 3\n",
+                                                         "unstable": "Rollback: 9\n",
+                                                         "snapshot": "Rollback: 12\n",
+                                                         "experimental": "Rollback: 6\n"},
+                                             "Default (no rollbacks)": {}}.items()):
                 default_layout, created = Layout.mbd_get_or_create(msglog, name=name)
                 if created:
                     so_stable = SuiteOption(
