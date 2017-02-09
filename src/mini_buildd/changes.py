@@ -104,7 +104,7 @@ class Changes(debian.deb822.Changes):
 
             self._compat_parse_magic()
 
-        def __unicode__(self):
+        def __str__(self):
             return ", ".join("{k}={v}".format(k=key, v=value) for key, value in sorted(self._options.items()))
 
         def _set(self, key, raw_value):
@@ -186,7 +186,7 @@ class Changes(debian.deb822.Changes):
         self.remote_http_url = None
         self.live_buildlog_url = None
 
-    def __unicode__(self):
+    def __str__(self):
         if self.type == self.TYPE_BREQ:
             return "Buildrequest from '{h}': {i}".format(h=self.get("Upload-Result-To"), i=self.get_pkg_id(with_arch=True))
         elif self.type == self.TYPE_BRES:

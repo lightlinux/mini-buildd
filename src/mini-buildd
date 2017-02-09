@@ -72,7 +72,7 @@ class PIDFile(object):
             self.pidfile.break_lock()
         self.pidfile.acquire(timeout=acquire_timeout)
 
-    def __unicode__(self):
+    def __str__(self):
         return "{f} ({p})".format(f=self.pidfile.path, p=self.pidfile.read_pid())
 
     def close(self):

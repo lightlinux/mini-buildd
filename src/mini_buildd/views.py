@@ -216,7 +216,7 @@ def api(request):
                                                 "repositories": mini_buildd.models.repository.Repository.mbd_get_prepared()})
 
         elif output == "plain":
-            response = django.http.HttpResponse(api_cmd.__unicode__().encode(mini_buildd.setup.CHAR_ENCODING),
+            response = django.http.HttpResponse(api_cmd.__str__().encode(mini_buildd.setup.CHAR_ENCODING),
                                                 content_type="text/plain; charset={charset}".format(charset=mini_buildd.setup.CHAR_ENCODING))
 
         elif output == "python":
@@ -225,7 +225,7 @@ def api(request):
 
         elif output[:7] == "referer":
             # Add all plain result lines as info messages on redirect
-            for l in api_cmd.__unicode__().splitlines():
+            for l in api_cmd.__str__().splitlines():
                 api_cmd.msglog.info("Result: {l}".format(l=l))
             response = django.shortcuts.redirect(_referer(request, output))
         else:

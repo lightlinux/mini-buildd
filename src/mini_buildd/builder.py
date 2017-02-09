@@ -54,7 +54,7 @@ class Build(mini_buildd.misc.Status):
 
         self.live_buildlog_url = breq.get_live_buildlog_loc()
 
-    def __unicode__(self):
+    def __str__(self):
         date_format = "%Y-%b-%d %H:%M:%S"
         return "{s}: [{h}] {k} ({c}): Started {start} ({took} seconds), uploaded {uploaded}: {desc}".format(
             s=self.status,
@@ -259,7 +259,7 @@ class LastBuild(mini_buildd.misc.API):
 
     def __init__(self, build):
         super(LastBuild, self).__init__()
-        self.identity = build.__unicode__()
+        self.identity = build.__str__()
         self.status = build.status
         self.status_desc = build.status_desc
 
@@ -273,7 +273,7 @@ class LastBuild(mini_buildd.misc.API):
         self.upload_result_to = build.upload_result_to
         self.live_buildlog_url = build.live_buildlog_url
 
-    def __unicode__(self):
+    def __str__(self):
         return self.identity
 
 

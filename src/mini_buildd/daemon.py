@@ -432,7 +432,7 @@ class Daemon(object):
         self.last_packages = None
         self.last_builds = None
 
-    def __unicode__(self):
+    def __str__(self):
         return "{r}: {d}".format(r="UP" if self.is_running() else "DOWN", d=self.model)
 
     @classmethod

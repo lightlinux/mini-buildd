@@ -40,7 +40,7 @@ class GnuPGPublicKey(mini_buildd.models.base.StatusModel):
         readonly_fields = ["key_long_id", "key_created", "key_expires", "key_name", "key_fingerprint"]
         exclude = ("extra_options",)
 
-    def __unicode__(self):
+    def __str__(self):
         return "{i}: {n}".format(i=self.key_long_id if self.key_long_id else self.key_id, n=self.key_name)
 
     def clean(self, *args, **kwargs):
@@ -146,11 +146,11 @@ class Uploader(KeyringKey):
         readonly_fields = KeyringKey.Admin.readonly_fields + ["user"]
         filter_horizontal = ("may_upload_to",)
 
-    def __unicode__(self):
+    def __str__(self):
         return "'{u}' may upload to '{r}' with key '{s}'".format(
             u=self.user,
             r=",".join([r.identity for r in self.may_upload_to.all()]),
-            s=super(Uploader, self).__unicode__())
+            s=super(Uploader, self).__str__())
 
 
 def cb_create_user_profile(sender, instance, created, **kwargs):
@@ -174,7 +174,7 @@ class Remote(KeyringKey):
         search_fields = KeyringKey.Admin.search_fields + ["http"]
         readonly_fields = KeyringKey.Admin.readonly_fields + ["key", "key_id", "pickled_data"]
 
-    def __unicode__(self):
+    def __str__(self):
         status = self.mbd_get_status()
         return "{h}: {c}".format(h=self.http,
                                  c=status.chroots_str())

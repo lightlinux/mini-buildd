@@ -37,7 +37,7 @@ class Package(mini_buildd.misc.Status):
         self.requests, self.success, self.failed = {}, {}, {}
         self.port_report = {}
 
-    def __unicode__(self):
+    def __str__(self):
         def arch_status():
             result = []
             for key, _r in list(self.requests.items()):
@@ -185,7 +185,7 @@ class Package(mini_buildd.misc.Status):
                                str(bres.get_pkglog_dir(self.get_status() == self.INSTALLED)),
                                bres.buildlog_name))
 
-        results = header(self.__unicode__(), "=")
+        results = header(self.__str__(), "=")
         results += "\n"
 
         if self.failed:
@@ -209,7 +209,7 @@ class Package(mini_buildd.misc.Status):
             results += "\n".join(("{d:<25}: {r}".format(d=d, r=r) for d, r in list(self.port_report.items())))
 
         self.daemon.model.mbd_notify(
-            self.__unicode__(),
+            self.__str__(),
             results,
             self.repository,
             self.changes)
@@ -224,7 +224,7 @@ class LastPackage(mini_buildd.misc.API):
     def __init__(self, package):
         super(LastPackage, self).__init__()
 
-        self.identity = package.__unicode__()
+        self.identity = package.__str__()
 
         self.started = package.started
         self.took = package.took
@@ -252,7 +252,7 @@ class LastPackage(mini_buildd.misc.API):
         self.failed = {}
         cp_bres(package.failed, self.failed)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.identity
 
 

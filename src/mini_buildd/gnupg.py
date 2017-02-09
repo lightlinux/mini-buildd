@@ -22,7 +22,7 @@ class Colons(object):
     def __init__(self, colons_line):
         self._colons = colons_line.split(":")
 
-    def __unicode__(self):
+    def __str__(self):
         return "{t}: {k}: {u}".format(t=self.type, k=self.key_id, u=self.user_id)
 
     def _get(self, index):

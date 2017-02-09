@@ -424,8 +424,8 @@ this would mean losing all packages!
         colored_status.allow_tags = True
 
         actions = [mbd_action_prepare, mbd_action_check, mbd_action_pc, mbd_action_activate, mbd_action_pca, mbd_action_deactivate, mbd_action_remove]
-        list_display = ["colored_status", "__unicode__"]
-        list_display_links = ["__unicode__"]
+        list_display = ["colored_status", "__str__"]
+        list_display_links = ["__str__"]
 
     @property
     def days_until_recheck(self):

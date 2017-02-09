@@ -89,7 +89,7 @@ Use the 'directory' notation with exactly one trailing slash (like 'http://examp
                 cls._mbd_get_or_create(msglog, url)
             msglog.info("Consider replacing these archives with you closest mirror(s); check netselect-apt.")
 
-    def __unicode__(self):
+    def __str__(self):
         return "{u} (ping {p} ms)".format(u=self.url, p=self.ping)
 
     def clean(self, *args, **kwargs):
@@ -162,7 +162,7 @@ Use the 'directory' notation with exactly one trailing slash (like 'http://examp
 class Architecture(mini_buildd.models.base.Model):
     name = django.db.models.CharField(primary_key=True, max_length=50)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     @classmethod
@@ -180,7 +180,7 @@ class Architecture(mini_buildd.models.base.Model):
 class Component(mini_buildd.models.base.Model):
     name = django.db.models.CharField(primary_key=True, max_length=50)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -350,7 +350,7 @@ codeversion is only used for base sources.""")
                                          origin__in=["Debian", "Ubuntu"],
                                          codename__regex=r"^[a-z]+$")
 
-    def __unicode__(self):
+    def __str__(self):
         """
         .. note:: Workaround for django 1.4.3 bug/new behaviour.
 
@@ -512,7 +512,7 @@ class PrioritySource(mini_buildd.models.base.Model):
             for source in Source.objects.exclude(codename__regex=r"^[a-z]+$"):
                 PrioritySource.mbd_get_or_create(msglog, source=source, priority=1)
 
-    def __unicode__(self):
+    def __str__(self):
         return "{i} with prio={p}".format(i=self.source, p=self.priority)
 
     def mbd_get_apt_preferences(self):

@@ -108,7 +108,7 @@ chroots (with <kbd>qemu-user-static</kbd> installed).
                     except Exception as e:
                         msglog.warn("{s}/{a}: Skipping customized chroot (on another backend, or not on default values) [{e}]".format(s=s.codename, a=a.name, e=e))
 
-    def __unicode__(self):
+    def __str__(self):
         return "{o} '{c}:{a}' ({f})".format(o=self.source.origin,
                                             c=self.source.codename,
                                             a=self.architecture.name,

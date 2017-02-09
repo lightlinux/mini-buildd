@@ -38,7 +38,7 @@ class EmailAddress(mini_buildd.models.base.Model):
     class Admin(mini_buildd.models.base.Model.Admin):
         exclude = ("extra_options",)
 
-    def __unicode__(self):
+    def __str__(self):
         return "{n} <{a}>".format(n=self.name, a=self.address)
 
 
@@ -50,7 +50,7 @@ class Suite(mini_buildd.models.base.Model):
     class Admin(mini_buildd.models.base.Model.Admin):
         exclude = ("extra_options",)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def clean(self, *args, **kwargs):
@@ -100,7 +100,7 @@ lintian) as non-lethal, and will install anyway.
     class Meta(mini_buildd.models.base.Model.Meta):
         unique_together = ("suite", "layout")
 
-    def __unicode__(self):
+    def __str__(self):
         return "{l}: {e}{n}{e} [{u}]{m}".format(
             l=self.layout.name,
             n=self.suite.name,
@@ -307,7 +307,7 @@ packages (to unstable,experimental,..) aimed for Debian.
                     but_automatic_upgrades=False)
                 debdev_experimental.save()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     @classmethod
@@ -349,7 +349,7 @@ class ArchitectureOption(mini_buildd.models.base.Model):
     class Meta(mini_buildd.models.base.Model.Meta):
         unique_together = ("architecture", "distribution")
 
-    def __unicode__(self):
+    def __str__(self):
         return "{a} for {d}".format(a=self.architecture, d=self.distribution)
 
     def clean(self, *args, **kwargs):
@@ -575,7 +575,7 @@ pimp the internal priority up here.
                     # Save changes to Distribution model
                     new_dist.save()
 
-    def __unicode__(self):
+    def __str__(self):
         return "{o} '{b}': {c} ({a}) + ({x})".format(o=self.base_source.origin,
                                                      b=self.base_source.codename,
                                                      c=" ".join(self.mbd_get_components()),
@@ -745,7 +745,7 @@ Example:
             if created:
                 debdev_repo.distributions.add(sid)
 
-    def __unicode__(self):
+    def __str__(self):
         return "{i}: {d}".format(i=self.identity, d=" ".join([d.base_source.codename for d in self.distributions.all()]))
 
     def clean(self, *args, **kwargs):

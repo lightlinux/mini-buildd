@@ -179,7 +179,7 @@ class BlockQueue(queue.Queue):
         self._active = queue.Queue(maxsize=maxsize)
         queue.Queue.__init__(self, maxsize=maxsize)
 
-    def __unicode__(self):
+    def __str__(self):
         return "{l}: {n}/{m} ({p} pending)".format(
             l=self.load,
             n=self._active.qsize(),
@@ -623,7 +623,7 @@ class UserURL(object):
         self._plain = list(parsed)
         self._plain[1] = parsed[1].rpartition("@")[2]
 
-    def __unicode__(self):
+    def __str__(self):
         return self.full
 
     @property
@@ -684,7 +684,7 @@ class Keyring(object):
         self._keyring = self._get_python_keyring()
         self._save_policy = self._keyring.get_password(service, self._SAVE_POLICY_KEY)
 
-    def __unicode__(self):
+    def __str__(self):
         return "Saving '{s}' passwords to '{k}' with policy '{p}'".format(
             s=self._service,
             k=qualname(self._keyring),

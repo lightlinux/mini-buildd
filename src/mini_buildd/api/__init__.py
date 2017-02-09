@@ -102,7 +102,7 @@ different components), or just as safeguard
         del pstate["request"]
         return pstate
 
-    def __unicode__(self):
+    def __str__(self):
         return self._plain_result
 
     @classmethod
@@ -387,7 +387,7 @@ class List(Command):
             if r_result:
                 self.repositories[r.identity] = r_result
 
-    def __unicode__(self):
+    def __str__(self):
         if not self.repositories:
             return "No packages found."
 
@@ -439,7 +439,7 @@ class Show(Command):
             if r_result:
                 self.repositories.append((r, r_result))
 
-    def __unicode__(self):
+    def __str__(self):
         if not self.repositories:
             return "No package found."
 
