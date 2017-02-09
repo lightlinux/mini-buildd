@@ -90,6 +90,12 @@ EOF
 	cat "${configFile}"
 }
 
+# For one-time 2to3 conversion only
+mbd_2to3()
+{
+	2to3 --write --print-function doc/conf.py setup.py src/mini-buildd src/mini-buildd-tool src/mini_buildd/
+}
+
 mbd_pyenv()
 {
 	printf "export PYTHONPATH=\"${PYPATH}\"\n"
