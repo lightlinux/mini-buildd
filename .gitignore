@@ -1,12 +1,13 @@
 # Python
 /build/
+/.pybuild/
 /src/mini_buildd/__init__.py
 *.pyc
 
 # Debian package
 /src/mini_buildd.egg-info/
 /debian/tmp/*
-/debian/python-mini-buildd/*
+/debian/python3-mini-buildd/*
 /debian/mini-buildd/*
 /debian/mini-buildd-common/*
 /debian/*mini-buildd*.*.debhelper
