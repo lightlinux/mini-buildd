@@ -49,13 +49,10 @@ class Call(object):
         """
         result = ""
         for arg in call:
-            # Sequences might need a properly encoded plain 'str' argument for the call to work (see genchanges in daemon.py).
-            # So make sure 'a' is 'unicode'.
-            a = arg.decode(mini_buildd.setup.CHAR_ENCODING, errors="replace") if isinstance(arg, str) else arg
-            if " " in a:
-                result += "\"" + a + "\""
+            if " " in arg:
+                result += "\"" + arg + "\""
             else:
-                result += a
+                result += arg
             result += " "
         return result
 
