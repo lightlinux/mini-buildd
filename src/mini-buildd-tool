@@ -43,6 +43,7 @@ def host_completer(prefix, **kwargs):  # pylint: disable=unused-argument
             host = dput_cf.get(section, "x_mini_buildd_host")
             _add(host)
             _add(host, "admin")
+            users = ""
             try:
                 users = dput_cf.get(section, "x_mini_buildd_users")
                 if not users:
