@@ -247,7 +247,7 @@ class StatusModel(Model):
                     if obj.LETHAL_DEPENDENCIES:
                         raise
                     else:
-                        MsgLog(LOG, request).warn("Check on '{o}' failed: {e}".format(o=o, e=e))
+                        MsgLog(LOG, request).warning("Check on '{o}' failed: {e}".format(o=o, e=e))
 
         @classmethod
         def mbd_prepare(cls, request, obj):
@@ -440,9 +440,9 @@ this would mean losing all packages!
     def mbd_set_changed(self, request):
         if self.mbd_is_active():
             self.status = self.STATUS_PREPARED
-            MsgLog(LOG, request).warn("Deactivated due to changes: {o}".format(o=self))
+            MsgLog(LOG, request).warning("Deactivated due to changes: {o}".format(o=self))
         self.last_checked = self.CHECK_CHANGED
-        MsgLog(LOG, request).warn("Marked as changed: {o}".format(o=self))
+        MsgLog(LOG, request).warning("Marked as changed: {o}".format(o=self))
 
     #
     # Action hooks helpers

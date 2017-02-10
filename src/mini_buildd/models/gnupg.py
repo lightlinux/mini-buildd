@@ -197,7 +197,7 @@ class Remote(KeyringKey):
         self.key = urllib.request.urlopen(url).read()
 
         if self.key:
-            MsgLog(LOG, request).warn("Downloaded remote key integrated: Please check key manually before activation!")
+            MsgLog(LOG, request).warning("Downloaded remote key integrated: Please check key manually before activation!")
         else:
             raise Exception("Empty remote key from '{u}' -- maybe the remote is not prepared yet?".format(u=url))
         super(Remote, self).mbd_prepare(request)

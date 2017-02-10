@@ -106,7 +106,7 @@ chroots (with <kbd>qemu-user-static</kbd> installed).
                             extra_options = "Debootstrap-Command: /usr/sbin/mbd-debootstrap-uname-2.6\n"
                         chroot_model.mbd_get_or_create(msglog, source=s, architecture=a, extra_options=extra_options)
                     except Exception as e:
-                        msglog.warn("{s}/{a}: Skipping customized chroot (on another backend, or not on default values) [{e}]".format(s=s.codename, a=a.name, e=e))
+                        msglog.warning("{s}/{a}: Skipping customized chroot (on another backend, or not on default values) [{e}]".format(s=s.codename, a=a.name, e=e))
 
     def __str__(self):
         return "{o} '{c}:{a}' ({f})".format(o=self.source.origin,
@@ -282,7 +282,7 @@ personality={p}
                     self._mbd_schroot_run(["--directory", "/", "--", "/usr/bin/apt-get", "-q", "-o", "APT::Install-Recommends=false", "--yes"] + args,
                                           namespace="source"))
             except:
-                MsgLog(LOG, request).warn("'apt-get {args}' not supported in this chroot.".format(args=" ".join(args)))
+                MsgLog(LOG, request).warning("'apt-get {args}' not supported in this chroot.".format(args=" ".join(args)))
                 if fatal:
                     raise
 

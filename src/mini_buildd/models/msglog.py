@@ -44,7 +44,7 @@ class MsgLog(object):
         "Map standard python log levels to django's."
         return {logging.DEBUG: django.contrib.messages.DEBUG,
                 logging.INFO: django.contrib.messages.INFO,
-                logging.WARN: django.contrib.messages.WARNING,
+                logging.WARNING: django.contrib.messages.WARNING,
                 logging.ERROR: django.contrib.messages.ERROR,
                 logging.CRITICAL: django.contrib.messages.ERROR}[level]
 
@@ -53,7 +53,7 @@ class MsgLog(object):
         "Map log levels to prefixes (for text-only output)."
         return {logging.DEBUG: "D",
                 logging.INFO: "I",
-                logging.WARN: "W",
+                logging.WARNING: "W",
                 logging.ERROR: "E",
                 logging.CRITICAL: "C"}[level]
 
@@ -86,8 +86,8 @@ class MsgLog(object):
     def info(self, msg):
         self.log(logging.INFO, msg)
 
-    def warn(self, msg):
-        self.log(logging.WARN, msg)
+    def warning(self, msg):
+        self.log(logging.WARNING, msg)
 
     def error(self, msg):
         self.log(logging.ERROR, msg)

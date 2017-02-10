@@ -199,7 +199,7 @@ prepare/remove actions will generate/remove the GnuPG key.
 
     @classmethod
     def mbd_sync(cls, request):
-        MsgLog(LOG, request).warn("The GnuPG key will never be updated automatically. Explicitly run remove+prepare to achieve this.")
+        MsgLog(LOG, request).warning("The GnuPG key will never be updated automatically. Explicitly run remove+prepare to achieve this.")
 
     def mbd_remove(self, request):
         self._mbd_gnupg.remove()
@@ -216,7 +216,7 @@ prepare/remove actions will generate/remove the GnuPG key.
     def mbd_check(self, request):
         "Just warn in case there are no repos and no chroots."
         if not self.mbd_get_daemon().get_active_repositories() and not self.mbd_get_daemon().get_active_chroots():
-            MsgLog(LOG, request).warn("No active chroot or repository.")
+            MsgLog(LOG, request).warning("No active chroot or repository.")
 
     def mbd_get_ftp_hopo(self):
         return mini_buildd.misc.HoPo("{h}:{p}".format(h=self.hostname, p=mini_buildd.misc.HoPo(self.ftpd_bind).port))
