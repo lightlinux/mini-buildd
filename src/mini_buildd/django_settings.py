@@ -91,13 +91,11 @@ def get_django_secret_key(home):
     if not os.path.exists(secret_key_filename):
         # use same randomize-algorithm as in "django/core/management/commands/startproject.py"
         secret_key = "".join([random.choice("abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)") for _i in range(50)])
-        secret_key_fd = os.open(secret_key_filename, os.O_CREAT | os.O_WRONLY, 0o600)
-        os.write(secret_key_fd, secret_key)
-        os.close(secret_key_fd)
+        with os.fdopen(os.open(secret_key_filename, os.O_CREAT | os.O_WRONLY, 0o600), "w") as secret_key_fd:
+            secret_key_fd.write(secret_key)
     else:
-        existing_file = open(secret_key_filename, "r")
-        secret_key = existing_file.read()
-        existing_file.close()
+        with open(secret_key_filename, "r") as existing_file:
+            secret_key = existing_file.read()
 
     return secret_key
 
