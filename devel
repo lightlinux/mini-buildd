@@ -57,7 +57,7 @@ mbd_installdeps()
 	mk-build-deps --install --root-cmd=sudo --remove --tool="apt-get --no-install-recommends --target-release='*'"
 
 	# Extra tools needed for checks
-	sudo apt-get install --no-install-recommends pycodestyle pylint3 pychecker pyflakes3 python-apt python-bs4 python-keyrings.alt
+	sudo apt-get install --no-install-recommends pycodestyle pylint3 pychecker pyflakes3 python3-apt python3-bs4 python3-keyrings.alt
 	# Extra tools needed vc and package building
 	sudo apt-get install --no-install-recommends git git-buildpackage
 	# binary package dependecies so we can just dpkg -i for testing
@@ -67,13 +67,13 @@ mbd_installdeps()
 # grml: The only thing I want here is that my manual test rig can do non-interactive API calls
 mbd_pythonkeyringtestconfig()
 {
-	sudo apt-get install python-keyrings.alt || true   # for the PlainTextKeyring (newer versions only)
+	sudo apt-get install python3-keyrings.alt || true   # for the PlainTextKeyring (newer versions only)
 	local configDir="$(python -c "import keyring.util.platform_; print(keyring.util.platform_.config_root())")" || true
 	[ -n "${configDir}" ] || configDir="${HOME}/.local/share/python_keyring"
 	mkdir -p "${configDir}"
 
 	local configFile="${configDir}/keyringrc.cfg"
-	local pkVersion=$(dpkg-query --show --showformat='${Version}' python-keyring)
+	local pkVersion=$(dpkg-query --show --showformat='${Version}' python3-keyring)
 	if dpkg --compare-versions ${pkVersion} gt 7; then
 		cat <<EOF >"${configFile}"
 [backend]
@@ -272,9 +272,9 @@ mbd_doc()
 
 mbd_installdjango()
 {
-	dpkg -s python-django | grep "^Version" || true
-	sudo dpkg --install ../django-versions/python-django*${1}*.deb
-	dpkg -s python-django | grep "^Version"
+	dpkg -s python3-django | grep "^Version" || true
+	sudo dpkg --install ../django-versions/python3-django*${1}*.deb
+	dpkg -s python3-django | grep "^Version"
 }
 
 mbd_service()
@@ -296,7 +296,7 @@ mbd_purge()
 {
 	_head "Purging all mini-buildd packages"
 	mbd_service stop || true
-	sudo dpkg --purge mini-buildd python-mini-buildd mini-buildd-common
+	sudo dpkg --purge mini-buildd python3-mini-buildd mini-buildd-common
 
 	# Also test mini-buildd's internal sbuild key workaround
 	sudo rm -v -f /var/lib/sbuild/apt-keys/*
