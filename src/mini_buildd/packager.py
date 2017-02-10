@@ -182,7 +182,7 @@ class Package(mini_buildd.misc.Status):
                 s=bres.bres_stat,
                 b=os.path.join(self.daemon.model.mbd_get_http_url(),
                                "log",
-                               str(bres.get_pkglog_dir(self.get_status() == self.INSTALLED)),
+                               bres.get_pkglog_dir(self.get_status() == self.INSTALLED),
                                bres.buildlog_name))
 
         results = header(self.__str__(), "=")
@@ -228,7 +228,7 @@ class LastPackage(mini_buildd.misc.API):
 
         self.started = package.started
         self.took = package.took
-        self.log = os.path.join("/mini_buildd/log", os.path.dirname(str(package.changes.get_pkglog_dir(installed=True))))
+        self.log = os.path.join("/mini_buildd/log", os.path.dirname(package.changes.get_pkglog_dir(installed=True)))
 
         self.changes = {}
         for k in ["source", "distribution", "version"]:
@@ -244,7 +244,7 @@ class LastPackage(mini_buildd.misc.API):
         def cp_bres(src, dst):
             for a, r in list(src.items()):
                 dst[a] = {"bres_stat": r.bres_stat,
-                          "log": os.path.join("/log", str(r.get_pkglog_dir(package.get_status() == package.INSTALLED)), r.buildlog_name)}
+                          "log": os.path.join("/log", r.get_pkglog_dir(package.get_status() == package.INSTALLED), r.buildlog_name)}
 
         self.success = {}
         cp_bres(package.success, self.success)
