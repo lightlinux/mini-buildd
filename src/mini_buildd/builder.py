@@ -140,7 +140,7 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
         better way to get these values.
         """
         regex = re.compile("^(Status|Lintian): [^ ]+$")
-        with open(buildlog) as f:
+        with open(buildlog, encoding=mini_buildd.setup.CHAR_ENCODING, errors="replace") as f:
             for l in f:
                 if regex.match(l):
                     LOG.debug("Build log line detected as build status: {l}".format(l=l.strip()))
