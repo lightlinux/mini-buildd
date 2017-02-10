@@ -71,15 +71,15 @@ class Call(object):
 
     @property
     def stdout(self):
-        """Raw value as str."""
+        """Raw value as bytes."""
         self.kwargs["stdout"].seek(0)
         return self.kwargs["stdout"].read()
 
     @property
     def stderr(self):
-        """Raw value as str."""
+        """Raw value as bytes."""
         if self.kwargs["stderr"] == subprocess.STDOUT:
-            return str("")
+            return b""
         else:
             self.kwargs["stderr"].seek(0)
             return self.kwargs["stderr"].read()
@@ -91,12 +91,14 @@ class Call(object):
 
         |docstr_uout|
         """
-        return self.stdout.decode(mini_buildd.setup.CHAR_ENCODING, errors="replace")
+        stdout = self.stdout
+        return stdout if isinstance(stdout, str) else self.stdout.decode(mini_buildd.setup.CHAR_ENCODING, errors="replace")
 
     @property
     def ustderr(self):
         """|docstr_uout|"""
-        return self.stderr.decode(mini_buildd.setup.CHAR_ENCODING, errors="replace")
+        stderr = self.stderr
+        return stderr if isinstance(stderr, str) else self.stderr.decode(mini_buildd.setup.CHAR_ENCODING, errors="replace")
 
     def log(self):
         """Log calls output to mini-buildd's logging for debugging.
