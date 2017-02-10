@@ -777,12 +777,12 @@ def web_login(host, user, credentials,
         # Login via POST request
         response = opener.open(
             login_url,
-            urllib.parse.urlencode({"username": user,
-                                    "password": password,
-                                    "csrfmiddlewaretoken": csrf_cookies[0].value,
-                                    "this_is_the_login_form": "1",
-                                    "next": next_loc,
-                                   }))
+            bytes(urllib.parse.urlencode({"username": user,
+                                          "password": password,
+                                          "csrfmiddlewaretoken": csrf_cookies[0].value,
+                                          "this_is_the_login_form": "1",
+                                          "next": next_loc}),
+                  encoding=mini_buildd.setup.CHAR_ENCODING))
 
         # If successful, next url of the response must match
         if canonize_url(response.geturl()) != canonize_url(next_url):
