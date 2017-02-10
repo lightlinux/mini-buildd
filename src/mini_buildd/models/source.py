@@ -8,6 +8,7 @@ import logging
 import datetime
 import contextlib
 import copy
+import functools
 
 import django.db.models
 import django.contrib.admin
@@ -403,7 +404,7 @@ codeversion is only used for base sources.""")
 
     def mbd_get_apt_line(self, distribution, prefix="deb "):
         allowed_components = [c.name for c in distribution.components.all()]
-        components = sorted([c for c in self.components.all() if c.name in allowed_components], cmp=cmp_components)
+        components = sorted([c for c in self.components.all() if c.name in allowed_components], key=functools.cmp_to_key(cmp_components))
         return self.mbd_get_apt_line_raw([c.name for c in components], prefix=prefix)
 
     def mbd_get_apt_pin(self):

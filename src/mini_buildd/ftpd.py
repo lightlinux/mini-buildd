@@ -6,6 +6,7 @@ import glob
 import shutil
 import fnmatch
 import logging
+import functools
 
 import debian.deb822
 
@@ -77,7 +78,7 @@ class Incoming(object):
         does not get any yet-unknown build results (hence the
         sorting).
         """
-        for c in sorted(cls.get_changes(), cmp=lambda c0, c1: 1 if fnmatch.fnmatch(c0, "*mini-buildd-build*") else -1):
+        for c in sorted(cls.get_changes(), key=functools.cmp_to_key(lambda c0, c1: 1 if fnmatch.fnmatch(c0, "*mini-buildd-build*") else -1)):
             LOG.info("Incoming: Re-queuing: {c}".format(c=c))
             queue.put(c)
 
