@@ -59,15 +59,11 @@ class Changelog(debian.changelog.Changelog):
     """
     def find_first_not(self, author):
         "Find (author,version+1) of the first changelog block not by given author."
-        def s2u(string):
-            "Compat for python-debian <= 0.1.19: Author strings are of class 'str', not 'unicode'."
-            return str(string) if isinstance(string, str) else string
-
         result = (None, None)
         for index, block in enumerate(self._blocks):
-            result = (s2u(block.author),
+            result = (block.author,
                       "{v}".format(v=self._blocks[index + 1].version) if len(self._blocks) > (index + 1) else "{v}~".format(v=block.version))
-            if author not in s2u(block.author):
+            if author not in block.author:
                 break
         return result
 
