@@ -81,7 +81,7 @@ class BaseGnuPG(object):
 
         with tempfile.TemporaryFile() as t:
             t.write(template.encode(mini_buildd.setup.CHAR_ENCODING))
-            t.write(flavor_additions.get(self.flavor, ""))
+            t.write(flavor_additions.get(self.flavor, "").encode(mini_buildd.setup.CHAR_ENCODING))
             t.seek(0)
             mini_buildd.call.Call(self.gpg_cmd + ["--gen-key"], stdin=t).log().check()
 
