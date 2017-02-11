@@ -536,8 +536,7 @@ class Daemon(object):
 
     @classmethod
     def logcat(cls, lines):
-        logfile = mini_buildd.misc.open_utf8(mini_buildd.setup.LOG_FILE, "r")
-        return mini_buildd.misc.tail(logfile, lines)
+        return "".join(collections.deque(mini_buildd.misc.open_utf8(mini_buildd.setup.LOG_FILE), lines))
 
     @classmethod
     def get_active_chroots(cls):

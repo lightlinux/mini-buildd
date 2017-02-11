@@ -573,18 +573,6 @@ def rmdirs(path):
         LOG.info("Directory removed recursively: {p}".format(p=path))
 
 
-def tail(file_object, lines, line_chars=160):
-    # goto EOF, and get file size
-    file_object.seek(0, 2)
-    file_size = file_object.tell()
-
-    # go approx n lines up from EOF
-    file_object.seek(-(min(file_size, lines * line_chars)), 2)
-
-    # Return tail
-    return file_object.read()
-
-
 class UserURL(object):
     """
     URL with a username attached.
