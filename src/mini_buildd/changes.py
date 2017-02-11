@@ -169,7 +169,7 @@ class Changes(debian.deb822.Changes):
         # Instance might be produced from a temporary file, so we need to save the hash now.
         self._spool_hash = self._spool_hash_from_file()
 
-        super(Changes, self).__init__([] if self._new else open(file_path))
+        super(Changes, self).__init__([] if self._new else mini_buildd.misc.open_utf8(file_path))
 
         self._options = None
         if self.BUILDREQUEST_RE.match(self._file_name):
