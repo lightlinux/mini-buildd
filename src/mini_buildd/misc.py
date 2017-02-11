@@ -7,7 +7,6 @@ import argparse
 import copy
 import datetime
 import shutil
-import codecs
 import glob
 import errno
 import threading
@@ -46,7 +45,7 @@ class ArgparseVersion2StdoutAction(argparse.Action):
 
 
 def open_utf8(path, mode="r", **kwargs):
-    return codecs.open(path, mode, encoding=mini_buildd.setup.CHAR_ENCODING, **kwargs)
+    return open(path, mode, encoding=mini_buildd.setup.CHAR_ENCODING, **kwargs)
 
 
 def check_multiprocessing():
