@@ -1,3 +1,106 @@
+mini-buildd (1.1.1) experimental; urgency=medium
+
+  ** 1.1.x are _development_ releases, use for testing only. **
+
+  This release updates mini-buildd to python3 (one-way, no py2 support).
+  Mostly formal updates and fixes up to the point that the test suite
+  ("./devel checkall") would run again. I expect more py3 issues, and
+  hope for more possible cleanups in later releases:
+
+  * [90da0bf] [devel] Make mini-buildd-tool shortcut for test calls
+    global.
+  * [be288b4] [devel]: Add wait4package(): Wait until a packge is in-repo.
+  * [65ecdd6] [devel]: checkall(): Add migration tests.
+  * [1c086cd] models/repository.py: Improve two error messages (add
+    version) when package is not found in repo.
+  * [c79c627] mini-buildd-tool: Pre-check for None for http_args dict
+    (Fixes (wheezy only): API call has 'version=None' instead of
+    'version=' when --version not given explicitly.)
+  * [25bfd44] misc.py: guess_codeversion(): Better variable naming:
+    digit->number.
+  * [c87cbfc] misc.py: The default 'codename version' is now only a single
+    number for Debian distributions wheezy upwards.
+  * [6962aba] mini-buildd.NEWS: Improve da NEWS.
+  * [cb08681] control: Bulk-update all dependencies for python3.
+  * [ddee0ca] Bulk-update all script shebangs to python3.
+  * [12a3c64] [devel]: Switch check tools pylint, pyflakes => pylint3,
+    pyflakes3.
+  * [cf2575c] debian/*: Rename debhelper files: python-mini-buildd ->
+    python3-mini-buildd
+  * [a8a7cfc] control: Add Conflicts/Replaces for python-mini-buildd for
+    now (needed for /usr/bin/mini-buildd-tool).
+  * [a754159] setup.py: Update to 'print function' to avoid hassles later.
+  * [dc5415b] python3-mini-buildd.lintian-overrides: Also update package
+    name inside file.
+  * [b1c3a93] mini_buildd/setup.py: Fix python path to
+    '/usr/lib/python3/..' (instead of 2.Y scheme for python2).
+  * [678b09d] rules: Switch to pybuild, and update to python3 only.
+  * [4739b09] [devel]: Add little 2to3 convenience helper.
+  * [72fea8e] setup.py: Update write() call for python3.
+  * [8af4b26] .gitignore: Update for packaging changes.
+  * [3c30690] call.py: Drop str/unicode workaround code (obsolete and now
+    failing).
+  * [5e70efc] Bulk-update all python source via '2to3 --write --print-
+    function'.
+  * [7b7883b] pycodestyle: Bulk-Fix blank lines as left by 2to3 tool.
+  * [8fff71b] pycodestyle: Bulk-Fix multiple imports as left by 2to3 tool.
+  * [3233cac] pycodestyle: Bulk-Fix wrong indents as left by 2to3 tool.
+  * [d54d582] [devel]: misc check: Omit checking for future import, now
+    obsolete.
+  * [29a10d2] setup.py: Remove "future imports" from generated
+    __init__.py.
+  * [3489c0d] pyflakes3 (models/source.py): Replace cmp() call (no longer
+    in python3).
+  * [bb6ef69] pylint3: Bulk-replace deprecated log.warn() by
+    log.warning().
+  * [99aed26] pylint3 (models/base.py): Use decode|encodebytes instead of
+    deprecated decode|encodestring method names.
+  * [0fd0254] mini-buildd-tool: Declare varibale in correct scope (fixes
+    new pylint3 warning).
+  * [47561d8] api/__init__.py: Correctly mark unused variable (fixes new
+    pylint3 warning).
+  * [eec9e7c] misc.py: ConfFile: Remove obsolete unicode code.
+  * [d4a2385] Bulk-remove all explicit unicode literals (u', u").
+  * [7a1771a] misc.py: Fix base64 doctest for python3.
+  * [6aa6a07] changes.py: Dump differently to avoid py3 bug (?) in deb822
+    (fixes doctest).
+  * [3b00164] gnupg.py: Fixup gnupg doctests for py3.
+  * [8ac1edf] py3: Bulk-replace __unicode__() by __str__().
+  * [4943e3c] [devel]: Update all py2 Debian package names to py3
+    variants.
+  * [0096863] [devel]: Temporarily skip debrepro test (some sphinx issue
+    again?).
+  * [97bce29] daemon.py: Changelog: Remove obsoleted unicode workaround.
+  * [0286f19] py3: Fix up all sorted(cmp=...) to sorted(key=...) (using
+    cmp_to_key() woakround).
+  * [25fb2a7] packager.py: py3: Remove some obsolete explicit str() (py2:
+    was unicode()) conversions.
+  * [5187e2e] daemon.py (Daemon._port): py3: No longer do extra decoding
+    of author call param.
+  * [0f72c3d] misc.py (web_login): py3: Needs bytes now as POST input.
+  * [d6fd1e0] mini-buildd-tool (cmd_call): py3: Fix terminal output.
+  * [afca5a2] call.py (Call): py3: Fixup [u]stderr, [u]stdout methods.
+  * [6594bcb] builder.py (Build._buildlog_to_buildresult): py3: Fix status
+    parsing for non-ascii buildlogs.
+  * [c67faaf] django_settings.py (get_django_secret_key): Fix for py3 and
+    improve code s/w.
+  * [520f132] models/msglog.py, *.py: Do warn->warning transition for
+    MsgLog also, and fixup forgotten code.
+  * [07ca8dd] [devel]: Update all direct python calls to use "python3".
+  * [aa8512b] misc.py (open_utf8): py3: Just use open(), not
+    codecs.open().
+  * [7658e36] changes.py (Changes.__init__): Open file with encoding.
+  * [557e801] daemon.py (Daemon.logcat): py3: Implement tail via deque
+    (Fixes: API:logcat)
+  * [5c2efc6] gnupg.py (BaseGnuPG.gen_secret_key): Properly encode flavor
+    additions.
+  * [bbb248f] builder.py: py3: Don't use binary mode for sbuildrc snippet
+    file.
+  * [ba8c6d2] mini-buildd-tool (cmd_call): py3: Fix localized terminal
+    output.
+
+ -- Stephan Sürken <absurd@debian.org>  Sun, 12 Feb 2017 14:17:09 +0000
+
 mini-buildd (1.1.0) experimental; urgency=medium
 
   1.1.x development ("python3, https, then some") kickoff.
