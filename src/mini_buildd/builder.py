@@ -125,7 +125,7 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
 # don't remove this, Perl needs it:
 1;
 """.format(apt_allow_unauthenticated=self._breq["Apt-Allow-Unauthenticated"],
-           custom_snippet=mini_buildd.misc.open_utf8(os.path.join(self._build_dir, "sbuildrc_snippet"), 'rb').read())).save()
+           custom_snippet=mini_buildd.misc.open_utf8(os.path.join(self._build_dir, "sbuildrc_snippet")).read())).save()
 
     def _buildlog_to_buildresult(self, buildlog):
         """
