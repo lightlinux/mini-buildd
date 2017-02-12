@@ -3,6 +3,7 @@
 
 import sys
 import os
+import io
 import locale
 import urllib.request
 import urllib.parse
@@ -143,11 +144,15 @@ def cmd_call(args):
     # Output result to stdout
     result = response.read()
     if sys.stdout.isatty() and http_args["output"] == "plain":
-        # On plain output to a tty, try to encode to the preferred locale
-        encoding = response.headers["content-type"].partition("charset=")[2]
-        sys.stdout.write(str(str(result, encoding if encoding else mini_buildd.setup.CHAR_ENCODING).encode(locale.getpreferredencoding(), "backslashreplace")))
+        # 1st, create a proper unicode str from HTTP result
+        result_encoding = response.headers["content-type"].partition("charset=")[2]
+        result_str = str(result, result_encoding if result_encoding else mini_buildd.setup.CHAR_ENCODING, errors="backslashreplace")
+
+        # 2nd, make stdout never fail on encoding errors
+        io.TextIOWrapper(sys.stdout.buffer, encoding=sys.stdout.encoding, errors="backslashreplace").write(result_str)
     else:
-        sys.stdout.write(result)
+        # Write bytes as-is
+        sys.stdout.buffer.write(result)  # pylint: disable=no-member
 
 
 # Unfortunaetely, we cannot group the commands (yet), see http://bugs.python.org/issue14037
