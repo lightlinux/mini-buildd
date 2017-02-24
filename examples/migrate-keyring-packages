@@ -40,4 +40,4 @@ except:
 
 MBD = Daemon(HOST, PORT, PROTO)
 MBD.login(USER)
-MBD._bulk_migrate(["{id}-archive-keyring".format(id=ARCHIVE_ID)])
+MBD.bulk_migrate(["{id}-archive-keyring".format(id=ARCHIVE_ID)])

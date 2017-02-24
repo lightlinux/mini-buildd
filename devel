@@ -177,6 +177,7 @@ mbd_pydoctests()
 		for m in $(mbd_pymodules); do
 			# Files that currently don't work
 			if [ "${m}" = "./doc/conf.py" -o "${m}" = "./setup.py" ]; then
+				printf "W: doctests: Skipping known broken ${m}...\n" >&2
 				continue;
 			fi
 
@@ -214,7 +215,22 @@ mbd_pylint()
 	_check_prog pylint3
 	(
 		pyenv
-		pylint3 setup.py src/mini-buildd src/mini-buildd-tool src/mini_buildd/
+		local f
+		for f in $(mbd_pymodules); do
+			# Files that currently don't work
+			if [ "${f}" = "./doc/conf.py" ]; then
+				printf "W: pylint3: Skipping known broken ${f}...\n" >&2
+				continue;
+			fi
+			printf "pylint3: ${f}..."
+			pylint3 "${f}"
+			printf "ok\n"
+		done
+		for f in $(mbd_pyscripts); do
+			printf "pylint3: ${f}..."
+			pylint3 --disable=C0103 "${f}"
+			printf "ok\n"
+		done
 	)
 }
 

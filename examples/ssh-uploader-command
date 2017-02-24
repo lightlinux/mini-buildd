@@ -78,7 +78,7 @@ def auth_log(msg):
 
     def get_fingerprint():
         try:
-            line = get_last_matching_line("/var/log/auth.log", "^.*sshd\[{pppid}\]: Found matching .* key: .*".format(pppid=getpppid()))
+            line = get_last_matching_line("/var/log/auth.log", r"^.*sshd\[{pppid}\]: Found matching .* key: .*".format(pppid=getpppid()))
             fp = line.rpartition(" ")[2].strip()
         except:
             fp = "NO_FINGERPRINT_FOUND"
