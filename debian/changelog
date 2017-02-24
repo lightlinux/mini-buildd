@@ -1,3 +1,39 @@
+mini-buildd (1.1.2) experimental; urgency=medium
+
+  ** 1.1.x are _development_ releases, use for testing only. **
+
+  This release fixes some regressions from the py3 migration, and
+  improves on internal code checking:
+
+  * [9500a4b] httpd.py: py3: Fix cherrypy static index (needs bytes now).
+  * [a2b582f] models/base.py: py3: Fix pickle support.
+  * [7e608e8] models/base.py: Remove compat unpickle support for old 1.0.x
+    beta release.
+  * [a322a9c] [devel]: Add pymodules, pyscripts and pysources (python code
+    files).
+  * [bdb1cfa] examples: Add missing char encoding mark for two scripts.
+  * [925123f] [devel]: Add "pycompat" search helper.
+  * [9dc4a5a] [devel]: pycodestyle: Use pysources(), and fix some now-
+    detected errors in example scripts.
+  * [3e56491] [devel]: codespell: Use pysources().
+  * [39411fa] [devel]: pydoctests: Use pymodules(), run in src/ and some
+    path fixes in modules.
+  * [d03618a] [devel]: pyflakes: Use pysources() and fixup previously
+    undetected errors in import-08x.
+  * [92361b8] [devel]: pylint: Use pymodules() and pysycripts() and fixup
+    previously undetected errors in example scripts.
+  * [8a81ab4] [devel]: Removing pychecker support (does not seem to work
+    for py3).
+  * [dd62d0d] [devel]: Remove obsoleted extra squeeze exception.
+  * [ae1b30f] [devel]: Compat search helper: Add searching for older
+    debian dist codenames.
+  * [e107d47] [devel]: use mbd_pysources() for 2to3 helper.
+  * [c94fda7] py3: Add all changes from 2to3 re-run with the updated file
+    list.
+  * [7a505b8] [devel]: Code re-ordering.
+
+ -- Stephan Sürken <absurd@debian.org>  Fri, 24 Feb 2017 19:33:59 +0000
+
 mini-buildd (1.1.1) experimental; urgency=medium
 
   ** 1.1.x are _development_ releases, use for testing only. **
