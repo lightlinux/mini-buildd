@@ -99,7 +99,7 @@ mbd_2to3()
 # (temporary) helper to identify possibly obsolete compatibilty code
 mbd_pycompat()
 {
-	grep -i -e "py.*2" -e "django.*1\." -e "django.*compat" -e "compat.*django" -e "bugs.python.org" $(mbd_pysources)
+	grep -i -e "py.*2" -e "django.*1\." -e "django.*compat" -e "compat.*django" -e "bugs.python.org" -e "squeeze" -e "wheezy" -e "etch" -e "lenny" $(mbd_pysources)
 }
 
 mbd_pyenv()
