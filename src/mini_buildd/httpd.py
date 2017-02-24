@@ -60,7 +60,7 @@ class StaticWithIndex(cherrypy._cptools.HandlerTool):  # pylint: disable=protect
 
             return result
 
-        return """\
+        return bytes("""\
 <!DOCTYPE html>
 
 <html>
@@ -85,7 +85,7 @@ class StaticWithIndex(cherrypy._cptools.HandlerTool):  # pylint: disable=protect
            table_parent=cls._TABLE_ROW.format(name="../", mod="&nbsp;", size="PARENT"),
            table_rows="\n".join(table_rows(directory.rstrip(r"\/"))),
            mbd_version=mini_buildd.__version__,
-           cp_version=cherrypy.__version__)
+           cp_version=cherrypy.__version__), encoding=mini_buildd.setup.CHAR_ENCODING)
 
     @classmethod
     def _mbd_serve_index(cls, _section, directory, root="", match="", **_kwargs):
