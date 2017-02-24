@@ -78,7 +78,7 @@ for dsc in debian.deb822.Sources.iter_paragraphs(open(os.path.join(ARGS.path, "S
             v[dsc["version"]]["debs"].append(deb)
 
 if OLD_REPOID != REPOID:
-    raw_input("""
+    input("""
 WARN: Old/new repo ids different: '{old}' vs '{new}'.
 WARN: If this is just a typo, STOP HERE.
 WARN: If you did not create a new repo with the same id, and/or want to force the packages in, force continue.
@@ -87,7 +87,7 @@ WARN: Continue (Ctr-C to cancel)?""".format(old=OLD_REPOID, new=REPOID))
 print("""
 {p}: {l} source packages. Trying to import to '{d}' in reprepo/cwd
 """.format(p=OLD_DIST, l=len(PACKAGES), d=ARGS.distribution))
-raw_input("Start import (dry_run={d}) (Ctrl-C to cancel)?".format(d=ARGS.dry_run))
+input("Start import (dry_run={d}) (Ctrl-C to cancel)?".format(d=ARGS.dry_run))
 print()
 
 for package, versions in PACKAGES.items():

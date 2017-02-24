@@ -193,7 +193,7 @@ mbd_pyflakes()
 	_check_prog pyflakes3
 	(
 		pyenv
-		pyflakes3 src/mini-buildd src/mini_buildd/
+		pyflakes3 $(mbd_pysources)
 	)
 }
 
