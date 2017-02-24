@@ -90,6 +90,29 @@ EOF
 	cat "${configFile}"
 }
 
+# Find files with python code
+MBD_PYFINDPARAMS=(\( -not -wholename './debian/*' -not -wholename './.git/*' -not -wholename './build/*' -not -wholename './.pybuild/*' -type f \))
+mbd_pyscripts()
+{
+	local f
+	for f in $(find "${MBD_PYFINDPARAMS[@]}" -executable); do
+		if head -1 "${f}" | grep --quiet "bin/python"; then
+			printf "%s\n" "${f}"
+		fi
+	done
+}
+
+mbd_pymodules()
+{
+	find "${MBD_PYFINDPARAMS[@]}" -name "*.py"
+}
+
+mbd_pysources()
+{
+	mbd_pyscripts
+	mbd_pymodules
+}
+
 # (temporary) helper for one-time 2to3 conversion
 mbd_2to3()
 {
@@ -124,28 +147,6 @@ mbd_pycodestyle()
 		pyenv
 		pycodestyle --show-source --show-pep8 --config=${PJPATH}/.pycodestyle $(mbd_pysources)
 	)
-}
-
-MBD_PYFINDPARAMS=(\( -not -wholename './debian/*' -not -wholename './.git/*' -not -wholename './build/*' -not -wholename './.pybuild/*' -type f \))
-mbd_pyscripts()
-{
-	local f
-	for f in $(find "${MBD_PYFINDPARAMS[@]}" -executable); do
-		if head -1 "${f}" | grep --quiet "bin/python"; then
-			printf "%s\n" "${f}"
-		fi
-	done
-}
-
-mbd_pymodules()
-{
-	find "${MBD_PYFINDPARAMS[@]}" -name "*.py"
-}
-
-mbd_pysources()
-{
-	mbd_pyscripts
-	mbd_pymodules
 }
 
 mbd_pymisc()
