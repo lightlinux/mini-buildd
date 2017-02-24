@@ -1,7 +1,5 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-from __future__ import print_function
 
 import os
 import re
@@ -98,7 +96,7 @@ for package, versions in PACKAGES.items():
     else:
         print("** Importing {p}".format(p=package))
         r = -1
-        for v, items in sorted(versions.items(), cmp=cmp_versions, reverse=True):
+        for v, items in sorted(list(versions.items()), cmp=cmp_versions, reverse=True):
             dist = ARGS.distribution
             if r >= 0:
                 dist += "-rollback{r}".format(r=r)

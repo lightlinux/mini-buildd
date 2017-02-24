@@ -37,7 +37,6 @@ As SSH user::
 
   Run 'ssh mini-buildd-[admin|staff]@your.host.name mini-buildd-tool -x -z -y
 """
-from __future__ import print_function
 
 import sys
 import os

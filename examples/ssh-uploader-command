@@ -39,7 +39,6 @@ As SSH uploader::
   Patch up your .dput.cf, then you should be able to upload like
   normal via dput with the new target.
 """
-from __future__ import print_function
 
 import sys
 import os

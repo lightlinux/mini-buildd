@@ -17,8 +17,6 @@ Typical example:
 
 migrate-keyring-packages my-archive admin@my-host.intra.net:8066
 """
-from __future__ import unicode_literals
-from __future__ import print_function
 
 import sys
 from mini_buildd.api.client_1_0 import Daemon
