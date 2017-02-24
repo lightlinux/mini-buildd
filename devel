@@ -90,10 +90,16 @@ EOF
 	cat "${configFile}"
 }
 
-# For one-time 2to3 conversion only
+# (temporary) helper for one-time 2to3 conversion
 mbd_2to3()
 {
 	2to3 --write --print-function doc/conf.py setup.py src/mini-buildd src/mini-buildd-tool src/mini_buildd/
+}
+
+# (temporary) helper to identify possibly obsolete compatibilty code
+mbd_pycompat()
+{
+	grep -i -e "py.*2" -e "django.*1\." -e "django.*compat" -e "compat.*django" -e "bugs.python.org" $(mbd_pysources)
 }
 
 mbd_pyenv()
