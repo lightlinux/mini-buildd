@@ -147,7 +147,7 @@ are actually supported by the current model.
 
     def mbd_get_pickled_data(self, default=None):
         try:
-            return pickle.loads(base64.decodebytes(self.pickled_data))
+            return pickle.loads(base64.decodebytes(bytes(self.pickled_data, encoding=mini_buildd.setup.CHAR_ENCODING)))
         except Exception as e:
             mini_buildd.setup.log_exception(LOG, "Ignoring unpickling error", e)
             try:
@@ -158,7 +158,7 @@ are actually supported by the current model.
                 return default
 
     def mbd_set_pickled_data_pickled(self, pickled_data):
-        self.pickled_data = base64.encodebytes(pickled_data)
+        self.pickled_data = str(base64.encodebytes(pickled_data), encoding=mini_buildd.setup.CHAR_ENCODING)
 
     def mbd_set_pickled_data(self, data):
         self.mbd_set_pickled_data_pickled(pickle.dumps(data, pickle.HIGHEST_PROTOCOL))
