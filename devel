@@ -93,7 +93,7 @@ EOF
 # (temporary) helper for one-time 2to3 conversion
 mbd_2to3()
 {
-	2to3 --write --print-function doc/conf.py setup.py src/mini-buildd src/mini-buildd-tool src/mini_buildd/
+	2to3 --write --print-function $(mbd_pysources)
 }
 
 # (temporary) helper to identify possibly obsolete compatibilty code
