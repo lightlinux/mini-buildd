@@ -211,7 +211,6 @@ mbd_pylintgeneratedmembers()
 
 mbd_pylint()
 {
-	[ "$(lsb_release -s -c)" != "squeeze" ] || { printf "W: Skipping pylint on squeeze\n" >&2; return; }
 	_check_prog pylint3
 	(
 		pyenv
