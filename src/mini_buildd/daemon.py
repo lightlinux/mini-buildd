@@ -41,19 +41,19 @@ class Changelog(debian.changelog.Changelog):
     """
     Changelog class with some extra functions.
 
-    >>> cl = Changelog(mini_buildd.misc.open_utf8("./examples/doctests/changelog"), max_blocks=100)
+    >>> cl = Changelog(mini_buildd.misc.open_utf8("../examples/doctests/changelog"), max_blocks=100)
     >>> cl.find_first_not("mini-buildd@buildd.intra")
     ('Stephan S\\xfcrken <absurd@debian.org>', '1.0.0-2')
 
-    >>> cl = Changelog(mini_buildd.misc.open_utf8("./examples/doctests/changelog.ported"), max_blocks=100)
+    >>> cl = Changelog(mini_buildd.misc.open_utf8("../examples/doctests/changelog.ported"), max_blocks=100)
     >>> cl.find_first_not("mini-buildd@buildd.intra")
     ('Stephan S\\xfcrken <absurd@debian.org>', '1.0.0-2')
 
-    >>> cl = Changelog(mini_buildd.misc.open_utf8("./examples/doctests/changelog.oneblock"), max_blocks=100)
+    >>> cl = Changelog(mini_buildd.misc.open_utf8("../examples/doctests/changelog.oneblock"), max_blocks=100)
     >>> cl.find_first_not("mini-buildd@buildd.intra")
     ('Stephan S\\xfcrken <absurd@debian.org>', '1.0.1-1~')
 
-    >>> cl = Changelog(mini_buildd.misc.open_utf8("./examples/doctests/changelog.oneblock.ported"), max_blocks=100)
+    >>> cl = Changelog(mini_buildd.misc.open_utf8("../examples/doctests/changelog.oneblock.ported"), max_blocks=100)
     >>> cl.find_first_not("mini-buildd@buildd.intra")
     ('Mini Buildd <mini-buildd@buildd.intra>', '1.0.1-1~')
     """

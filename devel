@@ -174,10 +174,15 @@ mbd_pydoctests()
 {
 	(
 		pyenv
-		for m in $(find src/mini_buildd/ -maxdepth 1 -name "*.py"); do
-			local module="$(basename $(tr '/' '.' <<< ${m}) '.py' | cut -d. -f2-)"
+		for m in $(mbd_pymodules); do
+			# Files that currently don't work
+			if [ "${m}" = "./doc/conf.py" -o "${m}" = "./setup.py" ]; then
+				continue;
+			fi
+
+			local module="$(basename $(tr '/' '.' <<< ${m:4}) '.py' | cut -d. -f2-)"
 			printf "=> Doctest on %s (%s)\n" "${m}" "${module}"
-			./src/run-doctest "${module}"
+			( cd ./src/ && ./run-doctest "${module}" )
 		done
 		python3 -m doctest -v src/mini-buildd src/mini-buildd-tool
 	)

@@ -199,8 +199,8 @@ class TmpGnuPG(BaseGnuPG, mini_buildd.misc.TmpDir):
     """
     >>> # mini_buildd.setup.DEBUG.append("keep")  # Enable 'keep' for debugging only
     >>> gnupg_home = mini_buildd.misc.TmpDir()
-    >>> dummy = shutil.copy2("./examples/doctests/gpg/secring.gpg", gnupg_home.tmpdir)
-    >>> dummy = shutil.copy2("./examples/doctests/gpg/pubring.gpg", gnupg_home.tmpdir)
+    >>> dummy = shutil.copy2("../examples/doctests/gpg/secring.gpg", gnupg_home.tmpdir)
+    >>> dummy = shutil.copy2("../examples/doctests/gpg/pubring.gpg", gnupg_home.tmpdir)
     >>> gnupg = BaseGnuPG(home=gnupg_home.tmpdir)
 
     >>> gnupg.get_first_sec_colon("sec").type

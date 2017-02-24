@@ -30,10 +30,10 @@ class Changes(debian.deb822.Changes):
         """
         Uploader options in changes.
 
-        >>> "{}".format(Changes("./examples/doctests/changes.options").options)
+        >>> "{}".format(Changes("../examples/doctests/changes.options").options)
         "auto-ports=['jessie-test-unstable', 'squeeze-test-snasphot'], ignore-lintian=True, ignore-lintian[i386]=False, internal-apt-priority=543, run-lintian=True, run-lintian[i386]=False"
 
-        >>> "{}".format(Changes("./examples/doctests/changes.magic").options)
+        >>> "{}".format(Changes("../examples/doctests/changes.magic").options)
         "auto-ports=['jessie-test-unstable', 'squeeze-test-snasphot'], ignore-lintian=True"
         """
         class Bool(object):
