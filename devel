@@ -120,10 +120,32 @@ mbd_pycodestyle()
 	)
 }
 
+MBD_PYFINDPARAMS=(\( -not -wholename './debian/*' -not -wholename './.git/*' -not -wholename './build/*' -not -wholename './.pybuild/*' -type f \))
+mbd_pyscripts()
+{
+	local f
+	for f in $(find "${MBD_PYFINDPARAMS[@]}" -executable); do
+		if head -1 "${f}" | grep --quiet "bin/python"; then
+			printf "%s\n" "${f}"
+		fi
+	done
+}
+
+mbd_pymodules()
+{
+	find "${MBD_PYFINDPARAMS[@]}" -name "*.py"
+}
+
+mbd_pysources()
+{
+	mbd_pyscripts
+	mbd_pymodules
+}
+
 mbd_pymisc()
 {
 	local f regex
-	for f in src/mini-buildd $(find src/mini_buildd -type f -name "*.py"); do
+	for f in $(mbd_pysources); do
 		for regex in \
 			^\#\ -\\*-\ coding:\ utf-8\ -\\*-; do
 			printf "Checking '${f}' for '${regex}'..."
