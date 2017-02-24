@@ -163,7 +163,7 @@ mbd_pymisc()
 
 mbd_codespell()
 {
-	local ups=$(codespell --quiet-level=2 src/mini-buildd src/mini-buildd-tool src/mini_buildd/ doc/)
+	local ups=$(codespell --quiet-level=2 $(mbd_pysources))
 	if [ -n "${ups}" ]; then
 		printf "${ups}\n" >&2
 		return 1
