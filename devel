@@ -122,7 +122,7 @@ mbd_pycodestyle()
 	_check_prog pycodestyle
 	(
 		pyenv
-		pycodestyle --show-source --show-pep8 --config=${PJPATH}/.pycodestyle doc/conf.py setup.py src/mini-buildd src/mini-buildd-tool src/mini_buildd/
+		pycodestyle --show-source --show-pep8 --config=${PJPATH}/.pycodestyle $(mbd_pysources)
 	)
 }
 
