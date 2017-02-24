@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 """Script to use as a 'command' in an authorized_key file to allow authorization to mini-buildd uploads via SSH.
 
 Steps to install 'uploads via SSH' (uses 'mini-buildd-uploader' as user name).
