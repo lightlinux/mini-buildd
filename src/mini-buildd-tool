@@ -73,10 +73,7 @@ PARSER = argparse.ArgumentParser(prog="mini-buildd-tool",
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
 
-# PARSER.add_argument("--version", action="version", version=mini_buildd.__version__)
-# python 2 compat (just use above for python 3)
-PARSER.add_argument("--version", nargs=0, action=mini_buildd.misc.ArgparseVersion2StdoutAction)
-
+PARSER.add_argument("--version", action="version", version=mini_buildd.__version__)
 PARSER.add_argument("-v", "--verbose", dest="verbosity", action="count", default=0,
                     help="lower log level. Give twice for max logs")
 PARSER.add_argument("-q", "--quiet", dest="terseness", action="count", default=0,
@@ -119,11 +116,7 @@ def cmd_call(args):
     # Compute api call parameters
     http_args = {}
     for k in [k for k in list(args.__dict__.keys()) if k not in ["terseness", "verbosity", "host", "reset_save_policy", "protocol", "command_class", "func"]]:
-        # Under wheezy, value of version may be None if not given; urllib.urlencode() later will convert this value to string "None" (bummer).
-        # Strangely, this only happens when the ArgparseVersion2StdoutAction() workaround for --version is used (see above).
-        # So we need to check for None right here and use the empty string to make this compatible with wheezy.
-        # For 1.1.x/python3: Both the ArgparseVersion2StdoutAction() workaround above and this one must be removed.
-        http_args[k] = "" if args.__dict__[k] is None else args.__dict__[k]
+        http_args[k] = args.__dict__[k]
 
     # Confirm if required by this call
     if args.command_class.CONFIRM:

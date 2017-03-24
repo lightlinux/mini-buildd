@@ -2,8 +2,6 @@
 
 import os
 import platform
-import sys
-import argparse
 import copy
 import datetime
 import shutil
@@ -33,15 +31,6 @@ LOG = logging.getLogger(__name__)
 
 # "Python 2 compat flags"
 PY2_HAS_URLLIB2_CAFILE = LooseVersion(platform.python_version()) >= LooseVersion("2.7.9")
-
-
-class ArgparseVersion2StdoutAction(argparse.Action):
-    """
-    python 2 compat: workaround for https://bugs.python.org/issue18920 (version goes to stderr).
-    """
-    def __call__(self, parser, namespace, values, option_string=None):
-        print(mini_buildd.__version__)
-        sys.exit(0)
 
 
 def open_utf8(path, mode="r", **kwargs):
