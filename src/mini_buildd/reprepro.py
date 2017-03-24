@@ -13,7 +13,6 @@ import mini_buildd.call
 
 LOG = logging.getLogger(__name__)
 
-_LOCKS_LOCK = threading.Lock()
 _LOCKS = {}
 
 
@@ -34,11 +33,8 @@ class Reprepro(object):
     def __init__(self, basedir):
         self._basedir = basedir
         self._cmd = ["reprepro", "--verbose", "--waitforlock", "10", "--basedir", "{b}".format(b=basedir)]
-        # Seems dict.setdefault 'should' be atomic, but it may be not the case in all versions >=2.6
-        # See: http://bugs.python.org/issue13521
-        with _LOCKS_LOCK:
-            self._lock = _LOCKS.setdefault(self._basedir, threading.Lock())
-            LOG.debug("Lock for reprepro repository '{r}': {o}".format(r=self._basedir, o=self._lock))
+        self._lock = _LOCKS.setdefault(self._basedir, threading.Lock())
+        LOG.debug("Lock for reprepro repository '{r}': {o}".format(r=self._basedir, o=self._lock))
 
     def _call(self, args, show_command=False):
         return "{command}{output}".format(command="Running {command}\n".format(command=" ".join(self._cmd + args)) if show_command else "",
