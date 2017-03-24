@@ -23,7 +23,7 @@ import logging.handlers
 
 import debian.debian_support
 
-import mini_buildd.setup  # pylint: disable=wrong-import-position
+import mini_buildd.setup
 
 LOG = logging.getLogger(__name__)
 
