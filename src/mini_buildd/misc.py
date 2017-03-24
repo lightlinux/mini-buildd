@@ -5,7 +5,6 @@ import copy
 import datetime
 import shutil
 import glob
-import errno
 import threading
 import socket
 import queue
@@ -523,22 +522,6 @@ def list_get(list_, index, default=None):
         return list_[index]
     except IndexError:
         return default
-
-
-def mkdirs(path):
-    """
-    Make path and any parents needed. Succeed even if it does already exist in the first place.
-
-    .. note:: Needed for python 2.x only. For 3.x, just use 'exist_ok' parameter for os.makedirs().
-    """
-    try:
-        os.makedirs(path)
-        LOG.info("Directory created: {d}".format(d=path))
-    except OSError as e:
-        if e.errno != errno.EEXIST:
-            raise
-        else:
-            LOG.debug("Directory already exists, ignoring; {d}".format(d=path))
 
 
 def rmdirs(path):

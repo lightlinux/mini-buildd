@@ -180,7 +180,7 @@ class Changes(debian.deb822.Changes):
             self._type = self.TYPE_DEFAULT
 
         # Be sure base dir is always available
-        mini_buildd.misc.mkdirs(os.path.dirname(file_path))
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
         # This is just for stat/display purposes
         self.remote_http_url = None

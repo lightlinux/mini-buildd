@@ -1244,7 +1244,7 @@ DscIndices: Sources Release . .gz .bz2
                 raise django.core.exceptions.ValidationError("Mandatory component 'main' missing in: {d}".format(d=d))
 
         # (Re-)build config files
-        mini_buildd.misc.mkdirs(os.path.join(self.mbd_get_path(), "conf"))
+        os.makedirs(os.path.join(self.mbd_get_path(), "conf"), exist_ok=True)
         mini_buildd.misc.ConfFile(
             os.path.join(self.mbd_get_path(), "conf", "distributions"),
             self._mbd_reprepro_config()).save()

@@ -38,7 +38,7 @@ class Build(mini_buildd.misc.Status):
         self._build_dir = self._breq.get_spool_dir()
         self._chroot = "mini-buildd-{d}-{a}".format(d=self._breq["Base-Distribution"], a=self.architecture)
         # Always generate the now out-of-chroot 'libdir' (needed for ccache, ...).
-        mini_buildd.misc.mkdirs(mini_buildd.misc.chroot_libdir_path(self._breq["Base-Distribution"], self.architecture))
+        os.makedirs(mini_buildd.misc.chroot_libdir_path(self._breq["Base-Distribution"], self.architecture), exist_ok=True)
 
         self._bres = breq.gen_buildresult()
 

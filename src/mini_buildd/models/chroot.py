@@ -172,7 +172,7 @@ chroots (with <kbd>qemu-user-static</kbd> installed).
                        ["/bin/rm", "--verbose", self.mbd_get_system_schroot_conf_file()])]
 
     def mbd_prepare(self, request):
-        mini_buildd.misc.mkdirs(self.mbd_get_path())
+        os.makedirs(self.mbd_get_path(), exist_ok=True)
 
         # Set personality
         self.personality = ""

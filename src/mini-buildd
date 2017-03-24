@@ -174,12 +174,13 @@ Comma-separated list of special debugging options:
         mini_buildd.setup.MANUAL_DIR = os.path.realpath("/usr/share/doc/mini-buildd/html")
 
         # Create base directories
-        mini_buildd.misc.mkdirs(mini_buildd.setup.INCOMING_DIR)
-        mini_buildd.misc.mkdirs(mini_buildd.setup.REPOSITORIES_DIR)
-        mini_buildd.misc.mkdirs(mini_buildd.setup.LOG_DIR)
-        mini_buildd.misc.mkdirs(mini_buildd.setup.TMP_DIR)
-        mini_buildd.misc.mkdirs(mini_buildd.setup.SPOOL_DIR)
-        mini_buildd.misc.mkdirs(mini_buildd.setup.CHROOTS_LIBDIR)
+        for d in [mini_buildd.setup.INCOMING_DIR,
+                  mini_buildd.setup.REPOSITORIES_DIR,
+                  mini_buildd.setup.LOG_DIR,
+                  mini_buildd.setup.TMP_DIR,
+                  mini_buildd.setup.SPOOL_DIR,
+                  mini_buildd.setup.CHROOTS_LIBDIR]:
+            os.makedirs(d, exist_ok=True)
 
     @staticmethod
     def _log_handler_file():
