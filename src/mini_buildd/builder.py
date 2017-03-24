@@ -104,7 +104,7 @@ class Build(mini_buildd.misc.Status):
 
     @property
     def took(self):
-        return round(mini_buildd.misc.timedelta_total_seconds(self.built - self.started), 1) if self.built else "n/a"
+        return round((self.built - self.started).total_seconds(), 1) if self.built else "n/a"
 
     def _generate_sbuildrc(self):
         """

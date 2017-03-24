@@ -144,7 +144,7 @@ Use the 'directory' notation with exactly one trailing slash (like 'http://examp
                     raise
 
             delta = datetime.datetime.now() - t0
-            self.ping = mini_buildd.misc.timedelta_total_seconds(delta) * (10 ** 3)
+            self.ping = delta.total_seconds() * (10 ** 3)
             self.save()
             MsgLog(LOG, request).debug("{s}: Ping!".format(s=self))
         except Exception as e:

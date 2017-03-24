@@ -58,7 +58,7 @@ class Package(mini_buildd.misc.Status):
 
     @property
     def took(self):
-        return round(mini_buildd.misc.timedelta_total_seconds(self.finished - self.started), 1) if self.finished else "n/a"
+        return round((self.finished - self.started).total_seconds(), 1) if self.finished else "n/a"
 
     def precheck(self):
         # Get/check repository, distribution and suite for changes

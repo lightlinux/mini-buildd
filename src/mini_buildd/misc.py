@@ -217,13 +217,6 @@ def dont_care_run(func, *args, **kwargs):
         pass
 
 
-def timedelta_total_seconds(delta):
-    """
-    python 2.6 compat for timedelta.total_seconds() from python >= 2.7.
-    """
-    return float(delta.microseconds + (delta.seconds + delta.days * 24 * 3600) * (10 ** 6)) / (10 ** 6)
-
-
 def codename_has_lintian_suppress(codename):
     "Test if the distribution (identified by the codename) has a recent lintian with the '--suppress-tags' option."
     return codename not in ["buzz", "rex", "bo", "hamm", "slink", "potato", "woody", "sarge", "etch", "lenny"]
