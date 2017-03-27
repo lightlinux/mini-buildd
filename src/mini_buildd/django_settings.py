@@ -3,7 +3,6 @@
 import os
 import logging
 import random
-from distutils.version import LooseVersion
 
 import django
 import django.conf
@@ -142,53 +141,32 @@ def configure(smtp_string, loglevel):
         "INSTALLED_APPS": MBD_INSTALLED_APPS
     }
 
-    if LooseVersion(django.get_version()) < LooseVersion("1.8"):
-        # Django <= 1.7 compat: TEMPLATE settings
-        settings.update({
-            "TEMPLATE_DEBUG": debug,
-            "TEMPLATE_DIRS": ["{p}/mini_buildd/templates".format(p=mini_buildd.setup.PY_PACKAGE_PATH)],
-            "TEMPLATE_LOADERS": (
-                "django.template.loaders.filesystem.Loader",
-                "django.template.loaders.app_directories.Loader"),
-            "TEMPLATE_CONTEXT_PROCESSORS": (
-                # django default (from conf/global_settings):
-                "django.contrib.auth.context_processors.auth",
-                "django.core.context_processors.debug",
-                "django.core.context_processors.i18n",
-                "django.core.context_processors.media",
-                "django.core.context_processors.static",
-                "django.core.context_processors.tz",
-                "django.contrib.messages.context_processors.messages",
-                # mini-buildd custom:
-                "mini_buildd.django_settings.context_processor"),
-        })
-    else:
-        settings.update({
-            "TEMPLATES": [
-                {
-                    "BACKEND": "django.template.backends.django.DjangoTemplates",
-                    "DIRS": [
-                        "{p}/mini_buildd/templates".format(p=mini_buildd.setup.PY_PACKAGE_PATH)
+    settings.update({
+        "TEMPLATES": [
+            {
+                "BACKEND": "django.template.backends.django.DjangoTemplates",
+                "DIRS": [
+                    "{p}/mini_buildd/templates".format(p=mini_buildd.setup.PY_PACKAGE_PATH)
+                ],
+                "APP_DIRS": True,
+                "OPTIONS": {
+                    "debug": debug,
+                    "context_processors": [
+                        # former django default (>= 1.9, the default is empty):
+                        "django.contrib.auth.context_processors.auth",
+                        "django.template.context_processors.debug",
+                        "django.template.context_processors.i18n",
+                        "django.template.context_processors.media",
+                        "django.template.context_processors.static",
+                        "django.template.context_processors.tz",
+                        "django.contrib.messages.context_processors.messages",
+                        # mini-buildd custom:
+                        "mini_buildd.django_settings.context_processor"
                     ],
-                    "APP_DIRS": True,
-                    "OPTIONS": {
-                        "debug": debug,
-                        "context_processors": [
-                            # former django default (>= 1.9, the default is empty):
-                            "django.contrib.auth.context_processors.auth",
-                            "django.template.context_processors.debug",
-                            "django.template.context_processors.i18n",
-                            "django.template.context_processors.media",
-                            "django.template.context_processors.static",
-                            "django.template.context_processors.tz",
-                            "django.contrib.messages.context_processors.messages",
-                            # mini-buildd custom:
-                            "mini_buildd.django_settings.context_processor"
-                        ],
-                    },
                 },
-            ],
-        })
+            },
+        ],
+    })
 
     django.conf.settings.configure(**settings)
     django.setup()
