@@ -352,14 +352,6 @@ codeversion is only used for base sources.""")
                                          codename__regex=r"^[a-z]+$")
 
     def __str__(self):
-        """
-        .. note:: Workaround for django 1.4.3 bug/new behaviour.
-
-            Since django 1.4.3, accessing 'self.archives.all()'
-            does not work anymore: "maximum recursion depth
-            exceeded" when trying to add a new source. Seems to
-            be a django bug (?). Just don't use it here.
-        """
         try:
             archive = self.mbd_get_archive().url
         except:
