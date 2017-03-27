@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-# django false-positives:
-# pylint: disable=unexpected-keyword-arg,no-value-for-parameter
 
 import os
 import copy
