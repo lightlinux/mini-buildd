@@ -113,12 +113,6 @@ mbd_pysources()
 	mbd_pymodules
 }
 
-# (temporary) helper for one-time 2to3 conversion
-mbd_2to3()
-{
-	2to3 --write --print-function $(mbd_pysources)
-}
-
 mbd_pyenv()
 {
 	printf "export PYTHONPATH=\"${PYPATH}\"\n"
