@@ -119,12 +119,6 @@ mbd_2to3()
 	2to3 --write --print-function $(mbd_pysources)
 }
 
-# (temporary) helper to identify possibly obsolete compatibilty code
-mbd_pycompat()
-{
-	grep -i -e "py.*2" -e "django.*1\." -e "django.*compat" -e "compat.*django" -e "bugs.python.org" -e "squeeze" -e "wheezy" -e "etch" -e "lenny" $(mbd_pysources)
-}
-
 mbd_pyenv()
 {
 	printf "export PYTHONPATH=\"${PYPATH}\"\n"
