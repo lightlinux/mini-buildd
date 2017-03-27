@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import os
-from distutils.version import LooseVersion
 
 import django
 import django.utils.safestring
@@ -21,13 +20,9 @@ def mbd_dirname(path):
     return os.path.dirname(path)
 
 
-# Use assignment_tag form campat 1.7, 1.8. django >= 1.9 allows this to be a simple_tag
-@register.assignment_tag
+@register.simple_tag
 def mbd_jquery_path():
-    if LooseVersion(django.get_version()) >= LooseVersion("1.9.0"):
-        return "admin/js/vendor/jquery/jquery.js"
-    else:
-        return "admin/js/jquery.js"
+    return "admin/js/vendor/jquery/jquery.js"
 
 
 @register.simple_tag
