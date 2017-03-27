@@ -49,11 +49,11 @@ def host_completer(prefix, **kwargs):  # pylint: disable=unused-argument
                 users = dput_cf.get(section, "x_mini_buildd_users")
                 if not users:
                     raise Exception()
-            except:
+            except:  # pylint: disable=bare-except
                 users = os.getenv("USER")
             for u in users.split(" "):
                 _add(host, u)
-        except:
+        except:  # pylint: disable=bare-except
             pass
     return hosts
 
@@ -63,7 +63,7 @@ def host_from_dput(section):
     dput_cf.read(os.path.expanduser("~/.dput.cf"))
     try:
         return dput_cf.get("mini-buildd-" + section, "x_mini_buildd_host")
-    except:
+    except:  # pylint: disable=bare-except
         return dput_cf.get(section, "x_mini_buildd_host")
 
 
@@ -106,7 +106,7 @@ def cmd_call(args):
     user, dummy, host = args.host.rpartition("@")
     try:
         host = host_from_dput(host)
-    except:
+    except:  # pylint: disable=bare-except
         pass
 
     # Log in if user given explicitely, or required by the command

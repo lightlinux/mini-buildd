@@ -212,7 +212,7 @@ def nop(*_args, **_kwargs):
 def dont_care_run(func, *args, **kwargs):
     try:
         func(*args, **kwargs)
-    except:
+    except:  # pylint: disable=bare-except
         pass
 
 
@@ -365,7 +365,7 @@ def guess_codeversion(release):
             return number0  # Debian >= wheezy: '~testN': One number tells the codeversion
         else:
             return number0 + number1  # Debian < wheezy, Ubuntu, maybe others: 1st plus 2nd number is needed
-    except:
+    except:  # pylint: disable=bare-except
         return "~" + release["Codename"].upper()
 
 
@@ -375,7 +375,7 @@ def guess_default_dirchroot_backend(overlay, aufs):
         # linux 3.18-1~exp1 in Debian removed aufs in favor of overlay
         if debian.debian_support.Version(release) < debian.debian_support.Version("3.18"):
             return aufs
-    except:
+    except:  # pylint: disable=bare-except
         pass
 
     return overlay
@@ -453,7 +453,7 @@ def run_as_thread(thread_func, name, daemon=False, **kwargs):
             LOG.debug("Thread function finished: {f}.".format(f=qual_thread_func))
         except Exception as e:
             mini_buildd.setup.log_exception(LOG, "Error in thread function: {f}".format(f=qual_thread_func), e)
-        except:
+        except:  # pylint: disable=bare-except
             LOG.exception("Non-standard exception in thread function: {f}".format(f=qual_thread_func))
 
     thread = threading.Thread(target=run, name=name, kwargs=kwargs)
@@ -513,7 +513,7 @@ def b642u(base64_bytestream):
 def get_cpus():
     try:
         return multiprocessing.cpu_count()
-    except:
+    except:  # pylint: disable=bare-except
         return 1
 
 

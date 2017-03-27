@@ -59,7 +59,7 @@ class PIDFile(object):
                 try:
                     pidfile_name = open("/proc/{}/comm".format(pidfile_pid)).read()
                     is_stale = pidfile_name != name
-                except:
+                except:  # pylint: disable=bare-except
                     # Ignore errors: Avoid any possible startup issues due to above code.
                     pass
 

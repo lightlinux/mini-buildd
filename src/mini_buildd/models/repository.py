@@ -780,7 +780,7 @@ Example:
             uploader = None
             try:
                 uploader = u.uploader
-            except:
+            except:  # pylint: disable=bare-except
                 LOG.warning("User '{u}' does not have an uploader profile (deliberately removed?)".format(u=u))
 
             if uploader and uploader.mbd_is_active() and uploader.may_upload_to.all().filter(identity=self.identity):

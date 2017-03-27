@@ -153,7 +153,7 @@ chroots (with <kbd>qemu-user-static</kbd> installed).
         # We should be able to assemble the sequence anyway to be able to remove that chroot.
         try:
             debootstrap_url = self.source.mbd_get_archive().url
-        except:
+        except:  # pylint: disable=bare-except
             LOG.warning("{c}: Can't get archive URL from source (source removed?).".format(c=self))
             debootstrap_url = "no_archive_url_found_maybe_source_is_removed"
 
@@ -181,7 +181,7 @@ chroots (with <kbd>qemu-user-static</kbd> installed).
         else:
             try:
                 self.personality = self.PERSONALITIES[self.architecture.name]
-            except:
+            except:  # pylint: disable=bare-except
                 self.personality = "linux"
 
         mini_buildd.misc.ConfFile(
@@ -237,7 +237,7 @@ personality={p}
         try:
             self._mbd_schroot_run(["--directory", "/", "--", "grep", "^{u}".format(u=os.getenv("USER")), "/etc/sudoers"])
             has_sudo_workaround = True
-        except:
+        except:  # pylint: disable=bare-except
             MsgLog(LOG, request).info("{c}: Ok, no sudo workaround found.".format(c=self))
 
         if has_sudo_workaround:
@@ -281,7 +281,7 @@ personality={p}
                 MsgLog(LOG, request).log_text(
                     self._mbd_schroot_run(["--directory", "/", "--", "/usr/bin/apt-get", "-q", "-o", "APT::Install-Recommends=false", "--yes"] + args,
                                           namespace="source"))
-            except:
+            except:  # pylint: disable=bare-except
                 MsgLog(LOG, request).warning("'apt-get {args}' not supported in this chroot.".format(args=" ".join(args)))
                 if fatal:
                     raise
@@ -425,7 +425,7 @@ class LVMChroot(Chroot):
     def mbd_get_volume_group(self):
         try:
             return self.looplvmchroot.mbd_get_volume_group()
-        except:
+        except:  # pylint: disable=bare-except
             return self.volume_group
 
     def mbd_get_lvm_device(self):
