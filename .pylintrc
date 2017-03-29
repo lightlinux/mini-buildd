@@ -4,7 +4,6 @@
 disable=
 	missing-docstring,
 	line-too-long,
-	no-init,
 	logging-format-interpolation,
 	locally-disabled
 
