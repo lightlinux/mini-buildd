@@ -192,10 +192,13 @@ mbd_pylintgeneratedmembers()
 	# Generate all identifiers with "has no xxx member" error. If
 	# needed, manually add those that are _actually_
 	# false-positive due to django to -> .pylintrc.
-	for o in $(${0} pylint3 | grep "has no.*member" | cut -d"'" -f4 | sort | uniq); do
-		printf "${o},"
+	sed -i "s/^generated-members=.*/generated-members=/" "${PYLINTRC}"  # Reset, so we actually see all these errors
+	local gm=""
+	for o in $(${0} pylint | grep "has no.*member" | cut -d"'" -f4 | sort | uniq); do
+		gm+="${o},"
 	done
-	printf "\n"
+	sed -i "s/^generated-members=.*/generated-members=${gm}/" "${PYLINTRC}"
+	printf "${PYLINTRC} tainted.\n"
 }
 
 mbd_pylint()
