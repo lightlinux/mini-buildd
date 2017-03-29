@@ -46,7 +46,7 @@ def host_completer(prefix, **kwargs):  # pylint: disable=unused-argument
             _add(host, "admin")
             users = ""
             try:
-                users = dput_cf.get(section, "x_mini_buildd_users")
+                users = dput_cf.get(section, "x_mini_buildd_users")  # pylint: disable=redefined-variable-type
                 if not users:
                     raise Exception()
             except:  # pylint: disable=bare-except

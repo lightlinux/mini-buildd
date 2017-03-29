@@ -177,7 +177,7 @@ chroots (with <kbd>qemu-user-static</kbd> installed).
         # Set personality
         self.personality = ""
         if self.personality_override:
-            self.personality = self.personality_override
+            self.personality = self.personality_override  # pylint: disable=redefined-variable-type
         else:
             try:
                 self.personality = self.PERSONALITIES[self.architecture.name]

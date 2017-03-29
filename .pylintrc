@@ -1,14 +1,12 @@
 [MESSAGES CONTROL]
 
 # logging-format-interpolation: Should be rechecked, but not for 1.0.x
-# redefined-variable-type: Seems unstable atm.
 disable=
 	missing-docstring,
 	line-too-long,
 	no-init,
 	logging-format-interpolation,
-	locally-disabled,
-	redefined-variable-type
+	locally-disabled
 
 [REPORTS]
 reports=no
