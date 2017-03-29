@@ -5,21 +5,25 @@ disable=
 # py3 logging: You still need "%s"-style formatting for "late formatting".
 # https://docs.python.org/3/howto/logging.html#logging-variable-data
 # We don't want to use different formatting formats though.
-	logging-format-interpolation,
-	locally-disabled
+	logging-format-interpolation
+
 
 [REPORTS]
+
 reports=no
 msg-template={path}:{line}: [{msg_id}({symbol}), {obj}] {msg}
 
 [FORMAT]
+
 max-line-length=200
 max-module-lines=1500
 
 [VARIABLES]
+
 dummy-variables-rgx=_|dummy
 
 [TYPECHECK]
+
 # see ./devel pylintgeneratedmembers
 generated-members=add,all,apt_keys,architectureoption_set,chroot_set,codename,distribution_set,DoesNotExist,get_status_display,get_union_type_display,id,layout,looplvmchroot,mbd_get_apt_line,mbd_get_apt_line_raw,mbd_get_apt_pin,mbd_get_archive,mbd_get_extra_option,mbd_get_mandatory_version_regex,mbd_model,mbd_remove,objects,origin,repository_set,source_set,splitlines,suite,suiteoption_set,uploadable,
 
