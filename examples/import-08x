@@ -18,8 +18,8 @@ def call(cmd, show=True, dry_run=False):
     if dry_run:
         return 0, "Dry run, skipped: {c}".format(c=cmd)
     else:
-        output = tempfile.TemporaryFile()
-        res = subprocess.call(cmd.split(), stdout=output, stderr=subprocess.STDOUT)
+        output = tempfile.TemporaryFile()  # pylint: disable=redefined-outer-name
+        res = subprocess.call(cmd.split(), stdout=output, stderr=subprocess.STDOUT)  # pylint: disable=redefined-outer-name
         output.seek(0)
         output_str = output.read().decode("UTF-8")
         if show:

@@ -303,7 +303,7 @@ Comma-separated list of special debugging options:
 
         # Get the daemon manager instance (import here: We cannot import anything 'django' prior to django's configuration)
         from mini_buildd.daemon import Daemon
-        daemon = Daemon()
+        daemon = Daemon()  # pylint: disable=redefined-outer-name
         daemon.start()
 
         while True:

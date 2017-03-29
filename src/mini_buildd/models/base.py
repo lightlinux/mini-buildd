@@ -131,7 +131,7 @@ are actually supported by the current model.
 
     @classmethod
     def mbd_get_daemon(cls):
-        import mini_buildd.daemon
+        import mini_buildd.daemon  # pylint: disable=redefined-outer-name
         return mini_buildd.daemon.get()
 
     def mbd_get_extra_options(self):

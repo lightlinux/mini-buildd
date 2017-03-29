@@ -11,7 +11,7 @@ LOG = logging.getLogger(__name__)
 
 def django_pseudo_configure():
     # pylint: disable=wrong-import-position
-    import mini_buildd.django_settings
+    import mini_buildd.django_settings  # pylint: disable=redefined-outer-name
     import django.core.management
     import mini_buildd.models
 
