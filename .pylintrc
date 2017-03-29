@@ -1,9 +1,11 @@
 [MESSAGES CONTROL]
 
-# logging-format-interpolation: Should be rechecked, but not for 1.0.x
 disable=
 	missing-docstring,
 	line-too-long,
+# py3 logging: You still need "%s"-style formatting for "late formatting".
+# https://docs.python.org/3/howto/logging.html#logging-variable-data
+# We don't want to use different formatting formats though.
 	logging-format-interpolation,
 	locally-disabled
 
