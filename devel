@@ -207,6 +207,7 @@ mbd_pylint()
 	(
 		pyenv
 		local f failed=""
+		local -i locallyDisabled=0  # No good way to keep track with pylint itself
 		for f in $(mbd_pymodules); do
 			# Files that currently don't work
 			if [ "${f}" = "./doc/conf.py" ]; then
@@ -215,11 +216,14 @@ mbd_pylint()
 			fi
 			printf "I: pylint3 checking module: %s...\n" "${f}"
 			pylint3 "${f}" || failed+="${f} "
+			locallyDisabled+=$(grep --count "pylint:.*disable" "${f}" || true)
 		done
 		for f in $(mbd_pyscripts); do
 			printf "I: pylint3 checking script: %s...\n" "${f}"
 			pylint3 --disable=C0103 "${f}" || failed+="${f} "
+			locallyDisabled+=$(grep --count "pylint:.*disable" "${f}" || true)
 		done
+		printf "W: Overall locally disabled checks: %s\n" "${locallyDisabled}"
 		if [ -n "${failed}" ]; then
 			printf "E: pylint3 check failed: %s\n" "${failed}"
 			exit 1
