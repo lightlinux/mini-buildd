@@ -2,7 +2,6 @@
 
 # logging-format-interpolation: Should be rechecked, but not for 1.0.x
 # redefined-variable-type: Seems unstable atm.
-# cyclic-import: Strange error on templatetags package that can't be disabled inline.
 disable=
 	missing-docstring,
 	line-too-long,
@@ -10,7 +9,6 @@ disable=
 	logging-format-interpolation,
 	redefined-outer-name,
 	locally-disabled,
-	cyclic-import,
 	redefined-variable-type
 
 [REPORTS]
