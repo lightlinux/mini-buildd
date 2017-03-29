@@ -451,7 +451,7 @@ def run_as_thread(thread_func, name, daemon=False, **kwargs):
             LOG.debug("Thread function started: {f}.".format(f=qual_thread_func))
             thread_func(**kwargs)
             LOG.debug("Thread function finished: {f}.".format(f=qual_thread_func))
-        except Exception as e:
+        except Exception as e:  # pylint: disable=broad-except
             mini_buildd.setup.log_exception(LOG, "Error in thread function: {f}".format(f=qual_thread_func), e)
         except:  # pylint: disable=bare-except
             LOG.exception("Non-standard exception in thread function: {f}".format(f=qual_thread_func))

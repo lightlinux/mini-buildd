@@ -7,7 +7,6 @@ disable=
 	missing-docstring,
 	line-too-long,
 	no-init,
-	broad-except,
 	logging-format-interpolation,
 	redefined-outer-name,
 	locally-disabled,

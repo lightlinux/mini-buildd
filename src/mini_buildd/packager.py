@@ -92,7 +92,7 @@ class Package(mini_buildd.misc.Status):
         for _key, breq in list(self.requests.items()):
             try:
                 breq.upload_buildrequest(self.daemon.model.mbd_get_http_hopo())
-            except Exception as e:
+            except Exception as e:  # pylint: disable=broad-except
                 mini_buildd.setup.log_exception(LOG,
                                                 "{i}: Buildrequest upload failed".format(i=breq.get_pkg_id()),
                                                 e)
@@ -146,7 +146,7 @@ class Package(mini_buildd.misc.Status):
                                  to_dist_str,
                                  self.changes["Version"])
                 self.port_report[to_dist_str] = "Requested"
-            except Exception as e:
+            except Exception as e:  # pylint: disable=broad-except
                 self.port_report[to_dist_str] = "FAILED: {e}".format(e=e)
                 mini_buildd.setup.log_exception(LOG, "{i}: Automatic package port failed for: {d}".format(i=self.changes.get_pkg_id(), d=to_dist_str), e)
 
@@ -264,7 +264,7 @@ def package_close(daemon, package):
         package.move_to_pkglog()
         package.notify()
         daemon.last_packages.appendleft(LastPackage(package))
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-except
         mini_buildd.setup.log_exception(LOG, "Error closing package '{p}'".format(p=package.pid), e, level=logging.CRITICAL)
     finally:
         del daemon.packages[package.pid]
@@ -285,7 +285,7 @@ def run(daemon, changes):
                 package.install()
                 package.set_status(package.INSTALLED)
                 package_close(daemon, package)
-        except Exception as e:
+        except Exception as e:  # pylint: disable=broad-except
             package.set_status(package.FAILED, str(e))
             package_close(daemon, package)
             mini_buildd.setup.log_exception(LOG, "Package '{p}' FAILED".format(p=pid), e)
@@ -299,7 +299,7 @@ def run(daemon, changes):
         try:
             package.precheck()
             package.set_status(package.BUILDING)
-        except Exception as e:
+        except Exception as e:  # pylint: disable=broad-except
             package.set_status(package.REJECTED, str(e))
             package_close(daemon, package)
             mini_buildd.setup.log_exception(LOG, "Package '{p}' REJECTED".format(p=pid), e)

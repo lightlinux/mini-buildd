@@ -105,7 +105,7 @@ chroots (with <kbd>qemu-user-static</kbd> installed).
                         if s.codename in ["lenny", "etch"]:
                             extra_options = "Debootstrap-Command: /usr/sbin/mbd-debootstrap-uname-2.6\n"
                         chroot_model.mbd_get_or_create(msglog, source=s, architecture=a, extra_options=extra_options)
-                    except Exception as e:
+                    except Exception as e:  # pylint: disable=broad-except
                         msglog.warning("{s}/{a}: Skipping customized chroot (on another backend, or not on default values) [{e}]".format(s=s.codename, a=a.name, e=e))
 
     def __str__(self):

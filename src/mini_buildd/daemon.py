@@ -371,7 +371,7 @@ def run():
                     daemon=get(),
                     changes=changes)
 
-        except Exception as e:
+        except Exception as e:  # pylint: disable=broad-except
             mini_buildd.setup.log_exception(LOG, "Invalid changes file", e)
 
             # Try to notify
@@ -379,7 +379,7 @@ def run():
                 subject = "INVALID CHANGES: {c}: {e}".format(c=event, e=e)
                 body = mini_buildd.misc.open_utf8(event, "r").read()
                 get().model.mbd_notify(subject, body)
-            except Exception as e:
+            except Exception as e:  # pylint: disable=broad-except
                 mini_buildd.setup.log_exception(LOG, "Invalid changes notify failed", e)
 
             # Try to clean up
@@ -388,7 +388,7 @@ def run():
                     changes.remove()
                 else:
                     os.remove(event)
-            except Exception as e:
+            except Exception as e:  # pylint: disable=broad-except
                 mini_buildd.setup.log_exception(LOG, "Invalid changes cleanup failed", e)
 
         finally:
@@ -473,7 +473,7 @@ class Daemon(object):
                     self.last_builds.append(b)
                 else:
                     LOG.warning("Removing (new API) from last builds info: {b}".format(b=b))
-        except Exception as e:
+        except Exception as e:  # pylint: disable=broad-except
             mini_buildd.setup.log_exception(LOG, "Error adding persisted last builds/packages (ignoring)", e, logging.WARN)
 
     def start(self, force_check=False, msglog=LOG):

@@ -236,7 +236,7 @@ def api(request):
 
         return response
 
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-except
         # This might as well be just an internal error; in case of no bug in the code, 405 fits better though.
         # ['wontfix' unless we refactor to diversified exception classes]
         mini_buildd.setup.log_exception(LOG, "API call error", e)

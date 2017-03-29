@@ -228,7 +228,7 @@ Comma-separated list of special debugging options:
                 handler_func = getattr(self, "_log_handler_" + typ)
                 LOG.addHandler(handler_func())
                 LOGW.addHandler(handler_func())
-            except Exception as e:
+            except Exception as e:  # pylint: disable=broad-except
                 loggers_failed[typ] = e
 
         # Set log level
@@ -345,7 +345,7 @@ try:
         cProfile.run("MAIN.run()", PROFILE)
     else:
         MAIN.run()
-except Exception as e:
+except Exception as e:  # pylint: disable=broad-except
     mini_buildd.setup.log_exception(LOG, "mini-buildd FAILED", e)
     sys.exit(1)
 except SystemExit as e:

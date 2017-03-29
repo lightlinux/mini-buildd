@@ -191,6 +191,6 @@ except urllib.error.HTTPError as e:
     print_daemon_messages(e.headers, ARGS.host)
     mini_buildd.setup.log_exception(LOG, ARGS.host, e)
     sys.exit(1)
-except Exception as e:
+except Exception as e:  # pylint: disable=broad-except
     mini_buildd.setup.log_exception(LOG, "{u}".format(u=ARGS.host), e)
     sys.exit(2)

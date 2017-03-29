@@ -125,7 +125,7 @@ try:
     # Try to do the auth log
     auth_log("SUCCESS")
 
-except Exception as e:
+except Exception as e:  # pylint: disable=broad-except
     auth_log("FAILED")
 
     log("""\
