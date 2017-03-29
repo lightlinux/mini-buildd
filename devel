@@ -203,23 +203,9 @@ mbd_pylint()
 	_check_prog pylint3
 	(
 		pyenv
-		local f failed=""
-		local -i locallyDisabled=0  # No good way to keep track with pylint itself
-		for f in $(mbd_pymodules); do
-			printf "I: pylint3 checking module: %s...\n" "${f}"
-			pylint3 "${f}" || failed+="${f} "
-			locallyDisabled+=$(grep --count "pylint:.*disable" "${f}" || true)
-		done
-		for f in $(mbd_pyscripts); do
-			printf "I: pylint3 checking script: %s...\n" "${f}"
-			pylint3 --disable=C0103 "${f}" || failed+="${f} "
-			locallyDisabled+=$(grep --count "pylint:.*disable" "${f}" || true)
-		done
-		printf "W: Overall locally disabled checks: %s\n" "${locallyDisabled}"
-		if [ -n "${failed}" ]; then
-			printf "E: pylint3 check failed: %s\n" "${failed}"
-			exit 1
-		fi
+		pylint3 --jobs=2 $(mbd_pymodules)
+		pylint3 --jobs=2 --disable=C0103 $(mbd_pyscripts)
+		printf "W: Overall locally disabled checks: %s\n" "$(cat $(mbd_pysources) | grep --count "pylint:.*disable")"  # No good way to keep track with pylint itself
 	)
 }
 
