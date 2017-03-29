@@ -1,6 +1,9 @@
 [MESSAGES CONTROL]
 
 disable=
+# We don't want the in-code exceptions pop up on pylint runs.
+	locally-disabled,
+# It seems hard and unfair to force us to write documentation!
 	missing-docstring,
 # py3 logging: You still need "%s"-style formatting for "late formatting".
 # https://docs.python.org/3/howto/logging.html#logging-variable-data
