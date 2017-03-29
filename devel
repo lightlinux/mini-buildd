@@ -104,7 +104,10 @@ mbd_pyscripts()
 
 mbd_pymodules()
 {
-	find "${MBD_PYFINDPARAMS[@]}" -name "*.py"
+	# ./setup.py and ./doc/conf.py currently don't work for doctests and/or pylint checks.
+	find "${MBD_PYFINDPARAMS[@]}" -name "*.py" \
+			 -a ! -wholename "./doc/conf.py" \
+			 -a ! -wholename "./setup.py"
 }
 
 mbd_pysources()
@@ -164,12 +167,6 @@ mbd_pydoctests()
 	(
 		pyenv
 		for m in $(mbd_pymodules); do
-			# Files that currently don't work
-			if [ "${m}" = "./doc/conf.py" -o "${m}" = "./setup.py" ]; then
-				printf "W: doctests: Skipping known broken ${m}...\n" >&2
-				continue;
-			fi
-
 			local module="$(basename $(tr '/' '.' <<< ${m:4}) '.py' | cut -d. -f2-)"
 			printf "=> Doctest on %s (%s)\n" "${m}" "${module}"
 			( cd ./src/ && ./run-doctest "${module}" )
@@ -209,11 +206,6 @@ mbd_pylint()
 		local f failed=""
 		local -i locallyDisabled=0  # No good way to keep track with pylint itself
 		for f in $(mbd_pymodules); do
-			# Files that currently don't work
-			if [ "${f}" = "./doc/conf.py" ]; then
-				printf "W: pylint3: Skipping known-broken %s...\n" "${f}" >&2
-				continue;
-			fi
 			printf "I: pylint3 checking module: %s...\n" "${f}"
 			pylint3 "${f}" || failed+="${f} "
 			locallyDisabled+=$(grep --count "pylint:.*disable" "${f}" || true)
