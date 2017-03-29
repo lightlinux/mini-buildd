@@ -203,22 +203,24 @@ mbd_pylint()
 	_check_prog pylint3
 	(
 		pyenv
-		local f
+		local f failed=""
 		for f in $(mbd_pymodules); do
 			# Files that currently don't work
 			if [ "${f}" = "./doc/conf.py" ]; then
-				printf "W: pylint3: Skipping known broken ${f}...\n" >&2
+				printf "W: pylint3: Skipping known-broken %s...\n" "${f}" >&2
 				continue;
 			fi
-			printf "pylint3: ${f}..."
-			pylint3 "${f}"
-			printf "ok\n"
+			printf "I: pylint3 checking module: %s...\n" "${f}"
+			pylint3 "${f}" || failed+="${f} "
 		done
 		for f in $(mbd_pyscripts); do
-			printf "pylint3: ${f}..."
-			pylint3 --disable=C0103 "${f}"
-			printf "ok\n"
+			printf "I: pylint3 checking script: %s...\n" "${f}"
+			pylint3 --disable=C0103 "${f}" || failed+="${f} "
 		done
+		if [ -n "${failed}" ]; then
+			printf "E: pylint3 check failed: %s\n" "${failed}"
+			exit 1
+		fi
 	)
 }
 
