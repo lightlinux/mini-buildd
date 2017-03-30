@@ -47,16 +47,16 @@ class WebApp(django.core.handlers.wsgi.WSGIHandler):
         :type password: string
         """
         # This import needs the django app to be already configured (since django 1.5.2)
-        import django.contrib.auth  # pylint: disable=redefined-outer-name
+        from django.contrib.auth import models
 
         try:
-            user = django.contrib.auth.models.User.objects.get(username="admin")
+            user = models.User.objects.get(username="admin")
             LOG.info("Updating 'admin' user password...")
             user.set_password(password)
             user.save()
-        except django.contrib.auth.models.User.DoesNotExist:
+        except models.User.DoesNotExist:
             LOG.info("Creating initial 'admin' user...")
-            django.contrib.auth.models.User.objects.create_superuser("admin", "root@localhost", password)
+            models.User.objects.create_superuser("admin", "root@localhost", password)
 
     @classmethod
     def remove_system_artifacts(cls):
@@ -66,12 +66,8 @@ class WebApp(django.core.handlers.wsgi.WSGIHandler):
         mini-buildd's home).
         """
         # This import needs the django app to be already configured
-        import mini_buildd.models.chroot  # pylint: disable=redefined-outer-name
-
-        mini_buildd.models.chroot.Chroot.Admin.mbd_action(
-            None,
-            mini_buildd.models.chroot.Chroot.mbd_get_prepared(),
-            "remove")
+        from mini_buildd.models.chroot import Chroot
+        Chroot.Admin.mbd_action(None, Chroot.mbd_get_prepared(), "remove")
 
     @classmethod
     def loaddata(cls, file_name):
