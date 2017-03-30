@@ -257,7 +257,7 @@ class LastBuild(mini_buildd.misc.API):
     """
     __API__ = -99
 
-    def __init__(self, build):  # pylint: disable=redefined-outer-name
+    def __init__(self, build):
         super(LastBuild, self).__init__()
         self.identity = build.__str__()
         self.status = build.status
@@ -289,7 +289,7 @@ def _expire_live_buildlogs(**kwargs):
             os.unlink(buildlog)
 
 
-def build_close(daemon, build):  # pylint: disable=redefined-outer-name
+def build_close(daemon, build):
     """
     Close build. Just continue on errors, but log them; guarantee to remove it from the builds dict.
     """
@@ -304,8 +304,8 @@ def build_close(daemon, build):  # pylint: disable=redefined-outer-name
             del daemon.builds[build.key]
 
 
-def build(daemon_, breq):
-    build = None  # pylint: disable=redefined-outer-name
+def run_build(daemon_, breq):
+    build = None
     try:
         # First, get build object. This will automagically set the status right.
         build = Build(breq, daemon_.model.mbd_gnupg, daemon_.model.sbuild_jobs)
@@ -350,7 +350,7 @@ def run(daemon_):
         LOG.info("Builder status: {s}.".format(s=daemon_.build_queue))
 
         mini_buildd.misc.run_as_thread(
-            build,
+            run_build,
             name="building {pkg}".format(pkg=os.path.basename(event)),
             daemon=True,
             daemon_=daemon_,
