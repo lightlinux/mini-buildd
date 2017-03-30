@@ -27,37 +27,24 @@ def host_completer(_prefix, **_kwargs):
     Ugly-parse a list of host names from ~/.dput.cf (solely for shell autocompletion convenience).
     """
     hosts = []
-    dput_cf = configparser.ConfigParser(interpolation=None)
-    dput_cf.read(os.path.expanduser("~/.dput.cf"))
-    for section in dput_cf.sections():
-        def _join(host, user):
-            if user:
-                return "{u}@{h}".format(u=user, h=host)
-            else:
-                return host
+    try:
+        dput_cf = configparser.ConfigParser(interpolation=None)
+        dput_cf.read(os.path.expanduser("~/.dput.cf"))
+        for section in dput_cf.sections():
+            def _join(host, user):
+                return "{u}@{h}".format(u=user, h=host) if user else host
 
-        def _add(_host, user=None):
-            # pylint: disable=cell-var-from-loop
-            if section.startswith("mini-buildd-"):
-                hosts.append(_join(section[12:], user))
-            else:
-                hosts.append(_join(section, user))
+            config = dput_cf[section]
+            host = config.get("x_mini_buildd_host")
+            if host:
+                for u in [None, "admin", os.getenv("USER")] + config.get("x_mini_buildd_users", "").split():
+                    if section.startswith("mini-buildd-"):
+                        hosts.append(_join(section[12:], u))
+                    else:
+                        hosts.append(_join(section, u))
+    except BaseException as e:
+        LOG.info("Error host_completer (ignoring): {e}".format(e=e))
 
-        try:
-            host = dput_cf.get(section, "x_mini_buildd_host")
-            _add(host)
-            _add(host, "admin")
-            users = ""
-            try:
-                users = dput_cf.get(section, "x_mini_buildd_users")  # pylint: disable=redefined-variable-type
-                if not users:
-                    raise Exception()
-            except BaseException:  # pylint: disable=broad-except
-                users = os.getenv("USER")
-            for u in users.split(" "):
-                _add(host, u)
-        except BaseException:  # pylint: disable=broad-except
-            pass
     return hosts
 
 
