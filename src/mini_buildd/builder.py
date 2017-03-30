@@ -297,7 +297,7 @@ def build_close(daemon, build):  # pylint: disable=redefined-outer-name
         build.clean()
         daemon.last_builds.appendleft(LastBuild(build))
         _expire_live_buildlogs(days=5)
-    except Exception as e:  # pylint: disable=broad-except
+    except BaseException as e:
         mini_buildd.setup.log_exception(LOG, "Error closing build '{p}'".format(p=build.key), e, level=logging.CRITICAL)
     finally:
         if build.key in daemon.builds:
@@ -324,11 +324,11 @@ def build(daemon_, breq):
         try:
             build.upload()
             build.set_status(build.UPLOADED)
-        except Exception as e:  # pylint: disable=broad-except
+        except BaseException as e:
             mini_buildd.setup.log_exception(LOG, "Upload failed (retry later)", e, logging.WARN)
             build.set_status(build.UPLOADING, str(e))
 
-    except Exception as e:  # pylint: disable=broad-except
+    except BaseException as e:
         # Try to upload failure build result to remote
         if build:
             build.set_status(build.FAILED)

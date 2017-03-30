@@ -157,7 +157,7 @@ def call_with_retry(call, retry_max_tries=5, retry_sleep=1, retry_failed_cleanup
         try:
             Call(call, **kwargs).log().check()
             break
-        except Exception as e:  # pylint: disable=broad-except
+        except BaseException as e:
             if t > retry_max_tries:
                 raise
             LOG.error("Retrying call in {s} seconds [retry #{t}]: {e}".format(s=retry_sleep, t=t, e=e))

@@ -53,7 +53,7 @@ def host_from_dput(section):
     dput_cf.read(os.path.expanduser("~/.dput.cf"))
     try:
         return dput_cf.get("mini-buildd-" + section, "x_mini_buildd_host")
-    except BaseException:  # pylint: disable=broad-except
+    except BaseException:
         return dput_cf.get(section, "x_mini_buildd_host")
 
 
@@ -96,7 +96,7 @@ def cmd_call(args):
     user, dummy, host = args.host.rpartition("@")
     try:
         host = host_from_dput(host)
-    except BaseException:  # pylint: disable=broad-except
+    except BaseException:
         pass
 
     # Log in if user given explicitely, or required by the command
@@ -181,6 +181,6 @@ except urllib.error.HTTPError as e:
     print_daemon_messages(e.headers, ARGS.host)
     mini_buildd.setup.log_exception(LOG, ARGS.host, e)
     sys.exit(1)
-except Exception as e:  # pylint: disable=broad-except
+except BaseException as e:
     mini_buildd.setup.log_exception(LOG, "{u}".format(u=ARGS.host), e)
     sys.exit(2)

@@ -47,7 +47,7 @@ class Incoming(object):
                         LOG.debug("Valid: {c}".format(c=fd["name"]))
 
                     valid_files.append(os.path.basename(changes_file))
-                except Exception as e:  # pylint: disable=broad-except
+                except BaseException as e:
                     mini_buildd.setup.log_exception(LOG, "Invalid changes file: {f}".format(f=changes_file), e, logging.WARNING)
 
         for f in files:
@@ -59,7 +59,7 @@ class Incoming(object):
                     else:
                         os.remove(f)
                     LOG.warning("Cruft file (not in any changes file) removed: {f}".format(f=f))
-                except Exception as e:  # pylint: disable=broad-except
+                except BaseException as e:
                     mini_buildd.setup.log_exception(LOG, "Can't remove cruft from incoming: {f}".format(f=f), e, logging.CRITICAL)
 
     @classmethod

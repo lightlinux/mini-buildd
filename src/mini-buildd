@@ -59,7 +59,7 @@ class PIDFile(object):
                 try:
                     pidfile_name = open("/proc/{}/comm".format(pidfile_pid)).read()
                     is_stale = pidfile_name != name
-                except BaseException as e:  # pylint: disable=broad-except
+                except BaseException as e:
                     LOG.warning("Error in extra linux /proc-style stale check (ignoring): {e}".format(e=e))
 
         return is_stale
@@ -227,7 +227,7 @@ Comma-separated list of special debugging options:
                 handler_func = getattr(self, "_log_handler_" + typ)
                 LOG.addHandler(handler_func())
                 LOGW.addHandler(handler_func())
-            except Exception as e:  # pylint: disable=broad-except
+            except BaseException as e:
                 loggers_failed[typ] = e
 
         # Set log level
@@ -344,8 +344,8 @@ try:
         cProfile.run("MAIN.run()", PROFILE)
     else:
         MAIN.run()
-except Exception as e:  # pylint: disable=broad-except
-    mini_buildd.setup.log_exception(LOG, "mini-buildd FAILED", e)
-    sys.exit(1)
 except SystemExit as e:
     sys.exit(e.code)
+except BaseException as e:
+    mini_buildd.setup.log_exception(LOG, "mini-buildd FAILED", e)
+    sys.exit(1)

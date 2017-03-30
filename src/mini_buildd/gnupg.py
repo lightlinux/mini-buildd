@@ -64,7 +64,7 @@ class BaseGnuPG(object):
             version_info = mini_buildd.call.Call(["gpg", "--version"]).check().ustdout.splitlines()
             version_line = version_info[0].split(" ")
             return version_line[2][0:3]
-        except BaseException as e:  # pylint: disable=broad-except
+        except BaseException as e:
             LOG.warning("Can't parse GPG flavor: {e}".format(e=e))
             return "unkown"
 

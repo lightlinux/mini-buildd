@@ -759,7 +759,7 @@ Example:
                 try:
                     self.mbd_get_daemon().portext(dsc_url, dist)
                     MsgLog(LOG, request).info("Requested: {i}".format(i=info))
-                except Exception as e:  # pylint: disable=broad-except
+                except BaseException as e:
                     mini_buildd.setup.log_exception(MsgLog(LOG, request), "FAILED: {i}".format(i=info), e)
 
     def mbd_build_keyring_packages(self, request):
@@ -780,7 +780,7 @@ Example:
             uploader = None
             try:
                 uploader = u.uploader
-            except BaseException as e:  # pylint: disable=broad-except
+            except BaseException as e:
                 LOG.warning("User '{u}' does not have an uploader profile (deliberately removed?): {e}".format(u=u, e=e))
 
             if uploader and uploader.mbd_is_active() and uploader.may_upload_to.all().filter(identity=self.identity):
@@ -1060,7 +1060,7 @@ DscIndices: Sources Release . .gz .bz2
             LOG.info("Rollback: Moving {p}: {s} to {d}".format(p=package_name, s=src, d=dst))
             try:
                 reprepro_output += self._mbd_reprepro().migrate(package_name, src, dst)
-            except Exception as e:  # pylint: disable=broad-except
+            except BaseException as e:
                 mini_buildd.setup.log_exception(LOG, "Rollback failed (ignoring)", e)
         return reprepro_output
 
@@ -1139,7 +1139,7 @@ DscIndices: Sources Release . .gz .bz2
                 try:
                     reprepro_output += self._mbd_reprepro().migrate(package, src, dst)
                     reprepro_output += self._mbd_reprepro().remove(package, src)
-                except Exception as e:  # pylint: disable=broad-except
+                except BaseException as e:
                     mini_buildd.setup.log_exception(msglog,
                                                     "Rollback: Moving '{p}' from '{s}' to '{d}' FAILED (ignoring)".format(p=package, s=src, d=dst),
                                                     e,

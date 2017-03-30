@@ -283,7 +283,7 @@ class Changes(debian.deb822.Changes):
                                                     self["Version"],
                                                     architecture=self["Architecture"],
                                                     relative=relative)
-        except Exception as e:  # pylint: disable=broad-except
+        except BaseException as e:
             mini_buildd.setup.log_exception(LOG, "No package log dir for bogus changes: {f}".format(f=self.file_name), e, logging.DEBUG)
 
     def is_new(self):
@@ -371,7 +371,7 @@ class Changes(debian.deb822.Changes):
             try:
                 mini_buildd.models.gnupg.Remote.Admin.mbd_check(None, remote, force=True)
                 add_remote(remote, False)
-            except Exception as e:  # pylint: disable=broad-except
+            except BaseException as e:
                 mini_buildd.setup.log_exception(LOG, "Builder check failed", e, logging.WARNING)
 
         # Always add our own instance as pseudo remote first
@@ -391,7 +391,7 @@ class Changes(debian.deb822.Changes):
                 self.remote_http_url = remote_url
                 self.live_buildlog_url = self.get_live_buildlog_url(base_url=remote_url)
                 return
-            except Exception as e:  # pylint: disable=broad-except
+            except BaseException as e:
                 mini_buildd.setup.log_exception(LOG, "Uploading to '{h}' failed".format(h=remote.ftp), e, logging.WARNING)
 
         raise Exception("Buildrequest upload failed for {a}/{c}".format(a=arch, c=codename))

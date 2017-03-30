@@ -104,7 +104,7 @@ def mbd_admin_index_table_row(app,  # pylint: disable=too-many-arguments
 def _mbd_e2n(func, *args, **kwargs):
     try:
         return func(*args, **kwargs)
-    except BaseException as e:  # pylint: disable=broad-except
+    except BaseException as e:
         LOG.warning("Function failed: {f}: {e}".format(f=func, e=e))
         return None
 
@@ -169,7 +169,7 @@ def mbd_build_status(success, failed):
         result = "[<span style=\"color:{b}\">B</span><span style=\"color:{l}\">L</span>]".format(
             b=build_colors.get(sbuild_status, "black"),
             l=lintian_colors.get(lintian_status, "black"))
-    except BaseException as e:  # pylint: disable=broad-except
+    except BaseException as e:
         LOG.warning("Some error generating build status (ignoring): {e}".format(e=e))
 
     return django.utils.safestring.mark_safe(result)

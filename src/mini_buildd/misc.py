@@ -212,7 +212,7 @@ def nop(*_args, **_kwargs):
 def dont_care_run(func, *args, **kwargs):
     try:
         func(*args, **kwargs)
-    except BaseException as e:  # pylint: disable=broad-except
+    except BaseException as e:
         LOG.info("Intentionally ignoring exception in function {f}: {e}.".format(f=func, e=e))
 
 
@@ -365,7 +365,7 @@ def guess_codeversion(release):
             return number0  # Debian >= wheezy: '~testN': One number tells the codeversion
         else:
             return number0 + number1  # Debian < wheezy, Ubuntu, maybe others: 1st plus 2nd number is needed
-    except BaseException as e:  # pylint: disable=broad-except
+    except BaseException as e:
         LOG.info("Falling back to codename for codeversion due to: {e}".format(e=e))
         return "~" + release["Codename"].upper()
 
@@ -376,7 +376,7 @@ def guess_default_dirchroot_backend(overlay, aufs):
         # linux 3.18-1~exp1 in Debian removed aufs in favor of overlay
         if debian.debian_support.Version(release) < debian.debian_support.Version("3.18"):
             return aufs
-    except BaseException:  # pylint: disable=broad-except
+    except BaseException:
         pass
 
     return overlay
@@ -452,7 +452,7 @@ def run_as_thread(thread_func, name, daemon=False, **kwargs):
             LOG.debug("Thread function started: {f}.".format(f=qual_thread_func))
             thread_func(**kwargs)
             LOG.debug("Thread function finished: {f}.".format(f=qual_thread_func))
-        except BaseException as e:  # pylint: disable=broad-except
+        except BaseException as e:
             mini_buildd.setup.log_exception(LOG, "Error in thread function: {f}".format(f=qual_thread_func), e)
 
     thread = threading.Thread(target=run, name=name, kwargs=kwargs)
@@ -512,7 +512,7 @@ def b642u(base64_bytestream):
 def get_cpus():
     try:
         return multiprocessing.cpu_count()
-    except BaseException:  # pylint: disable=broad-except
+    except BaseException:
         return 1
 
 

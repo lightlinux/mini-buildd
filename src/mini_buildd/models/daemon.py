@@ -326,5 +326,5 @@ Manage your account : {url}accounts/login/
         try:
             django.core.mail.send_mass_mail(m_to)
             msglog.info("Notify: Sent '{s}'".format(s=subject))
-        except Exception as e:  # pylint: disable=broad-except
+        except BaseException as e:
             mini_buildd.setup.log_exception(msglog, "Notify: Mail '{s}' failed to '{r}'".format(s=subject, r=m_to), e)

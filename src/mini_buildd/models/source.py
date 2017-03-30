@@ -57,7 +57,7 @@ Use the 'directory' notation with exactly one trailing slash (like 'http://examp
                 for src in aptsources.sourceslist.SourcesList():
                     # These URLs come from the user. 'normalize' the uri first to have exactly one trailing slash.
                     cls._mbd_get_or_create(msglog, src.uri.rstrip("/") + "/")
-            except Exception as e:  # pylint: disable=broad-except
+            except BaseException as e:
                 mini_buildd.setup.log_exception(LOG,
                                                 "Failed to scan local sources.lists for default mirrors ('python-apt' not installed?)",
                                                 e,
@@ -274,7 +274,7 @@ codeversion is only used for base sources.""")
                             apt_key, _created = mini_buildd.models.gnupg.AptKey.mbd_get_or_create(msglog, key_id=long_key_id)
                         obj.apt_keys.add(apt_key)
                     obj.save()
-            except Exception as e:  # pylint: disable=broad-except
+            except BaseException as e:
                 msglog.debug("Can't add {c} (most likely a non-default instance already exists): {e}".format(c=codename, e=e))
 
         @classmethod
@@ -354,7 +354,7 @@ codeversion is only used for base sources.""")
     def __str__(self):
         try:
             archive = self.mbd_get_archive().url
-        except BaseException:  # pylint: disable=broad-except
+        except BaseException:
             archive = None
         return "{o} '{c}' from '{a}'".format(o=self.origin, c=self.codename, a=archive)
 
@@ -469,7 +469,7 @@ codeversion is only used for base sources.""")
                         msglog.info("{o}: Added archive: {a}".format(o=self, a=archive))
                     else:
                         msglog.debug("{a}: Not hosting {s}".format(a=archive, s=self))
-                except Exception as e:  # pylint: disable=broad-except
+                except BaseException as e:
                     mini_buildd.setup.log_exception(msglog, "Error checking {a} for {s} (check Archive or Source)".format(a=archive, s=self), e)
 
         # Check that at least one archive can be found

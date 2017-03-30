@@ -105,7 +105,7 @@ chroots (with <kbd>qemu-user-static</kbd> installed).
                         if s.codename in ["lenny", "etch"]:
                             extra_options = "Debootstrap-Command: /usr/sbin/mbd-debootstrap-uname-2.6\n"
                         chroot_model.mbd_get_or_create(msglog, source=s, architecture=a, extra_options=extra_options)
-                    except Exception as e:  # pylint: disable=broad-except
+                    except BaseException as e:
                         msglog.warning("{s}/{a}: Skipping customized chroot (on another backend, or not on default values) [{e}]".format(s=s.codename, a=a.name, e=e))
 
     def __str__(self):
@@ -153,7 +153,7 @@ chroots (with <kbd>qemu-user-static</kbd> installed).
         # We should be able to assemble the sequence anyway to be able to remove that chroot.
         try:
             debootstrap_url = self.source.mbd_get_archive().url
-        except BaseException as e:  # pylint: disable=broad-except
+        except BaseException as e:
             LOG.warning("{c}: Can't get archive URL from source (source removed?): {e}".format(c=self, e=e))
             debootstrap_url = "no_archive_url_found_maybe_source_is_removed"
 
@@ -234,7 +234,7 @@ personality={p}
         try:
             self._mbd_schroot_run(["--directory", "/", "--", "grep", "^{u}".format(u=os.getenv("USER")), "/etc/sudoers"])
             has_sudo_workaround = True
-        except BaseException:  # pylint: disable=broad-except
+        except BaseException:
             MsgLog(LOG, request).info("{c}: Ok, no sudo workaround found.".format(c=self))
 
         if has_sudo_workaround:
@@ -278,7 +278,7 @@ personality={p}
                 MsgLog(LOG, request).log_text(
                     self._mbd_schroot_run(["--directory", "/", "--", "/usr/bin/apt-get", "-q", "-o", "APT::Install-Recommends=false", "--yes"] + args,
                                           namespace="source"))
-            except BaseException as e:  # pylint: disable=broad-except
+            except BaseException as e:
                 MsgLog(LOG, request).warning("'apt-get {args}' not supported in this chroot: {e}".format(args=" ".join(args), e=e))
                 if fatal:
                     raise
@@ -422,7 +422,7 @@ class LVMChroot(Chroot):
     def mbd_get_volume_group(self):
         try:
             return self.looplvmchroot.mbd_get_volume_group()
-        except BaseException:  # pylint: disable=broad-except
+        except BaseException:
             return self.volume_group
 
     def mbd_get_lvm_device(self):

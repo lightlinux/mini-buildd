@@ -65,7 +65,7 @@ LOG = logging.getLogger(__name__)
 # single objects from the model's form.
 try:
     django.contrib.admin.site.disable_action("delete_selected")
-except BaseException as e:  # pylint: disable=broad-except
+except BaseException as e:
     LOG.warning("Error disabling delete action (ignoring): {e}".format(e=e))
 
 
@@ -148,7 +148,7 @@ are actually supported by the current model.
     def mbd_get_pickled_data(self, default=None):
         try:
             return pickle.loads(base64.decodebytes(bytes(self.pickled_data, encoding=mini_buildd.setup.CHAR_ENCODING)))
-        except Exception as e:  # pylint: disable=broad-except
+        except BaseException as e:
             mini_buildd.setup.log_exception(LOG, "Ignoring unpickling error", e)
             return default
 
@@ -238,7 +238,7 @@ class StatusModel(Model):
             for o in obj.mbd_get_dependencies():
                 try:
                     func(request, o, **kwargs)
-                except Exception as e:  # pylint: disable=broad-except
+                except BaseException as e:
                     if obj.LETHAL_DEPENDENCIES:
                         raise
                     else:
@@ -354,7 +354,7 @@ class StatusModel(Model):
             for o in queryset:
                 try:
                     getattr(cls, "mbd_" + action)(request, o, **kwargs)
-                except Exception as e:  # pylint: disable=broad-except
+                except BaseException as e:
                     mini_buildd.setup.log_exception(MsgLog(LOG, request), "{a} failed: {o}".format(a=action, o=o), e)
 
         def mbd_action_prepare(self, request, queryset):
