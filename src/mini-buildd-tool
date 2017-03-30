@@ -24,7 +24,7 @@ mini_buildd.misc.setup_console_logging(logging.DEBUG)
 
 def host_completer(_prefix, **_kwargs):
     hosts = []
-    dput_cf = configparser.RawConfigParser()
+    dput_cf = configparser.ConfigParser(interpolation=None)
     dput_cf.read(os.path.expanduser("~/.dput.cf"))
     for section in dput_cf.sections():
         def _join(host, user):
