@@ -10,7 +10,6 @@ LOG = logging.getLogger(__name__)
 
 
 def django_pseudo_configure():
-    # pylint: disable=wrong-import-position
     from mini_buildd.django_settings import pseudo_configure
     from mini_buildd.models import import_all
     from django.core.management import call_command

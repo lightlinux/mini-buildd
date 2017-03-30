@@ -613,11 +613,11 @@ class Keyring(object):
         keyring_log = logging.getLogger("keyring")
         keyring_log.addHandler(logging.NullHandler())
 
-        import keyring  # pylint: disable=wrong-import-position
+        import keyring
         try:
-            from keyring.util.platform_ import data_root as keyring_data_root  # pylint: disable=wrong-import-position,wrong-import-order,import-error,no-name-in-module
+            from keyring.util.platform_ import data_root as keyring_data_root
         except ImportError:
-            from keyring.util.platform import data_root as keyring_data_root  # pylint: disable=wrong-import-position,wrong-import-order,import-error,no-name-in-module
+            from keyring.util.platform import data_root as keyring_data_root
 
         LOG.info("Viable keyring backends: {b}".format(b=" ".join([qualname(o) for o in keyring.backend.get_all_keyring()])))
         LOG.info("Hint: You may set up '{r}/keyringrc.cfg' to force a backend.".format(r=keyring_data_root()))
