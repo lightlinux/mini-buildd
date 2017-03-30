@@ -23,6 +23,9 @@ mini_buildd.misc.setup_console_logging(logging.DEBUG)
 
 
 def host_completer(_prefix, **_kwargs):
+    """
+    Ugly-parse a list of host names from ~/.dput.cf (solely for shell autocompletion convenience).
+    """
     hosts = []
     dput_cf = configparser.ConfigParser(interpolation=None)
     dput_cf.read(os.path.expanduser("~/.dput.cf"))
