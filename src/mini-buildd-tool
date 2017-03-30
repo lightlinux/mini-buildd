@@ -22,7 +22,7 @@ LOG = logging.getLogger("mini_buildd")
 mini_buildd.misc.setup_console_logging(logging.DEBUG)
 
 
-def host_completer(prefix, **kwargs):  # pylint: disable=unused-argument
+def host_completer(_prefix, **_kwargs):
     hosts = []
     dput_cf = configparser.RawConfigParser()
     dput_cf.read(os.path.expanduser("~/.dput.cf"))
@@ -33,7 +33,7 @@ def host_completer(prefix, **kwargs):  # pylint: disable=unused-argument
             else:
                 return host
 
-        def _add(host, user=None):  # pylint: disable=unused-argument
+        def _add(_host, user=None):
             # pylint: disable=cell-var-from-loop
             if section.startswith("mini-buildd-"):
                 hosts.append(_join(section[12:], user))
