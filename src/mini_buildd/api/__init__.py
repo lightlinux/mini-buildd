@@ -11,13 +11,13 @@ LOG = logging.getLogger(__name__)
 
 def django_pseudo_configure():
     # pylint: disable=wrong-import-position
-    import mini_buildd.django_settings  # pylint: disable=redefined-outer-name
-    import django.core.management
-    import mini_buildd.models
+    from mini_buildd.django_settings import pseudo_configure
+    from mini_buildd.models import import_all
+    from django.core.management import call_command
 
-    mini_buildd.django_settings.pseudo_configure()
-    mini_buildd.models.import_all()
-    django.core.management.call_command("migrate", interactive=False, run_syncdb=True, verbosity=0)
+    pseudo_configure()
+    import_all()
+    call_command("migrate", interactive=False, run_syncdb=True, verbosity=0)
 
 
 class Command(object):
