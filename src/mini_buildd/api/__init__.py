@@ -56,7 +56,7 @@ different components), or just as safeguard
             try:
                 # django request.GET args
                 return ",".join(args.getlist(key))
-            except:  # pylint: disable=bare-except
+            except BaseException:  # pylint: disable=broad-except
                 # dict arg (like from get_default_args)
                 return args[key]
 

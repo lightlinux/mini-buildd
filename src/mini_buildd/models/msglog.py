@@ -70,7 +70,7 @@ class MsgLog(object):
             frame = inspect.stack()[2]
             actual_mod = inspect.getmodulename(frame[1])
             actual_line = frame[2]
-        except:  # pylint: disable=bare-except
+        except BaseException:  # pylint: disable=broad-except
             pass
 
         self.pylog.log(level, "{m} [{mod}:{l}]".format(m=msg, mod=actual_mod, l=actual_line))

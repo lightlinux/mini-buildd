@@ -153,8 +153,8 @@ chroots (with <kbd>qemu-user-static</kbd> installed).
         # We should be able to assemble the sequence anyway to be able to remove that chroot.
         try:
             debootstrap_url = self.source.mbd_get_archive().url
-        except:  # pylint: disable=bare-except
-            LOG.warning("{c}: Can't get archive URL from source (source removed?).".format(c=self))
+        except BaseException as e:  # pylint: disable=broad-except
+            LOG.warning("{c}: Can't get archive URL from source (source removed?): {e}".format(c=self, e=e))
             debootstrap_url = "no_archive_url_found_maybe_source_is_removed"
 
         return [
@@ -234,7 +234,7 @@ personality={p}
         try:
             self._mbd_schroot_run(["--directory", "/", "--", "grep", "^{u}".format(u=os.getenv("USER")), "/etc/sudoers"])
             has_sudo_workaround = True
-        except:  # pylint: disable=bare-except
+        except BaseException:  # pylint: disable=broad-except
             MsgLog(LOG, request).info("{c}: Ok, no sudo workaround found.".format(c=self))
 
         if has_sudo_workaround:
@@ -278,8 +278,8 @@ personality={p}
                 MsgLog(LOG, request).log_text(
                     self._mbd_schroot_run(["--directory", "/", "--", "/usr/bin/apt-get", "-q", "-o", "APT::Install-Recommends=false", "--yes"] + args,
                                           namespace="source"))
-            except:  # pylint: disable=bare-except
-                MsgLog(LOG, request).warning("'apt-get {args}' not supported in this chroot.".format(args=" ".join(args)))
+            except BaseException as e:  # pylint: disable=broad-except
+                MsgLog(LOG, request).warning("'apt-get {args}' not supported in this chroot: {e}".format(args=" ".join(args), e=e))
                 if fatal:
                     raise
 
@@ -422,7 +422,7 @@ class LVMChroot(Chroot):
     def mbd_get_volume_group(self):
         try:
             return self.looplvmchroot.mbd_get_volume_group()
-        except:  # pylint: disable=bare-except
+        except BaseException:  # pylint: disable=broad-except
             return self.volume_group
 
     def mbd_get_lvm_device(self):

@@ -41,7 +41,7 @@ def context_processor(_request):
                 "django-registration": registration_version(),
                 "cherrypy": cherrypy_version,
                 "pyftpdlib": pyftpdlib_version}
-        except:  # pylint: disable=bare-except
+        except BaseException:  # pylint: disable=broad-except
             pass
 
     return MBD_STATIC_CONTEXT

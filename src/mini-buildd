@@ -59,9 +59,8 @@ class PIDFile(object):
                 try:
                     pidfile_name = open("/proc/{}/comm".format(pidfile_pid)).read()
                     is_stale = pidfile_name != name
-                except:  # pylint: disable=bare-except
-                    # Ignore errors: Avoid any possible startup issues due to above code.
-                    pass
+                except BaseException as e:  # pylint: disable=broad-except
+                    LOG.warning("Error in extra linux /proc-style stale check (ignoring): {e}".format(e=e))
 
         return is_stale
 

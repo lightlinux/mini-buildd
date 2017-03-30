@@ -354,7 +354,7 @@ codeversion is only used for base sources.""")
     def __str__(self):
         try:
             archive = self.mbd_get_archive().url
-        except:  # pylint: disable=bare-except
+        except BaseException:  # pylint: disable=broad-except
             archive = None
         return "{o} '{c}' from '{a}'".format(o=self.origin, c=self.codename, a=archive)
 

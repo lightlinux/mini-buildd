@@ -780,8 +780,8 @@ Example:
             uploader = None
             try:
                 uploader = u.uploader
-            except:  # pylint: disable=bare-except
-                LOG.warning("User '{u}' does not have an uploader profile (deliberately removed?)".format(u=u))
+            except BaseException as e:  # pylint: disable=broad-except
+                LOG.warning("User '{u}' does not have an uploader profile (deliberately removed?): {e}".format(u=u, e=e))
 
             if uploader and uploader.mbd_is_active() and uploader.may_upload_to.all().filter(identity=self.identity):
                 LOG.info("Adding uploader key for '{r}': {k}: {n}".format(r=self, k=uploader.key_long_id, n=uploader.key_name))

@@ -403,7 +403,7 @@ def run():
     # There should be a nicer way, really...
     try:
         get().keyrings.close()
-    except:  # pylint: disable=bare-except
+    except BaseException:  # pylint: disable=broad-except
         pass
 
 

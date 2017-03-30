@@ -65,8 +65,8 @@ LOG = logging.getLogger(__name__)
 # single objects from the model's form.
 try:
     django.contrib.admin.site.disable_action("delete_selected")
-except:  # pylint: disable=bare-except
-    pass
+except BaseException as e:  # pylint: disable=broad-except
+    LOG.warning("Error disabling delete action (ignoring): {e}".format(e=e))
 
 
 class Model(django.db.models.Model):
