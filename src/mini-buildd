@@ -302,18 +302,18 @@ Comma-separated list of special debugging options:
 
         # Get the daemon manager instance (import here: We cannot import anything 'django' prior to django's configuration)
         from mini_buildd.daemon import Daemon
-        daemon = Daemon()  # pylint: disable=redefined-outer-name
-        daemon.start()
+        mini_buildd_daemon = Daemon()
+        mini_buildd_daemon.start()
 
         while True:
             signal.pause()
             if self._status == "RESTART":
-                daemon.stop()
-                daemon.start()
+                mini_buildd_daemon.stop()
+                mini_buildd_daemon.start()
             else:
                 break
 
-        daemon.stop()
+        mini_buildd_daemon.stop()
 
     def run(self):
         # Get the django project instance (import here: We cannot import anything 'django' prior to django's configuration)
