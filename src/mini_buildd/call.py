@@ -61,7 +61,7 @@ class Call(object):
         # Generate stdout and stderr streams in kwargs, if not given explicitly
         for stream in ["stdout", "stderr"]:
             if stream not in self.kwargs:
-                self.kwargs[stream] = tempfile.TemporaryFile()
+                self.kwargs[stream] = tempfile.SpooledTemporaryFile()
 
         self.retval = subprocess.call(self.call, **self.kwargs)
         LOG.info("Called with retval {r}: {c}".format(r=self.retval, c=self._call2shell(self.call)))
