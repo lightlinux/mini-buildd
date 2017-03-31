@@ -135,7 +135,7 @@ def cmd_call(args):
         io.TextIOWrapper(sys.stdout.buffer, encoding=sys.stdout.encoding, errors="backslashreplace").write(result_str)
     else:
         # Write bytes as-is
-        sys.stdout.buffer.write(result)  # pylint: disable=no-member
+        sys.stdout.buffer.write(result)  # [pylint < 1.7 false-positive: https://github.com/PyCQA/pylint/issues/1004] pylint: disable=no-member
 
 
 # Unfortunaetely, we cannot group the commands (yet), see http://bugs.python.org/issue14037
