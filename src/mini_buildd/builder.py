@@ -221,7 +221,7 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
                                                                                 "GNUPGHOME": os.path.join(mini_buildd.setup.HOME_DIR, ".gnupg"),
                                                                                 "DEB_BUILD_OPTIONS": "parallel={j}".format(j=self._sbuild_jobs)}),
                                                 stdout=l, stderr=subprocess.STDOUT)
-            retval = sbuild_call.retval
+            retval = sbuild_call.result.returncode
 
         # Add build results to build request object
         self._bres["Sbuildretval"] = str(retval)

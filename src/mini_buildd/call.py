@@ -34,7 +34,7 @@ class Call(object):
     >>> Call(["ls", "__no_such_file__"]).check()
     Traceback (most recent call last):
     ...
-    Exception: Call failed with retval 2: 'ls __no_such_file__ '
+    Exception: Call failed with returncode 2: 'ls __no_such_file__ '
     >>> Call(["printf stdin; printf stderr >&2"], stderr=subprocess.STDOUT, shell=True).stdout
     'stdinstderr'
     """
@@ -54,7 +54,7 @@ class Call(object):
         self.call = ["sudo", "-n"] + call if run_as_root else call
         self.kwargs = kwargs.copy()
 
-        # Generate stdout and stderr streams in kwargs, if not given explicitly
+        # Generate stdout and stderr args if not given explicitly, and remember streams given explicitly
         self._given_stream = {}
         for stream in ["stdout", "stderr"]:
             if stream not in self.kwargs:
@@ -63,11 +63,11 @@ class Call(object):
                 self._given_stream[stream] = self.kwargs[stream]
 
         self.result = subprocess.run(self.call, **self.kwargs)
-        self.retval = self.result.returncode
-        LOG.info("Called with retval {r}: {c}".format(r=self.retval, c=self._call2shell(self.call)))
 
         # Convenience 'label' for log output
         self.label = "{p} {c}..".format(p="#" if run_as_root else "?", c=call[0])
+
+        LOG.info("Called with returncode {r}: {c}".format(r=self.result.returncode, c=self._call2shell(self.call)))
 
     @classmethod
     def _bos2str(cls, value, errors="replace"):
@@ -76,26 +76,22 @@ class Call(object):
 
     def _stdx(self, value, key):
         """stdin or stdout value as str."""
-        retval = ""
         if value:
-            retval = self._bos2str(value)
+            return self._bos2str(value)
         elif key in self._given_stream:
             self._given_stream[key].seek(0)
-            retval = self._bos2str(self._given_stream[key].read())
-        return retval
+            return self._bos2str(self._given_stream[key].read())
+        else:
+            return ""
 
     @property
     def stdout(self):
-        """
-        .. |docstr_uout| replace:: Value as unicode (decoding from :py:data:`mini_buildd.setup.CHAR_ENCODING`, replacing on error).
-
-        |docstr_uout|
-        """
+        """stdout value (empty string if none)"""
         return self._stdx(self.result.stdout, "stdout")
 
     @property
     def stderr(self):
-        """|docstr_uout|"""
+        """stderr value (empty string if none)"""
         return self._stdx(self.result.stderr, "stderr")
 
     def log(self):
@@ -105,17 +101,16 @@ class Call(object):
         this logs with level ``debug``.
 
         """
-        olog = LOG.debug if self.retval == 0 else LOG.warning
+        olog = LOG.debug if self.result.returncode == 0 else LOG.warning
         for prefix, output in [("stdout", self.stdout), ("stderr", self.stderr)]:
             for line in output.splitlines():
                 olog("{label} ({p}): {l}".format(label=self.label, p=prefix, l=line.rstrip('\n')))
-
         return self
 
     def check(self):
-        """Raise on unsuccessful (retval != 0) call."""
-        if self.retval != 0:
-            raise Exception("Call failed with retval {r}: '{c}'".format(r=self.retval, c=self._call2shell(self.call)))
+        """Raise on unsuccessful (returncode != 0) call."""
+        if self.result.returncode != 0:
+            raise Exception("Call failed with returncode {r}: '{c}'".format(r=self.result.returncode, c=self._call2shell(self.call)))
         return self
 
 
