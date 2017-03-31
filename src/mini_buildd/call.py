@@ -146,7 +146,7 @@ def call_sequence(calls, run_as_root=False, rollback_only=False, **kwargs):
                 else:
                     LOG.debug("Skipping empty call sequent {i}".format(i=i))
                 i += 1
-        except:
+        except BaseException:
             LOG.error("Sequence failed at: {i} (rolling back)".format(i=i))
             rollback(i)
             raise

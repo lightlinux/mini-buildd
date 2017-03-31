@@ -193,8 +193,8 @@ class HoPo(object):
             self.tuple = (triple[0], int(triple[2]))
             self.host = self.tuple[0]
             self.port = self.tuple[1]
-        except:
-            raise Exception("Invalid bind argument (HOST:PORT): '{b}'".format(b=bind))
+        except BaseException as e:
+            raise Exception("Invalid bind argument (HOST:PORT): '{b}': {e}".format(b=bind, e=e))
 
     def test_bind(self):
         "Check that we can bind to the first found addrinfo (not already bound, permissions)."

@@ -298,7 +298,7 @@ class StatusModel(Model):
 
                     if needs_activation and not obj.mbd_is_active():
                         raise Exception("Not active, but a (tobe-)active item depends on it. Activate this first: {o}".format(o=obj))
-                except:
+                except BaseException:
                     # Check failed, auto-deactivate and re-raise exception
                     obj.last_checked = max(obj.last_checked, obj.CHECK_FAILED)
                     if obj.mbd_is_active():

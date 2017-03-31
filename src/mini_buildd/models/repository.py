@@ -730,8 +730,8 @@ Example:
             "Add developer repository 'debdev', only for sid."
             try:
                 sid = Distribution.objects.get(base_source__codename="sid")
-            except:
-                raise Exception("No 'sid' distribution found")
+            except BaseException as e:
+                raise Exception("No 'sid' distribution found: {e}".format(e=e))
             debdev_repo, created = Repository.mbd_get_or_create(
                 msglog,
                 identity="debdev",

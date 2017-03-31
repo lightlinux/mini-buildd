@@ -333,7 +333,7 @@ class Changes(debian.deb822.Changes):
             if gnupg:
                 gnupg.sign(self._file_path)
             self._spool_hash = self._spool_hash_from_file()
-        except:
+        except BaseException:
             # Existence of the file name is used as flag
             if os.path.exists(self._file_path):
                 os.remove(self._file_path)

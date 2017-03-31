@@ -657,7 +657,7 @@ class Daemon(object):
             # Sign and add to incoming queue
             self.model.mbd_gnupg.sign(changes)
             self.incoming_queue.put(changes)
-        except:
+        except BaseException:
             t.close()
             raise
 
