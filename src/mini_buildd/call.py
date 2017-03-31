@@ -29,13 +29,13 @@ class Call(object):
 
       mystdout = open(myoutputfile, "w+")
 
-    >>> Call(["echo", "-n", "hallo"]).check().ustdout
+    >>> Call(["echo", "-n", "hallo"]).check().stdout
     'hallo'
     >>> Call(["ls", "__no_such_file__"]).check()
     Traceback (most recent call last):
     ...
     Exception: Call failed with retval 2: 'ls __no_such_file__ '
-    >>> Call(["printf stdin; printf stderr >&2"], stderr=subprocess.STDOUT, shell=True).ustdout
+    >>> Call(["printf stdin; printf stderr >&2"], stderr=subprocess.STDOUT, shell=True).stdout
     'stdinstderr'
     """
     @classmethod
@@ -85,7 +85,7 @@ class Call(object):
         return retval
 
     @property
-    def ustdout(self):
+    def stdout(self):
         """
         .. |docstr_uout| replace:: Value as unicode (decoding from :py:data:`mini_buildd.setup.CHAR_ENCODING`, replacing on error).
 
@@ -94,7 +94,7 @@ class Call(object):
         return self._stdx(self.result.stdout, "stdout")
 
     @property
-    def ustderr(self):
+    def stderr(self):
         """|docstr_uout|"""
         return self._stdx(self.result.stderr, "stderr")
 
@@ -106,7 +106,7 @@ class Call(object):
 
         """
         olog = LOG.debug if self.retval == 0 else LOG.warning
-        for prefix, output in [("stdout", self.ustdout), ("stderr", self.ustderr)]:
+        for prefix, output in [("stdout", self.stdout), ("stderr", self.stderr)]:
             for line in output.splitlines():
                 olog("{label} ({p}): {l}".format(label=self.label, p=prefix, l=line.rstrip('\n')))
 

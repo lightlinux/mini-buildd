@@ -61,7 +61,7 @@ class BaseGnuPG(object):
         nasty happens.
         """
         try:
-            version_info = mini_buildd.call.Call(["gpg", "--version"]).check().ustdout.splitlines()
+            version_info = mini_buildd.call.Call(["gpg", "--version"]).check().stdout.splitlines()
             version_line = version_info[0].split(" ")
             return version_line[2][0:3]
         except BaseException as e:
@@ -91,10 +91,10 @@ class BaseGnuPG(object):
             mini_buildd.call.Call(self.gpg_cmd + ["--export"] + ([identity] if identity else []), stdout=f).check()
 
     def get_pub_key(self, identity):
-        return mini_buildd.call.Call(self.gpg_cmd + ["--armor", "--export", identity]).log().check().ustdout
+        return mini_buildd.call.Call(self.gpg_cmd + ["--armor", "--export", identity]).log().check().stdout
 
     def _get_colons(self, list_arg="--list-public-keys", type_regex=".*"):
-        for line in mini_buildd.call.Call(self.gpg_cmd + [list_arg, "--with-colons", "--fixed-list-mode", "--with-fingerprint", "--with-fingerprint"]).log().check().ustdout.splitlines():
+        for line in mini_buildd.call.Call(self.gpg_cmd + [list_arg, "--with-colons", "--fixed-list-mode", "--with-fingerprint", "--with-fingerprint"]).log().check().stdout.splitlines():
             colons = Colons(line)
             LOG.debug("{c}".format(c=colons))
             if re.match(type_regex, colons.type):
@@ -122,7 +122,7 @@ class BaseGnuPG(object):
         return self.get_first_sec_colon("uid").user_id
 
     def recv_key(self, keyserver, identity):
-        return mini_buildd.call.Call(self.gpg_cmd + ["--armor", "--keyserver", keyserver, "--recv-keys", identity]).log().check().ustdout
+        return mini_buildd.call.Call(self.gpg_cmd + ["--armor", "--keyserver", keyserver, "--recv-keys", identity]).log().check().stdout
 
     def add_pub_key(self, key):
         with tempfile.TemporaryFile() as t:

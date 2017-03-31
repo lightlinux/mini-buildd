@@ -217,7 +217,7 @@ personality={p}
         return mini_buildd.call.Call(["/usr/bin/schroot",
                                       "--chroot", "{n}:{c}".format(n=namespace, c=self.mbd_get_name()),
                                       "--user", user] +
-                                     call).log().check().ustdout
+                                     call).log().check().stdout
 
     def mbd_check_sudo_workaround(self, request):
         """
@@ -482,7 +482,7 @@ class LoopLVMChroot(LVMChroot):
             if os.path.realpath(mini_buildd.misc.open_utf8(f).read().strip()) == os.path.realpath(self.mbd_get_backing_file()):
                 return "/dev/" + f.split("/")[3]
         LOG.debug("No existing loop device for {b}, searching for free device".format(b=self.mbd_get_backing_file()))
-        return mini_buildd.call.Call(["/sbin/losetup", "--find"], run_as_root=True).log().check().ustdout.rstrip()
+        return mini_buildd.call.Call(["/sbin/losetup", "--find"], run_as_root=True).log().check().stdout.rstrip()
 
     def mbd_get_pre_sequence(self):
         loop_device = self.mbd_get_loop_device()

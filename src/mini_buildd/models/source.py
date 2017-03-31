@@ -167,7 +167,7 @@ class Architecture(mini_buildd.models.base.Model):
 
     @classmethod
     def mbd_host_architecture(cls):
-        return mini_buildd.call.Call(["dpkg", "--print-architecture"]).check().ustdout.strip()
+        return mini_buildd.call.Call(["dpkg", "--print-architecture"]).check().stdout.strip()
 
     @classmethod
     def mbd_supported_architectures(cls, arch=None):
