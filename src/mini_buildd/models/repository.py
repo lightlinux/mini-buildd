@@ -7,7 +7,6 @@ import shutil
 import glob
 import re
 import logging
-import functools
 
 import debian.debian_support
 
@@ -582,7 +581,7 @@ pimp the internal priority up here.
                                                      x=", ".join(["{c}:{p}".format(c=e.source.codename, p=e.priority) for e in self.extra_sources.all()]))
 
     def mbd_get_components(self):
-        return [c.name for c in sorted(self.components.all(), key=functools.cmp_to_key(mini_buildd.models.source.cmp_components))]
+        return [c.name for c in sorted(self.components.all(), key=mini_buildd.models.source.component_key)]
 
     def mbd_get_architectures(self, show_opt_flag=False):
         return ["{a}{o}".format(a=a.architecture.name, o="*" if (show_opt_flag and a.optional) else "") for a in self.architectureoption_set.all()]
@@ -921,7 +920,7 @@ DscIndices: Sources Release . .gz .bz2
         """
         subdir = package[:4] if package.startswith("lib") else package[0]
 
-        for c in sorted(distribution.components.all(), key=functools.cmp_to_key(mini_buildd.models.source.cmp_components)):
+        for c in sorted(distribution.components.all(), key=mini_buildd.models.source.component_key):
             dsc = "{r}/pool/{c}/{d}/{p}/{dsc}".format(r=self.identity, c=c.name, d=subdir, p=package,
                                                       dsc=mini_buildd.changes.Changes.gen_dsc_file_name(package, version))
             LOG.debug("Checking dsc: {d}".format(d=dsc))

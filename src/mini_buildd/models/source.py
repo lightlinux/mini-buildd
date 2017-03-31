@@ -8,7 +8,6 @@ import logging
 import datetime
 import contextlib
 import copy
-import functools
 
 import django.db.models
 import django.contrib.admin
@@ -185,7 +184,7 @@ class Component(mini_buildd.models.base.Model):
         return self.name
 
 
-def cmp_components(component0, component1):
+def component_key(component):
     """
     Get Debian components as string in a suitable order -- i.e.,
     'main' should be first, the others in alphabetical order.
@@ -194,9 +193,7 @@ def cmp_components(component0, component1):
     component guessing, which uses the first given component in
     the configuration.
     """
-    if component0.name == "main":
-        return -1
-    return (component0.name > component1.name) - (component0.name < component1.name)
+    return "" if component.name == "main" else component.name  # Use empty string to force 'main' to order first.
 
 
 class Source(mini_buildd.models.base.StatusModel):
@@ -396,7 +393,7 @@ codeversion is only used for base sources.""")
 
     def mbd_get_apt_line(self, distribution, prefix="deb "):
         allowed_components = [c.name for c in distribution.components.all()]
-        components = sorted([c for c in self.components.all() if c.name in allowed_components], key=functools.cmp_to_key(cmp_components))
+        components = sorted([c for c in self.components.all() if c.name in allowed_components], key=component_key)
         return self.mbd_get_apt_line_raw([c.name for c in components], prefix=prefix)
 
     def mbd_get_apt_pin(self):
