@@ -69,27 +69,20 @@ class Call(object):
         # Convenience 'label' for log output
         self.label = "{p} {c}..".format(p="#" if run_as_root else "?", c=call[0])
 
-    def _xout(self, value, key):
-        """Raw value as bytes."""
+    @classmethod
+    def _bos2str(cls, value, errors="replace"):
+        """return str(), regardless if value is of type bytes or str."""
+        return value if isinstance(value, str) else value.decode(encoding=mini_buildd.setup.CHAR_ENCODING, errors=errors)
+
+    def _stdx(self, value, key):
+        """stdin or stdout value as str."""
+        retval = ""
         if value:
-            return value
-        else:
-            if key in self._given_stream:
-                self._given_stream[key].seek(0)
-                ret_val = self._given_stream[key].read()
-                return ret_val.encode(encoding=mini_buildd.setup.CHAR_ENCODING) if isinstance(ret_val, str) else ret_val
-            else:
-                return b""
-
-    @property
-    def stdout(self):
-        """Raw value as bytes."""
-        return self._xout(self.result.stdout, "stdout")
-
-    @property
-    def stderr(self):
-        """Raw value as bytes."""
-        return self._xout(self.result.stderr, "stderr")
+            retval = self._bos2str(value)
+        elif key in self._given_stream:
+            self._given_stream[key].seek(0)
+            retval = self._bos2str(self._given_stream[key].read())
+        return retval
 
     @property
     def ustdout(self):
@@ -98,12 +91,12 @@ class Call(object):
 
         |docstr_uout|
         """
-        return self.stdout.decode(mini_buildd.setup.CHAR_ENCODING, errors="replace")
+        return self._stdx(self.result.stdout, "stdout")
 
     @property
     def ustderr(self):
         """|docstr_uout|"""
-        return self.stderr.decode(mini_buildd.setup.CHAR_ENCODING, errors="replace")
+        return self._stdx(self.result.stderr, "stderr")
 
     def log(self):
         """Log calls output to mini-buildd's logging for debugging.
