@@ -59,7 +59,8 @@ class Call(object):
             if stream not in self.kwargs:
                 self.kwargs[stream] = tempfile.SpooledTemporaryFile()
 
-        self.retval = subprocess.call(self.call, **self.kwargs)
+        self.result = subprocess.run(self.call, **self.kwargs)
+        self.retval = self.result.returncode
         LOG.info("Called with retval {r}: {c}".format(r=self.retval, c=self._call2shell(self.call)))
 
         # Convenience 'label' for log output
