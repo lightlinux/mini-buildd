@@ -55,9 +55,12 @@ class Call(object):
         self.kwargs = kwargs.copy()
 
         # Generate stdout and stderr streams in kwargs, if not given explicitly
+        self._given_stream = {}
         for stream in ["stdout", "stderr"]:
             if stream not in self.kwargs:
-                self.kwargs[stream] = tempfile.SpooledTemporaryFile()
+                self.kwargs[stream] = subprocess.PIPE
+            elif not isinstance(self.kwargs[stream], int):
+                self._given_stream[stream] = self.kwargs[stream]
 
         self.result = subprocess.run(self.call, **self.kwargs)
         self.retval = self.result.returncode
@@ -66,20 +69,27 @@ class Call(object):
         # Convenience 'label' for log output
         self.label = "{p} {c}..".format(p="#" if run_as_root else "?", c=call[0])
 
+    def _xout(self, value, key):
+        """Raw value as bytes."""
+        if value:
+            return value
+        else:
+            if key in self._given_stream:
+                self._given_stream[key].seek(0)
+                ret_val = self._given_stream[key].read()
+                return ret_val.encode(encoding=mini_buildd.setup.CHAR_ENCODING) if isinstance(ret_val, str) else ret_val
+            else:
+                return b""
+
     @property
     def stdout(self):
         """Raw value as bytes."""
-        self.kwargs["stdout"].seek(0)
-        return self.kwargs["stdout"].read()
+        return self._xout(self.result.stdout, "stdout")
 
     @property
     def stderr(self):
         """Raw value as bytes."""
-        if self.kwargs["stderr"] == subprocess.STDOUT:
-            return b""
-        else:
-            self.kwargs["stderr"].seek(0)
-            return self.kwargs["stderr"].read()
+        return self._xout(self.result.stderr, "stderr")
 
     @property
     def ustdout(self):
@@ -88,14 +98,12 @@ class Call(object):
 
         |docstr_uout|
         """
-        stdout = self.stdout
-        return stdout if isinstance(stdout, str) else self.stdout.decode(mini_buildd.setup.CHAR_ENCODING, errors="replace")
+        return self.stdout.decode(mini_buildd.setup.CHAR_ENCODING, errors="replace")
 
     @property
     def ustderr(self):
         """|docstr_uout|"""
-        stderr = self.stderr
-        return stderr if isinstance(stderr, str) else self.stderr.decode(mini_buildd.setup.CHAR_ENCODING, errors="replace")
+        return self.stderr.decode(mini_buildd.setup.CHAR_ENCODING, errors="replace")
 
     def log(self):
         """Log calls output to mini-buildd's logging for debugging.
