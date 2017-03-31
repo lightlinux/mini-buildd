@@ -47,11 +47,7 @@ class Call(object):
         """
         result = ""
         for arg in call:
-            if " " in arg:
-                result += "\"" + arg + "\""
-            else:
-                result += arg
-            result += " "
+            result += "{arg} ".format(arg="\"" + arg + "\"" if " " in arg else arg)
         return result
 
     def __init__(self, call, run_as_root=False, **kwargs):
