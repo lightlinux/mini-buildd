@@ -203,7 +203,9 @@ mbd_pylint()
 	_check_prog pylint3
 	(
 		pyenv
+		printf "N: pylint checking modules...\n"
 		pylint3 --jobs=2 $(mbd_pymodules)
+		printf "N: pylint checking scripts...\n"
 		pylint3 --jobs=2 --disable=C0103 $(mbd_pyscripts)
 		printf "W: Overall locally disabled checks: %s\n" "$(cat $(mbd_pysources) | grep --count "pylint:.*disable")"  # No good way to keep track with pylint itself
 	)
