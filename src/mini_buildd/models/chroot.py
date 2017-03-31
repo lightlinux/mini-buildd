@@ -175,11 +175,7 @@ chroots (with <kbd>qemu-user-static</kbd> installed).
         os.makedirs(self.mbd_get_path(), exist_ok=True)
 
         # Set personality
-        self.personality = ""
-        if self.personality_override:
-            self.personality = self.personality_override  # pylint: disable=redefined-variable-type
-        else:
-            self.personality = self.PERSONALITIES.get(self.architecture.name, "linux")
+        self.personality = self.personality_override if self.personality_override else self.PERSONALITIES.get(self.architecture.name, "linux")
 
         mini_buildd.misc.ConfFile(
             self.mbd_get_schroot_conf_file(),
