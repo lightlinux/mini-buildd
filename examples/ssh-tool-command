@@ -76,7 +76,7 @@ def auth_log(msg):
         try:
             line = get_last_matching_line("/var/log/auth.log", r"^.*sshd\[{pppid}\]: Found matching .* key: .*".format(pppid=getpppid()))
             fp = line.rpartition(" ")[2].strip()
-        except:  # pylint: disable=bare-except
+        except BaseException:
             fp = "NO_FINGERPRINT_FOUND"
         return fp
 
@@ -84,7 +84,7 @@ def auth_log(msg):
     ip = os.environ.get("SSH_CONNECTION", "NO_IP_FOUND").partition(" ")[0]
     try:
         host = socket.gethostbyaddr(ip)[0]
-    except:  # pylint: disable=bare-except
+    except BaseException:
         host = ip
 
     syslog.syslog(syslog.LOG_NOTICE, "{msg}: [{user}] {fp}@{host} \"{command}\"".format(msg=msg,
@@ -125,7 +125,7 @@ try:
     # Try to do the auth log
     auth_log("SUCCESS")
 
-except Exception as e:  # pylint: disable=broad-except
+except BaseException as e:
     auth_log("FAILED")
 
     log("""\
