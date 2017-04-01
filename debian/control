@@ -3,26 +3,27 @@ Section: devel
 Priority: extra
 Maintainer: Stephan Sürken <absurd@debian.org>
 X-Python3-Version: >= 3.2
-Build-Depends: debhelper (>= 10),
-               dh-python,
-               dh-systemd (>= 1.5),
-               man-db (>= 2.5.1),
-               po-debconf,
-               python3 (>= 3.2),
-               python3-setuptools,
-               python3-sphinx (>= 1.1.3),
-               python3-pygraphviz,
-               help2man,
-               python3-argcomplete (>= 0.5.4),
-               python3-keyring (>= 1.6),
-               python3-daemon (>= 2.0.5),
-               python3-debian (>= 0.1.18~),
-               python3-cherrypy3,
-               python3-pyftpdlib (>= 1.2.0),
-               python3-django (>= 1.10),
-               python3-django (<< 1:1.11),
-               python3-django-registration (>= 2.0.4),
-               gnupg
+Build-Depends:
+	debhelper (>= 10),
+	dh-python,
+	dh-systemd (>= 1.5),
+	man-db (>= 2.5.1),
+	po-debconf,
+	python3 (>= 3.2),
+	python3-setuptools,
+	python3-sphinx (>= 1.1.3),
+	python3-pygraphviz,
+	help2man,
+	python3-argcomplete (>= 0.5.4),
+	python3-keyring (>= 1.6),
+	python3-daemon (>= 2.0.5),
+	python3-debian (>= 0.1.18~),
+	python3-cherrypy3,
+	python3-pyftpdlib (>= 1.2.0),
+	python3-django (>= 1.10),
+	python3-django (<< 1:1.11),
+	python3-django-registration (>= 2.0.4),
+	gnupg
 Standards-Version: 3.9.8
 Vcs-Git: git://anonscm.debian.org/git/collab-maint/mini-buildd.git
 Vcs-Browser: https://anonscm.debian.org/git/collab-maint/mini-buildd.git
@@ -31,64 +32,73 @@ Homepage: http://mini-buildd.installiert.net/
 Package: python3-mini-buildd
 Section: python
 Architecture: all
-Depends: ${misc:Depends},
-         ${python3:Depends},
-         python3-argcomplete (>= 0.5.4),
-         python3-keyring (>= 1.6),
-         python3-debian (>= 0.1.25~),
-         python3-django (>= 1.10),
-         python3-django (<< 1:1.11),
-         python3-django-registration (>= 2.0.4)
+Depends:
+	${misc:Depends},
+	${python3:Depends},
+	python3-argcomplete (>= 0.5.4),
+	python3-keyring (>= 1.6),
+	python3-debian (>= 0.1.25~),
+	python3-django (>= 1.10),
+	python3-django (<< 1:1.11),
+	python3-django-registration (>= 2.0.4)
 Conflicts: python-mini-buildd
 Replaces: python-mini-buildd
 Description: minimal build daemon - python library and user tool
- Mini-buildd is an easy-to-configure autobuilder and
- repository for deb packages.
- .
- This package includes the control utility "mini-buildd-tool" along
- with the "mini_buildd" Python package.
+	Mini-buildd is an easy-to-configure autobuilder and
+	repository for deb packages.
+	.
+	This package includes the control utility "mini-buildd-tool" along
+	with the "mini_buildd" Python package.
 
 Package: mini-buildd
 Architecture: all
-Depends: ${misc:Depends},
-         ${python3:Depends},
-         ${sphinxdoc:Depends},
-         lsb-base (>= 3.0-6),
-         python3-mini-buildd (= ${binary:Version}),
-         mini-buildd-common (= ${binary:Version}),
-         python3-daemon (>= 2.0.5),
-         python3-cherrypy3,
-         python3-pyftpdlib (>= 1.2.0),
-         libjs-jquery,
-         adduser,
-         sudo,
-         gnupg,
-         dirmngr,
-         reprepro (>= 5),
-         debootstrap (>= 1.0.81~),
-         schroot (>= 1.6.10-2~),
-         schroot (<< 1.7),
-         sbuild (>= 0.72),
-         dpkg-dev (>= 1.17.27~),
-         devscripts (>= 2.14.5~),
-         lintian
+Depends:
+	${misc:Depends},
+	${python3:Depends},
+	${sphinxdoc:Depends},
+	lsb-base (>= 3.0-6),
+	python3-mini-buildd (= ${binary:Version}),
+	mini-buildd-common (= ${binary:Version}),
+	python3-daemon (>= 2.0.5),
+	python3-cherrypy3,
+	python3-pyftpdlib (>= 1.2.0),
+	libjs-jquery,
+	adduser,
+	sudo,
+	gnupg,
+	dirmngr,
+	reprepro (>= 5),
+	debootstrap (>= 1.0.81~),
+	schroot (>= 1.6.10-2~),
+	schroot (<< 1.7),
+	sbuild (>= 0.72),
+	dpkg-dev (>= 1.17.27~),
+	devscripts (>= 2.14.5~),
+	lintian
 Recommends: python3-apt
-Suggests: haveged, lvm2, qemu-user-static, binfmt-support, btrfs-progs
-Breaks: mini-buildd-rep (<< 1.0.0~),
-        mini-buildd-bld (<< 1.0.0~)
-Replaces: mini-buildd-rep,
-          mini-buildd-bld
+Suggests:
+	haveged,
+	lvm2,
+	qemu-user-static,
+	binfmt-support,
+	btrfs-progs
+Breaks:
+	mini-buildd-rep (<< 1.0.0~),
+	mini-buildd-bld (<< 1.0.0~)
+Replaces:
+	mini-buildd-rep,
+	mini-buildd-bld
 Description: minimal build daemon - daemon
- Mini-buildd is an easy-to-configure autobuilder and
- repository for deb packages.
- .
- This package provides the main daemon.
+	Mini-buildd is an easy-to-configure autobuilder and
+	repository for deb packages.
+	.
+	This package provides the main daemon.
 
 Package: mini-buildd-common
 Architecture: all
 Multi-Arch: foreign
 Depends: ${misc:Depends}
 Description: minimal build daemon - 08x upgrade dummy package
- This is a dummy package assuring mini-buildd-common is
- upgraded (as a possible purge of the 0.8.x package
- would badly break mini-buildd 1.0).
+	This is a dummy package assuring mini-buildd-common is
+	upgraded (as a possible purge of the 0.8.x package
+	would badly break mini-buildd 1.0).
