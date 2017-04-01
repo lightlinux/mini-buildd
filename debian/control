@@ -23,6 +23,8 @@ Build-Depends:
 	python3-django (>= 1.10),
 	python3-django (<< 1:1.11),
 	python3-django-registration (>= 2.0.4),
+# Needed for api/_contrib.py only:
+	python3-bs4,
 	gnupg
 Standards-Version: 3.9.8
 Vcs-Git: git://anonscm.debian.org/git/collab-maint/mini-buildd.git
@@ -43,6 +45,7 @@ Depends:
 	python3-django-registration (>= 2.0.4)
 Conflicts: python-mini-buildd
 Replaces: python-mini-buildd
+Suggests: python3-bs4
 Description: minimal build daemon - python library and user tool
 	Mini-buildd is an easy-to-configure autobuilder and
 	repository for deb packages.
