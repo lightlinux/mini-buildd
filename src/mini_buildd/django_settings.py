@@ -108,41 +108,38 @@ def configure(smtp_string, loglevel):
     smtp = SMTPCreds(smtp_string)
     debug = "webapp" in mini_buildd.setup.DEBUG
 
-    settings = {
-        "DEBUG": debug,
-        "MESSAGE_LEVEL": mini_buildd.models.msglog.MsgLog.level2django(loglevel),
+    django.conf.settings.configure(
+        DEBUG=debug,
+        MESSAGE_LEVEL=mini_buildd.models.msglog.MsgLog.level2django(loglevel),
 
-        "ALLOWED_HOSTS": ["*"],
+        ALLOWED_HOSTS=["*"],
 
-        "EMAIL_HOST": smtp.host,
-        "EMAIL_PORT": smtp.port,
-        "EMAIL_USE_TLS": smtp.protocol == "ssmtp",
-        "EMAIL_HOST_USER": smtp.user,
-        "EMAIL_HOST_PASSWORD": smtp.password,
+        EMAIL_HOST=smtp.host,
+        EMAIL_PORT=smtp.port,
+        EMAIL_USE_TLS=smtp.protocol == "ssmtp",
+        EMAIL_HOST_USER=smtp.user,
+        EMAIL_HOST_PASSWORD=smtp.password,
 
-        "DATABASES": {"default": {"ENGINE": "django.db.backends.sqlite3",
-                                  "NAME": os.path.join(mini_buildd.setup.HOME_DIR, "config.sqlite")}},
+        DATABASES={"default": {"ENGINE": "django.db.backends.sqlite3",
+                               "NAME": os.path.join(mini_buildd.setup.HOME_DIR, "config.sqlite")}},
 
-        "TIME_ZONE": None,
-        "USE_L10N": True,
-        "SECRET_KEY": get_django_secret_key(mini_buildd.setup.HOME_DIR),
-        "ROOT_URLCONF": "mini_buildd.root_urls",
-        "STATIC_URL": mini_buildd.setup.STATIC_URL,
-        "ACCOUNT_ACTIVATION_DAYS": 3,
-        "LOGIN_REDIRECT_URL": "/mini_buildd/",
+        TIME_ZONE=None,
+        USE_L10N=True,
+        SECRET_KEY=get_django_secret_key(mini_buildd.setup.HOME_DIR),
+        ROOT_URLCONF="mini_buildd.root_urls",
+        STATIC_URL=mini_buildd.setup.STATIC_URL,
+        ACCOUNT_ACTIVATION_DAYS=3,
+        LOGIN_REDIRECT_URL="/mini_buildd/",
 
-        "MIDDLEWARE": [
+        MIDDLEWARE=[
             "django.middleware.common.CommonMiddleware",
             "django.contrib.sessions.middleware.SessionMiddleware",
             "django.middleware.csrf.CsrfViewMiddleware",
             "django.contrib.auth.middleware.AuthenticationMiddleware",
             "django.contrib.messages.middleware.MessageMiddleware"],
 
-        "INSTALLED_APPS": MBD_INSTALLED_APPS
-    }
-
-    settings.update({
-        "TEMPLATES": [
+        INSTALLED_APPS=MBD_INSTALLED_APPS,
+        TEMPLATES=[
             {
                 "BACKEND": "django.template.backends.django.DjangoTemplates",
                 "DIRS": [
@@ -165,10 +162,8 @@ def configure(smtp_string, loglevel):
                     ],
                 },
             },
-        ],
-    })
+        ])
 
-    django.conf.settings.configure(**settings)
     django.setup()
 
 
