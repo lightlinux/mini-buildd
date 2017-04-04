@@ -455,8 +455,7 @@ def run_as_thread(thread_func, name, daemon=False, **kwargs):
         except BaseException as e:
             mini_buildd.setup.log_exception(LOG, "Error in thread function: {f}".format(f=qual_thread_func), e)
 
-    thread = threading.Thread(target=run, name=name, kwargs=kwargs)
-    thread.setDaemon(daemon)
+    thread = threading.Thread(target=run, name=name, daemon=daemon, kwargs=kwargs)
     thread.start()
     return thread
 
