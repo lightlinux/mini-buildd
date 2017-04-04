@@ -234,8 +234,8 @@ Comma-separated list of special debugging options:
         LOG.setLevel(self._loglevel())
         LOGW.setLevel(self._loglevel())
 
-        # Global: Don't propagate exceptions that happen while logging
-        logging.raiseExceptions = 0
+        # Properly set raiseException based "exception" debug value given (see https://docs.python.org/3.5/howto/logging.html#exceptions-raised-during-logging)
+        logging.raiseExceptions = "exception" in mini_buildd.setup.DEBUG
 
         if "warnings" in mini_buildd.setup.DEBUG:
             warnings.simplefilter("default")
