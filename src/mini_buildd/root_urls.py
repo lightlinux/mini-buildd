@@ -13,7 +13,7 @@ urlpatterns = [
     url(r"^mini_buildd/", include("mini_buildd.urls")),
     # admin
     url(r"^admin/doc/", include("django.contrib.admindocs.urls")),
-    url(r"^admin/", include(django.contrib.admin.site.urls)),
+    url(r"^admin/", django.contrib.admin.site.urls),
     # registration
     url(r"^accounts/password/reset/confirm/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$", django.contrib.auth.views.password_reset_confirm, name="auth_password_reset_confirm"),
     url(r"^accounts/", include("registration.backends.model_activation.urls")),
