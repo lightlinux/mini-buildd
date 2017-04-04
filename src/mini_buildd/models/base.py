@@ -410,13 +410,12 @@ this would mean losing all packages!
             cls.mbd_action(msglog.request, cls.mbd_model.objects.all(), "activate")
 
         def colored_status(self, obj):  # pylint: disable=no-self-use
-            return '<div style="font-weight:bold;background-color:{bc};color:{fc};padding:2px 0px 2px 5px" title="{t}">{o}</div>'.format(
+            return django.utils.html.format_html(
+                '<div style="font-weight:bold;background-color:{bc};color:{fc};padding:2px 0px 2px 5px" title="{t}">{o}</div>',
                 bc=obj.STATUS_COLORS[obj.status].get("bg"),
                 fc=obj.STATUS_COLORS[obj.status].get("fg"),
                 t=obj.mbd_get_status_display(typ="string"),
                 o=obj.mbd_get_status_display(typ="char"))
-
-        colored_status.allow_tags = True
 
         actions = [mbd_action_prepare, mbd_action_check, mbd_action_pc, mbd_action_activate, mbd_action_pca, mbd_action_deactivate, mbd_action_remove]
         list_display = ["colored_status", "__str__"]
