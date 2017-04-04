@@ -131,12 +131,12 @@ def configure(smtp_string, loglevel):
         "ACCOUNT_ACTIVATION_DAYS": 3,
         "LOGIN_REDIRECT_URL": "/mini_buildd/",
 
-        "MIDDLEWARE_CLASSES": (
+        "MIDDLEWARE": [
             "django.middleware.common.CommonMiddleware",
             "django.contrib.sessions.middleware.SessionMiddleware",
             "django.middleware.csrf.CsrfViewMiddleware",
             "django.contrib.auth.middleware.AuthenticationMiddleware",
-            "django.contrib.messages.middleware.MessageMiddleware"),
+            "django.contrib.messages.middleware.MessageMiddleware"],
 
         "INSTALLED_APPS": MBD_INSTALLED_APPS
     }
