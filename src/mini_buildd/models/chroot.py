@@ -469,7 +469,7 @@ class LoopLVMChroot(LVMChroot):
 
     def mbd_backend_flavor(self):
         return "{size}G loop: {l}".format(size=self.loop_size,
-                                          l=super(LoopLVMChroot, self).mbd_backend_flavor())
+                                          l=super().mbd_backend_flavor())
 
     def mbd_get_volume_group(self):
         return "mini-buildd-loop-{d}-{a}".format(d=self.source.codename, a=self.architecture.name)
@@ -501,7 +501,7 @@ class LoopLVMChroot(LVMChroot):
              ["/sbin/pvremove", "--verbose", loop_device]),
 
             (["/sbin/vgcreate", "--verbose", self.mbd_get_volume_group(), loop_device],
-             ["/sbin/vgremove", "--verbose", "--force", self.mbd_get_volume_group()])] + super(LoopLVMChroot, self).mbd_get_pre_sequence()
+             ["/sbin/vgremove", "--verbose", "--force", self.mbd_get_volume_group()])] + super().mbd_get_pre_sequence()
 
 
 class BtrfsSnapshotChroot(Chroot):

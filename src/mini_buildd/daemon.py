@@ -194,7 +194,7 @@ class DebianVersion(debian.debian_support.Version):
 
 class KeyringPackage(mini_buildd.misc.TmpDir):
     def __init__(self, identity, gpg, debfullname, debemail, tpl_dir="/usr/share/doc/mini-buildd/examples/packages/archive-keyring-template"):
-        super(KeyringPackage, self).__init__()
+        super().__init__()
 
         self.key_id = gpg.get_first_sec_key()
         LOG.debug("KeyringPackage using key: '{i}'".format(i=self.key_id))
@@ -263,7 +263,7 @@ class KeyringPackage(mini_buildd.misc.TmpDir):
 
 class DSTPackage(mini_buildd.misc.TmpDir):
     def __init__(self, tpl_dir, version=None):
-        super(DSTPackage, self).__init__()
+        super().__init__()
 
         dst_dir = os.path.join(self.tmpdir, "package")
         shutil.copytree(tpl_dir, dst_dir)

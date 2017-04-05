@@ -226,7 +226,7 @@ class StatusModel(Model):
         def save_model(self, request, obj, form, change):
             if change:
                 obj.mbd_set_changed(request)
-            super(StatusModel.Admin, self).save_model(request, obj, form, change)
+            super().save_model(request, obj, form, change)
 
         @classmethod
         def _mbd_run_dependencies(cls, request, obj, func, **kwargs):

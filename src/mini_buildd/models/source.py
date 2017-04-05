@@ -95,7 +95,7 @@ Use the 'directory' notation with exactly one trailing slash (like 'http://examp
     def clean(self, *args, **kwargs):
         if self.url[-1] != "/" or self.url[-2] == "/":  # pylint: disable=unsubscriptable-object
             raise django.core.exceptions.ValidationError("The URL must have exactly one trailing slash (like 'http://example.org/path/').")
-        super(Archive, self).clean(*args, **kwargs)
+        super().clean(*args, **kwargs)
 
     def mbd_get_matching_release(self, request, source, gnupg):
         url = "{u}/dists/{d}/Release".format(u=self.url, d=source.codename)

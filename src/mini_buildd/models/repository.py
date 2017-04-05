@@ -53,7 +53,7 @@ class Suite(mini_buildd.models.base.Model):
 
     def clean(self, *args, **kwargs):
         self.mbd_validate_regex(r"^[a-z]+$", self.name, "Name")
-        super(Suite, self).clean(*args, **kwargs)
+        super().clean(*args, **kwargs)
 
 
 class SuiteOption(mini_buildd.models.base.Model):
@@ -118,7 +118,7 @@ lintian) as non-lethal, and will install anyway.
         if self.migrates_to and self.migrates_to.uploadable:
             raise django.core.exceptions.ValidationError("You may not migrate to an uploadable suite.")
 
-        super(SuiteOption, self).clean(*args, **kwargs)
+        super().clean(*args, **kwargs)
 
     @property
     def rollback(self):
@@ -353,7 +353,7 @@ class ArchitectureOption(mini_buildd.models.base.Model):
     def clean(self, *args, **kwargs):
         if self.build_architecture_all and self.optional:
             raise django.core.exceptions.ValidationError("Optional architectures must not be architecture all!")
-        super(ArchitectureOption, self).clean(*args, **kwargs)
+        super().clean(*args, **kwargs)
 
 
 class ArchitectureOptionInline(django.contrib.admin.TabularInline):
@@ -748,7 +748,7 @@ Example:
 
     def clean(self, *args, **kwargs):
         self.mbd_validate_regex(r"^[a-z0-9]+$", self.identity, "Identity")
-        super(Repository, self).clean(*args, **kwargs)
+        super().clean(*args, **kwargs)
 
     def _mbd_portext2keyring_suites(self, request, dsc_url):
         for d in self.distributions.all():

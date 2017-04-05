@@ -24,7 +24,7 @@ class Build(mini_buildd.misc.Status):
     UPLOADED = 10
 
     def __init__(self, breq, gnupg, sbuild_jobs):
-        super(Build, self).__init__(
+        super().__init__(
             stati={self.FAILED: "FAILED",
                    self.CHECKING: "CHECKING",
                    self.BUILDING: "BUILDING",
@@ -258,7 +258,7 @@ class LastBuild(mini_buildd.misc.API):
     __API__ = -99
 
     def __init__(self, build):
-        super(LastBuild, self).__init__()
+        super().__init__()
         self.identity = build.__str__()
         self.status = build.status
         self.status_desc = build.status_desc

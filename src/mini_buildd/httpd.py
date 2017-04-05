@@ -132,7 +132,7 @@ class StaticWithIndex(cherrypy._cptools.HandlerTool):  # pylint: disable=protect
         return cls._mbd_serve_index(section, directory, **kwargs)
 
     def __init__(self):
-        super(StaticWithIndex, self).__init__(self._mbd_serve)
+        super().__init__(self._mbd_serve)
 
 
 def run(bind, wsgi_app):

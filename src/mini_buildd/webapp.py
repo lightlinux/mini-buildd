@@ -21,7 +21,7 @@ class WebApp(django.core.handlers.wsgi.WSGIHandler):
 
     def __init__(self):
         LOG.info("Generating web application...")
-        super(WebApp, self).__init__()
+        super().__init__()
         mini_buildd.models.import_all()
 
         LOG.info("Migrating database (migrate)...")

@@ -44,7 +44,7 @@ class GnuPGPublicKey(mini_buildd.models.base.StatusModel):
         return "{i}: {n}".format(i=self.key_long_id if self.key_long_id else self.key_id, n=self.key_name)
 
     def clean(self, *args, **kwargs):
-        super(GnuPGPublicKey, self).clean(*args, **kwargs)
+        super().clean(*args, **kwargs)
         if self.key_id and len(self.key_id) < 8:
             raise django.core.exceptions.ValidationError("The key id, if given, must be at least 8 bytes  long")
 
@@ -99,7 +99,7 @@ class GnuPGPublicKey(mini_buildd.models.base.StatusModel):
 
 class AptKey(GnuPGPublicKey):
     def clean(self, *args, **kwargs):
-        super(AptKey, self).clean(*args, **kwargs)
+        super().clean(*args, **kwargs)
 
         if self.key_id:
             matching_key = self.mbd_filter_key(self.key_id)
@@ -150,7 +150,7 @@ class Uploader(KeyringKey):
         return "'{u}' may upload to '{r}' with key '{s}'".format(
             u=self.user,
             r=",".join([r.identity for r in self.may_upload_to.all()]),
-            s=super(Uploader, self).__str__())
+            s=super().__str__())
 
 
 def cb_create_user_profile(sender, instance, created, **kwargs):
@@ -200,10 +200,10 @@ class Remote(KeyringKey):
             MsgLog(LOG, request).warning("Downloaded remote key integrated: Please check key manually before activation!")
         else:
             raise Exception("Empty remote key from '{u}' -- maybe the remote is not prepared yet?".format(u=url))
-        super(Remote, self).mbd_prepare(request)
+        super().mbd_prepare(request)
 
     def mbd_remove(self, request):
-        super(Remote, self).mbd_remove(request)
+        super().mbd_remove(request)
         self.mbd_set_pickled_data(mini_buildd.api.Status({}))
         MsgLog(LOG, request).info("Remote key and state removed.")
 
@@ -211,7 +211,7 @@ class Remote(KeyringKey):
         """
         Check whether the remote mini-buildd is up, running and serving for us.
         """
-        super(Remote, self).mbd_check(request)
+        super().mbd_check(request)
         status = self.mbd_get_status(update=True)
 
         if self.mbd_get_daemon().model.mbd_get_http_hopo().string not in status.remotes:

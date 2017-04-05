@@ -172,7 +172,7 @@ class BaseGnuPG(object):
 
 class GnuPG(BaseGnuPG):
     def __init__(self, template, fullname, email):
-        super(GnuPG, self).__init__(home=os.path.join(mini_buildd.setup.HOME_DIR, ".gnupg"))
+        super().__init__(home=os.path.join(mini_buildd.setup.HOME_DIR, ".gnupg"))
         self.template = """\
 {t}
 Name-Real: {n}
@@ -193,7 +193,7 @@ Name-Email: {e}
             LOG.info("GnuPG setup removed: {h}".format(h=self.home))
 
     def get_pub_key(self, identity=None):
-        return super(GnuPG, self).get_pub_key("mini-buildd")
+        return super().get_pub_key("mini-buildd")
 
 
 class TmpGnuPG(BaseGnuPG, mini_buildd.misc.TmpDir):
@@ -232,4 +232,4 @@ class TmpGnuPG(BaseGnuPG, mini_buildd.misc.TmpDir):
     """
     def __init__(self):
         mini_buildd.misc.TmpDir.__init__(self)
-        super(TmpGnuPG, self).__init__(home=self.tmpdir)
+        super().__init__(home=self.tmpdir)

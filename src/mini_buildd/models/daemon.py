@@ -151,7 +151,7 @@ prepare/remove actions will generate/remove the GnuPG key.
         def save_model(self, request, obj, form, change):
             "Always update date the daemon object to model."
             obj.mbd_get_daemon().update_to_model(obj)
-            super(Daemon.Admin, self).save_model(request, obj, form, change)
+            super().save_model(request, obj, form, change)
 
     def __str__(self):
         return "{i}: Serving {r} repositories, {c} chroots, using {R} remotes".format(
@@ -161,7 +161,7 @@ prepare/remove actions will generate/remove the GnuPG key.
             R=len(mini_buildd.models.gnupg.Remote.mbd_get_active()))
 
     def __init__(self, *args, **kwargs):
-        super(Daemon, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self._mbd_fullname = "mini-buildd archive {i}".format(i=self.identity)
         self._mbd_gnupg = mini_buildd.gnupg.GnuPG(self.gnupg_template, self._mbd_fullname, self.email_address)
         self._mbd_gnupg_long_id = self._mbd_gnupg.get_first_sec_key()
@@ -184,7 +184,7 @@ prepare/remove actions will generate/remove the GnuPG key.
         return self._mbd_gnupg_long_id
 
     def clean(self, *args, **kwargs):
-        super(Daemon, self).clean(*args, **kwargs)
+        super().clean(*args, **kwargs)
 
         self.mbd_validate_regex(r"^[a-zA-Z0-9\-]+$", self.identity, "Identity")
 

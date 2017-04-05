@@ -19,7 +19,7 @@ class Package(mini_buildd.misc.Status):
     INSTALLED = 10
 
     def __init__(self, daemon, changes):
-        super(Package, self).__init__(
+        super().__init__(
             stati={self.FAILED: "FAILED",
                    self.REJECTED: "REJECTED",
                    self.CHECKING: "CHECKING",
@@ -222,7 +222,7 @@ class LastPackage(mini_buildd.misc.API):
     __API__ = -99
 
     def __init__(self, package):
-        super(LastPackage, self).__init__()
+        super().__init__()
 
         self.identity = package.__str__()
 
