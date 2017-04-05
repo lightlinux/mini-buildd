@@ -169,7 +169,7 @@ def api(request):
 
         # Authentication
         def chk_login():
-            return request.user.is_authenticated() and request.user.is_active
+            return request.user.is_authenticated and request.user.is_active
 
         if (api_cls.AUTH == api_cls.LOGIN) and not chk_login():
             return error401_unauthorized(request, "API: '{c}': Needs user login".format(c=command))
