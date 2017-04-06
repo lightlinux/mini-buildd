@@ -91,11 +91,11 @@ EOF
 }
 
 # Find files with python code
-MBD_PYFINDPARAMS=(\( -not -wholename './debian/*' -not -wholename './.git/*' -not -wholename './build/*' -not -wholename './.pybuild/*' -type f \))
+declare -a MBD_PYFINDPARAMS=(-not -wholename './debian/*' -not -wholename './.git/*' -not -wholename './build/*' -not -wholename './.pybuild/*' -type f)
 mbd_pyscripts()
 {
 	local f
-	for f in $(find "${MBD_PYFINDPARAMS[@]}" -executable); do
+	for f in $(find \( "${MBD_PYFINDPARAMS[@]}" \) -a -executable); do
 		if head -1 "${f}" | grep --quiet "bin/python"; then
 			printf "%s\n" "${f}"
 		fi
@@ -104,10 +104,9 @@ mbd_pyscripts()
 
 mbd_pymodules()
 {
-	# ./setup.py and ./doc/conf.py currently don't work for doctests and/or pylint checks.
-	find "${MBD_PYFINDPARAMS[@]}" -name "*.py" \
-			 -a ! -wholename "./doc/conf.py" \
-			 -a ! -wholename "./setup.py"
+	local -a exceptions=(-true)
+	[ -z "${@}" ] || exceptions=($(printf " -not -wholename %s" "${@}"))
+	find -name "*.py" -a \( "${MBD_PYFINDPARAMS[@]}" \) -a \( "${exceptions[@]}" \)
 }
 
 mbd_pysources()
@@ -166,7 +165,7 @@ mbd_pydoctests()
 {
 	(
 		pyenv
-		for m in $(mbd_pymodules); do
+		for m in $(mbd_pymodules ./setup.py ./doc/conf.py); do  # ./setup.py && ./doc/conf.py can't be used for doctests
 			local module="$(basename $(tr '/' '.' <<< ${m:4}) '.py' | cut -d. -f2-)"
 			printf "=> Doctest on %s (%s)\n" "${m}" "${module}"
 			( cd ./src/ && ./run-doctest "${module}" )
@@ -204,7 +203,7 @@ mbd_pylint()
 	(
 		pyenv
 		printf "N: pylint checking modules...\n"
-		pylint3 --jobs=2 $(mbd_pymodules)
+		pylint3 --jobs=2 $(mbd_pymodules ./doc/conf.py)  # ./doc/conf.py can't be used pylint-conform
 		printf "N: pylint checking scripts...\n"
 		pylint3 --jobs=2 --disable=C0103 $(mbd_pyscripts)
 		printf "W: Overall locally disabled checks: %s\n" "$(cat $(mbd_pysources) | grep --count "pylint:.*disable")"  # No good way to keep track with pylint itself
