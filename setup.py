@@ -5,7 +5,6 @@ import os
 import sys
 import shutil
 import subprocess
-import distutils.core
 import debian.changelog
 import setuptools
 
@@ -48,7 +47,7 @@ print("I: Got version from changelog: {v}".format(v=__version__))
 if "build_sphinx" in sys.argv:
     sphinx_build_workaround()
 
-distutils.core.setup(
+setuptools.setup(
     name="mini-buildd",
     version=__version__,
     package_dir={'': 'src'},
