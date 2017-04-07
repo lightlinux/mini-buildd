@@ -5,23 +5,19 @@ import shutil
 import subprocess
 
 import setuptools
+import setuptools.command.build_py
 import debian.changelog
 import sphinx.setup_command
 
 
 # Get version from debian/changelog, and update package's __init__.py unconditionally
 MINI_BUILDD_VERSION = str(debian.changelog.Changelog(file=open("./debian/changelog", "rb")).version)
+MINI_BUILDD_INIT_PY_PATH = "./src/mini_buildd/__init__.py"
 MINI_BUILDD_INIT_PY = """\
 # -*- coding: utf-8 -*-
 
 __version__ = "{version}"
 """.format(version=MINI_BUILDD_VERSION)
-
-
-def update_init(init_py_path="./src/mini_buildd/__init__.py"):
-    with open(init_py_path, "w", encoding="UTF-8") as init_py:
-        init_py.write(MINI_BUILDD_INIT_PY)
-    print("I: Updated {f} ({v})".format(f=init_py_path, v=MINI_BUILDD_VERSION))
 
 
 class BuildDoc(sphinx.setup_command.BuildDoc):
@@ -54,10 +50,19 @@ class BuildDoc(sphinx.setup_command.BuildDoc):
         super().run()
 
 
-update_init()
+class BuildPy(setuptools.command.build_py.build_py):
+    def run(self):
+        with open(MINI_BUILDD_INIT_PY_PATH, "w", encoding="UTF-8") as init_py:
+            init_py.write(MINI_BUILDD_INIT_PY)
+        print("I: Updated {f} ({v})".format(f=MINI_BUILDD_INIT_PY_PATH, v=MINI_BUILDD_VERSION))
+
+        super().run()
+        self.run_command("build_sphinx")
+
 
 setuptools.setup(
-    cmdclass={"build_sphinx": BuildDoc},
+    cmdclass={"build_sphinx": BuildDoc,
+              "build_py": BuildPy},
     name="mini-buildd",
     version=MINI_BUILDD_VERSION,
     package_dir={'': 'src'},
