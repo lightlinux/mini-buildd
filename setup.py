@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
 import os
 import sys
 import shutil
@@ -8,7 +7,19 @@ import subprocess
 import debian.changelog
 import setuptools
 
-print("I: Using setuptools: {v}".format(v=setuptools.__version__))
+# Get version from debian/changelog, and update package's __init__.py unconditionally
+MINI_BUILDD_VERSION = str(debian.changelog.Changelog(file=open("./debian/changelog", "rb")).version)
+MINI_BUILDD_INIT_PY = """\
+# -*- coding: utf-8 -*-
+
+__version__ = "{version}"
+""".format(version=MINI_BUILDD_VERSION)
+
+
+def update_init(init_py_path="./src/mini_buildd/__init__.py"):
+    with open(init_py_path, "w", encoding="UTF-8") as init_py:
+        init_py.write(MINI_BUILDD_INIT_PY)
+    print("I: Updated {f} ({v})".format(f=init_py_path, v=MINI_BUILDD_VERSION))
 
 
 def sphinx_build_workaround(build_dir="./build/sphinx"):
@@ -31,25 +42,13 @@ def sphinx_build_workaround(build_dir="./build/sphinx"):
                            r"--name=mini-buildd-tool \- User/client tool box for mini-buildd instances.", "./src/mini-buildd-tool"])
 
 
-# This is a Debian native package, the version is in
-# debian/changelog and nowhere else. We automagically get the
-# version from there, and update the mini_buildd package's
-# __init__.py
-__version__ = str(debian.changelog.Changelog(file=open("./debian/changelog", "rb")).version)
-with open("./src/mini_buildd/__init__.py", "wb") as version_py:
-    version_py.write("""\
-# -*- coding: utf-8 -*-
-
-__version__ = "{version}"
-""".format(version=__version__).encode())
-print("I: Got version from changelog: {v}".format(v=__version__))
-
+update_init()
 if "build_sphinx" in sys.argv:
     sphinx_build_workaround()
 
 setuptools.setup(
     name="mini-buildd",
-    version=__version__,
+    version=MINI_BUILDD_VERSION,
     package_dir={'': 'src'},
     description="Mini Debian build daemon",
     author="Stephan Sürken",
