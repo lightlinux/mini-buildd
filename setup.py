@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import os
-import sys
 import shutil
 import subprocess
-import debian.changelog
+
 import setuptools
+import debian.changelog
+import sphinx.setup_command
+
 
 # Get version from debian/changelog, and update package's __init__.py unconditionally
 MINI_BUILDD_VERSION = str(debian.changelog.Changelog(file=open("./debian/changelog", "rb")).version)
@@ -22,31 +24,40 @@ def update_init(init_py_path="./src/mini_buildd/__init__.py"):
     print("I: Updated {f} ({v})".format(f=init_py_path, v=MINI_BUILDD_VERSION))
 
 
-def sphinx_build_workaround(build_dir="./build/sphinx"):
-    # Prepare build dir: doc/, plus static files from app.mini_buildd
-    shutil.rmtree(build_dir, ignore_errors=True)
-    shutil.copytree("./doc", build_dir)
-    shutil.copytree("./src/mini_buildd/static", os.path.join(build_dir, "_static"))
+class BuildDoc(sphinx.setup_command.BuildDoc):
+    def finalize_options(self):
+        # pylint: disable=attribute-defined-outside-init
+        self.build_dir = self.build_dir if self.build_dir else "./build/sphinx"
+        self.source_dir = self.source_dir if self.source_dir else "./build/sphinx"
 
-    # Generate API documentation
-    subprocess.check_call(["/usr/bin/sphinx-apidoc", "--force", "--output-dir", build_dir, "./src/mini_buildd/"])
+        # Prepare build dir: doc/, plus static files from app.mini_buildd
+        shutil.rmtree(self.build_dir, ignore_errors=True)
+        shutil.copytree("./doc", self.build_dir)
+        shutil.copytree("./src/mini_buildd/static", os.path.join(self.build_dir, "_static"))
 
-    # Generate man pages via help2man
-    subprocess.check_call(["help2man",
-                           "--no-info",
-                           "--output=" + build_dir + "/mini-buildd.8", "--section=8",
-                           "--include=doc/mini-buildd.help2man.include", "./src/mini-buildd"])
-    subprocess.check_call(["help2man",
-                           "--no-info",
-                           "--output=" + build_dir + "/mini-buildd-tool.1", "--section=1",
-                           r"--name=mini-buildd-tool \- User/client tool box for mini-buildd instances.", "./src/mini-buildd-tool"])
+        # Generate API documentation
+        subprocess.check_call(["/usr/bin/sphinx-apidoc", "--force", "--output-dir", self.build_dir, "./src/mini_buildd/"])
+
+        super().finalize_options()
+
+    def run(self):
+        # Generate man pages via help2man
+        subprocess.check_call(["help2man",
+                               "--no-info",
+                               "--output=" + self.build_dir + "/mini-buildd.8", "--section=8",
+                               "--include=doc/mini-buildd.help2man.include", "./src/mini-buildd"])
+        subprocess.check_call(["help2man",
+                               "--no-info",
+                               "--output=" + self.build_dir + "/mini-buildd-tool.1", "--section=1",
+                               r"--name=mini-buildd-tool \- User/client tool box for mini-buildd instances.", "./src/mini-buildd-tool"])
+
+        super().run()
 
 
 update_init()
-if "build_sphinx" in sys.argv:
-    sphinx_build_workaround()
 
 setuptools.setup(
+    cmdclass={"build_sphinx": BuildDoc},
     name="mini-buildd",
     version=MINI_BUILDD_VERSION,
     package_dir={'': 'src'},
