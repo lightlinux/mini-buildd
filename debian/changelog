@@ -1,3 +1,145 @@
+mini-buildd (1.1.3) experimental; urgency=medium
+
+  ** 1.1.x are _development_ releases, use for testing only. **
+
+  This release again is a mere code maintenance release:
+    * python 3: More 2to3 code updates (calling this finished).
+    * django 1.10: Remove all < 1.10 compat code.
+    * pylint: Make nearly all exceptions in-code, and bring it
+      down to about 30 exception aver all.
+    * All known regressions fixed.
+
+  * [fe0732c] py3: Remove obsolete py2 compat: Argparse/stderr workaround.
+  * [8791ee6] py3: Remove obsolete py2 compat: PY2_HAS_URLLIB2_CAFILE.
+  * [6d37317] misc.py: Remove obsoleted pylint exception.
+  * [e7212c3] py3: Remove obsolete py2 compat: timedelta_total_seconds()
+    wrapper.
+  * [9a57e4a] py3: Remove obsolete py2 compat: mkdirs() wrapper.
+  * [118fb9f] py3: Remove obsolete py2 compat: Extra locking for
+    dict.setdefault() not atomic.
+  * [5e23968] control: Update/harden dep on django: >= 1.10.
+  * [9f1b505] django_settings.py: Remove settings compat code for django
+    versions < 1.8.
+  * [3370ecd] daemon.py: Remove and replace old 'model-save()-workaround'
+    for django versions < 1.5.
+  * [c6f41b5] templatetags/mini_buildd_tags.py: mbd_jquery_path() Remove
+    compat for django versions < 1.9.
+  * [18a91f4] models/source.py: Remove obsolete and 'not-quite correct'
+    workaround comment for source.__str__()
+  * [0c7d67c] [devel]: Rm now-obsoleted helper pycompat.
+  * [7e50464] [devel]: Remove no longer needed temporary helper 2to3.
+  * [a745002] pylint: Remove all in-code "module-global" exceptions (two
+    files).
+  * [84e6ae7] pylint: "bare-expect": Bulk-move to in-code exceptions.
+  * [9ea6286] [devel]: pylint check convenience: Don't stop testing on
+    first file that fails.
+  * [5ed2929] pylint: "broad-expect": Bulk-move to in-code exceptions.
+  * [bc46515] pylint: Drop global exception "cyclic-import" (no longer
+    needed).
+  * [777f2e8] pylint: "redefined-outer-name": Bulk-move to in-code
+    exceptions.
+  * [db39ae4] pylint: "redefined-variable-type": Bulk-move to in-code
+    exceptions.
+  * [309607e] pylint: Drop global exception "no-init" (no longer needed).
+  * [c8efdff] pylint: Re-check && keep global "logging-format-
+    interpolation" exception (update comment)
+  * [8103ce8] pylint: Remove "line-too-long" exception, rather use
+    max_line_length=200 now.
+  * [faedd7a] [devel]: pylintgeneratedmembers(): Fix 'devel call', and
+    change pylintrc directly.
+  * [6d3e474] .pylintrc: Update via pylintgeneratedmembers().
+  * [88f4acf] .pylintrc: Some general formatting cleanups.
+  * [4476306] .pylintrc: Add comment on each global exception.
+  * [4a858fc] [devel]: pylint: Add && print extra counter for number of
+    locally disabled checks.
+  * [0023580] [devel] Put py file exceptions to py_modules() func only.
+  * [3b24358] [devel]: Call pylint with many args && --jobs=2 (instead of
+    once for each module) (~quarters run time).
+  * [11fd16f] models/chroot.py: Use dict.get() with default value instead
+    of try/catch for personality value (obsoletes pylint exception).
+  * [25f20ca] code: Bulk-replace all "bare-excepts" by "broad-excepts" on
+    BaseException.
+  * [6f3d7e4] mini-buildd: Better name for daemon variable (obsoletes
+    pylint exception redefined-outer-name).
+  * [1592f54] mini-buildd-tool: Rather use '_var' naming than pylint
+    exception 'unused-argument'.
+  * [105de9c] mini-buildd-tool: Use ConfigParser, not legacy
+    RawConfigParser.
+  * [0eec1ff] mini-buildd-tool: Add short doc for host_completer function.
+  * [6ae0ef8] mini-buildd-tool: Simplify && improve host_completer()
+    (obsoleting a handful of pylint exceptions).
+  * [c34333c] code: Bulk-fix: Only use BaseException for broad except
+    clauses.
+  * [dadc1ff] webapp.py: Fixup 2 import statements (obsoleting 2
+    'redefined-outer-name' pylint exceptions).
+  * [bb62214] models/base.py: Fixup import statement (obsoleting a
+    'redefined-outer-name' pylint exceptions).
+  * [8bb3f6b] builder.py: Rename/improve function name build() ->
+    run_build() (obsoleting 3 'redefined-outer-name' pylint exceptions).
+  * [6026ad9] api/__init__.py: Fixup/improve internal imports (obsoleting
+    'redefined-outer-name' pylint exception).
+  * [d56140b] pylint: Remove unneeded in-code exceptions: 'wrong-import-
+    position|order','import-error', 'no-name-in-module'.
+  * [83801ca] mini-buildd-tool: pylint: Add false-positive comment to no-
+    member disable pragma.
+  * [15e839f] [devel]: pylint: Add short log line before checking modules
+    resp. scripts.
+  * [805f006] models/base.py: pylint: Remove 'super-on-old-class'
+    exception (no longer relevant with py3).
+  * [2d378be] models/chroot.py: Simplify/improve code to set personality
+    (obsoletes pylint exception redefined-variable-type).
+  * [fe39105] models/source|repository.py: py3: Switch to use key function
+    for ordering components.
+  * [79c1fcc] ftpd.py: py3: Switch to key function to order list.
+  * [adc0da9] .pycodestyle: Replace UTF-8 chars by ascii.
+  * [96ab49e] examples/*: Remove a number of exception bases pylint
+    exceptions.
+  * [056de7b] code: Bulk-fix *more* "bare-excepts" (found by pycodestyle
+    2.3.1).
+  * [6762822] call.py: Rather use SpooledTemporary for default stdout|err.
+  * [98d6b47] call.py: Simplify call2shell() convenience code.
+  * [5c5504c] call.py: py3: Switch to use subprocess.run().
+  * [a611831] call.py: py3: Use more from CompletedProcess, stop using
+    implicitly created temporary files (fixes py warning).
+  * [9a4a916] call.py: Get rid of (unused) methods to get stdout|err as
+    bytes.
+  * [d99f9a2] call.py, all: py3: Bulk-rename ustdout|err to stdout|err
+    ('u' for unicode does not make sense anymore).
+  * [55864ce] call.py: Remove extra retval, and some more cleanups.
+  * [29280ea] debian/control: Update to 'nicer' notation.
+  * [176fbeb] debian/control: Add py3-bs4 b-d and suggests for p-m-b.
+  * [1fae937] django_settings.py: Update to 1.10 MIDDLEWARE style (fixes
+    django warning).
+  * [dcf11e8] django_settings.py: With compat removed, we can simplify
+    back to call configure() directly.
+  * [3f5b283] root_urls.py: Remove unnecessary include() for admin site
+    (fixes django warning).
+  * [94d9260] models/base.py: colored status: Switch from deprecated
+    'allow_tags' to html_format() (fixes django warning).
+  * [e0ead55] misc.py: run_as_thread(): Switch to daemon property (instead
+    of deprecated setDeamon()).
+  * [3fe5534] mini-buildd: logging: Set 'raiseException' value based on
+    "exception" debug flag (previously, it was always disabled).
+  * [9dc3b24] code: py3: Bulk-update use of super() to py3-style.
+  * [30a5239] views.py: Use 'is_authenticated' as attribute (fixes django
+    deprecation warning).
+  * [197ab68] [devel] pymodules(): Add file exceptions as args (and use
+    exceptions only where needed).
+  * [175f061] setup.py: Use setuptools.setup(), not
+    distutils.core.setup().
+  * [ebfa639] setup.py: Some code cleanup, improve __init__.py creator
+    code.
+  * [566991b] setup.py: Fix build_sphinx workaround to custom BuildDoc
+    command.
+  * [c7bfb8d] [devel]: pyenv: write own version of __init__.py (don't use
+    setup.py's side effect).
+  * [eed7020] setup.py: Use custom command for build: generate __init__.py
+    && trigger doc build automatically.
+  * [f061c98] setup.py, debian/rules: Move bash-completion file generation
+    to setup.py (this finally obsoletes rule's build target override)
+
+ -- Stephan Sürken <absurd@debian.org>  Mon, 10 Apr 2017 12:17:52 +0000
+
 mini-buildd (1.1.2) experimental; urgency=medium
 
   ** 1.1.x are _development_ releases, use for testing only. **
