@@ -193,7 +193,7 @@ a.hover-underline:hover
 #mbd-content .status.table
 {
 	display: block;
-	overflow: scroll;
+	overflow: auto;
 	height: 30vh;
 	background-color: whitesmoke;
 }
