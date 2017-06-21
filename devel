@@ -332,7 +332,7 @@ mbd_install()
 
 	_head "Installing snapshot..."
 	cat ./devel.debconf.selections | sudo debconf-set-selections --verbose -
-	sudo debi
+	sudo debi --with-depends
 }
 
 mbd_update()
