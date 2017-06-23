@@ -194,7 +194,7 @@ Comma-separated list of special debugging options:
     @staticmethod
     def _log_handler_syslog():
         handler = logging.handlers.SysLogHandler(
-            address="/dev/log".encode("UTF-8"),
+            address="/dev/log",
             facility=logging.handlers.SysLogHandler.LOG_USER)
         handler.setFormatter(logging.Formatter(LOG_FORMAT))
         return handler
