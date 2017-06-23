@@ -277,73 +277,97 @@ codeversion is only used for base sources.""")
         @classmethod
         def mbd_meta_add_debian(cls, msglog):
             """
-            Add well-known Debian sources
+            Add well-known Debian sources.
 
-            7638D0442B90D010: Debian Archive Automatic Signing Key (8/jessie) <ftpmaster@debian.org>
-            CBF8D6FD518E17E1: Jessie Stable Release Key <debian-release@lists.debian.org>
+            To display the key ids via apt-key in the format as used here::
 
-            8B48AD6246925553: Debian Archive Automatic Signing Key (7.0/wheezy) <ftpmaster@debian.org>
-            6FB2A1C265FFB764: Wheezy Stable Release Key <debian-release@lists.debian.org>
+              apt-key adv --list-public-keys --keyid-format=long
 
-            AED4B06F473041FA: Debian Archive Automatic Signing Key (6.0/squeeze) <ftpmaster@debian.org>
-            64481591B98321F9: Squeeze Stable Release Key <debian-release@lists.debian.org>
             """
+
+            keys = {
+                "archive_stretch": "E0B11894F66AEC98",    # Debian Archive Automatic Signing Key (9/stretch) <ftpmaster@debian.org>
+                "release_stretch": "EF0F382A1A7B6500",    # Debian Stable Release Key (9/stretch) <debian-release@lists.debian.org>
+                "archive_jessie": "7638D0442B90D010",     # Debian Archive Automatic Signing Key (8/jessie) <ftpmaster@debian.org>
+                "release_jessie": "CBF8D6FD518E17E1",     # Jessie Stable Release Key <debian-release@lists.debian.org>
+                "archive_wheezy": "8B48AD6246925553",     # Debian Archive Automatic Signing Key (7.0/wheezy) <ftpmaster@debian.org>
+                "release_wheezy": "6FB2A1C265FFB764",     # Wheezy Stable Release Key <debian-release@lists.debian.org>
+                "archive_squeeze": "AED4B06F473041FA",    # Debian Archive Automatic Signing Key (6.0/squeeze) <ftpmaster@debian.org>
+                "release_squeeze": "64481591B98321F9"     # Squeeze Stable Release Key <debian-release@lists.debian.org>
+            }
+
             cls._mbd_get_or_create(msglog, "Debian", "squeeze",
-                                   ["AED4B06F473041FA", "64481591B98321F9"])
-            cls._mbd_get_or_create(msglog, "Debian", "wheezy",
-                                   ["8B48AD6246925553", "6FB2A1C265FFB764", "7638D0442B90D010"])
-            cls._mbd_get_or_create(msglog, "Debian", "jessie",
-                                   ["8B48AD6246925553", "CBF8D6FD518E17E1", "7638D0442B90D010"])
-            cls._mbd_get_or_create(msglog, "Debian", "stretch",
-                                   ["8B48AD6246925553", "7638D0442B90D010"])
-            cls._mbd_get_or_create(msglog, "Debian", "sid",
-                                   ["8B48AD6246925553", "6FB2A1C265FFB764", "7638D0442B90D010"])
+                                   [keys["archive_squeeze"], keys["release_squeeze"]])
             cls._mbd_get_or_create(msglog, "Debian Backports", "squeeze-backports",
-                                   ["AED4B06F473041FA", "8B48AD6246925553"])
+                                   [keys["archive_squeeze"], keys["archive_wheezy"]])
+
+            cls._mbd_get_or_create(msglog, "Debian", "wheezy",
+                                   [keys["archive_wheezy"], keys["release_wheezy"], keys["archive_jessie"]])
             cls._mbd_get_or_create(msglog, "Debian Backports", "wheezy-backports",
-                                   ["8B48AD6246925553", "6FB2A1C265FFB764", "7638D0442B90D010"])
+                                   [keys["archive_wheezy"], keys["release_wheezy"], keys["archive_jessie"]])
             cls._mbd_get_or_create(msglog, "Debian Backports", "wheezy-backports-sloppy",
-                                   ["8B48AD6246925553", "7638D0442B90D010"])
+                                   [keys["archive_wheezy"], keys["archive_jessie"]])
+
+            cls._mbd_get_or_create(msglog, "Debian", "jessie",
+                                   [keys["archive_wheezy"], keys["release_jessie"], keys["archive_jessie"]])
             cls._mbd_get_or_create(msglog, "Debian Backports", "jessie-backports",
-                                   ["8B48AD6246925553", "7638D0442B90D010"])
+                                   [keys["archive_wheezy"], keys["archive_jessie"]])
+
+            cls._mbd_get_or_create(msglog, "Debian", "stretch",
+                                   [keys["archive_wheezy"], keys["archive_jessie"]])
+
+            cls._mbd_get_or_create(msglog, "Debian", "sid",
+                                   [keys["archive_wheezy"], keys["release_wheezy"], keys["archive_jessie"]])
 
         @classmethod
         def mbd_meta_add_ubuntu(cls, msglog):
-            "Add well-known Ubuntu sources"
+            "Add well-known Ubuntu sources."
+
+            keys = {
+                "archive_current": "40976EAF437D05B5",    # Ubuntu Archive Automatic Signing Key <ftpmaster@ubuntu.com>
+                "archive_2012": "3B4FE6ACC0B21F32",       # Ubuntu Archive Automatic Signing Key (2012) <ftpmaster@ubuntu.com>
+            }
+
             cls._mbd_get_or_create(msglog, "Ubuntu", "trusty",
-                                   ["40976EAF437D05B5", "3B4FE6ACC0B21F32"])
+                                   [keys["archive_current"], keys["archive_2012"]])
             cls._mbd_get_or_create(msglog, "Ubuntu", "trusty-backports",
-                                   ["40976EAF437D05B5", "3B4FE6ACC0B21F32"],
+                                   [keys["archive_current"], keys["archive_2012"]],
                                    "Codename: trusty\nSuite: trusty-backports")
+
             cls._mbd_get_or_create(msglog, "Ubuntu", "utopic",
-                                   ["40976EAF437D05B5", "3B4FE6ACC0B21F32"])
+                                   [keys["archive_current"], keys["archive_2012"]])
             cls._mbd_get_or_create(msglog, "Ubuntu", "utopic-backports",
-                                   ["40976EAF437D05B5", "3B4FE6ACC0B21F32"],
+                                   [keys["archive_current"], keys["archive_2012"]],
                                    "Codename: utopic\nSuite: utopic-backports")
+
             cls._mbd_get_or_create(msglog, "Ubuntu", "vivid",
-                                   ["40976EAF437D05B5", "3B4FE6ACC0B21F32"])
+                                   [keys["archive_current"], keys["archive_2012"]])
             cls._mbd_get_or_create(msglog, "Ubuntu", "vivid-backports",
-                                   ["40976EAF437D05B5", "3B4FE6ACC0B21F32"],
+                                   [keys["archive_current"], keys["archive_2012"]],
                                    "Codename: vivid\nSuite: vivid-backports")
+
             cls._mbd_get_or_create(msglog, "Ubuntu", "wily",
-                                   ["40976EAF437D05B5", "3B4FE6ACC0B21F32"])
+                                   [keys["archive_current"], keys["archive_2012"]])
             cls._mbd_get_or_create(msglog, "Ubuntu", "wily-backports",
-                                   ["40976EAF437D05B5", "3B4FE6ACC0B21F32"],
+                                   [keys["archive_current"], keys["archive_2012"]],
                                    "Codename: wily\nSuite: wily-backports")
+
             cls._mbd_get_or_create(msglog, "Ubuntu", "xenial",
-                                   ["40976EAF437D05B5", "3B4FE6ACC0B21F32"])
+                                   [keys["archive_current"], keys["archive_2012"]])
             cls._mbd_get_or_create(msglog, "Ubuntu", "xenial-backports",
-                                   ["40976EAF437D05B5", "3B4FE6ACC0B21F32"],
+                                   [keys["archive_current"], keys["archive_2012"]],
                                    "Codename: xenial\nSuite: xenial-backports")
+
             cls._mbd_get_or_create(msglog, "Ubuntu", "yakkety",
-                                   ["40976EAF437D05B5", "3B4FE6ACC0B21F32"])
+                                   [keys["archive_current"], keys["archive_2012"]])
             cls._mbd_get_or_create(msglog, "Ubuntu", "yakkety-backports",
-                                   ["40976EAF437D05B5", "3B4FE6ACC0B21F32"],
+                                   [keys["archive_current"], keys["archive_2012"]],
                                    "Codename: yakkety\nSuite: yakkety-backports")
+
             cls._mbd_get_or_create(msglog, "Ubuntu", "zesty",
-                                   ["40976EAF437D05B5", "3B4FE6ACC0B21F32"])
+                                   [keys["archive_current"], keys["archive_2012"]])
             cls._mbd_get_or_create(msglog, "Ubuntu", "zesty-backports",
-                                   ["40976EAF437D05B5", "3B4FE6ACC0B21F32"],
+                                   [keys["archive_current"], keys["archive_2012"]],
                                    "Codename: zesty\nSuite: zesty-backports")
 
         @classmethod
