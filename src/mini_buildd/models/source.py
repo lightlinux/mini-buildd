@@ -312,6 +312,8 @@ codeversion is only used for base sources.""")
                                    [keys["archive_wheezy"], keys["release_jessie"], keys["archive_jessie"]])
             cls._mbd_get_or_create(msglog, "Debian Backports", "jessie-backports",
                                    [keys["archive_wheezy"], keys["archive_jessie"]])
+            cls._mbd_get_or_create(msglog, "Debian Backports", "jessie-backports-sloppy",
+                                   [keys["archive_wheezy"], keys["archive_jessie"]])
 
             cls._mbd_get_or_create(msglog, "Debian", "stretch",
                                    [keys["archive_wheezy"], keys["archive_jessie"], keys["release_jessie"], keys["release_stretch"]])
