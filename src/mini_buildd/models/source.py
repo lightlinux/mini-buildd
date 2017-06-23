@@ -328,42 +328,28 @@ codeversion is only used for base sources.""")
                 "archive_2012": "3B4FE6ACC0B21F32",       # Ubuntu Archive Automatic Signing Key (2012) <ftpmaster@ubuntu.com>
             }
 
+            # trusty: 14.04 (LTS until 2019)
             cls._mbd_get_or_create(msglog, "Ubuntu", "trusty",
                                    [keys["archive_current"], keys["archive_2012"]])
             cls._mbd_get_or_create(msglog, "Ubuntu", "trusty-backports",
                                    [keys["archive_current"], keys["archive_2012"]],
                                    "Codename: trusty\nSuite: trusty-backports")
 
-            cls._mbd_get_or_create(msglog, "Ubuntu", "utopic",
-                                   [keys["archive_current"], keys["archive_2012"]])
-            cls._mbd_get_or_create(msglog, "Ubuntu", "utopic-backports",
-                                   [keys["archive_current"], keys["archive_2012"]],
-                                   "Codename: utopic\nSuite: utopic-backports")
-
-            cls._mbd_get_or_create(msglog, "Ubuntu", "vivid",
-                                   [keys["archive_current"], keys["archive_2012"]])
-            cls._mbd_get_or_create(msglog, "Ubuntu", "vivid-backports",
-                                   [keys["archive_current"], keys["archive_2012"]],
-                                   "Codename: vivid\nSuite: vivid-backports")
-
-            cls._mbd_get_or_create(msglog, "Ubuntu", "wily",
-                                   [keys["archive_current"], keys["archive_2012"]])
-            cls._mbd_get_or_create(msglog, "Ubuntu", "wily-backports",
-                                   [keys["archive_current"], keys["archive_2012"]],
-                                   "Codename: wily\nSuite: wily-backports")
-
+            # xenial: 16.04 (LTS until 2018)
             cls._mbd_get_or_create(msglog, "Ubuntu", "xenial",
                                    [keys["archive_current"], keys["archive_2012"]])
             cls._mbd_get_or_create(msglog, "Ubuntu", "xenial-backports",
                                    [keys["archive_current"], keys["archive_2012"]],
                                    "Codename: xenial\nSuite: xenial-backports")
 
+            # yakkety: 16.10
             cls._mbd_get_or_create(msglog, "Ubuntu", "yakkety",
                                    [keys["archive_current"], keys["archive_2012"]])
             cls._mbd_get_or_create(msglog, "Ubuntu", "yakkety-backports",
                                    [keys["archive_current"], keys["archive_2012"]],
                                    "Codename: yakkety\nSuite: yakkety-backports")
 
+            # zesty: 17.04
             cls._mbd_get_or_create(msglog, "Ubuntu", "zesty",
                                    [keys["archive_current"], keys["archive_2012"]])
             cls._mbd_get_or_create(msglog, "Ubuntu", "zesty-backports",
