@@ -4,6 +4,8 @@ import os
 import logging
 import random
 
+import tzlocal
+
 import django
 import django.conf
 
@@ -123,8 +125,10 @@ def configure(smtp_string, loglevel):
         DATABASES={"default": {"ENGINE": "django.db.backends.sqlite3",
                                "NAME": os.path.join(mini_buildd.setup.HOME_DIR, "config.sqlite")}},
 
-        TIME_ZONE=None,
+        TIME_ZONE=tzlocal.get_localzone().zone,
+        USE_TZ=True,  # Django: "stores datetime information in UTC in the database": that's definitely what we want
         USE_L10N=True,
+
         SECRET_KEY=get_django_secret_key(mini_buildd.setup.HOME_DIR),
         ROOT_URLCONF="mini_buildd.root_urls",
         STATIC_URL=mini_buildd.setup.STATIC_URL,

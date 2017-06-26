@@ -2,10 +2,11 @@
 
 import os
 import shutil
-import datetime
 import logging
 
 import mini_buildd.misc
+
+import django.utils.timezone
 
 LOG = logging.getLogger(__name__)
 
@@ -27,7 +28,7 @@ class Package(mini_buildd.misc.Status):
                    self.INSTALLING: "INSTALLING",
                    self.INSTALLED: "INSTALLED"})
 
-        self.started = datetime.datetime.now()
+        self.started = django.utils.timezone.now()
         self.finished = None
 
         self.daemon = daemon
@@ -125,7 +126,7 @@ class Package(mini_buildd.misc.Status):
 
         missing = len(self.requests) - len(self.success) - len(self.failed)
         if missing <= 0:
-            self.finished = datetime.datetime.now()
+            self.finished = django.utils.timezone.now()
 
     def install(self):
         """

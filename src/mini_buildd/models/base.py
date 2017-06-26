@@ -49,6 +49,7 @@ import django.contrib.auth.models
 import django.db.models.signals
 import django.core.exceptions
 import django.template.response
+import django.utils.timezone
 
 import mini_buildd.setup
 
@@ -202,10 +203,10 @@ class StatusModel(Model):
 
     # Statuses of the prepared data, relevant for status "Prepared" only.
     # For "Removed" it's always NONE, for "Active" it's always the stamp of the last check.
-    CHECK_NONE = datetime.datetime(datetime.MINYEAR, 1, 1, tzinfo=None)
-    CHECK_CHANGED = datetime.datetime(datetime.MINYEAR, 1, 2, tzinfo=None)
-    CHECK_FAILED = datetime.datetime(datetime.MINYEAR, 1, 3, tzinfo=None)
-    CHECK_REACTIVATE = datetime.datetime(datetime.MINYEAR, 1, 4, tzinfo=None)
+    CHECK_NONE = datetime.datetime(datetime.MINYEAR, 1, 1, tzinfo=datetime.timezone.utc)
+    CHECK_CHANGED = datetime.datetime(datetime.MINYEAR, 1, 2, tzinfo=datetime.timezone.utc)
+    CHECK_FAILED = datetime.datetime(datetime.MINYEAR, 1, 3, tzinfo=datetime.timezone.utc)
+    CHECK_REACTIVATE = datetime.datetime(datetime.MINYEAR, 1, 4, tzinfo=datetime.timezone.utc)
     _CHECK_MAX = CHECK_REACTIVATE
     CHECK_STRINGS = {
         CHECK_NONE: {"char": "-", "string": "Unchecked -- please run check"},
@@ -285,7 +286,7 @@ class StatusModel(Model):
                             MsgLog(LOG, request).info("Auto-reactivated: {o}".format(o=obj))
 
                         # Finish up
-                        obj.last_checked = datetime.datetime.now()
+                        obj.last_checked = django.utils.timezone.now()
                         obj.save()
 
                         # Run activation hook if reactivated
@@ -458,7 +459,7 @@ this would mean losing all packages!
         return self.last_checked > self._CHECK_MAX
 
     def mbd_needs_check(self):
-        return not self.mbd_is_checked() or self.last_checked < (datetime.datetime.now() - datetime.timedelta(days=self.days_until_recheck))
+        return not self.mbd_is_checked() or self.last_checked < (django.utils.timezone.now() - datetime.timedelta(days=self.days_until_recheck))
 
     def mbd_is_changed(self):
         return self.last_checked == self.CHECK_CHANGED

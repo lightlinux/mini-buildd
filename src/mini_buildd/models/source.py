@@ -5,13 +5,13 @@ import urllib.request
 import urllib.parse
 import urllib.error
 import logging
-import datetime
 import contextlib
 import copy
 
 import django.db.models
 import django.contrib.admin
 import django.contrib.messages
+import django.utils.timezone
 
 import debian.deb822
 
@@ -130,7 +130,7 @@ Use the 'directory' notation with exactly one trailing slash (like 'http://examp
     def mbd_ping(self, request):
         "Ping and update the ping value."
         try:
-            t0 = datetime.datetime.now()
+            t0 = django.utils.timezone.now()
             # Append dists to URL for ping check: Archive may be
             # just fine, but not allow to access to base URL
             # (like ourselves ;). Any archive _must_ have dists/ anyway.
@@ -142,7 +142,7 @@ Use the 'directory' notation with exactly one trailing slash (like 'http://examp
                 if not 400 <= e.code <= 499:
                     raise
 
-            delta = datetime.datetime.now() - t0
+            delta = django.utils.timezone.now() - t0
             self.ping = delta.total_seconds() * (10 ** 3)
             self.save()
             MsgLog(LOG, request).debug("{s}: Ping!".format(s=self))

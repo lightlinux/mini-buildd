@@ -13,6 +13,8 @@ import mini_buildd.misc
 import mini_buildd.call
 import mini_buildd.changes
 
+import django.utils.timezone
+
 LOG = logging.getLogger(__name__)
 
 
@@ -96,11 +98,11 @@ class Build(mini_buildd.misc.Status):
 
     def _get_started_stamp(self):
         if os.path.exists(self.sbuildrc_path):
-            return datetime.datetime.fromtimestamp(os.path.getmtime(self.sbuildrc_path))
+            return datetime.datetime.fromtimestamp(os.path.getmtime(self.sbuildrc_path), tz=datetime.timezone.utc)
 
     def _get_built_stamp(self):
         if os.path.exists(self._bres.file_path):
-            return datetime.datetime.fromtimestamp(os.path.getmtime(self._bres.file_path))
+            return datetime.datetime.fromtimestamp(os.path.getmtime(self._bres.file_path), tz=datetime.timezone.utc)
 
     @property
     def took(self):
@@ -244,7 +246,7 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
     def upload(self):
         hopo = mini_buildd.misc.HoPo(self.upload_result_to)
         self._bres.upload(hopo)
-        self.uploaded = datetime.datetime.now()
+        self.uploaded = django.utils.timezone.now()
 
     def clean(self):
         mini_buildd.misc.skip_if_keep_in_debug(shutil.rmtree, self._breq.get_spool_dir())
@@ -281,10 +283,10 @@ def _expire_live_buildlogs(**kwargs):
     """
     Expire live buildlogs older than timedelta. Arguments are given as-is to the datetime.timedelta constructor.
     """
-    valid_until = datetime.datetime.now() - datetime.timedelta(**kwargs)
+    valid_until = django.utils.timezone.now() - datetime.timedelta(**kwargs)
     for buildlog in glob.glob(os.path.join(mini_buildd.setup.SPOOL_DIR, "*.buildlog")):
         LOG.debug("Checking if live build log is older than {d}: {logfile}".format(d=valid_until, logfile=buildlog))
-        if datetime.datetime.fromtimestamp(os.path.getmtime(buildlog)) < valid_until:
+        if datetime.datetime.fromtimestamp(os.path.getmtime(buildlog), tz=datetime.timezone.utc) < valid_until:
             LOG.info("Expiring live build log: {logfile}".format(logfile=buildlog))
             os.unlink(buildlog)
 
