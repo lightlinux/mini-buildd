@@ -4,9 +4,10 @@ import os
 import shutil
 import logging
 
+import django.utils.timezone
+
 import mini_buildd.misc
 
-import django.utils.timezone
 
 LOG = logging.getLogger(__name__)
 

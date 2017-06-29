@@ -8,12 +8,13 @@ import re
 import subprocess
 import logging
 
+import django.utils.timezone
+
 import mini_buildd.setup
 import mini_buildd.misc
 import mini_buildd.call
 import mini_buildd.changes
 
-import django.utils.timezone
 
 LOG = logging.getLogger(__name__)
 
