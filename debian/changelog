@@ -1,3 +1,40 @@
+mini-buildd (1.1.4) experimental; urgency=medium
+
+  ** 1.1.x are _development_ releases, use for testing only. **
+
+  This release mainly catches up w/ needed changes already in
+  the new 1.0.x stable release (especially, make it work with
+  current django 1.11).
+
+  [ Gerhard A. Dittes ]
+  * [6cb3ba6] mini-buildd.css: Improve "status table" appearance.
+
+  [ Stephan Sürken ]
+  * [ed6f61d] Remove (08x compat) package mini-buildd-common for good.
+  * [4da9072] lintian: Add hardcoded suppress for 'bad-ubuntu-
+    distribution-in-changes-file'.
+  * [0e4fabe] wizards: Add support for Ubuntu zesty (17.04).
+  * [1df9c9c] [devel]: update: Install with depends (debi --with-depends).
+  * [64e31c1] [devel]: installdeps: Add tidy.
+  * [8b437cc] wizards: Improve source wizard code: Don't repeat key ids.
+  * [457a513] wizards: Cleanup Ubuntu sources, support only zesty, yakkety
+    (latest) + xenial, trusty (latest LTS).
+  * [a717be5] wizards: Archives: Replace httpredir.debian.org by
+    deb.debian.org.
+  * [6a0be63] wizards: Sources: Update keys for stretch after release.
+  * [f474dbf] wizards: Add support for buster.
+  * [e380b7f] wizards: Add support for jessie-backports-sloppy.
+  * [1f39afe] wizards: Add support for stretch-backports.
+  * [6031e7d] src/mini-buildd: py3: Remove obsolete encode() call in
+    SysLogHandler (fixes syslog logger).
+  * [4d1f642] django: Update to aware datetime objects ('USE_TZ'), and
+    allow django 1.11.
+  * [58aa3a2] builder/packager.py: Fixup import order.
+  * [cea621e] Revert "lintian: Add hardcoded suppress for 'bad-ubuntu-
+    distribution-in-changes-file'."
+
+ -- Stephan Sürken <absurd@debian.org>  Tue, 25 Jul 2017 14:04:35 +0200
+
 mini-buildd (1.1.3) experimental; urgency=medium
 
   ** 1.1.x are _development_ releases, use for testing only. **
