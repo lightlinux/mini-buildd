@@ -476,6 +476,10 @@ class Daemon(object):
         except BaseException as e:
             mini_buildd.setup.log_exception(LOG, "Error adding persisted last builds/packages (ignoring)", e, logging.WARN)
 
+    def update_to_model(self):
+        # Save pickled persistend state
+        self.model.mbd_set_pickled_data((self.last_packages, self.last_builds))
+
     def start(self, force_check=False, msglog=LOG):
         with self.lock:
             if not self.thread:
@@ -496,7 +500,7 @@ class Daemon(object):
         with self.lock:
             if self.thread:
                 # Save pickled persistend state
-                self.model.mbd_set_pickled_data((self.last_packages, self.last_builds))
+                self.update_to_model()
                 self.model.save(update_fields=["pickled_data"])
 
                 self.incoming_queue.put("SHUTDOWN")
