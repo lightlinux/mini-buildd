@@ -170,7 +170,7 @@ Comma-separated list of special debugging options:
         mini_buildd.setup.TMP_DIR = os.path.join(vardir, "tmp")
 
         # Hardcoded to the Debian path atm
-        mini_buildd.setup.MANUAL_DIR = os.path.realpath("/usr/share/doc/mini-buildd/html")
+        mini_buildd.setup.MANUAL_DIR = os.path.realpath("/usr/share/doc/mini-buildd-doc/html")
 
         # Create base directories
         for d in [mini_buildd.setup.INCOMING_DIR,

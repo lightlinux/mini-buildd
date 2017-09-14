@@ -145,7 +145,11 @@ def run(bind, wsgi_app):
     :type wsgi_app: WSGI-application
 
     """
-    def add_static_handler(path, root, with_index=False, match=""):
+
+    def _error_manual_missing(status, _message, _traceback, _version):
+        return "<html><body><h1>Online Manual Not Available ({})</h1>Package <b><tt>mini-buildd-doc</tt></b> needs to be installed to make the manual available.</body></html>".format(status)
+
+    def add_static_handler(path, root, with_index=False, match="", config=None):
         "Shortcut to add a static handler."
         mime_text_plain = "text/plain; charset={charset}".format(charset=mini_buildd.setup.CHAR_ENCODING)
 
@@ -160,7 +164,8 @@ def run(bind, wsgi_app):
                                       "buildlog": mime_text_plain,
                                       "changes": mime_text_plain,
                                       "dsc": mime_text_plain}),
-            path)
+            path,
+            config={"/": config if config else {}})
 
     debug = "http" in mini_buildd.setup.DEBUG
     cherrypy.config.update({"server.socket_host": str(mini_buildd.misc.HoPo(bind).host),
@@ -198,7 +203,8 @@ def run(bind, wsgi_app):
 
     # Serve mini-buildd's HTML manual
     add_static_handler("/doc/",
-                       "/usr/share/doc/mini-buildd/html")
+                       mini_buildd.setup.MANUAL_DIR,
+                       config={"error_page.default": _error_manual_missing})
 
     # Serve repositories with index support
     add_static_handler("/repositories/",
