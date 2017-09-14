@@ -9,7 +9,7 @@
 /debian/tmp/*
 /debian/python3-mini-buildd/*
 /debian/mini-buildd/*
-/debian/mini-buildd-common/*
+/debian/mini-buildd-utils/*
 /debian/*mini-buildd*.*.debhelper
 /debian/*mini-buildd*.debhelper.log
 /debian/*mini-buildd*.substvars

@@ -1,0 +1,2 @@
+usr/bin/mini-buildd-tool usr/bin/
+build/bash-completions/mini-buildd-tool /usr/share/bash-completion/completions/

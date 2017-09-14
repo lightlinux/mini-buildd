@@ -97,3 +97,18 @@ Description: minimal build daemon - daemon
 	repository for deb packages.
 	.
 	This package provides the main daemon.
+
+Package: mini-buildd-utils
+Architecture: all
+Depends:
+	${misc:Depends},
+	${python3:Depends},
+	python3-mini-buildd (= ${binary:Version})
+Replaces: python3-mini-buildd (<< 1.1.5~)
+Breaks: python3-mini-buildd (<< 1.1.5~)
+Description: minimal build daemon - utilities
+	Mini-buildd is an easy-to-configure autobuilder and
+	repository for deb packages.
+	.
+	This package provides (optional) utilities, notably mini-buildd-tool,
+	a command line to access the web API.
