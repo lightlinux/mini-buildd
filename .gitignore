@@ -10,6 +10,7 @@
 /debian/python3-mini-buildd/*
 /debian/mini-buildd/*
 /debian/mini-buildd-utils/*
+/debian/mini-buildd-doc/*
 /debian/*mini-buildd*.*.debhelper
 /debian/*mini-buildd*.debhelper.log
 /debian/*mini-buildd*.substvars

@@ -60,7 +60,6 @@ Architecture: all
 Depends:
 	${misc:Depends},
 	${python3:Depends},
-	${sphinxdoc:Depends},
 	lsb-base (>= 3.0-6),
 	python3-mini-buildd (= ${binary:Version}),
 	python3-daemon (>= 2.0.5),
@@ -79,7 +78,9 @@ Depends:
 	dpkg-dev (>= 1.17.27~),
 	devscripts (>= 2.14.5~),
 	lintian
-Recommends: python3-apt
+Recommends:
+	mini-buildd-doc,
+	python3-apt
 Suggests:
 	haveged,
 	lvm2,
@@ -112,3 +113,17 @@ Description: minimal build daemon - utilities
 	.
 	This package provides (optional) utilities, notably mini-buildd-tool,
 	a command line to access the web API.
+
+Package: mini-buildd-doc
+Section: doc
+Architecture: all
+Depends:
+	${misc:Depends},
+	${sphinxdoc:Depends}
+Replaces: mini-buildd (<< 1.1.5~)
+Breaks: mini-buildd (<< 1.1.5~)
+Description: minimal build daemon - utilities
+	Mini-buildd is an easy-to-configure autobuilder and
+	repository for deb packages.
+	.
+	This package contains the HTML documentation.
