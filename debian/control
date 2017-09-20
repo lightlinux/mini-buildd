@@ -28,7 +28,7 @@ Build-Depends:
 # Needed for api/_contrib.py only:
 	python3-bs4,
 	gnupg
-Standards-Version: 3.9.8
+Standards-Version: 4.1.0
 Vcs-Git: git://anonscm.debian.org/git/collab-maint/mini-buildd.git
 Vcs-Browser: https://anonscm.debian.org/git/collab-maint/mini-buildd.git
 Homepage: http://mini-buildd.installiert.net/
