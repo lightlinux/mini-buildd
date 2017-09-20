@@ -1,6 +1,4 @@
-Name: mini-buildd
-Maintainer: Stephan Sürken <absurd@debian.org>
-Source: http://ftp.debian.org/debian/pool/main/m/mini-buildd/
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 
 Files: *
 Copyright: © 2007-2017 United Internet AG
