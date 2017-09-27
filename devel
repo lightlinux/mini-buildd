@@ -314,7 +314,7 @@ mbd_purge()
 {
 	_head "Purging all mini-buildd packages"
 	mbd_service stop || true
-	sudo dpkg --purge mini-buildd python3-mini-buildd mini-buildd-common
+	sudo dpkg --purge mini-buildd mini-buildd-utils mini-buildd-doc python3-mini-buildd python-mini-buildd mini-buildd-common
 
 	# Also test mini-buildd's internal sbuild key workaround
 	sudo rm -v -f /var/lib/sbuild/apt-keys/*
