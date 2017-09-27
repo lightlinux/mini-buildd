@@ -1,2 +1,5 @@
 usr/bin/mini-buildd-tool usr/bin/
 build/bash-completions/mini-buildd-tool /usr/share/bash-completion/completions/
+
+# /share/
+share/bin/dput-wait-for-build /usr/share/mini-buildd/bin/
