@@ -7,6 +7,7 @@
 # mini-buildd) to clean these up.
 #
 # Will also try to clean stray lvm loop snapshots.
+printf "Interactive cleanup of possibly left-over cruft from schroot...\n\n"
 
 [ $(id -u) -eq 0 ] || { printf "E: Needs to be run as root.\n" >&2; exit 1; }
 
