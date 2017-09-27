@@ -10,6 +10,8 @@
 #
 # This script tries to find these stray directories and offers to purge them.
 #
+printf "Interactive cleanup of some cruft maybe left over from versions <= 1.0.17...\n\n"
+
 [ "$(id -u -n)" = "mini-buildd" ] || { printf "E: Run this as user mini-buildd.\n" >&2; exit 1; }
 
 for LOG_PATH in $(find "${HOME}/var/log/" -maxdepth 1 -mindepth 1 -type d); do
