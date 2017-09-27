@@ -377,7 +377,7 @@ mbd_checkall()
 	mbd_updatecheck
 	mbd_pythonkeyringtestconfig
 
-	time /usr/share/doc/mini-buildd/examples/auto-setup
+	time /usr/share/mini-buildd/bin/auto-setup
 
 	# Migration of test packages
 	MBD__PACKAGE="mbd-test-cpp" MBD__DIST="jessie-test-unstable" mbd_wait4package

@@ -41,7 +41,7 @@ Configure
 .. note:: In case you are both, **extraordinary hasty and
           adventurous**, you may just run this::
 
-          	? /usr/share/doc/mini-buildd/examples/auto-setup
+          	? /usr/share/mini-buildd/bin/auto-setup
 
           This will basically try to run this whole section
           non-interactively, with all defaults. If you really
