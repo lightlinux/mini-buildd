@@ -1,8 +1,9 @@
 usr/bin/mini-buildd usr/sbin/
 debian/mini-buildd-sudoers etc/sudoers.d/
 debian/fstab-generic etc/schroot/mini-buildd/
-debian/15mini-buildd-workarounds etc/schroot/setup.d/
 debian/mbd-debootstrap-uname-2.6 /usr/sbin/
 build/bash-completions/mini-buildd /usr/share/bash-completion/completions/
-# share/
+# /share/
 share/bin/auto-setup /usr/share/mini-buildd/bin/
+# /etc/
+etc/schroot/
