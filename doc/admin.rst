@@ -687,8 +687,8 @@ the new 1.0.x repos only:
 
 		 # su - mini-buildd
 		 $ cd repositories/REPOID
-		 $ /usr/share/doc/mini-buildd/examples/import-08x ~/rep/squeeze-REPOID-experimental squeeze-REPOID-experimental
-		 $ /usr/share/doc/mini-buildd/examples/import-08x ~/rep/squeeze-REPOID squeeze-REPOID-unstable
+		 $ /usr/share/mini-buildd/bin/import-08x ~/rep/squeeze-REPOID-experimental squeeze-REPOID-experimental
+		 $ /usr/share/mini-buildd/bin/import-08x ~/rep/squeeze-REPOID squeeze-REPOID-unstable
 
 	 This example is for squeeze; repeat the imports for all base
 	 distributions you want to migrate.
