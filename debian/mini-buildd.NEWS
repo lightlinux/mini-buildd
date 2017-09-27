@@ -48,6 +48,16 @@ mini-buildd (1.1.0) unstable; urgency=medium
       resp.  Source, save and empty string for 'Codeversion override'
       (Extras), and "PCA" the Source.
 
+  [5] Extra scripts now in '/usr/share/mini-buildd/bin/':
+
+      The (pretty much obsolete) 'mbd-debootstrap-uname-2.6' used to
+      be in '/usr/sbin'; other scripts were sort-of to be used from
+      '/usr/share/doc/mini-buildd/examples/' directly.
+
+      Practically, you only need to worry/check in case you were using
+      any of these in your own custom scripts expecting the old
+      installation path.
+
  -- Stephan Sürken <absurd@debian.org>  Tue, 07 Feb 2017 17:31:27 +0000
 
 mini-buildd (1.0.5) unstable; urgency=medium

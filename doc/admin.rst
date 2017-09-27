@@ -498,9 +498,9 @@ FAQ
 
 	 See [#debbug642031]_. This should ideally be worked around in debootstrap itself eventually.
 
-	 mini-buildd comes with a workaround wrapper ``/usr/sbin/mbd-debootstrap-uname-2.6``. Just add::
+	 mini-buildd comes with a workaround wrapper ``/usr/share/mini-buildd/bin/mbd-debootstrap-uname-2.6``. Just add::
 
-		 Debootstrap-Command: /usr/sbin/mbd-debootstrap-uname-2.6
+		 Debootstrap-Command: /usr/share/mini-buildd/bin/mbd-debootstrap-uname-2.6
 
 	 to the chroot's extra options to work around it (the default
 	 chroots created with the chroot wizard already include this
