@@ -8,6 +8,8 @@ share/bin/mbd-debootstrap-uname-2.6 /usr/share/mini-buildd/bin/
 share/bin/reject-cleanup /usr/share/mini-buildd/bin/
 share/bin/schroot-cleanup /usr/share/mini-buildd/bin/
 share/bin/import-08x /usr/share/mini-buildd/bin/
+share/bin/ssh-uploader-command /usr/share/mini-buildd/bin/
+share/bin/ssh-tool-command /usr/share/mini-buildd/bin/
 
 # /etc/
 etc/schroot/

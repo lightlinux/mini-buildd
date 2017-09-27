@@ -27,7 +27,7 @@ As admin user at the mini-buildd instance (web app)::
 
 To authorize a SSH Key, as user mini-buildd-uploader, add a line like this::
 
-  command="/usr/share/doc/mini-buildd/examples/ssh-uploader-command" ssh-rsa AA...
+  command="/usr/share/mini-buildd/bin/ssh-uploader-command" ssh-rsa AA...
 
 per ssh user key.
 
