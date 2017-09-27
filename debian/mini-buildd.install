@@ -5,6 +5,7 @@ build/bash-completions/mini-buildd /usr/share/bash-completion/completions/
 share/package-templates/ /usr/share/mini-buildd/
 share/bin/auto-setup /usr/share/mini-buildd/bin/
 share/bin/mbd-debootstrap-uname-2.6 /usr/share/mini-buildd/bin/
+share/bin/reject-cleanup /usr/share/mini-buildd/bin/
 
 # /etc/
 etc/schroot/

@@ -623,7 +623,7 @@ With mini-buildd <= 1.0.17, rejected packages where logged here
 too, which may have lead to cruft that is never cleaned up. You
 may run::
 
-	~mini-buildd? /usr/share/doc/mini-buildd/examples/reject-cleanup
+	~mini-buildd? /usr/share/mini-buildd/bin/reject-cleanup
 
 as user ``mini-buildd`` to find and get rid of them.
 
