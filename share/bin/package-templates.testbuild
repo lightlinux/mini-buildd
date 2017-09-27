@@ -34,7 +34,7 @@ prev_prev_dist=${DEB_RELEASE_PREV[${prev_dist}]}
 read -e -i "unstable" -p "upload to suite? " dest
 read -e -i "${prev_dist}-${id}-${dest}, ${prev_prev_dist}-${id}-${dest}" -p "auto backports for? " backports
 
-PKG_DIR="$(dirname $(readlink -f ${0}))/packages/"
+PKG_DIR="$(dirname $(readlink -f ${0}))/../package-templates/"
 PACKAGES="${*}"
 [ -n "${PACKAGES}" ] || PACKAGES=$(ls "${PKG_DIR}/")
 

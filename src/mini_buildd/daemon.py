@@ -193,7 +193,7 @@ class DebianVersion(debian.debian_support.Version):
 
 
 class KeyringPackage(mini_buildd.misc.TmpDir):
-    def __init__(self, identity, gpg, debfullname, debemail, tpl_dir="/usr/share/doc/mini-buildd/examples/packages/archive-keyring-template"):
+    def __init__(self, identity, gpg, debfullname, debemail, tpl_dir="/usr/share/mini-buildd/package-templates/archive-keyring-template"):
         super().__init__()
 
         self.key_id = gpg.get_first_sec_key()
@@ -720,7 +720,7 @@ class Daemon(object):
 
     @classmethod
     def get_test_package(cls, id_):
-        return DSTPackage("/usr/share/doc/mini-buildd/examples/packages/mbd-test-{i}".format(i=id_),
+        return DSTPackage("/usr/share/mini-buildd/package-templates/mbd-test-{i}".format(i=id_),
                           version=DebianVersion.stamp())
 
     def mbd_get_sources_list(self, codename, repo_regex, suite_regex, prefixes, with_extra_sources):
