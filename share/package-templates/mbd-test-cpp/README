@@ -1,4 +1,3 @@
 mbd-test-cpp
-=============
-Example autotools project, ui-auto enabled. Also used in
-ui-auto's testsuite.
+============
+Dummy project for mini-buildd build testing.
