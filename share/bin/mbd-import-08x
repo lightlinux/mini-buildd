@@ -35,7 +35,7 @@ def cmp_versions(pair0, pair1):
     return debian.debian_support.version_compare(pair0[0], pair1[0])
 
 
-PARSER = argparse.ArgumentParser(prog="import-08x",
+PARSER = argparse.ArgumentParser(prog="mbd-import-08x",
                                  description="Import package from an old mini-buildd 08x distribution into a reprepro distribution in cwd.",
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 

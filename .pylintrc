@@ -32,7 +32,7 @@ generated-members=add,all,apt_keys,architectureoption_set,chroot_set,codename,di
 
 [BASIC]
 
-good-names=mini-buildd,mini-buildd-tool,import-08x,urlpatterns,register
+good-names=mini-buildd,mini-buildd-tool,mbd-import-08x,urlpatterns,register
 variable-rgx=[a-z_][a-z0-9_]{0,30}$
 method-rgx=[a-z_][a-z0-9_]{1,40}$
 function-rgx=[a-z_][a-z0-9_]{1,40}$
