@@ -3,4 +3,3 @@ build/bash-completions/mini-buildd-tool /usr/share/bash-completion/completions/
 
 # /share/
 share/bin/mbu-* /usr/share/mini-buildd/bin/
-share/bin/migrate-keyring-packages /usr/share/mini-buildd/bin/

@@ -15,7 +15,7 @@ layouts.
 
 Typical example:
 
-migrate-keyring-packages my-archive admin@my-host.intra.net:8066
+mbu-migrate-keyring-packages my-archive admin@my-host.intra.net:8066
 """
 
 import sys
@@ -34,7 +34,7 @@ try:
     SUITES = sys.argv[4].split(",") if len(sys.argv) > 4 else ["unstable", "testing"]
 except BaseException as e:
     print("Error: {e}".format(e=e))
-    print("Usage: migrate-keyring-packages <ARCHIVE_ID> <USER@my-host.xyz[:PORT]> [<PROTO>=http] [<SUITES>=unstable,testing]", file=sys.stderr)
+    print("Usage: mbu-migrate-keyring-packages <ARCHIVE_ID> <USER@my-host.xyz[:PORT]> [<PROTO>=http] [<SUITES>=unstable,testing]", file=sys.stderr)
     sys.exit(1)
 
 MBD = Daemon(HOST, PORT, PROTO)
