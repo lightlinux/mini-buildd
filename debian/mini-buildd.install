@@ -4,7 +4,6 @@ build/bash-completions/mini-buildd /usr/share/bash-completion/completions/
 # /share/
 share/package-templates/ /usr/share/mini-buildd/
 share/bin/mbd-* /usr/share/mini-buildd/bin/
-share/bin/auto-setup /usr/share/mini-buildd/bin/
 share/bin/reject-cleanup /usr/share/mini-buildd/bin/
 share/bin/schroot-cleanup /usr/share/mini-buildd/bin/
 share/bin/import-08x /usr/share/mini-buildd/bin/
