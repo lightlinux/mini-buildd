@@ -3,7 +3,7 @@ Section: misc
 Priority: extra
 Maintainer: Stephan Sürken <absurd@debian.org>
 Build-Depends: debhelper (>= 10.0.0~)
-Standards-Version: 3.9.2
+Standards-Version: 4.1.0
 
 Package: mbd-test-ftbfs
 Architecture: any
