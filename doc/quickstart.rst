@@ -215,7 +215,7 @@ Authorize yourself to do package uploads
 Upload authorization works via a GnuPG ``allowed`` keyring.
 
 .. note:: For the administrator: See
-          ``/usr/share/mini-buildd/bin/ssh-uploader-command``
+          ``/usr/share/mini-buildd/bin/mbd-ssh-uploader-command``
           should you be interested in manually setting up a
           ssh-based authorization wrapper.
 

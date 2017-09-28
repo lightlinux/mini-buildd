@@ -29,7 +29,7 @@ As admin user at the mini-buildd instance (web app)::
 
 To authorize a SSH Key, as user mini-buildd-uploader, add a line like this::
 
-  command="/usr/share/mini-buildd/bin/ssh-tool-command" ssh-rsa AA...
+  command="/usr/share/mini-buildd/bin/mbd-ssh-tool-command" ssh-rsa AA...
 
 per ssh user key.
 
@@ -47,7 +47,7 @@ import getpass
 import syslog
 
 
-# @TODO: Fix redundancy. auth_log code copied from ssh-uploader-command
+# @TODO: Fix redundancy. auth_log code copied from mbd-ssh-uploader-command
 
 # Use syslog, facility user, to log access and key
 syslog.openlog(facility=syslog.LOG_USER)

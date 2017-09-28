@@ -4,8 +4,6 @@ build/bash-completions/mini-buildd /usr/share/bash-completion/completions/
 # /share/
 share/package-templates/ /usr/share/mini-buildd/
 share/bin/mbd-* /usr/share/mini-buildd/bin/
-share/bin/ssh-uploader-command /usr/share/mini-buildd/bin/
-share/bin/ssh-tool-command /usr/share/mini-buildd/bin/
 
 # /etc/
 etc/schroot/
