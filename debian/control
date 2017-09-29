@@ -6,7 +6,6 @@ X-Python3-Version: >= 3.2
 Build-Depends:
 	debhelper (>= 10),
 	dh-python,
-	dh-systemd (>= 1.5),
 	man-db (>= 2.5.1),
 	po-debconf,
 	python3 (>= 3.2),
