@@ -32,7 +32,7 @@ class BuildDoc(sphinx.setup_command.BuildDoc):
         shutil.copytree("./src/mini_buildd/static", os.path.join(self.build_dir, "_static"))
 
         # Generate API documentation
-        subprocess.check_call(["/usr/bin/sphinx-apidoc", "--force", "--output-dir", self.build_dir, "./src/mini_buildd/"])
+        subprocess.check_call(["/usr/share/sphinx/scripts/python3/sphinx-apidoc", "--force", "--output-dir", self.build_dir, "./src/mini_buildd/"])
 
         super().finalize_options()
 
