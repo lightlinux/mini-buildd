@@ -1,5 +1,2 @@
 # The template file is for the postinstall only, to warn when purging
 mini-buildd: no-debconf-config
-
-# git dch always produces these errors
-mini-buildd: debian-changelog-line-too-long
