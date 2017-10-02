@@ -227,3 +227,6 @@ todo_include_todos = True
 
 # reproducibility: Without this option, todo will add absolute build-time document paths
 todo_link_only = True
+
+# Order members like in source (sphinx default (strangely enough) seems to be alphabetic order).
+autodoc_member_order = 'bysource'
