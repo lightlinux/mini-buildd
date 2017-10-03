@@ -1,3 +1,83 @@
+mini-buildd (1.1.5) experimental; urgency=medium
+
+  ** 1.1.x are _development_ releases, use for testing only. **
+
+  This release focuses on the binary package split (now:
+  python3-mini-buildd, mini-buildd, mmini-buildd-utils, mini-buildd-doc)
+  and internal directory/file structure changes.
+
+  * [a37e69c] daemon.py: Fix broken 'save' of Daemon instances (regression
+    in 1.1 only). Thanks to Frank Doepper (Closes: 867592)
+  * [c21b7a0] Package split: Add deb 'mini-buildd-utils' (currently for
+    mini-buildd-tool only).
+  * [e0bf493] Package split: Add deb 'mini-buildd-doc'.
+  * [d243a51] Adapt code path for new online manual location, and add sane
+    error hint (in case *-doc is not installed).
+  * [f9648bf] Package split: Move mini-build-tool manpage to *-utils.
+  * [366eaee] debian/copyright: Update year (2017).
+  * [7940157] debian/copyright: Update to 1.0 (add 4.0-recommended https
+    Format:-Url, remove obsolete entries).
+  * [c3a656a] debian/control: Update prio extra->optional (policy 4.0.1).
+  * [23728a6] debian/control: Update Std.-Ver. to 4.1.0.
+  * [1acd9e8] Move doctest extra test data from /examples/ to /src/.
+  * [65509a4] Introduce new project dir "share/"; mv "auto-setup" from
+    "examples/" here.
+  * [6f5944c] Introduce new project dir "etc/"; mv "15mini-buildd-
+    workarounds" from debian/ here.
+  * [7c38c01] Mv "fstab-generic" from "debian/" to "etc/".
+  * [dbb5cfd] Mv "mini-buildd-sudoers" from "debian/" to "etc/".
+  * [d681e96] Mv "mbd-debootstrap-uname-2.6" from "debian/" to "share/".
+  * [1d7e5a4] Mv "packages/" from "examples/" to "share/" as "package-
+    templates/".
+  * [57e6c5b] Mv "dput-wait-for-build" from "examples/" to "share/".
+  * [3e9a685] Mv "migrate-keyring-packages" from "examples/" to "share/".
+  * [6a58213] examples/reject-cleanup: Fixup doc/help.
+  * [f3132ac] Mv "reject-cleanup" from "examples/" to "share/".
+  * [050c6ee] examples/schroot-cleanup: Fix up docs/help.
+  * [281d4d3] Mv "schroot-cleanup" from "examples/" to "share/".
+  * [c26a5aa] Remove examples/README: Now obsolete.
+  * [0ebb62c] Mv "import-08x" from "examples/" to "share/".
+  * [9b4c8a9] Mv "ssh-uploader|tool-command" from "examples/" to "share/".
+  * [c9c31ae] archive-keyring-template: postinst and prerm should be +x.
+  * [7e156ea] mini-buildd.lintian-overrides: Rm now-obsolete override
+    'duplicate-changelog-files'.
+  * [a074745] debian/rules: No need to override compress for examples any
+    more.
+  * [de2b1bd] [devel]: purge: Also purge new packages mini-buildd-utils
+    and -doc.
+  * [3fd755d] Introduce prefixes "mbd-" (admin, package mini-buildd) and
+    "mbu-" (utilities, package mini-buildd-utils) for executables in
+    'share/bin/'.
+  * [0813931] Rename 'auto-setup'->'mbd-auto-setup'.
+  * [a48169a] Rename 'dput-wait-for-build'->'mbu-dput-wait-for-build'.
+  * [655b47a] Rename 'migrate-keyring-packages'->'mbu-migrate-keyring-
+    packages'.
+  * [70ac474] Rename 'import-08x'->'mbd-import-08x'.
+  * [a65b9d0] Rename 'reject-cleanup'->'mbd-reject-cleanup'.
+  * [079d77d] Rename 'schroot-cleanup'->'mbd-schroot-cleanup'.
+  * [ecbbcc4] Rename 'ssh-uploader|tool-command'->'mbd-ssh-uploader|tool-
+    command'.
+  * [8dca8a3] test packages: Bulk-upgrade debhelper compat level to 10.
+  * [d99b255] test packages: -cpp|ftbfs: Remove extra .ui-auto.conf
+    (really not needed).
+  * [c6aab94] test packages: Remove now-obsolete previously checked-in
+    generated/redundant autotools files.
+  * [d6decd3] test packages: Bulk-update/renice top level README.
+  * [7dddf23] test packages: Bulk-upgrade stds-ver to 4.1.0.
+  * [92022e6] control: Rm obsoleted b-d for dh-systemd.
+  * [bd219f6] control: *-util must also break+replace old py2 package
+    python-mini-buildd.
+  * [4e0cec5] gbp.conf: Configure snapshot number: time stamp.
+  * [a5cef50] gnupg.py: Support passwordless key creation for gpg flavor
+    2.2 (fixes daemon creation).
+  * [b7ef0c8] control: Update to Stds-Ver 4.1.1 (no changes needed).
+  * [4d65c50] *.lintian-overrides: Remove 'debian-cl-line-too-long'
+    override (this does not seem to be an issue w/ default gbp any more).
+  * [2c5f20e] setup.py: sphinx-apidoc: Use explicit path for py3 variant.
+  * [265c14c] doc/conf.py: (sphinx doc) Order autodoc members by source.
+
+ -- Stephan Sürken <absurd@debian.org>  Tue, 03 Oct 2017 12:24:20 +0200
+
 mini-buildd (1.1.4) experimental; urgency=medium
 
   ** 1.1.x are _development_ releases, use for testing only. **
