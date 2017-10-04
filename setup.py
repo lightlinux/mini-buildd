@@ -7,19 +7,27 @@ import setuptools.command.build_py
 import debian.changelog
 
 
-# Get version from debian/changelog, and update package's __init__.py unconditionally
+# Get version from debian/changelog
 MINI_BUILDD_VERSION = str(debian.changelog.Changelog(file=open("./debian/changelog", "rb")).version)
-MINI_BUILDD_INIT_PY_PATH = "./src/mini_buildd/__init__.py"
-MINI_BUILDD_INIT_PY = """\
-# -*- coding: utf-8 -*-
-
-__version__ = "{version}"
-""".format(version=MINI_BUILDD_VERSION)
 
 
 class BuildPy(setuptools.command.build_py.build_py):
     @classmethod
-    def _gen_manpage(cls, name, section):
+    def _gen_init(cls):
+        path = "./src/mini_buildd/__init__.py"
+        print("I: Generating {f} ({v})...".format(f=path, v=MINI_BUILDD_VERSION))
+
+        with open(path, "w", encoding="UTF-8") as init_py:
+            init_py.write("""\
+# -*- coding: utf-8 -*-
+
+__version__ = "{version}"
+""".format(version=MINI_BUILDD_VERSION))
+
+    @classmethod
+    def _gen_man(cls, name, section):
+        print("I: Generating man page for \"{n}\"...".format(n=name))
+
         subprocess.check_call(["help2man",
                                "--no-info",
                                "--section", section,
@@ -28,13 +36,9 @@ class BuildPy(setuptools.command.build_py.build_py):
                                "./src/{}".format(name)])
 
     def run(self):
-        with open(MINI_BUILDD_INIT_PY_PATH, "w", encoding="UTF-8") as init_py:
-            init_py.write(MINI_BUILDD_INIT_PY)
-        print("I: Updated {f} ({v})".format(f=MINI_BUILDD_INIT_PY_PATH, v=MINI_BUILDD_VERSION))
-
-        self._gen_manpage("mini-buildd", "8")
-        self._gen_manpage("mini-buildd-tool", "1")
-
+        self._gen_init()
+        self._gen_man("mini-buildd", "8")
+        self._gen_man("mini-buildd-tool", "1")
         super().run()
 
 
