@@ -17,6 +17,9 @@ override_dh_fixperms:
 	dh_fixperms
 	chmod 440 debian/mini-buildd/etc/sudoers.d/mini-buildd-sudoers
 
+# Note: With python3, build_sphinx is no longer reproducible.
+# Note: Using PYTHONHASHSEED=0 seems to be a workaround.
+# Note: See: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=877637
 override_dh_auto_build:
-	/usr/share/sphinx/scripts/python3/sphinx-build ./doc/ ./build/sphinx/html/
+	PYTHONHASHSEED=0 /usr/share/sphinx/scripts/python3/sphinx-build ./doc/ ./build/sphinx/html/
 	dh_auto_build
