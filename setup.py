@@ -32,7 +32,7 @@ __version__ = "{version}"
                                "--no-info",
                                "--section", section,
                                "--include", "./src/{}.help2man.include".format(name),
-                               "--output", "./src/{}.{}".format(name, section),
+                               "--output", "./build/{}.{}".format(name, section),
                                "./src/{}".format(name)])
 
     def run(self):
