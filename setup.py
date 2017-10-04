@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 import subprocess
 
 import setuptools
@@ -27,7 +28,7 @@ __version__ = "{version}"
     @classmethod
     def _gen_man(cls, name, section):
         print("I: Generating man page for \"{n}\"...".format(n=name))
-
+        os.makedirs("./build", exist_ok=True)
         subprocess.check_call(["help2man",
                                "--no-info",
                                "--section", section,
