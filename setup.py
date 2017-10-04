@@ -24,9 +24,6 @@ class BuildDoc(sphinx.setup_command.BuildDoc):
         self.build_dir = self.build_dir if self.build_dir else "./build/sphinx"
         self.source_dir = self.source_dir if self.source_dir else "./doc/"
 
-        # Generate API documentation
-        subprocess.check_call(["/usr/share/sphinx/scripts/python3/sphinx-apidoc", "--force", "--output-dir", self.source_dir, "./src/mini_buildd/"])
-
         super().finalize_options()
 
     def run(self):
