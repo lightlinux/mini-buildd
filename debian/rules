@@ -21,5 +21,5 @@ override_dh_fixperms:
 # Note: Using PYTHONHASHSEED=0 seems to be a workaround.
 # Note: See: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=877637
 override_dh_auto_build:
-	PYTHONHASHSEED=0 /usr/share/sphinx/scripts/python3/sphinx-build ./doc/ ./build/sphinx/html/
 	dh_auto_build
+	PYTHONHASHSEED=0 /usr/share/sphinx/scripts/python3/sphinx-build ./doc/ ./build/sphinx/html/
