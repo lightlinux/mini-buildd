@@ -5,7 +5,7 @@
 import sys
 import os
 
-sys.path.insert(0, os.path.abspath('../../src'))
+sys.path.insert(0, os.path.abspath('../src'))
 
 # Pseudo-configure django
 import mini_buildd.django_settings
@@ -26,7 +26,7 @@ release = __version__
 exclude_patterns = ['_build']
 pygments_style = 'sphinx'
 html_theme = 'default'
-html_static_path = ['_static']
+html_static_path = [os.path.abspath("../src/mini_buildd/static")]
 htmlhelp_basename = 'mini-buildddoc'
 
 # Extension 'todo'

@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import os
-import shutil
 import subprocess
 
 import setuptools
@@ -24,15 +22,10 @@ class BuildDoc(sphinx.setup_command.BuildDoc):
     def finalize_options(self):
         # pylint: disable=attribute-defined-outside-init
         self.build_dir = self.build_dir if self.build_dir else "./build/sphinx"
-        self.source_dir = self.source_dir if self.source_dir else "./build/sphinx"
-
-        # Prepare build dir: doc/, plus static files from app.mini_buildd
-        shutil.rmtree(self.build_dir, ignore_errors=True)
-        shutil.copytree("./doc", self.build_dir)
-        shutil.copytree("./src/mini_buildd/static", os.path.join(self.build_dir, "_static"))
+        self.source_dir = self.source_dir if self.source_dir else "./doc/"
 
         # Generate API documentation
-        subprocess.check_call(["/usr/share/sphinx/scripts/python3/sphinx-apidoc", "--force", "--output-dir", self.build_dir, "./src/mini_buildd/"])
+        subprocess.check_call(["/usr/share/sphinx/scripts/python3/sphinx-apidoc", "--force", "--output-dir", self.source_dir, "./src/mini_buildd/"])
 
         super().finalize_options()
 
