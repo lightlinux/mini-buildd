@@ -27,20 +27,19 @@ class BuildDoc(sphinx.setup_command.BuildDoc):
         super().finalize_options()
 
     def run(self):
-        # Generate man pages via help2man
-        subprocess.check_call(["help2man",
-                               "--no-info",
-                               "--output=" + self.build_dir + "/mini-buildd.8", "--section=8",
-                               "--include=doc/mini-buildd.help2man.include", "./src/mini-buildd"])
-        subprocess.check_call(["help2man",
-                               "--no-info",
-                               "--output=" + self.build_dir + "/mini-buildd-tool.1", "--section=1",
-                               r"--name=mini-buildd-tool \- User/client tool box for mini-buildd instances.", "./src/mini-buildd-tool"])
-
         super().run()
 
 
 class BuildPy(setuptools.command.build_py.build_py):
+    @classmethod
+    def _gen_manpage(cls, name, section):
+        subprocess.check_call(["help2man",
+                               "--no-info",
+                               "--section", section,
+                               "--include", "./src/{}.help2man.include".format(name),
+                               "--output", "./src/{}.{}".format(name, section),
+                               "./src/{}".format(name)])
+
     def run(self):
         with open(MINI_BUILDD_INIT_PY_PATH, "w", encoding="UTF-8") as init_py:
             init_py.write(MINI_BUILDD_INIT_PY)
@@ -48,6 +47,8 @@ class BuildPy(setuptools.command.build_py.build_py):
 
         super().run()
         self.run_command("build_sphinx")
+        self._gen_manpage("mini-buildd", "8")
+        self._gen_manpage("mini-buildd-tool", "1")
 
 
 setuptools.setup(
