@@ -59,14 +59,6 @@ class BuildPy(setuptools.command.build_py.build_py):
         super().run()
         self.run_command("build_sphinx")
 
-        # Create bash completion scripts via python-argcomplete
-        completion_dir = os.path.join("./build", "bash-completions")
-        os.makedirs(completion_dir, exist_ok=True)
-        for cmd in ["mini-buildd", "mini-buildd-tool"]:
-            with open("{}/{}".format(completion_dir, cmd), "w", encoding="UTF-8") as out:
-                out.write('eval "$(register-python-argcomplete --shell=bash "{cmd}")"\n'.format(cmd=cmd))
-                print("I: Generated {f}".format(f=out.name))
-
 
 setuptools.setup(
     cmdclass={"build_sphinx": BuildDoc,

@@ -1,5 +1,4 @@
 usr/bin/mini-buildd usr/sbin/
-build/bash-completions/mini-buildd /usr/share/bash-completion/completions/
 
 # /share/
 share/package-templates/ /usr/share/mini-buildd/
