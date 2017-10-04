@@ -16,3 +16,7 @@ override_dh_auto_clean:
 override_dh_fixperms:
 	dh_fixperms
 	chmod 440 debian/mini-buildd/etc/sudoers.d/mini-buildd-sudoers
+
+override_dh_auto_build:
+	/usr/share/sphinx/scripts/python3/sphinx-build ./doc/ ./build/sphinx/html/
+	dh_auto_build
