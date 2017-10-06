@@ -10,7 +10,7 @@ sys.path.insert(0, os.path.abspath('../src'))
 
 # Autogenerate API documentation for package mini_buildd
 # Strange to do this here, but it (works and) seems more coherent than extra support in setup.py
-subprocess.check_call(["sphinx-apidoc", "--force", "--separate", "--output-dir", ".", "../src/mini_buildd/"])
+subprocess.check_call(["sphinx-apidoc", "--force", "--separate", "--output-dir", "./code/mini_buildd/", "../src/mini_buildd/"])
 
 # Pseudo-configure django
 import mini_buildd.django_settings

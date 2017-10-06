@@ -27,7 +27,7 @@ Special pages
 
 	 todo
 	 glossary
-	 Python package mini_buildd <modules>
+	 Python package mini_buildd <code/mini_buildd/modules>
 
 * :ref:`modindex`
 * :ref:`genindex`

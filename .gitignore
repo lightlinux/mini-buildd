@@ -18,6 +18,5 @@
 /debian/.debhelper
 /debian/debhelper-build-stamp
 
-# sphinx-apidoc
-/doc/modules.rst
-/doc/mini_buildd*.rst
+# Auto-generated code doc (sphinx-apidoc)
+/doc/code/
