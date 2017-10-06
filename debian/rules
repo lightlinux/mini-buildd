@@ -22,4 +22,4 @@ override_dh_fixperms:
 # Note: See: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=877637
 override_dh_auto_build:
 	dh_auto_build
-	PYTHONHASHSEED=0 /usr/share/sphinx/scripts/python3/sphinx-build ./doc/ ./build/sphinx/html/
+	PYTHONHASHSEED=0 /usr/share/sphinx/scripts/python3/sphinx-build -N -bhtml ./doc/ ./build/sphinx/html/
