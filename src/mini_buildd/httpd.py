@@ -147,7 +147,12 @@ def run(bind, wsgi_app):
     """
 
     def _error_manual_missing(status, message, traceback, version):  # Exact arg names needed (cherrypy calls back with named arguments)  # pylint: disable=unused-argument
-        return "<html><body><h1>{} (<tt>mini-buildd-doc</tt> not installed?)</h1>Maybe package <b><tt>mini-buildd-doc</tt></b> needs to be installed to make the manual available.</body></html>".format(status)
+        return """\
+<html><body>
+<h1>{} (<tt>mini-buildd-doc</tt> not installed?)</h1>
+Maybe package <b><tt>mini-buildd-doc</tt></b> needs to be installed to make the manual available.
+</body></html>
+""".format(status)
 
     def add_static_handler(path, root, with_index=False, match="", config=None):
         "Shortcut to add a static handler."
