@@ -2,6 +2,8 @@
 
 import os
 import subprocess
+import contextlib
+import distutils.command.clean
 
 import setuptools
 import setuptools.command.build_py
@@ -10,6 +12,7 @@ import debian.changelog
 
 # Get version from debian/changelog
 MINI_BUILDD_VERSION = str(debian.changelog.Changelog(file=open("./debian/changelog", "rb")).version)
+MINI_BUILDD_MANPAGES = ["mini-buildd-tool.1", "mini-buildd.8"]
 
 
 class BuildPy(setuptools.command.build_py.build_py):
@@ -25,26 +28,42 @@ class BuildPy(setuptools.command.build_py.build_py):
 __version__ = "{version}"
 """.format(version=MINI_BUILDD_VERSION))
 
-    @classmethod
-    def _gen_man(cls, name, section):
-        print("I: Generating man page for \"{n}\"...".format(n=name))
-        os.makedirs("./build", exist_ok=True)
+    def _build_man(self, man):
+        build_base = os.path.dirname(self.build_lib)
+        name, dummy, section = man.partition(".")
+        output = os.path.join(build_base, man)
+
+        print("I: Generating \"{}\"...".format(output))
+        os.makedirs(build_base, exist_ok=True)
         subprocess.check_call(["help2man",
                                "--no-info",
                                "--section", section,
                                "--include", "./src/{}.help2man.include".format(name),
-                               "--output", "./build/{}.{}".format(name, section),
+                               "--output", output,
                                "./src/{}".format(name)])
 
     def run(self):
         self._gen_init()
-        self._gen_man("mini-buildd", "8")
-        self._gen_man("mini-buildd-tool", "1")
+        for man in MINI_BUILDD_MANPAGES:
+            self._build_man(man)
+        super().run()
+
+
+class Clean(distutils.command.clean.clean):
+    def _clean_man(self, man):
+        with contextlib.suppress(FileNotFoundError):
+            f = os.path.join(self.build_base, man)
+            print("I: Cleaning {}...".format(f))
+            os.remove(f)
+
+    def run(self):
+        for man in MINI_BUILDD_MANPAGES:
+            self._clean_man(man)
         super().run()
 
 
 setuptools.setup(
-    cmdclass={"build_py": BuildPy},
+    cmdclass={"build_py": BuildPy, "clean": Clean},
     name="mini-buildd",
     version=MINI_BUILDD_VERSION,
     package_dir={'': 'src'},
