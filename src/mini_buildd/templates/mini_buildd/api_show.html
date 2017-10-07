@@ -40,7 +40,7 @@
 								</td>
 								<td>
 									{% if values.sourceversion %}
-										[<a href="{{ values.dsc_url }}" title="Source package URL">dsc</a>|<a href="{{ values.dsc_url|mbd_dirname }}/" title="Browse package pool directory">pool</a>]
+										[<a href="{{ values.dsc_path }}" title="Source package URL">dsc</a>|<a href="{{ values.dsc_path|mbd_dirname }}/" title="Browse package pool directory">pool</a>]
 									{% endif %}
 								</td>
 								<td>
@@ -77,7 +77,7 @@
 														 href="/mini_buildd/api?command=migrate&amp;package={{ rollback.source|urlencode }}&amp;distribution={{ rollback.distribution|urlencode }}&amp;version={{ rollback.sourceversion|urlencode }}&amp;output=referer">{{ rollback.no }}</a>
 												{% endif %}
 												[<a title="Get dsc of {{ rollback.sourceversion }} from {{ rollback.distribution }}"
-														href="{{ rollback.dsc_url }}">dsc</a>|<a href="/mini_buildd/log/{{ repository.identity }}/{{ api_cmd.args.package }}/{{ rollback.sourceversion }}/" title="Build logs">logs</a>]
+														href="{{ rollback.dsc_path }}">dsc</a>|<a href="/mini_buildd/log/{{ repository.identity }}/{{ api_cmd.args.package }}/{{ rollback.sourceversion }}/" title="Build logs">logs</a>]
 											</div>
 											 {% endfor %}
 									</div>

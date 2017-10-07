@@ -914,9 +914,9 @@ DscIndices: Sources Release . .gz .bz2
                         result.extend(self._mbd_reprepro().list(pattern, dist_str, typ=typ))
         return result
 
-    def mbd_get_dsc_url(self, distribution, package, version):
+    def mbd_get_dsc_path(self, distribution, package, version):
         """
-        Get complete DSC URL of an installed package.
+        Get component and (absolute) DSC path of an installed package (http://host:port/<path>).
         """
         subdir = package[:4] if package.startswith("lib") else package[0]
 
@@ -925,7 +925,7 @@ DscIndices: Sources Release . .gz .bz2
                                                       dsc=mini_buildd.changes.Changes.gen_dsc_file_name(package, version))
             LOG.debug("Checking dsc: {d}".format(d=dsc))
             if os.path.exists(os.path.join(mini_buildd.setup.REPOSITORIES_DIR, dsc)):
-                return c.name, os.path.join(self.mbd_get_daemon().model.mbd_get_http_url(), os.path.basename(mini_buildd.setup.REPOSITORIES_DIR), dsc)
+                return c.name, os.path.join("/", os.path.basename(mini_buildd.setup.REPOSITORIES_DIR), dsc)
 
         # Not found in pool
         return None, None
@@ -975,7 +975,7 @@ DscIndices: Sources Release . .gz .bz2
             codename = get_or_create_codename(dist.codename)
 
             # Get component and URL early
-            component, dsc_url = self.mbd_get_dsc_url(distribution, r["source"], r["sourceversion"])
+            component, dsc_path = self.mbd_get_dsc_path(distribution, r["source"], r["sourceversion"])
 
             # Get dict with distribution values
             values = get_or_create_distribution(codename, dist.get(rollback=False), component)
@@ -985,7 +985,7 @@ DscIndices: Sources Release . .gz .bz2
             values.setdefault("component", component)
             values.setdefault("source", "")
             values.setdefault("sourceversion", "")
-            values.setdefault("dsc_url", "")
+            values.setdefault("dsc_path", "")
             values.setdefault("migrates_to", suite.migrates_to.mbd_get_distribution_string(self, distribution) if suite.migrates_to else "")
             values.setdefault("uploadable", suite.uploadable)
             values.setdefault("experimental", suite.experimental)
@@ -997,7 +997,7 @@ DscIndices: Sources Release . .gz .bz2
                 # Add to rollback list with "no" appended
                 r["no"] = dist.rollback_no
                 r["component"] = component
-                r["dsc_url"] = dsc_url
+                r["dsc_path"] = dsc_path
                 values["rollbacks"].append(r)
             else:
                 # Copy all reprepro values
@@ -1005,7 +1005,7 @@ DscIndices: Sources Release . .gz .bz2
                     values[k] = v
 
                 # Extra: URL, is_migrated flag
-                values["dsc_url"] = dsc_url
+                values["dsc_path"] = dsc_path
                 values["is_migrated"] = \
                     values["migrates_to"] and \
                     self._mbd_package_find(pkg_show, distribution=values["migrates_to"], version=values["sourceversion"])

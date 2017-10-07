@@ -687,11 +687,11 @@ class Daemon(object):
             port_version = v.gen_internal_port(from_repository.layout.mbd_get_mandatory_version_regex(from_repository, from_distribution, from_suite),
                                                to_repository.layout.mbd_get_default_version(to_repository, to_distribution, to_suite))
 
-        _component, url = from_repository.mbd_get_dsc_url(from_distribution, package, p["sourceversion"])
-        if not url:
+        _component, path = from_repository.mbd_get_dsc_path(from_distribution, package, p["sourceversion"])
+        if not path:
             raise Exception("Port failed: Can't find DSC for {p}-{v} in pool".format(p=package, v=p["sourceversion"]))
 
-        self._port(url, package, to_dist, port_version, options=options)
+        self._port("{}{}".format(self.model.mbd_get_http_url(), path), package, to_dist, port_version, options=options)
 
     def portext(self, dsc_url, to_dist, options=None):
         # check to_dist

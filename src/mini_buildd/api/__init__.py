@@ -459,7 +459,7 @@ class Show(Command):
                 ("sourceversion", "Version"),
                 ("migrates_to", "Migrates to")]
         if self.has_flag("verbose"):
-            rows.append(("dsc_url", "Source URL"))
+            rows.append(("dsc_path", "Source package path"))
             rows.append(("rollbacks_str_verbose", "Rollbacks"))
         else:
             rows.append(("rollbacks_str", "Rollbacks"))
