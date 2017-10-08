@@ -213,12 +213,11 @@ class KeyringPackage(mini_buildd.misc.TmpDir):
             for f in files:
                 old_file = os.path.join(root, f)
                 new_file = old_file + ".new"
-                mini_buildd.misc.open_utf8(new_file, "w").write(
-                    mini_buildd.misc.subst_placeholders(
-                        mini_buildd.misc.open_utf8(old_file, "r").read(),
-                        {"ID": identity,
-                         "KEY_ID": self.key_id,
-                         "MAINT": "{n} <{e}>".format(n=debfullname, e=debemail)}))
+                with mini_buildd.misc.open_utf8(old_file, "r") as of, mini_buildd.misc.open_utf8(new_file, "w") as nf:
+                    nf.write(mini_buildd.misc.subst_placeholders(of.read(),
+                                                                 {"ID": identity,
+                                                                  "KEY_ID": self.key_id,
+                                                                  "MAINT": "{n} <{e}>".format(n=debfullname, e=debemail)}))
                 os.rename(new_file, old_file)
 
         # Export public GnuPG key into the package
@@ -238,7 +237,8 @@ class KeyringPackage(mini_buildd.misc.TmpDir):
                         for prefix, appendix in [("deb ", ""), ("deb-src ", "_src")]:
                             apt_line = d.mbd_get_apt_line(r, s, rollback=rb, prefix=prefix)
                             file_name = "{base}{appendix}.list".format(base=file_base, appendix=appendix)
-                            mini_buildd.misc.open_utf8(os.path.join(p, file_name), "w").write(apt_line + "\n")
+                            with mini_buildd.misc.open_utf8(os.path.join(p, file_name), "w") as f:
+                                f.write(apt_line + "\n")
 
         # Generate changelog entry
         mini_buildd.call.Call(["debchange",
@@ -376,9 +376,9 @@ def run():
 
             # Try to notify
             try:
-                subject = "INVALID CHANGES: {c}: {e}".format(c=event, e=e)
-                body = mini_buildd.misc.open_utf8(event, "r").read()
-                get().model.mbd_notify(subject, body)
+                with mini_buildd.misc.open_utf8(event, "r") as body:
+                    subject = "INVALID CHANGES: {c}: {e}".format(c=event, e=e)
+                    get().model.mbd_notify(subject, body.read())
             except BaseException as e:
                 mini_buildd.setup.log_exception(LOG, "Invalid changes notify failed", e)
 
@@ -535,7 +535,8 @@ class Daemon(object):
 
     @classmethod
     def logcat(cls, lines):
-        return "".join(collections.deque(mini_buildd.misc.open_utf8(mini_buildd.setup.LOG_FILE), lines))
+        with mini_buildd.misc.open_utf8(mini_buildd.setup.LOG_FILE) as lf:
+            return "".join(collections.deque(lf, lines))
 
     @classmethod
     def get_active_chroots(cls):
@@ -611,8 +612,8 @@ class Daemon(object):
             dst_path = os.path.join(t.tmpdir, dst)
 
             # Get version and author from original changelog; use the first block not
-            original_author, original_version = Changelog(mini_buildd.misc.open_utf8(os.path.join(dst_path, "debian", "changelog"), "r"),
-                                                          max_blocks=100).find_first_not(self.model.email_address)
+            with mini_buildd.misc.open_utf8(os.path.join(dst_path, "debian", "changelog"), "r") as cl:
+                original_author, original_version = Changelog(cl, max_blocks=100).find_first_not(self.model.email_address)
             LOG.debug("Port: Found original version/author: {v}/{a}".format(v=original_version, a=original_author))
 
             # Change changelog in DST

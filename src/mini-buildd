@@ -57,7 +57,8 @@ class PIDFile(object):
             is_stale = daemon.runner.is_pidfile_stale(pidfile)
             if name and not is_stale:
                 try:
-                    pidfile_name = open("/proc/{}/comm".format(pidfile_pid)).read()
+                    with open("/proc/{}/comm".format(pidfile_pid)) as proc_comm:
+                        pidfile_name = proc_comm.read()
                     is_stale = pidfile_name != name
                 except BaseException as e:
                     LOG.warning("Error in extra linux /proc-style stale check (ignoring): {e}".format(e=e))

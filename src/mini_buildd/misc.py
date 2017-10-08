@@ -144,7 +144,8 @@ class ConfFile(object):
         return self
 
     def save(self):
-        open_utf8(self._file_path, "w").write(self._content)
+        with open_utf8(self._file_path, "w") as f:
+            f.write(self._content)
 
 
 class BlockQueue(queue.Queue):

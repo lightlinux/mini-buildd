@@ -167,7 +167,11 @@ class Changes(debian.deb822.Changes):
         # Instance might be produced from a temporary file, so we need to save the hash now.
         self._spool_hash = self._spool_hash_from_file()
 
-        super().__init__([] if self._new else mini_buildd.misc.open_utf8(file_path))
+        if self._new:
+            super().__init__([])
+        else:
+            with mini_buildd.misc.open_utf8(file_path) as cf:
+                super().__init__(cf)
 
         self._options = None
         if self.BUILDREQUEST_RE.match(self._file_name):
@@ -342,7 +346,8 @@ class Changes(debian.deb822.Changes):
     def upload(self, hopo):
         upload = os.path.splitext(self._file_path)[0] + ".upload"
         if os.path.exists(upload):
-            LOG.info("FTP: '{f}' already uploaded to '{h}'...".format(f=self._file_name, h=mini_buildd.misc.open_utf8(upload).read()))
+            with mini_buildd.misc.open_utf8(upload) as uf:
+                LOG.info("FTP: '{f}' already uploaded to '{h}'...".format(f=self._file_name, h=uf.read()))
         else:
             ftp = ftplib.FTP()
             ftp.connect(hopo.host, hopo.port)
@@ -351,8 +356,10 @@ class Changes(debian.deb822.Changes):
             for fd in self.get_files() + [{"name": self._file_name}]:
                 f = fd["name"]
                 LOG.debug("FTP: Uploading file: '{f}'".format(f=f))
-                ftp.storbinary("STOR {f}".format(f=f), open(os.path.join(os.path.dirname(self._file_path), f), "rb"))
-            mini_buildd.misc.open_utf8(upload, "w").write("{h}:{p}".format(h=hopo.host, p=hopo.port))
+                with open(os.path.join(os.path.dirname(self._file_path), f), "rb") as fi:
+                    ftp.storbinary("STOR {f}".format(f=f), fi)
+            with mini_buildd.misc.open_utf8(upload, "w") as fi:
+                fi.write("{h}:{p}".format(h=hopo.host, p=hopo.port))
             LOG.info("FTP: '{f}' uploaded to '{h}'...".format(f=self._file_name, h=hopo.host))
 
     def upload_buildrequest(self, local_hopo):
@@ -455,7 +462,9 @@ class Changes(debian.deb822.Changes):
         # - Add missing from pool (i.e., orig.tar.gz).
         # - make sure all files from dsc are actually available
         files_from_pool = []
-        dsc = debian.deb822.Dsc(open(self.dsc_file_name))
+        with open(self.dsc_file_name) as dsc_file:
+            dsc = debian.deb822.Dsc(dsc_file)
+
         for f in dsc["Files"]:
             in_changes = f["name"] in self.get_files(key="name")
             from_pool = False
@@ -485,16 +494,19 @@ class Changes(debian.deb822.Changes):
                 for v in ["Source", "Version"]:
                     breq[v] = self[v]
 
-                # Generate sources.list et.al. to be used
-                mini_buildd.misc.open_utf8(os.path.join(path, "apt_sources.list"), "w").write(dist.mbd_get_apt_sources_list(repository, suite_option))
-                mini_buildd.misc.open_utf8(os.path.join(path, "apt_preferences"), "w").write(dist.mbd_get_apt_preferences(repository, suite_option, self.options.get("internal-apt-priority")))
-                mini_buildd.misc.open_utf8(os.path.join(path, "apt_keys"), "w").write(repository.mbd_get_apt_keys(dist))
+                # Generate files
                 chroot_setup_script = os.path.join(path, "chroot_setup_script")
-                # Note: For some reason (python, django sqlite, browser?) the text field may be in DOS mode.
-                mini_buildd.misc.open_utf8(chroot_setup_script, "w").write(mini_buildd.misc.fromdos(dist.chroot_setup_script))
-
-                os.chmod(chroot_setup_script, stat.S_IRWXU)
-                mini_buildd.misc.open_utf8(os.path.join(path, "sbuildrc_snippet"), "w").write(dist.mbd_get_sbuildrc_snippet(ao.architecture.name))
+                with mini_buildd.misc.open_utf8(os.path.join(path, "apt_sources.list"), "w") as asl, \
+                     mini_buildd.misc.open_utf8(os.path.join(path, "apt_preferences"), "w") as ap, \
+                     mini_buildd.misc.open_utf8(os.path.join(path, "apt_keys"), "w") as ak, \
+                     mini_buildd.misc.open_utf8(chroot_setup_script, "w") as css, \
+                     mini_buildd.misc.open_utf8(os.path.join(path, "sbuildrc_snippet"), "w") as src:
+                    asl.write(dist.mbd_get_apt_sources_list(repository, suite_option))
+                    ap.write(dist.mbd_get_apt_preferences(repository, suite_option, self.options.get("internal-apt-priority")))
+                    ak.write(repository.mbd_get_apt_keys(dist))
+                    css.write(mini_buildd.misc.fromdos(dist.chroot_setup_script))  # Note: For some reason (python, django sqlite, browser?) the text field may be in DOS mode.
+                    os.chmod(chroot_setup_script, stat.S_IRWXU)
+                    src.write(dist.mbd_get_sbuildrc_snippet(ao.architecture.name))
 
                 # Generate tar from original changes
                 self.tar(tar_path=breq.file_path + ".tar",

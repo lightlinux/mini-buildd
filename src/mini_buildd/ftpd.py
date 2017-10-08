@@ -41,11 +41,12 @@ class Incoming(object):
             if cls.is_changes(changes_file):
                 LOG.debug("Checking: {c}".format(c=changes_file))
                 try:
-                    for fd in debian.deb822.Changes(mini_buildd.misc.open_utf8(changes_file)).get("Files", []):
-                        valid_files.append(fd["name"])
-                        LOG.debug("Valid: {c}".format(c=fd["name"]))
+                    with mini_buildd.misc.open_utf8(changes_file) as cf:
+                        for fd in debian.deb822.Changes(cf).get("Files", []):
+                            valid_files.append(fd["name"])
+                            LOG.debug("Valid: {c}".format(c=fd["name"]))
 
-                    valid_files.append(os.path.basename(changes_file))
+                        valid_files.append(os.path.basename(changes_file))
                 except BaseException as e:
                     mini_buildd.setup.log_exception(LOG, "Invalid changes file: {f}".format(f=changes_file), e, logging.WARNING)
 
