@@ -105,7 +105,7 @@ mbd_pyscripts()
 mbd_pymodules()
 {
 	local -a exceptions=(-true)
-	[ -z "${@}" ] || exceptions=($(printf " -not -wholename %s" "${@}"))
+	[ -z "${*}" ] || exceptions=($(printf " -not -wholename %s" "${@}"))
 	find -name "*.py" -a \( "${MBD_PYFINDPARAMS[@]}" \) -a \( "${exceptions[@]}" \)
 }
 
