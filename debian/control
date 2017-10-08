@@ -53,8 +53,7 @@ Description: minimal build daemon - python library and user tool
 	Mini-buildd is an easy-to-configure autobuilder and
 	repository for deb packages.
 	.
-	This package includes the control utility "mini-buildd-tool" along
-	with the "mini_buildd" Python package.
+	This package contains the "mini_buildd" Python package.
 
 Package: mini-buildd
 Architecture: all
