@@ -440,16 +440,16 @@ codeversion is only used for base sources.""")
         self._mbd_remove_and_prepare(request)
 
     def mbd_remove(self, _request):
-        self.archives = []
-        self.components = []
-        self.architectures = []
+        self.archives.set([])
+        self.components.set([])
+        self.architectures.set([])
         self.description = ""
 
     def mbd_check(self, request):
         "Rescan all archives, and check that there is at least one working."
         msglog = MsgLog(LOG, request)
 
-        self.archives = []
+        self.archives.set([])
         with contextlib.closing(mini_buildd.gnupg.TmpGnuPG()) as gpg:
             for k in self.apt_keys.all():
                 gpg.add_pub_key(k.key)
