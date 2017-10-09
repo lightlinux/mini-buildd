@@ -1,3 +1,55 @@
+mini-buildd (1.1.6) experimental; urgency=medium
+
+  ** 1.1.x are _development_ releases, use for testing only. **
+
+  This release consists of misc cleanups/fixes, focusing on the
+  python/Debian build system. Makes it reproducible again.
+
+  * [ea78677] rules: Remove superfluous DH_VERBOSE comment.
+  * [63c6f19] bash-completions: Drop 'building' (use plain files), and
+    switch to dh_bash-completion for package installation.
+  * [3458321] sphinx conf.py: Cleanup up: Remove obsolete config (man,
+    latex) and comments.
+  * [e7e2b48] sphinx build: Simplify setup (put generated sources in doc/
+    directly).
+  * [100ee4f] sphinx: Call sphinx-apidoc via conf.py (not setup.py).
+  * [141e221] setup.py/man pages: Cleanup generation code; do it on build,
+    not sphinx_build.
+  * [01af9e8] sphinx: Move sphinx build from setup.py to rules.
+  * [12f1a8c] httpd.py: Fix "manual missing" error handling callback.
+  * [ce2e942] setup.py: Add method for init generator; minor cleanups.
+  * [1c2b2b7] rules/setup.py: Add workaround for sphinx unreproducible
+    html (see bug #877637).
+  * [41d5eba] setup.py: Build man pages to /build/ not /src/.
+  * [6b280da] rules: Build sphinx _after_ pybuild (so we get a working py
+    package for apidocs).
+  * [fa779e7] setup.py: man pages: Make sure build/ dir exists.
+  * [388b19d] apidoc: Use separate pages for modules.
+  * [fb64c4b] doc/conf.py: Fix and update copyright text.
+  * [da3d651] .gitignore: Ignore new sphinx-apidoc-generated files in
+    doc/.
+  * [df48e0f] doc: Build all generated docs to extra directory
+    (doc/code/).
+  * [add8fe8] rules: sphinx-build call: Explicitly give builder (html).
+  * [57c6f04] httpd.py: Improve doc "error hinter".
+  * [b968bfe] httpd.py: manual error: Use multiline html string (fixes
+    codestyle warning).
+  * [1b34100] setup.py: Add custom "clean": Now actually clean all files
+    gen. in build/ (obsoletes "clean" override in rules).
+  * [53b6102] api show, misc code: Switch from dsc_url to dsc_path
+    internally (fixes "early binding" to absolute URL).
+  * [82c36e6] code: Mass fix py warning: 'ResourceWarning: unclosed file'.
+  * [f9b2736] source.py: Use django's set() to reset many-to-many set on
+    check() and remove() (Fixes django deprecation warning)
+  * [c895315] [devel]: pymodules: Use "$*" not "$@" in test (latter will
+    expand to several args). Fixes annoying error displayed.
+  * [00264d4] control: b-d on debhelper >= 10.6 [in previous versions,
+    dh_installman fails to find man pages].
+  * [4ff0cc1] control: Fix description for package py3-m-b (this no longer
+    contains m-b-tool).
+
+ -- Stephan Sürken <absurd@debian.org>  Mon, 09 Oct 2017 08:40:31 +0200
+
 mini-buildd (1.1.5) experimental; urgency=medium
 
   ** 1.1.x are _development_ releases, use for testing only. **
