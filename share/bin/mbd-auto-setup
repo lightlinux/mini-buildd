@@ -26,7 +26,7 @@ EOF
 	read -p"Ctr-C to abort, RETURN to continue" dummy
 fi
 
-MBDT="mini-buildd-tool ${HOST}"
+MBDT="mini-buildd-tool --verbose ${HOST}"
 
 ${MBDT} status
 ${MBDT} stop
