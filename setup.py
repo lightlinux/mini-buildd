@@ -13,6 +13,8 @@ import debian.changelog
 # Get version from debian/changelog
 MINI_BUILDD_VERSION = str(debian.changelog.Changelog(file=open("./debian/changelog", "rb")).version)
 MINI_BUILDD_MANPAGES = ["mini-buildd-tool.1", "mini-buildd.8"]
+# We need a fix static base dir for the extra files we built (to later refer to fixed static paths in debian/* debhelper files).
+MINI_BUILDD_BUILD_BASE = "build"
 
 
 class BuildPy(setuptools.command.build_py.build_py):
@@ -28,13 +30,12 @@ class BuildPy(setuptools.command.build_py.build_py):
 __version__ = "{version}"
 """.format(version=MINI_BUILDD_VERSION))
 
-    def _build_man(self, man):
-        build_base = os.path.dirname(self.build_lib)
+    @classmethod
+    def _build_man(cls, man):
         name, dummy, section = man.partition(".")
-        output = os.path.join(build_base, man)
+        output = os.path.join(MINI_BUILDD_BUILD_BASE, man)
 
         print("I: Generating \"{}\"...".format(output))
-        os.makedirs(build_base, exist_ok=True)
         subprocess.check_call(["help2man",
                                "--no-info",
                                "--section", section,
@@ -44,21 +45,26 @@ __version__ = "{version}"
 
     def run(self):
         self._gen_init()
+
+        os.makedirs(MINI_BUILDD_BUILD_BASE, exist_ok=True)
         for man in MINI_BUILDD_MANPAGES:
             self._build_man(man)
+
         super().run()
 
 
 class Clean(distutils.command.clean.clean):
-    def _clean_man(self, man):
+    @classmethod
+    def _clean_man(cls, man):
         with contextlib.suppress(FileNotFoundError):
-            f = os.path.join(self.build_base, man)
+            f = os.path.join(MINI_BUILDD_BUILD_BASE, man)
             print("I: Cleaning {}...".format(f))
             os.remove(f)
 
     def run(self):
         for man in MINI_BUILDD_MANPAGES:
             self._clean_man(man)
+
         super().run()
 
 
