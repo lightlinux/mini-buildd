@@ -414,20 +414,13 @@ mbd_checkall()
 	[ ! -d ../test-packages/ ] || dput --unchecked --no-upload-log mini-buildd-$(hostname) ../test-packages/*.changes
 }
 
-sep=" "
+# Usage trap
+sep=""
 for c in $(compgen -A function | grep '^mbd_'); do
 	ACTIONS+="${sep}${c:4}"
 	sep="|"
 done
-trap "printf '\nUsage: $(basename "${0}")${ACTIONS}[_arg1_arg2..] \n' >&2" ERR
+trap "printf '\nUsage: ./$(basename "${0}") ${ACTIONS} [arg1 arg2...] \n' >&2" ERR
 
-[ "${*}" ]
-
-for ACTION in ${*}; do
-	func=$(printf "${ACTION}" | cut -d_ -f1)
-	args=""
-	if printf "${ACTION}" | grep -q "_"; then
-		args=$(printf "${ACTION}" | cut -d_ -f2- | tr "_" " ")
-	fi
-	mbd_${func} ${args}
-done
+# Run
+mbd_${1} "${@:2}"
