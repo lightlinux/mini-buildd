@@ -131,7 +131,7 @@ __version__ = "$(dpkg-parsechangelog --show-field=Version)~0dev$(date +%Y%m%d)"
 EOF
 }
 
-mbd_pycodestyle()
+mbd_check:pycodestyle()
 {
 	_check_prog pycodestyle
 	(
@@ -140,7 +140,7 @@ mbd_pycodestyle()
 	)
 }
 
-mbd_pymisc()
+mbd_check:pymisc()
 {
 	local f regex
 	for f in $(mbd_pysources); do
@@ -162,7 +162,7 @@ mbd_codespell()
 	fi
 }
 
-mbd_pydoctests()
+mbd_check:pydoctests()
 {
 	(
 		pyenv
@@ -175,7 +175,7 @@ mbd_pydoctests()
 	)
 }
 
-mbd_pyflakes()
+mbd_check:pyflakes()
 {
 	_check_prog pyflakes3
 	(
@@ -198,7 +198,7 @@ mbd_pylintgeneratedmembers()
 	printf "${PYLINTRC} tainted.\n"
 }
 
-mbd_pylint()
+mbd_check:pylint()
 {
 	_check_prog pylint3
 	(
@@ -211,7 +211,7 @@ mbd_pylint()
 	)
 }
 
-mbd_css()
+mbd_check:css()
 {
 	local class errors=0 ignoreRegex="mbd-action-.*"
 
@@ -244,14 +244,14 @@ mbd_tidy()
 	done
 }
 
-mbd_repro()
+mbd_check:debrepro()
 {
 	debrepro
 }
 
 mbd_check()
 {
-	local tests="pycodestyle pymisc pyflakes pylint css pydoctests repro"
+	local tests="check:pycodestyle check:pymisc check:pyflakes check:pylint check:css check:pydoctests check:debrepro"
 	for t in ${tests}; do
 		printf "=> mbd_${t}\n"
 		mbd_${t}

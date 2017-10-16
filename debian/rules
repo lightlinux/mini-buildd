@@ -6,7 +6,7 @@
 ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
 override_dh_auto_test:
 	dh_auto_test
-	./devel pydoctests
+	./devel check:pydoctests
 endif
 
 override_dh_fixperms:
