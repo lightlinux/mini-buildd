@@ -131,6 +131,9 @@ __version__ = "$(dpkg-parsechangelog --show-field=Version)~0dev$(date +%Y%m%d)"
 EOF
 }
 
+#
+# check: Static code checks
+#
 mbd_check:pycodestyle()
 {
 	_check_prog pycodestyle
@@ -230,20 +233,6 @@ mbd_check:css()
 	return ${errors}
 }
 
-mbd_tidy()
-{
-	local url
-	for url in \
-		http://localhost:8066/mini_buildd \
-		http://localhost:8066/mini_buildd/api \
-		http://localhost:8066/mini_buildd/api?command=getdputconf \
-		http://localhost:8066/accounts/login/ \
-		; do
-		printf "\n=> Testing HTML: ${url}\n"
-		wget --output-document=- "${url}" | tidy -output /dev/null
-	done
-}
-
 mbd_check:debrepro()
 {
 	debrepro
@@ -259,17 +248,37 @@ mbd_check()
 	printf "\nOK. Tests passed: %s\n" "${tests}"
 }
 
-mbd_checklive()
+#
+# checklive: Checks on running mini-buildd instance on localhost
+#
+mbd_checklive:apicalls()
 {
 	_head "Checking basic src/mini-buildd-tool calls"
-
 	${MBD_TOOL} status
 	${MBD_TOOL} getkey
 	${MBD_TOOL} getdputconf
 	${MBD_TOOL} getsourceslist wheezy
+}
 
-	# Some (live) HTML checks.
-	mbd_tidy
+mbd_checklive:tidy()
+{
+	_head "Some (live) HTML checks."
+	local url
+	for url in \
+		http://localhost:8066/mini_buildd \
+		http://localhost:8066/mini_buildd/api \
+		http://localhost:8066/mini_buildd/api?command=getdputconf \
+		http://localhost:8066/accounts/login/ \
+		; do
+		printf "\n=> Testing HTML: ${url}\n"
+		wget --output-document=- "${url}" | tidy -output /dev/null
+	done
+}
+
+mbd_checklive()
+{
+	mbd_checklive:apicalls
+	mbd_checklive:tidy
 }
 
 mbd_sfood()
