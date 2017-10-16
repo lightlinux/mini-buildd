@@ -246,7 +246,6 @@ mbd_tidy()
 
 mbd_repro()
 {
-	printf "\nW: py3/sphinx: Skipping debrepro tests temporarily."
 	debrepro
 }
 
