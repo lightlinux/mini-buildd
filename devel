@@ -328,7 +328,7 @@ mbd_install()
 
 	_head "Building snapshot..."
 	gbp dch --snapshot --auto --ignore-branch
-	gbp buildpackage --git-ignore-new --git-ignore-branch -us -uc
+	gbp buildpackage --git-ignore-new --git-ignore-branch -us -uc --git-postbuild='lintian --info --suppress-tags=changelog-should-mention-nmu,source-nmu-has-incorrect-version-number,newer-standards-version --fail-on-warnings $GBP_CHANGES_FILE'
 
 	_head "Installing snapshot..."
 	cat ./devel.debconf.selections | sudo debconf-set-selections --verbose -
