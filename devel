@@ -124,11 +124,7 @@ mbd_pyenv()
 pyenv()
 {
 	eval "$(mbd_pyenv)"
-	cat <<EOF >"./src/mini_buildd/__init__.py"
-# -*- coding: utf-8 -*-
-
-__version__ = "$(dpkg-parsechangelog --show-field=Version)~0dev$(date +%Y%m%d)"
-EOF
+	python3 ./setup.py build_py
 }
 
 #
