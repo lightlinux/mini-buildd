@@ -1,8 +1,15 @@
-# Python
+# python, setup.py
 /build/
 /.pybuild/
-/src/mini_buildd/__init__.py
 *.pyc
+
+# Custom generated files from setup.py
+/src/mini_buildd/__init__.py
+/src/mini-buildd-tool.1
+/src/mini-buildd.8
+
+# Auto-generated code doc (sphinx-apidoc)
+/doc/code/
 
 # Debian package
 /src/mini_buildd.egg-info/
@@ -17,6 +24,3 @@
 /debian/files
 /debian/.debhelper
 /debian/debhelper-build-stamp
-
-# Auto-generated code doc (sphinx-apidoc)
-/doc/code/
