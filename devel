@@ -283,16 +283,6 @@ mbd_check:debian-rules()
 	mbd_check static:1:pydoctests
 }
 
-mbd_sfood()
-{
-	_check_prog sfood
-	(
-		pyenv
-		sfood --internal-only src/mini_buildd/ | sfood-graph | dot -Tpdf >dependency.pdf
-		evince --fullscreen dependency.pdf
-	)
-}
-
 mbd_doc()
 {
 	python3 setup.py build_sphinx --source-dir=build/sphinx
