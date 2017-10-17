@@ -283,11 +283,6 @@ mbd_check:debian-rules()
 	mbd_check static:1:pydoctests
 }
 
-mbd_doc()
-{
-	python3 setup.py build_sphinx --source-dir=build/sphinx
-}
-
 mbd_installdjango()
 {
 	dpkg -s python3-django | grep "^Version" || true
