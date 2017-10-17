@@ -25,7 +25,7 @@ As mini-buildd-[staff|uploader]::
 
 As admin user at the mini-buildd instance (web app)::
 
-  Generate apropriate django pseudo users ("admin" does already exist).
+  Generate appropriate django pseudo users ("admin" does already exist).
 
 To authorize a SSH Key, as user mini-buildd-uploader, add a line like this::
 

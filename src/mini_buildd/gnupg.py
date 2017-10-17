@@ -66,7 +66,7 @@ class BaseGnuPG(object):
             return version_line[2][0:3]
         except BaseException as e:
             LOG.warning("Can't parse GPG flavor: {e}".format(e=e))
-            return "unkown"
+            return "unknown"
 
     def __init__(self, home):
         self.flavor = self.get_flavor()
