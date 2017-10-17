@@ -156,6 +156,21 @@ mbd_wait4package()
 	done
 }
 
+mbd_service()
+{
+	if sudo ischroot && [ -d /run/systemd/system ]; then
+		# Seems we are in a chroot, and host is running systemd
+		# The service will not be started in that case
+		# For now, we really want to start the service anyway, so this is still usable in "traditional" chroots
+		# (Rather use a container-based environment to test)
+		sudo mv /lib/lsb/init-functions.d/40-systemd /lib/lsb/init-functions.d/40-systemd.DISABLED || true
+		sudo /etc/init.d/mini-buildd ${1}
+		sudo mv /lib/lsb/init-functions.d/40-systemd.DISABLED /lib/lsb/init-functions.d/40-systemd || true
+	else
+		service mini-buildd "${1}"
+	fi
+}
+
 # temporary debug helper only
 # This shows bug https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=877637 (debian/rules now has a workaround).
 mbd_sphinxrepro()
@@ -286,7 +301,33 @@ mbd_check:static:9:debrepro()
 #
 # checklive: Checks on running mini-buildd instance on localhost
 #
-mbd_check:live:0:apicalls()
+mbd_check:live:0:purge()
+{
+	_head "Purging all mini-buildd packages"
+	mbd_service stop || true
+	sudo dpkg --purge mini-buildd mini-buildd-utils mini-buildd-doc python3-mini-buildd python-mini-buildd mini-buildd-common
+
+	# Also test mini-buildd's internal sbuild key workaround
+	sudo rm -v -f /var/lib/sbuild/apt-keys/*
+}
+
+mbd_check:live:1:install()
+{
+	_head "Installing snapshot..."
+	cat ./devel.debconf.selections | sudo debconf-set-selections --verbose -
+	sudo debi --with-depends
+}
+
+mbd_check:live:2:start()
+{
+	mbd_service restart
+	# todo: check until service is alive
+	sleep 10 # Sleeping a while 1st to be sure the network service is ready
+
+	printf "Ok, mini-buildd running.\n"
+}
+
+mbd_check:live:3:apicalls()
 {
 	_head "Checking basic src/mini-buildd-tool calls"
 	${MBD_TOOL} status
@@ -295,7 +336,7 @@ mbd_check:live:0:apicalls()
 	${MBD_TOOL} getsourceslist wheezy
 }
 
-mbd_check:live:1:tidy()
+mbd_check:live:3:tidy()
 {
 	_head "Some (live) HTML checks."
 	local url
@@ -308,6 +349,26 @@ mbd_check:live:1:tidy()
 		printf "\n=> Testing HTML: ${url}\n"
 		wget --output-document=- "${url}" | tidy -output /dev/null
 	done
+}
+
+mbd_check:live:4:auto-setup()
+{
+	mbd_pythonkeyringtestconfig
+	/usr/share/mini-buildd/bin/mbd-auto-setup
+	MBD__PACKAGE="mbd-test-cpp" MBD__DIST="jessie-test-unstable" mbd_wait4package
+}
+
+mbd_check:live:5:migrate()
+{
+	# Migration of test packages
+	${MBD_TOOL} migrate mbd-test-cpp jessie-test-unstable --confirm=migrate
+	${MBD_TOOL} migrate mbd-test-cpp jessie-test-testing --confirm=migrate
+}
+
+mbd_check:live:5:extra-packages()
+{
+	# Extra test packages when available
+	[ ! -d ../test-packages/ ] || dput --unchecked --no-upload-log mini-buildd-$(hostname) ../test-packages/*.changes
 }
 
 mbd_check()
@@ -332,42 +393,10 @@ mbd_check:debian-rules()
 	mbd_check:static:1:pydoctests
 }
 
-mbd_service()
-{
-	if sudo ischroot && [ -d /run/systemd/system ]; then
-		# Seems we are in a chroot, and host is running systemd
-		# The service will not be started in that case
-		# For now, we really want to start the service anyway, so this is still usable in "traditional" chroots
-		# (Rather use a container-based environment to test)
-		sudo mv /lib/lsb/init-functions.d/40-systemd /lib/lsb/init-functions.d/40-systemd.DISABLED || true
-		sudo /etc/init.d/mini-buildd ${1}
-		sudo mv /lib/lsb/init-functions.d/40-systemd.DISABLED /lib/lsb/init-functions.d/40-systemd || true
-	else
-		service mini-buildd "${1}"
-	fi
-}
-
-mbd_purge()
-{
-	_head "Purging all mini-buildd packages"
-	mbd_service stop || true
-	sudo dpkg --purge mini-buildd mini-buildd-utils mini-buildd-doc python3-mini-buildd python-mini-buildd mini-buildd-common
-
-	# Also test mini-buildd's internal sbuild key workaround
-	sudo rm -v -f /var/lib/sbuild/apt-keys/*
-}
-
-mbd_install()
-{
-	_head "Installing snapshot..."
-	cat ./devel.debconf.selections | sudo debconf-set-selections --verbose -
-	sudo debi --with-depends
-}
-
 mbd_update()
 {
 	mbd_check:static:2:build
-	mbd_install
+	mbd_check:live:1:install
 	mbd_service restart
 	printf "Ok, updated (NO checks).\n"
 }
@@ -375,7 +404,7 @@ mbd_update()
 mbd_updatecheck()
 {
 	mbd_check static
-	mbd_install
+	mbd_check:live:1:install
 	mbd_service restart
 	sleep 10 && mbd_check live  # Sleeping a while 1st to be sure the network service is ready
 
@@ -384,19 +413,8 @@ mbd_updatecheck()
 
 mbd_checkall()
 {
-	mbd_purge
-	mbd_updatecheck
-	mbd_pythonkeyringtestconfig
-
-	time /usr/share/mini-buildd/bin/mbd-auto-setup
-
-	# Migration of test packages
-	MBD__PACKAGE="mbd-test-cpp" MBD__DIST="jessie-test-unstable" mbd_wait4package
-	${MBD_TOOL} migrate mbd-test-cpp jessie-test-unstable --confirm=migrate
-	${MBD_TOOL} migrate mbd-test-cpp jessie-test-testing --confirm=migrate
-
-	# Extra test packages when available
-	[ ! -d ../test-packages/ ] || dput --unchecked --no-upload-log mini-buildd-$(hostname) ../test-packages/*.changes
+	mbd_check static
+	mbd_check live
 }
 
 # Usage trap
