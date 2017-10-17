@@ -117,6 +117,63 @@ pyenv()
 	python3 ./setup.py build_py
 }
 
+mbd_pylintgeneratedmembers()
+{
+	# Generate all identifiers with "has no xxx member" error. If
+	# needed, manually add those that are _actually_
+	# false-positive due to django to -> .pylintrc.
+	sed -i "s/^generated-members=.*/generated-members=/" "${PYLINTRC}"  # Reset, so we actually see all these errors
+	local gm=""
+	for o in $(${0} pylint | grep "has no.*member" | cut -d"'" -f4 | sort | uniq); do
+		gm+="${o},"
+	done
+	sed -i "s/^generated-members=.*/generated-members=${gm}/" "${PYLINTRC}"
+	printf "${PYLINTRC} tainted.\n"
+}
+
+mbd_installdjango()
+{
+	dpkg -s python3-django | grep "^Version" || true
+	sudo dpkg --install ../django-versions/python3-django*${1}*.deb
+	dpkg -s python3-django | grep "^Version"
+}
+
+# python API has nicer support for this.
+# Example call: MBD__PACKAGE="mbd-test-cpp" MBD__DIST="squeeze-test-unstable" [MBD__VERSION=1.2.3] ./devel wait4package
+mbd_wait4package()
+{
+	local sleep=30
+	printf "\nWaiting for ${MBD__PACKAGE}-${MBD__VERSION} to appear in ${MBD__DIST}:\n"
+	while true; do
+		# ${MBD_TOOL} show ${MBD__PACKAGE}
+		if ${MBD_TOOL} show ${MBD__PACKAGE} 2>/dev/null | grep "^${MBD__DIST}\b.*${MBD__VERSION}"; then
+			printf "\nOK, build\n"
+			break
+		else
+			printf "*"
+			sleep ${sleep}
+		fi
+	done
+}
+
+# temporary debug helper only
+# This shows bug https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=877637 (debian/rules now has a workaround).
+mbd_sphinxrepro()
+{
+	# export PYTHONHASHSEED=random  # default, buggy
+	# export PYTHONHASHSEED=0       # workaround
+
+	local b
+	for b in 1 2; do
+		./debian/rules clean
+		rm -rf "sphinx-${b}"
+		/usr/share/sphinx/scripts/python3/sphinx-build ./doc/ ./build/sphinx/html/
+		cp -a build/sphinx/ sphinx-${b}
+	done
+	diff -r -u -x *.pickle sphinx-1/ sphinx-2/
+	printf "OK: sphinx HTML identical"
+}
+
 #
 # check: Static code checks
 #
@@ -171,20 +228,6 @@ mbd_check:static:0:pyflakes()
 		pyenv
 		pyflakes3 $(mbd_pysources)
 	)
-}
-
-mbd_pylintgeneratedmembers()
-{
-	# Generate all identifiers with "has no xxx member" error. If
-	# needed, manually add those that are _actually_
-	# false-positive due to django to -> .pylintrc.
-	sed -i "s/^generated-members=.*/generated-members=/" "${PYLINTRC}"  # Reset, so we actually see all these errors
-	local gm=""
-	for o in $(${0} pylint | grep "has no.*member" | cut -d"'" -f4 | sort | uniq); do
-		gm+="${o},"
-	done
-	sed -i "s/^generated-members=.*/generated-members=${gm}/" "${PYLINTRC}"
-	printf "${PYLINTRC} tainted.\n"
 }
 
 mbd_check:static:1:pylint()
@@ -273,13 +316,6 @@ mbd_check:debian-rules()
 	mbd_check static:1:pydoctests
 }
 
-mbd_installdjango()
-{
-	dpkg -s python3-django | grep "^Version" || true
-	sudo dpkg --install ../django-versions/python3-django*${1}*.deb
-	dpkg -s python3-django | grep "^Version"
-}
-
 mbd_service()
 {
 	if sudo ischroot && [ -d /run/systemd/system ]; then
@@ -336,42 +372,6 @@ mbd_updatecheck()
 	sleep 10 && mbd_check live  # Sleeping a while 1st to be sure the network service is ready
 
 	printf "Ok, updated (checked).\n"
-}
-
-# python API has nicer support for this.
-# Example call: MBD__PACKAGE="mbd-test-cpp" MBD__DIST="squeeze-test-unstable" [MBD__VERSION=1.2.3] ./devel wait4package
-mbd_wait4package()
-{
-	local sleep=30
-	printf "\nWaiting for ${MBD__PACKAGE}-${MBD__VERSION} to appear in ${MBD__DIST}:\n"
-	while true; do
-		# ${MBD_TOOL} show ${MBD__PACKAGE}
-		if ${MBD_TOOL} show ${MBD__PACKAGE} 2>/dev/null | grep "^${MBD__DIST}\b.*${MBD__VERSION}"; then
-			printf "\nOK, build\n"
-			break
-		else
-			printf "*"
-			sleep ${sleep}
-		fi
-	done
-}
-
-# temporary debug helper only
-# This shows bug https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=877637 (debian/rules now has a workaround).
-mbd_sphinxrepro()
-{
-	# export PYTHONHASHSEED=random  # default, buggy
-	# export PYTHONHASHSEED=0       # workaround
-
-	local b
-	for b in 1 2; do
-		./debian/rules clean
-		rm -rf "sphinx-${b}"
-		/usr/share/sphinx/scripts/python3/sphinx-build ./doc/ ./build/sphinx/html/
-		cp -a build/sphinx/ sphinx-${b}
-	done
-	diff -r -u -x *.pickle sphinx-1/ sphinx-2/
-	printf "OK: sphinx HTML identical"
 }
 
 mbd_checkall()
