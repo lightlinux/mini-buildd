@@ -57,10 +57,10 @@ mbd_installdeps()
 	mk-build-deps --install --root-cmd=sudo --remove --tool="apt-get --no-install-recommends --target-release='*'"
 
 	# Extra tools needed for checks
-	sudo apt-get install --no-install-recommends pycodestyle pylint3 pyflakes3 python3-apt python3-bs4 python3-keyrings.alt tidy
+	sudo apt-get install --no-install-recommends pycodestyle pylint3 pyflakes3 python3-apt python3-bs4 python3-keyrings.alt tidy codespell
 	# Extra tools needed vc and package building
 	sudo apt-get install --no-install-recommends git git-buildpackage
-	# binary package dependecies so we can just dpkg -i for testing
+	# binary package dependencies so we can just dpkg -i for testing
 	sudo apt-get install --no-install-recommends --target-release='*' sbuild schroot reprepro debootstrap lintian
 }
 
@@ -152,7 +152,7 @@ mbd_check:pymisc()
 	done
 }
 
-mbd_codespell()
+mbd_check:codespell()
 {
 	local ups=$(codespell --quiet-level=2 $(mbd_pysources))
 	if [ -n "${ups}" ]; then
