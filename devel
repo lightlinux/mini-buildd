@@ -130,7 +130,7 @@ pyenv()
 #
 # check: Static code checks
 #
-mbd_check:pycodestyle()
+mbd_check:static:0:pycodestyle()
 {
 	_check_prog pycodestyle
 	(
@@ -139,7 +139,7 @@ mbd_check:pycodestyle()
 	)
 }
 
-mbd_check:pymisc()
+mbd_check:static:0:pymisc()
 {
 	local f regex
 	for f in $(mbd_pysources); do
@@ -152,7 +152,7 @@ mbd_check:pymisc()
 	done
 }
 
-mbd_check:codespell()
+mbd_check:static:0:codespell()
 {
 	local ups=$(codespell --quiet-level=2 $(mbd_pysources))
 	if [ -n "${ups}" ]; then
@@ -161,7 +161,7 @@ mbd_check:codespell()
 	fi
 }
 
-mbd_check:pydoctests()
+mbd_check:static:1:pydoctests()
 {
 	(
 		pyenv
@@ -174,7 +174,7 @@ mbd_check:pydoctests()
 	)
 }
 
-mbd_check:pyflakes()
+mbd_check:static:0:pyflakes()
 {
 	_check_prog pyflakes3
 	(
@@ -197,7 +197,7 @@ mbd_pylintgeneratedmembers()
 	printf "${PYLINTRC} tainted.\n"
 }
 
-mbd_check:pylint()
+mbd_check:static:1:pylint()
 {
 	_check_prog pylint3
 	(
@@ -210,7 +210,7 @@ mbd_check:pylint()
 	)
 }
 
-mbd_check:css()
+mbd_check:static:0:css()
 {
 	local class errors=0 ignoreRegex="mbd-action-.*"
 
@@ -229,31 +229,15 @@ mbd_check:css()
 	return ${errors}
 }
 
-mbd_check:debrepro()
+mbd_check:static:2:debrepro()
 {
 	debrepro
-}
-
-_mbd_check()
-{
-	local typ="${1}"
-	local checks="$(declare -F | cut -d" " -f3- | grep "^mbd_${typ}:[[:alnum:]]" || true)" c
-	for c in ${checks}; do
-		printf "=> Running %s...\n" "${c}"
-		${c}
-	done
-	printf "\nOK, all checks succeeded:\n%s\n" "${checks}"
-}
-
-mbd_check()
-{
-	_mbd_check "check"
 }
 
 #
 # checklive: Checks on running mini-buildd instance on localhost
 #
-mbd_checklive:apicalls()
+mbd_check:live:0:apicalls()
 {
 	_head "Checking basic src/mini-buildd-tool calls"
 	${MBD_TOOL} status
@@ -262,7 +246,7 @@ mbd_checklive:apicalls()
 	${MBD_TOOL} getsourceslist wheezy
 }
 
-mbd_checklive:tidy()
+mbd_check:live:1:tidy()
 {
 	_head "Some (live) HTML checks."
 	local url
@@ -277,9 +261,26 @@ mbd_checklive:tidy()
 	done
 }
 
-mbd_checklive()
+mbd_check()
 {
-	_mbd_check "checklive"
+	local typ="${1:-.*}"
+	local checks="$(declare -F | cut -d" " -f3- | grep "^mbd_check:${typ}:[[:alnum:]]" || true)" c
+	local -a info=()
+	for c in ${checks}; do
+		printf "=> Running %s...\n" "${c}"
+		local startStamp=$(date +%s)
+		${c}
+		info+=("$(printf "OK (%03d seconds): %s" "$(($(date +%s) - startStamp))" "${c}")")
+	done
+	printf "\nResults:\n"
+	printf "%s\n" "${info[@]}"
+	printf "\nOK, all checks succeeded.\n"
+}
+
+# Special to be used in debian/rules
+mbd_check:debian-rules()
+{
+	mbd_check static:1:pydoctests
 }
 
 mbd_sfood()
@@ -354,10 +355,10 @@ mbd_update()
 
 mbd_updatecheck()
 {
-	mbd_check
+	mbd_check static
 	mbd_install
 	mbd_service restart
-	sleep 10 && mbd_checklive  # Sleeping a while 1st to be sure the network service is ready
+	sleep 10 && mbd_check live  # Sleeping a while 1st to be sure the network service is ready
 
 	printf "Ok, updated (checked).\n"
 }
