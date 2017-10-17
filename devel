@@ -234,14 +234,20 @@ mbd_check:debrepro()
 	debrepro
 }
 
+_mbd_check()
+{
+	local typ="${1}"
+	local checks="$(declare -F | cut -d" " -f3- | grep "^mbd_${typ}:[[:alnum:]]" || true)" c
+	for c in ${checks}; do
+		printf "=> Running %s...\n" "${c}"
+		${c}
+	done
+	printf "\nOK, all checks succeeded:\n%s\n" "${checks}"
+}
+
 mbd_check()
 {
-	local tests="check:pycodestyle check:pymisc check:pyflakes check:pylint check:css check:pydoctests check:debrepro"
-	for t in ${tests}; do
-		printf "=> mbd_${t}\n"
-		mbd_${t}
-	done
-	printf "\nOK. Tests passed: %s\n" "${tests}"
+	_mbd_check "check"
 }
 
 #
@@ -273,8 +279,7 @@ mbd_checklive:tidy()
 
 mbd_checklive()
 {
-	mbd_checklive:apicalls
-	mbd_checklive:tidy
+	_mbd_check "checklive"
 }
 
 mbd_sfood()
