@@ -12,11 +12,6 @@ MBD_HOME=~mini-buildd
 # m-b-tool shortcut for testing calls
 MBD_TOOL="/usr/bin/mini-buildd-tool admin@localhost:8066"
 
-_head()
-{
-	printf "\n=> ${*}\n"
-}
-
 _check_prog()
 {
 	local path
@@ -279,11 +274,10 @@ mbd_check:static:1:pydoctests()
 
 mbd_check:static:2:build()
 {
-	_head "Checking changelog (must be unchanged)..."
+	# Checking changelog (must be unchanged)...
 	git diff-index --exit-code HEAD debian/changelog
 	trap "git checkout debian/changelog" EXIT
 
-	_head "Building snapshot..."
 	gbp dch --snapshot --auto
 	DEB_BUILD_OPTIONS+=" nocheck" gbp buildpackage --git-ignore-new --git-ignore-branch -us -uc
 }
@@ -303,7 +297,6 @@ mbd_check:static:9:debrepro()
 #
 mbd_check:live:0:purge()
 {
-	_head "Purging all mini-buildd packages"
 	mbd_service stop || true
 	sudo dpkg --purge mini-buildd mini-buildd-utils mini-buildd-doc python3-mini-buildd python-mini-buildd mini-buildd-common
 
@@ -313,23 +306,20 @@ mbd_check:live:0:purge()
 
 mbd_check:live:1:install()
 {
-	_head "Installing snapshot..."
 	cat ./devel.debconf.selections | sudo debconf-set-selections --verbose -
 	sudo debi --with-depends
 }
 
-mbd_check:live:2:start()
+mbd_check:live:2:restart()
 {
 	mbd_service restart
-	# todo: check until service is alive
-	sleep 10 # Sleeping a while 1st to be sure the network service is ready
-
-	printf "Ok, mini-buildd running.\n"
+	until ${MBD_TOOL} status; do
+		sleep 1
+	done
 }
 
 mbd_check:live:3:apicalls()
 {
-	_head "Checking basic src/mini-buildd-tool calls"
 	${MBD_TOOL} status
 	${MBD_TOOL} getkey
 	${MBD_TOOL} getdputconf
@@ -338,7 +328,6 @@ mbd_check:live:3:apicalls()
 
 mbd_check:live:3:tidy()
 {
-	_head "Some (live) HTML checks."
 	local url
 	for url in \
 		http://localhost:8066/mini_buildd \
@@ -397,18 +386,16 @@ mbd_update()
 {
 	mbd_check:static:2:build
 	mbd_check:live:1:install
-	mbd_service restart
-	printf "Ok, updated (NO checks).\n"
+	mbd_check:live:2:restart
 }
 
 mbd_updatecheck()
 {
 	mbd_check static
 	mbd_check:live:1:install
-	mbd_service restart
-	sleep 10 && mbd_check live  # Sleeping a while 1st to be sure the network service is ready
-
-	printf "Ok, updated (checked).\n"
+	mbd_check:live:2:restart
+	mbd_check:live:3:apicalls
+	mbd_check:live:3:tidy
 }
 
 mbd_checkall()
@@ -418,12 +405,29 @@ mbd_checkall()
 }
 
 # Usage trap
-sep=""
-for c in $(compgen -A function | grep '^mbd_'); do
-	ACTIONS+="${sep}${c:4}"
-	sep="|"
-done
-trap "printf '\nUsage: ./$(basename "${0}") ${ACTIONS} [arg1 arg2...] \n' >&2" ERR
+_usage()
+{
+	_list_actions()
+	{
+		local a
+		for a in $(declare -F | cut -d" " -f3- | grep "${1}" || true); do
+			printf "%s " "${a:4}"
+		done
+	}
+	local sep="" c p="./$(basename "${0}")" b=$(tput bold) r=$(tput sgr0)
+	for c in $(compgen -A function | grep '^mbd_'); do
+		ACTIONS+="${sep}${c:4}"
+		sep="|"
+	done
+	printf "\nUsage: ${p} <action> [arg..]\n\n"
+
+	printf "${b}${p} update${r}      : Build+employ snapshot on current system fast (no checks)\n"
+	printf "${b}${p} updatecheck${r} : Build+employ snapshot on current system (all static checks, selected live checks)\n"
+	printf "${b}${p} checkall${r}    : Run complete suite of static and live checks\n"
+	printf "${b}${p} check static${r}: Run all static tests (%s)\n" "$(_list_actions "^mbd_check:static:[[:alnum:]]")"
+	printf "${b}${p} check live${r}  : Run all live tests (%s)\n" "$(_list_actions "^mbd_check:live:[[:alnum:]]")"
+}
+trap "_usage" ERR
 
 # Run
 mbd_${1} "${@:2}"
