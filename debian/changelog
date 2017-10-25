@@ -1,3 +1,54 @@
+mini-buildd (1.1.7) experimental; urgency=medium
+
+  ** 1.1.x are _development_ releases, use for testing only. **
+
+  This release has more ;) cleanups for the build setup (setup.py +
+  packaging), now making the package lintian-clean -- including an
+  internal check to keep it that way (fixes the 'missing man pages'
+  regression from 1.6 on the way).
+  Apart from that, this mainly has improvements to the internal
+  development test suite scripting.
+
+  * [abaa17b] Revert "control: b-d on debhelper >= 10.6 [in previous
+    versions, dh_installman fails to find man pages]."
+  * [802f0aa] setup.py: Revert back to fixed build path for man pages
+    (fixes 'no manpages' regr. in 1.1.6).
+  * [ae2b570] mbd-auto-setup: Run m-b-tool in --verbose mode.
+  * [46c8e48] rules: QA: Run dh with '--fail-missing'.
+  * [274e739] mini-buildd-tool: Use fixed metavar string for commands
+    (fixes manpage warning); add note about full command help.
+  * [a70a4b6] [devel] update(): Add extra lintian run to catch (new)
+    lintian warnings.
+  * [e5f32f7] [devel]: Remove skip warning from repro check (forgot to
+    remove).
+  * [8f90ac0] [devel]: New naming convention for static checks:
+    'mbd_check:<type>': This updates all active checks.
+  * [cc99f28] [devel]: New naming convention for live checks:
+    'mbd_checklive:<type>': This updates all active checks.
+  * [f19ff57] setup.py: Yet more cleanup/simplification for the custom
+    setup (init, mans).
+  * [9bcad45] [devel] Fix up usage (remove the strange underscore/args
+    thing).
+  * [3ff71f0] [devel] Remove redundant code to write init -- use setup.py
+    instead.
+  * [71800f9] devel: check(), livecheck(): Auto-generate list of check
+    functions.
+  * [0bab5ad] devel: Add codespell check to active checks.
+  * [3fbc836] code: Fix three minor spell issues found by codespell check.
+  * [22c07ca] devel: Update checks to yet another naming scheme (with an
+    added ordering cardinal number).
+  * [08e1ae3] devel: Remove unused snakefood graph support.
+  * [8e7692d] devel: Remove unused and outdated mbd_doc().
+  * [ac6f5ec] devel: Remove _read_mirror(): Not used, and should be
+    obsolete.
+  * [5fbc424] devel: Re-order functions.
+  * [04f78af] devel: static checks: Integrate build(); add lintian() as
+    extra check.
+  * [2bd2414] devel: split up "checkall" into new ordered "live" checks.
+  * [a31b51d] devel: Update/improve usage.
+
+ -- Stephan Sürken <absurd@debian.org>  Wed, 25 Oct 2017 11:51:47 +0200
+
 mini-buildd (1.1.6) experimental; urgency=medium
 
   ** 1.1.x are _development_ releases, use for testing only. **
