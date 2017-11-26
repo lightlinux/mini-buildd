@@ -120,10 +120,14 @@ def home(request):
 def log(request, repository, package, version):
     def get_logs(installed):
         pkg_log = mini_buildd.misc.PkgLog(repository, installed, package, version)
-        with mini_buildd.misc.open_utf8(pkg_log.changes) as cf:
-            return {"changes": cf.read() if pkg_log.changes else None,
-                    "changes_path": pkg_log.make_relative(pkg_log.changes) if pkg_log.changes else None,
-                    "buildlogs": dict((k, pkg_log.make_relative(v)) for k, v in pkg_log.buildlogs.items())}
+        result = {"changes": None,
+                  "changes_path": None,
+                  "buildlogs": dict((k, pkg_log.make_relative(v)) for k, v in pkg_log.buildlogs.items())}
+        if pkg_log.changes:
+            with mini_buildd.misc.open_utf8(pkg_log.changes) as cf:
+                result["changes"] = cf.read()
+            result["changes_path"] = pkg_log.make_relative(pkg_log.changes)
+        return result
 
     return django.shortcuts.render(request,
                                    "mini_buildd/log.html",
