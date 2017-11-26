@@ -463,6 +463,9 @@ class Changes(debian.deb822.Changes):
     def gen_buildrequests(self, daemon, repository, dist, suite_option):
         """
         Build buildrequest files for all architectures.
+
+        .. todo:: **IDEA**: gen_buildrequests(): Instead of tar'ing ourselves (uploaded changes)
+                  with exceptions (.deb, .buildinfo, .changes), add the *.dsc* and its files only!
         """
 
         # Extra check on all DSC/source package files
