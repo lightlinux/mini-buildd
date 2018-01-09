@@ -248,28 +248,13 @@ mbd_check:static:0:pyflakes()
 
 mbd_check:static:1:pylint()
 {
-	local pylint="pylint3"
-
-	# Uff -- ridiculously oversized workaround: sid + pylint3 <= 1.6.5 is broken
-	local pl_ver=$(pylint3 --version | head -1 | cut -d" " -f2 | cut -d, -f1)
-	local os=$(lsb_release --short --codename)
-	if [ "${os}" = "sid" ]; then
-		if [ "${pl_ver}" = "1.6.5" ]; then
-			read -p "W: pylint3 ${pl_ver}: Broken!! Skipping!!" DUMMY
-			return 0
-		else
-			read -p "E: Remove pylint workaround!!" DUMMY
-			exit 1
-		fi
-	fi
-
-	_check_prog ${pylint}
+	_check_prog pylint3
 	(
 		pyenv
 		printf "N: pylint checking modules...\n"
-		${pylint} --jobs=2 $(mbd_pymodules ./doc/conf.py)  # ./doc/conf.py can't be used pylint-conform
+		pylint3 --jobs=2 $(mbd_pymodules ./doc/conf.py)  # ./doc/conf.py can't be used pylint-conform
 		printf "N: pylint checking scripts...\n"
-		${pylint} --jobs=2 --disable=C0103 $(mbd_pyscripts)
+		pylint3 --jobs=2 --disable=C0103 $(mbd_pyscripts)
 		printf "W: Overall locally disabled checks: %s\n" "$(cat $(mbd_pysources) | grep --count "pylint:.*disable")"  # No good way to keep track with pylint itself
 	)
 }
