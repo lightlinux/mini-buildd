@@ -183,7 +183,7 @@ prepare/remove actions will generate/remove the GnuPG key.
     def mbd_gnupg_long_id(self):
         return self._mbd_gnupg_long_id
 
-    def clean(self, *args, **kwargs):
+    def clean(self, *args, **kwargs):  # https://github.com/PyCQA/pylint/issues/1553  # pylint: disable=arguments-differ
         super().clean(*args, **kwargs)
 
         self.mbd_validate_regex(r"^[a-zA-Z0-9\-]+$", self.identity, "Identity")

@@ -43,7 +43,7 @@ class GnuPGPublicKey(mini_buildd.models.base.StatusModel):
     def __str__(self):
         return "{i}: {n}".format(i=self.key_long_id if self.key_long_id else self.key_id, n=self.key_name)
 
-    def clean(self, *args, **kwargs):
+    def clean(self, *args, **kwargs):  # https://github.com/PyCQA/pylint/issues/1553  # pylint: disable=arguments-differ
         super().clean(*args, **kwargs)
         if self.key_id and len(self.key_id) < 8:
             raise django.core.exceptions.ValidationError("The key id, if given, must be at least 8 bytes  long")

@@ -51,7 +51,7 @@ class Suite(mini_buildd.models.base.Model):
     def __str__(self):
         return self.name
 
-    def clean(self, *args, **kwargs):
+    def clean(self, *args, **kwargs):  # https://github.com/PyCQA/pylint/issues/1553  # pylint: disable=arguments-differ
         self.mbd_validate_regex(r"^[a-z]+$", self.name, "Name")
         super().clean(*args, **kwargs)
 
@@ -106,7 +106,7 @@ lintian) as non-lethal, and will install anyway.
             u="uploadable" if self.uploadable else "managed",
             m=" => {m}".format(m=self.migrates_to.suite.name) if self.migrates_to else "")
 
-    def clean(self, *args, **kwargs):
+    def clean(self, *args, **kwargs):  # https://github.com/PyCQA/pylint/issues/1553  # pylint: disable=arguments-differ
         if self.build_keyring_package and not self.uploadable:
             raise django.core.exceptions.ValidationError("You can only build keyring packages on uploadable suites!")
         if self.experimental and self.migrates_to:
@@ -350,7 +350,7 @@ class ArchitectureOption(mini_buildd.models.base.Model):
     def __str__(self):
         return "{a} for {d}".format(a=self.architecture, d=self.distribution)
 
-    def clean(self, *args, **kwargs):
+    def clean(self, *args, **kwargs):  # https://github.com/PyCQA/pylint/issues/1553  # pylint: disable=arguments-differ
         if self.build_architecture_all and self.optional:
             raise django.core.exceptions.ValidationError("Optional architectures must not be architecture all!")
         super().clean(*args, **kwargs)
@@ -746,7 +746,7 @@ Example:
     def __str__(self):
         return "{i}: {d}".format(i=self.identity, d=" ".join([d.base_source.codename for d in self.distributions.all()]))
 
-    def clean(self, *args, **kwargs):
+    def clean(self, *args, **kwargs):  # https://github.com/PyCQA/pylint/issues/1553  # pylint: disable=arguments-differ
         self.mbd_validate_regex(r"^[a-z0-9]+$", self.identity, "Identity")
         super().clean(*args, **kwargs)
 
