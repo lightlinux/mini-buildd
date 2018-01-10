@@ -232,7 +232,7 @@ def api(request):
                 api_cmd.msglog.info("Result: {l}".format(l=l))
             response = django.shortcuts.redirect(_referer(request, output))
         else:
-            response = django.http.HttpResponseBadRequest("<h1>Unknow output type '{o}'</h1>".format(o=output))  # pylint: disable=redefined-variable-type
+            response = django.http.HttpResponseBadRequest("<h1>Unknow output type '{o}'</h1>".format(o=output))
 
         # Add all user messages as as custom HTTP headers
         _add_api_messages(response, api_cmd)
