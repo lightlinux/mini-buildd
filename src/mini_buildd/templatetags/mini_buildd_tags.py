@@ -34,7 +34,7 @@ def mbd_title():
 
 
 @register.filter
-def mbd_daemon_is_running(dummy):
+def mbd_daemon_is_running(_dummy):
     return mini_buildd.daemon.get().is_running()
 
 
