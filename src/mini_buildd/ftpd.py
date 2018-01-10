@@ -89,17 +89,17 @@ class FtpDHandler(pyftpdlib.handlers.FTPHandler):
         pyftpdlib.handlers.FTPHandler.__init__(self, *args, **kwargs)
         self._mbd_files_received = []
 
-    def on_file_received(self, file_name):
+    def on_file_received(self, file):
         """
         Make any incoming file read-only as soon as it arrives; avoids overriding uploads of the same file.
         """
-        os.chmod(file_name, stat.S_IRUSR | stat.S_IRGRP)
-        self._mbd_files_received.append(file_name)
-        LOG.info("File received: {f}".format(f=file_name))
+        os.chmod(file, stat.S_IRUSR | stat.S_IRGRP)
+        self._mbd_files_received.append(file)
+        LOG.info("File received: {f}".format(f=file))
 
-    def on_incomplete_file_received(self, file_name):
-        LOG.warning("Incomplete file received: {f}".format(f=file_name))
-        self._mbd_files_received.append(file_name)
+    def on_incomplete_file_received(self, file):
+        LOG.warning("Incomplete file received: {f}".format(f=file))
+        self._mbd_files_received.append(file)
 
     def on_disconnect(self):
         for file_name in (f for f in self._mbd_files_received if Incoming.is_changes(f)):
