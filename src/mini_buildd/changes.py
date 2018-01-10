@@ -429,6 +429,7 @@ class Changes(debian.deb822.Changes):
         tar_file = self._file_path + ".tar"
         if os.path.exists(tar_file):
             with contextlib.closing(tarfile.open(tar_file, "r")) as tar:
+                # https://github.com/PyCQA/pylint/issues/1437  # pylint: disable=no-member
                 tar.extractall(path=path)
         else:
             LOG.info("No tar file (skipping): {f}".format(f=tar_file))
@@ -566,6 +567,7 @@ class Changes(debian.deb822.Changes):
 
     def upload_failed_buildresult(self, gnupg, hopo, retval, status, exception):
         with contextlib.closing(mini_buildd.misc.TmpDir()) as t:
+            # https://github.com/PyCQA/pylint/issues/1437  # pylint: disable=no-member
             bres = self.gen_buildresult(path=t.tmpdir)
 
             bres["Sbuildretval"] = str(retval)

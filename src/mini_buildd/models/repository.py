@@ -763,11 +763,13 @@ Example:
 
     def mbd_build_keyring_packages(self, request):
         with contextlib.closing(self.mbd_get_daemon().get_keyring_package()) as package:
+            # https://github.com/PyCQA/pylint/issues/1437  # pylint: disable=no-member
             self._mbd_portext2keyring_suites(request, "file://" + package.dsc)
 
     def mbd_build_test_packages(self, request):
         for t in ["archall", "cpp", "ftbfs"]:
             with contextlib.closing(self.mbd_get_daemon().get_test_package(t)) as package:
+                # https://github.com/PyCQA/pylint/issues/1437  # pylint: disable=no-member
                 self._mbd_portext2keyring_suites(request, "file://" + package.dsc)
 
     def mbd_get_uploader_keyring(self):
@@ -1179,6 +1181,7 @@ DscIndices: Sources Release . .gz .bz2
 
     def _mbd_package_install(self, bres, dist_str):
         with contextlib.closing(mini_buildd.misc.TmpDir()) as t:
+            # https://github.com/PyCQA/pylint/issues/1437  # pylint: disable=no-member
             bres.untar(path=t.tmpdir)
             self._mbd_reprepro().install(" ".join(glob.glob(os.path.join(t.tmpdir, "*.changes"))),
                                          dist_str)

@@ -196,6 +196,7 @@ personality={p}
 
         # Gen keyring file to use with debootstrap
         with contextlib.closing(mini_buildd.gnupg.TmpGnuPG()) as gpg:
+            # https://github.com/PyCQA/pylint/issues/1437  # pylint: disable=no-member
             for k in self.source.apt_keys.all():
                 gpg.add_pub_key(k.key)
             gpg.export(self.mbd_get_keyring_file())
