@@ -74,20 +74,14 @@ class DebianVersion(debian.debian_support.Version):
         last_match = None
         for last_match in re.finditer(pattern, string):
             pass
-        if last_match:
-            return string[:last_match.start()] + repl + string[last_match.end():]
-        else:
-            return string + repl
+        return string[:last_match.start()] + repl + string[last_match.end():] if last_match else string + repl
 
     @classmethod
     def _get_rightmost(cls, pattern, string):
         last_match = None
         for last_match in re.finditer(pattern, string):
             pass
-        if last_match:
-            return string[last_match.start():last_match.end()]
-        else:
-            return ""
+        return string[last_match.start():last_match.end()] if last_match else ""
 
     @classmethod
     def stamp(cls):

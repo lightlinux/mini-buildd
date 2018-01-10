@@ -201,8 +201,7 @@ def api(request):
                                                "mini_buildd/api_confirm.html",
                                                {"api_cmd": api_cmd,
                                                 "referer": _referer(request, output)})
-            else:
-                return error401_unauthorized(request, "API: '{c}': Needs to be confirmed".format(c=command))
+            return error401_unauthorized(request, "API: '{c}': Needs to be confirmed".format(c=command))
 
         # Show api command name and user calling it.
         api_cmd.msglog.info("API call '{c}' by user '{u}'".format(c=command, u=request.user))

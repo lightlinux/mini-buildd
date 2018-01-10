@@ -81,8 +81,7 @@ class Call(object):
         elif key in self._given_stream:
             self._given_stream[key].seek(0)
             return self._bos2str(self._given_stream[key].read())
-        else:
-            return ""
+        return ""
 
     @property
     def stdout(self):

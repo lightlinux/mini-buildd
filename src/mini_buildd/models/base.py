@@ -478,11 +478,7 @@ this would mean losing all packages!
         return cls.objects.filter(status__gte=cls.STATUS_PREPARED)
 
     def mbd_get_check_display(self, typ="string"):
-        if self.mbd_is_checked():
-            return {"string": self.last_checked.strftime("Checked on %Y-%m-%d %H:%M"),
-                    "char": "C"}[typ]
-        else:
-            return self.CHECK_STRINGS[self.last_checked][typ]
+        return {"string": self.last_checked.strftime("Checked on %Y-%m-%d %H:%M"), "char": "C"}[typ] if self.mbd_is_checked() else self.CHECK_STRINGS[self.last_checked][typ]
 
     def mbd_get_status_display(self, typ="string"):
         return "{s} ({p})".format(s=self.get_status_display(),

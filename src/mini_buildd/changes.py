@@ -193,8 +193,7 @@ class Changes(debian.deb822.Changes):
             return "Buildrequest from '{h}': {i}".format(h=self.get("Upload-Result-To"), i=self.get_pkg_id(with_arch=True))
         elif self.type == self.TYPE_BRES:
             return "Buildresult from '{h}': {i}".format(h=self.get("Built-By"), i=self.get_pkg_id(with_arch=True))
-        else:
-            return "User upload: {i}".format(i=self.get_pkg_id())
+        return "User upload: {i}".format(i=self.get_pkg_id())
 
     @property
     def options(self):
