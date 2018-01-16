@@ -1,3 +1,36 @@
+mini-buildd (1.1.8) experimental; urgency=medium
+
+  ** 1.1.x are _development_ releases, use for testing only. **
+
+  This release: Syncs with newer pylint and other minor fixes
+  and cleanups only.
+
+  * [ff78c7e] views.py: Fix log view (1.1.x regression).
+  * [7accd29] changes.py: buildrequest: Also exclude .changes (fixes:
+    failed buildlog sometimes not archived) and .buildinfo files.
+  * [351cb45] changes.py: Add todo note about maybe using dsc only for
+    buildrequests later.
+  * [f19c3b8] [devel]: Add ridiculously oversized skip-workaround for
+    pylint3@sid breakage.
+  * [56c088b] Revert "[devel]: Add ridiculously oversized skip-workaround
+    for pylint3@sid breakage."
+  * [c250c15] pylint 1.7.4: Fix various new 'no-else-return' warnings.
+  * [6ba8656] pylint 1.7.4: Fix one new "unused-argument".
+  * [5503913] pylint 1.7.4: Remove false-positive override for 'redefined-
+    variable-type' (now fixed in pylint default).
+  * [e8840b1] pylint 1.7.4. Add exceptions for new (no-member/contextlib)
+    false-positive: https://github.com/PyCQA/pylint/issues/1437
+  * [b38af5d] pylint 1.7.4: Another exception for 'no-member' false-
+    positive on threading.Lock().
+  * [5f1ac30] pylint 1.7.4: Fix two new 'args-differ' warnings in ftp
+    code.
+  * [0789b90] pylint 1.7.4: Add exceptions for several 'arguments-differ'
+    false-positives (https://github.com/PyCQA/pylint/issues/1553).
+  * [1827d2c] rules: Remove PYTHONHASHSEED=0 sphinx/repro workaround
+    (#877637 has been fixed).
+
+ -- Stephan Sürken <absurd@debian.org>  Tue, 16 Jan 2018 12:42:38 +0100
+
 mini-buildd (1.1.7) experimental; urgency=medium
 
   ** 1.1.x are _development_ releases, use for testing only. **
