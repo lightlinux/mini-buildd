@@ -13,11 +13,11 @@ import urllib.parse
 import urllib.error
 import logging
 
+import django.conf
+
 import debian.deb822
 import debian.changelog
 import debian.debian_support
-
-import django.conf
 
 import mini_buildd.misc
 import mini_buildd.call

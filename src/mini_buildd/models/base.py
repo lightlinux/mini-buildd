@@ -374,7 +374,7 @@ class StatusModel(Model):
             self.mbd_action(request, queryset, "deactivate")
         mbd_action_deactivate.short_description = "Deactivate"
 
-        def mbd_action_remove(self, request, queryset):
+        def mbd_action_remove(self, request, queryset):  # pylint: disable=inconsistent-return-statements
             if request.POST.get("confirm"):
                 self.mbd_action(request, queryset, "remove")
             else:

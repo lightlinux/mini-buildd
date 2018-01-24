@@ -97,11 +97,11 @@ class Build(mini_buildd.misc.Status):
     def sbuildrc_path(self):
         return os.path.join(self._build_dir, ".sbuildrc")
 
-    def _get_started_stamp(self):
+    def _get_started_stamp(self):  # pylint: disable=inconsistent-return-statements
         if os.path.exists(self.sbuildrc_path):
             return datetime.datetime.fromtimestamp(os.path.getmtime(self.sbuildrc_path), tz=datetime.timezone.utc)
 
-    def _get_built_stamp(self):
+    def _get_built_stamp(self):  # pylint: disable=inconsistent-return-statements
         if os.path.exists(self._bres.file_path):
             return datetime.datetime.fromtimestamp(os.path.getmtime(self._bres.file_path), tz=datetime.timezone.utc)
 

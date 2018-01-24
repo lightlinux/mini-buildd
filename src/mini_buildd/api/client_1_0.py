@@ -155,7 +155,7 @@ class Daemon(object):
 
         return result
 
-    def wait_for_package(self, distribution, src_package, version=None, or_greater=False,
+    def wait_for_package(self, distribution, src_package, version=None, or_greater=False,  # pylint: disable=inconsistent-return-statements
                          max_tries=-1, sleep=60, initial_sleep=0,
                          raise_on_error=True):
         """

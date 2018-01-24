@@ -8,11 +8,11 @@ import glob
 import re
 import logging
 
-import debian.debian_support
-
 import django.db
 import django.core.exceptions
 import django.contrib.auth.models
+
+import debian.debian_support
 
 import mini_buildd.setup
 import mini_buildd.misc
@@ -1015,7 +1015,7 @@ DscIndices: Sources Release . .gz .bz2
         return result
 
     @classmethod
-    def _mbd_package_find(cls, pkg_show, distribution=None, version=None):
+    def _mbd_package_find(cls, pkg_show, distribution=None, version=None):  # pylint: disable=inconsistent-return-statements
         for r in pkg_show:
             if not distribution or r["distribution"] == distribution:
                 if not version or r["sourceversion"] == version:

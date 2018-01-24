@@ -86,7 +86,7 @@ class Status(object):
         return self.__status__
 
 
-def _skip_if_in_debug(key, func, *args, **kwargs):
+def _skip_if_in_debug(key, func, *args, **kwargs):  # pylint: disable=inconsistent-return-statements
     if key in mini_buildd.setup.DEBUG:
         LOG.warning("DEBUG MODE('{k}'): Skipping: {f} {args} {kwargs}".format(k=key, f=func, args=args, kwargs=kwargs))
     else:
@@ -114,7 +114,7 @@ class TmpDir(object):
         return self._tmpdir
 
     @classmethod
-    def file_dir(cls, file_name):
+    def file_dir(cls, file_name):  # pylint: disable=inconsistent-return-statements
         # nf "/var/lib/mini-buildd/tmp/t123/xyz.file
         # nd "/var/lib/mini-buildd/tmp/t123"
         # nt "/var/lib/mini-buildd/tmp"
@@ -305,12 +305,12 @@ class Distribution(object):
         return len(self._dsplit) == 4
 
     @property
-    def rollback(self):
+    def rollback(self):  # pylint: disable=inconsistent-return-statements
         if self.is_rollback:
             return self._dsplit[3]
 
     @property
-    def rollback_no(self):
+    def rollback_no(self):  # pylint: disable=inconsistent-return-statements
         " Rollback (int) number: 'rollback0' -> 0 "
         if self.is_rollback:
             return int(re.sub(r"\D", "", self.rollback))

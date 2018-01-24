@@ -7,11 +7,11 @@ import shutil
 import fnmatch
 import logging
 
-import debian.deb822
-
 import pyftpdlib.handlers
 import pyftpdlib.authorizers
 import pyftpdlib.servers
+
+import debian.deb822
 
 import mini_buildd
 import mini_buildd.setup
