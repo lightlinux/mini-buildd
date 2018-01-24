@@ -185,9 +185,15 @@ mbd_sphinxrepro()
 }
 
 #
-# check: Static code checks
+# Runner functions: mbd_run:<sequence>:<level>:<name>
 #
-mbd_check:static:0:pycodestyle()
+# <sequence>: Two-digit sequence number (0-9) -- order in which to run.
+# <level>: Higher second digit, higher "cost".
+#  00-09: deploy: Actions needed to test-deploy only.
+#  10-19: check : Static tests, fully automatic.
+#  20-29: test  : Live tests, system tests.
+
+mbd_run:00:10:pycodestyle()
 {
 	_check_prog pycodestyle
 	(
@@ -196,7 +202,7 @@ mbd_check:static:0:pycodestyle()
 	)
 }
 
-mbd_check:static:0:pymisc()
+mbd_run:00:11:pymisc()
 {
 	local f regex
 	for f in $(mbd_pysources); do
@@ -209,7 +215,7 @@ mbd_check:static:0:pymisc()
 	done
 }
 
-mbd_check:static:0:codespell()
+mbd_run:00:11:codespell()
 {
 	local ups=$(codespell --quiet-level=2 $(mbd_pysources))
 	if [ -n "${ups}" ]; then
@@ -218,7 +224,7 @@ mbd_check:static:0:codespell()
 	fi
 }
 
-mbd_check:static:0:css()
+mbd_run:00:11:css()
 {
 	local class errors=0 ignoreRegex="mbd-action-.*"
 
@@ -237,7 +243,7 @@ mbd_check:static:0:css()
 	return ${errors}
 }
 
-mbd_check:static:0:pyflakes()
+mbd_run:00:12:pyflakes()
 {
 	_check_prog pyflakes3
 	(
@@ -246,7 +252,7 @@ mbd_check:static:0:pyflakes()
 	)
 }
 
-mbd_check:static:1:pylint()
+mbd_run:01:11:pylint()
 {
 	_check_prog pylint3
 	(
@@ -259,7 +265,7 @@ mbd_check:static:1:pylint()
 	)
 }
 
-mbd_check:static:1:pydoctests()
+mbd_run:01:11:pydoctests()
 {
 	(
 		pyenv
@@ -272,7 +278,7 @@ mbd_check:static:1:pydoctests()
 	)
 }
 
-mbd_check:static:2:build()
+mbd_run:02:00:build()
 {
 	# Checking changelog (must be unchanged)...
 	git diff-index --exit-code HEAD debian/changelog
@@ -282,20 +288,17 @@ mbd_check:static:2:build()
 	DEB_BUILD_OPTIONS+=" nocheck" gbp buildpackage --git-ignore-new --git-ignore-branch -us -uc
 }
 
-mbd_check:static:3:lintian()
+mbd_run:03:11:lintian()
 {
 	lintian --fail-on-warnings --suppress-tags=changelog-should-mention-nmu,source-nmu-has-incorrect-version-number,newer-standards-version --info ../mini-buildd_$(dpkg-parsechangelog --show-field=Version)_$(dpkg --print-architecture).changes
 }
 
-mbd_check:static:9:debrepro()
+mbd_run:04:21:debrepro()
 {
 	debrepro
 }
 
-#
-# checklive: Checks on running mini-buildd instance on localhost
-#
-mbd_check:live:0:purge()
+mbd_run:10:22:purge()
 {
 	mbd_service stop || true
 	sudo dpkg --purge mini-buildd mini-buildd-utils mini-buildd-doc python3-mini-buildd python-mini-buildd mini-buildd-common
@@ -304,13 +307,13 @@ mbd_check:live:0:purge()
 	sudo rm -v -f /var/lib/sbuild/apt-keys/*
 }
 
-mbd_check:live:1:install()
+mbd_run:11:00:install()
 {
 	cat ./devel.debconf.selections | sudo debconf-set-selections --verbose -
 	sudo debi --with-depends
 }
 
-mbd_check:live:2:restart()
+mbd_run:12:00:restart()
 {
 	mbd_service restart
 	until ${MBD_TOOL} status; do
@@ -318,7 +321,7 @@ mbd_check:live:2:restart()
 	done
 }
 
-mbd_check:live:3:apicalls()
+mbd_run:13:20:apicalls()
 {
 	${MBD_TOOL} status
 	${MBD_TOOL} getkey
@@ -326,7 +329,7 @@ mbd_check:live:3:apicalls()
 	${MBD_TOOL} getsourceslist wheezy
 }
 
-mbd_check:live:3:tidy()
+mbd_run:13:20:tidy()
 {
 	local url
 	for url in \
@@ -340,71 +343,52 @@ mbd_check:live:3:tidy()
 	done
 }
 
-mbd_check:live:4:auto-setup()
+mbd_run:14:22:auto-setup()
 {
 	mbd_pythonkeyringtestconfig
 	/usr/share/mini-buildd/bin/mbd-auto-setup
 	MBD__PACKAGE="mbd-test-cpp" MBD__DIST="jessie-test-unstable" mbd_wait4package
-}
+ }
 
-mbd_check:live:5:migrate()
+mbd_run:15:22:migrate()
 {
 	# Migration of test packages
 	${MBD_TOOL} migrate mbd-test-cpp jessie-test-unstable --confirm=migrate
 	${MBD_TOOL} migrate mbd-test-cpp jessie-test-testing --confirm=migrate
 }
 
-mbd_check:live:5:extra-packages()
+mbd_run:16:22:extra-packages()
 {
 	# Extra test packages when available
 	[ ! -d ../test-packages/ ] || dput --force --unchecked --no-upload-log mini-buildd-$(hostname) ../test-packages/*.changes
 }
 
-mbd_check()
+mbd_run()  # [<levelRegex>=00] [<name>]
 {
-	local typ="${1:-.*}"
-	local checks="$(declare -F | cut -d" " -f3- | grep "^mbd_check:${typ}:[[:alnum:]]" || true)" c
+	local levelRegex="${1:-00}" name="${2}"
 	local -a info=()
-	for c in ${checks}; do
-		printf "=> Running %s...\n" "${c}"
+	local func totalStartStamp=$(date +%s)
+	for func in $(declare -F | cut -d" " -f3- | grep "^mbd_run:[[:alnum:]][[:alnum:]]:${levelRegex}:${name}" | sort || true); do
+		printf "=> Running %s...\n" "${func}"
 		local startStamp=$(date +%s)
-		${c}
-		info+=("$(printf "OK (%03d seconds): %s" "$(($(date +%s) - startStamp))" "${c}")")
+		${func}
+		info+=("$(printf "OK (%03d seconds): %s" "$(($(date +%s) - startStamp))" "${func}")")
 	done
-	printf "\nResults:\n"
+	printf "\nSequence results (%03d seconds):\n" "$(($(date +%s) - totalStartStamp))"
 	printf "%s\n" "${info[@]}"
-	printf "\nOK, all checks succeeded.\n"
+	printf "\nOK, all runs succeeded.\n"
 }
 
-# Special to be used in debian/rules
-mbd_check:debian-rules()
-{
-	mbd_check:static:1:pydoctests
-}
+# Shortcuts
+mbd_update()         { mbd_run "00"; }
+mbd_updatecheck()    { mbd_run "[01]0"; }
+mbd_updatecheckmost(){ mbd_run "[01][01]"; }
+mbd_updatecheckall() { mbd_run "[01][0-9]"; }
+mbd_updatetest()     { mbd_run "[012]0"; }
+mbd_updatetestmost() { mbd_run "[012][01]"; }
+mbd_updatetestall()  { mbd_run "[012][0-9]"; }
 
-mbd_update()
-{
-	mbd_check:static:2:build
-	mbd_check:live:1:install
-	mbd_check:live:2:restart
-}
-
-mbd_updatecheck()
-{
-	mbd_check static
-	mbd_check:live:1:install
-	mbd_check:live:2:restart
-	mbd_check:live:3:apicalls
-	mbd_check:live:3:tidy
-}
-
-mbd_checkall()
-{
-	mbd_check static
-	mbd_check live
-}
-
-mbd_log()
+mbd_logcat()
 {
 	tail --follow=name --retry /var/lib/mini-buildd/var/log/daemon.log /var/lib/mini-buildd/var/log/access.log
 }
@@ -412,26 +396,45 @@ mbd_log()
 # Usage trap
 _usage()
 {
-	_list_actions()
+	_list_sequents()
 	{
 		local a
-		for a in $(declare -F | cut -d" " -f3- | grep "${1}" || true); do
-			printf "%s " "${a:4}"
+		for a in $(declare -F | cut -d" " -f3- | grep "^mbd_run:[[:alnum:]]" || true); do
+			printf "%s | " "${a:14}"
 		done
 	}
-	local sep="" c p="./$(basename "${0}")" b=$(tput bold) r=$(tput sgr0)
+	local sep="" c p="./$(basename "${0}")" b=$(tput bold) i=$(tput sitm) r=$(tput sgr0)
 	for c in $(compgen -A function | grep '^mbd_'); do
 		ACTIONS+="${sep}${c:4}"
 		sep="|"
 	done
-	printf "\nUsage: ${p} <action> [arg..]\n\n"
 
-	printf "${b}${p} update${r}      : Build+employ snapshot on current system fast (no checks)\n"
-	printf "${b}${p} updatecheck${r} : Build+employ snapshot on current system (all static checks, selected live checks)\n"
-	printf "${b}${p} log${r}         : Follow all logs (daemon and access).\n"
-	printf "${b}${p} checkall${r}    : Run complete suite of static and live checks\n"
-	printf "${b}${p} check static${r}: Run all static tests (%s)\n" "$(_list_actions "^mbd_check:static:[[:alnum:]]")"
-	printf "${b}${p} check live${r}  : Run all live tests (%s)\n" "$(_list_actions "^mbd_check:live:[[:alnum:]]")"
+	cat <<EOF
+
+Usage: ${i}${p} <action> [arg..]${r}
+
+mini-buildd development helper.
+
+${b}Sequence runs${r}:
+ ${i}${p} run <groupRegex><levelRegex>${r}: generic sequence runner.
+
+ ${b}Shortcuts${r}:
+  ${i}${p} update${r}         : only deployment, no checks.
+  ${i}${p} updatecheck${r}    : deployment, basic static tests.
+  ${i}${p} updatecheckmost${r}: deployment, most static tests.
+  ${i}${p} updatecheckall${r} : deployment, all static tests.
+  ${i}${p} updatetest${r}     : deployment, basic static and live tests.
+  ${i}${p} updatetestmost${r} : deployment, most basic static and live tests.
+  ${i}${p} updatetestall${r}  : deployment, all static and live tests.
+
+ ${b}Individual sequents${r}:
+  ${i}${p} run ".." $(_list_sequents)
+
+${b}Other targets${r}:
+ ${i}${p} logcat${r}: Follow all logs (daemon and access).
+ ...-> Check source for other possible esoteric calls.
+EOF
+
 }
 trap "_usage" ERR
 
