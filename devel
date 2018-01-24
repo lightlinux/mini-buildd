@@ -404,6 +404,11 @@ mbd_checkall()
 	mbd_check live
 }
 
+mbd_log()
+{
+	tail --follow=name --retry /var/lib/mini-buildd/var/log/daemon.log /var/lib/mini-buildd/var/log/access.log
+}
+
 # Usage trap
 _usage()
 {
@@ -423,6 +428,7 @@ _usage()
 
 	printf "${b}${p} update${r}      : Build+employ snapshot on current system fast (no checks)\n"
 	printf "${b}${p} updatecheck${r} : Build+employ snapshot on current system (all static checks, selected live checks)\n"
+	printf "${b}${p} log${r}         : Follow all logs (daemon and access).\n"
 	printf "${b}${p} checkall${r}    : Run complete suite of static and live checks\n"
 	printf "${b}${p} check static${r}: Run all static tests (%s)\n" "$(_list_actions "^mbd_check:static:[[:alnum:]]")"
 	printf "${b}${p} check live${r}  : Run all live tests (%s)\n" "$(_list_actions "^mbd_check:live:[[:alnum:]]")"
