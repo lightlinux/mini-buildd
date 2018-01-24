@@ -357,7 +357,7 @@ mbd_check:live:5:migrate()
 mbd_check:live:5:extra-packages()
 {
 	# Extra test packages when available
-	[ ! -d ../test-packages/ ] || dput --unchecked --no-upload-log mini-buildd-$(hostname) ../test-packages/*.changes
+	[ ! -d ../test-packages/ ] || dput --force --unchecked --no-upload-log mini-buildd-$(hostname) ../test-packages/*.changes
 }
 
 mbd_check()
