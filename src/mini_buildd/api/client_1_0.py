@@ -7,15 +7,11 @@ import urllib.request
 import urllib.parse
 import urllib.error
 import re
-import http.client
 
 import debian.debian_support
 
 import mini_buildd.misc
 import mini_buildd.api
-
-# mini-buildd API transfers log message via HTTP headers. The default (100) is sometimes too low.
-http.client._MAXHEADERS = 500  # pylint: disable=protected-access
 
 
 class Daemon(object):

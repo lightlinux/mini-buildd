@@ -3,10 +3,14 @@
 import os
 import copy
 import logging
+import http.client
 
 import mini_buildd.misc
 
 LOG = logging.getLogger(__name__)
+
+# mini-buildd API transfers log message via HTTP headers. The default (100) is sometimes too low.
+http.client._MAXHEADERS = 5000  # pylint: disable=protected-access
 
 
 def django_pseudo_configure():
