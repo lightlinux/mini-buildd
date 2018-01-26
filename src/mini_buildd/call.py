@@ -145,12 +145,21 @@ def call_sequence(calls, run_as_root=False, rollback_only=False, **kwargs):
 
 
 def call_with_retry(call, retry_max_tries=5, retry_sleep=1, retry_failed_cleanup=None, **kwargs):
+    """Run call repeatedly until it succeeds (retval 0). In case
+    retry_max_tries is reached, the error from the last try is raised.
+
+    >>> call_with_retry(["/bin/true"])
+    >>> call_with_retry(["/bin/false"])
+    Traceback (most recent call last):
+      ...
+    Exception: Call failed with returncode 1: '/bin/false '
+    """
     for t in range(retry_max_tries):
         try:
             Call(call, **kwargs).log().check()
-            break
+            return
         except BaseException as e:
-            if t > retry_max_tries:
+            if t >= retry_max_tries - 1:
                 raise
             LOG.error("Retrying call in {s} seconds [retry #{t}]: {e}".format(s=retry_sleep, t=t, e=e))
             if retry_failed_cleanup:
