@@ -298,10 +298,15 @@ mbd_run:04:21:debrepro()
 	debrepro
 }
 
-mbd_run:10:22:purge()
+mbd_run:10:22:remove()
 {
 	mbd_service stop || true
-	sudo dpkg --purge mini-buildd mini-buildd-utils mini-buildd-doc python3-mini-buildd python-mini-buildd mini-buildd-common
+	sudo dpkg --${1:-remove} mini-buildd mini-buildd-utils mini-buildd-doc python3-mini-buildd python-mini-buildd mini-buildd-common
+}
+
+mbd_run:10:22:purge()
+{
+	mbd_run:10:22:remove purge
 
 	# Also test mini-buildd's internal sbuild key workaround
 	sudo rm -v -f /var/lib/sbuild/apt-keys/*
