@@ -81,6 +81,8 @@ Recommends:
 	mini-buildd-doc,
 	python3-apt
 Suggests:
+	debian-archive-keyring,
+	ubuntu-keyring,
 	haveged,
 	lvm2,
 	qemu-user-static,

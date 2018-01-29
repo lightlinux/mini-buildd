@@ -649,6 +649,42 @@ Import a foreign archive key to an existing mini-buildd instance
           the instance.
 
 
+Possible problems fetching keys from keyservers (gpg 2.1, 2.2)
+==============================================================
+
+Since gpg 2.1.22, 'use-tor' option is default. Afaiu, there is some
+magic in dirmgr now trying to autodetect if tor is available, and then
+uses this (safer) option.
+
+In practice, we have seen that receiving from keyserver has become
+unreliable, sometimes failing with::
+
+	gpg: keyserver receive failed: Connection closed in DNS
+
+and sometimes with::
+
+	gpg: WARNING: Tor is not properly configured
+	gpg: keyserver receive failed: Permission denied
+
+and occasionally working fine.
+
+.. seealso:: [#debbug836266]_
+
+.. versionchanged:: 1.0.34,1.1.9
+	 mini-buildd's internal importer now first tries to utilize keys
+	 from installed Debian or Ubuntu archive key packages (and add
+	 'Suggests:' for them) before reverting to 'recv' from the
+	 configured keyserver. Also, the keyserver import is now being
+	 retried.
+
+Ulimately, the GPG's defaults should be used, and ``dirmngr`` should
+be more reliable. If this bugs you however, you might try the
+following options to mitigate the problem:
+
+- Update ``tor``; on a stretch system, updating from 0.2.9.14 -> 0.3.2.9 seems to improve the success rate.
+- Remove ``tor`` from the system.
+- Use ``no-use-tor`` in ``dirmngr.conf``. This might eventually be an option when there is a systemwide default config for user-context dirmngr instances. Currently, that's not the case, and also no command line option to tunnel that through.
+
 Migrate packages from 0.8.x
 ===========================
 
@@ -725,3 +761,4 @@ References
 .. [#debbug705238] http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=705238
 .. [#debbug733281] http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=733281
 .. [#debbug847154] http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=847154
+.. [#debbug836266] http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=836266

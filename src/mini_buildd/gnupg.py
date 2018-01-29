@@ -122,8 +122,24 @@ class BaseGnuPG(object):
     def get_first_sec_key_user_id(self):
         return self.get_first_sec_colon("uid").user_id
 
-    def recv_key(self, keyserver, identity):
-        return mini_buildd.call.Call(self.gpg_cmd + ["--armor", "--keyserver", keyserver, "--recv-keys", identity]).log().check().stdout
+    def import_pub_key(self, keyserver, identity):
+        # 1st, try keyrings on local system
+        for keyring in ["/usr/share/keyrings/debian-archive-keyring.gpg",
+                        "/usr/share/keyrings/debian-archive-removed-keys.gpg",
+                        "/usr/share/keyrings/ubuntu-archive-keyring.gpg",
+                        "/usr/share/keyrings/ubuntu-archive-removed-keys.gpg"]:
+            try:
+                # Note that gpg --export succeeds even if nothing can be exported, --import however fails on empty input
+                key = mini_buildd.call.Call(self.gpg_cmd + ["--armor", "--keyring", keyring, "--export", identity]).log().check().stdout
+                mini_buildd.call.Call(self.gpg_cmd + ["--armor", "--import", "-"], input=bytes(key, encoding="ascii")).log().check()
+                LOG.info("{id}: Imported from keyring: {k}".format(id=identity, k=keyring))
+                return
+            except BaseException as e:
+                LOG.info("{id}: Can't import from keyring {k}: {e}".format(id=identity, k=keyring, e=e))
+
+        # 2nd, try keyserver (with retry)
+        mini_buildd.call.call_with_retry(self.gpg_cmd + ["--armor", "--keyserver", keyserver, "--recv-keys", identity], retry_max_tries=5, retry_sleep=5)
+        LOG.info("{id}: Imported from keyserver: {k}".format(id=identity, k=keyserver))
 
     def add_pub_key(self, key):
         with tempfile.TemporaryFile() as t:

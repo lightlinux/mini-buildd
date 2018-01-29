@@ -61,8 +61,8 @@ class GnuPGPublicKey(mini_buildd.models.base.StatusModel):
                 # Add key given explicitly
                 gpg.add_pub_key(self.key)
             elif self.key_id:
-                # Receive key from keyserver
-                gpg.recv_key(self.mbd_get_daemon().model.gnupg_keyserver, self.key_id)
+                # Import key
+                gpg.import_pub_key(self.mbd_get_daemon().model.gnupg_keyserver, self.key_id)
                 self.key = gpg.get_pub_key(self.key_id)
 
             self.key_long_id = ""
