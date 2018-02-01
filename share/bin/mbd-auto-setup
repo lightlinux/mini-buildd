@@ -28,35 +28,7 @@ fi
 
 MBDT="mini-buildd-tool --verbose ${HOST}"
 
-${MBDT} status
-${MBDT} stop
-
-# Daemon
-${MBDT} meta daemon.Daemon pca_all
-
-# Sources
-${MBDT} meta source.Archive add_from_sources_list
-${MBDT} meta source.Archive add_debian
-${MBDT} meta source.Source add_debian
-${MBDT} meta source.PrioritySource add_extras
-${MBDT} meta source.Source pca_all
-
-# Repositories
-${MBDT} meta repository.Layout create_defaults
-${MBDT} meta repository.Distribution add_base_sources
-${MBDT} meta repository.Repository add_sandbox
-${MBDT} meta repository.Repository add_debdev
-${MBDT} meta repository.Repository pca_all
-
-# Chroots
-${MBDT} meta chroot.DirChroot add_base_sources
-${MBDT} meta chroot.DirChroot pca_all
-
-# Show status
-${MBDT} status
-
-# Start the daemon engine
-${MBDT} start
+${MBDT} autosetup
 
 # Build keyring packages
 ${MBDT} meta repository.Repository build_keyring_packages

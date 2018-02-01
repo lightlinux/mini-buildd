@@ -278,6 +278,39 @@ class Meta(Command):
         daemon.meta(self.args["model"], self.args["function"], msglog=self.msglog)
 
 
+class AutoSetup(Command):
+    """Auto setup / bootstrap."""
+    COMMAND = "autosetup"
+    AUTH = Command.ADMIN
+    ARGUMENTS = []
+
+    def run(self, daemon):
+        daemon.stop()
+
+        # Daemon
+        daemon.meta("daemon.Daemon", "pca_all", msglog=self.msglog)
+
+        # Sources
+        daemon.meta("source.Archive", "add_from_sources_list", msglog=self.msglog)
+        daemon.meta("source.Archive", "add_debian", msglog=self.msglog)
+        daemon.meta("source.Source", "add_debian", msglog=self.msglog)
+        daemon.meta("source.PrioritySource", "add_extras", msglog=self.msglog)
+        daemon.meta("source.Source", "pca_all", msglog=self.msglog)
+
+        # Repositories
+        daemon.meta("repository.Layout", "create_defaults", msglog=self.msglog)
+        daemon.meta("repository.Distribution", "add_base_sources", msglog=self.msglog)
+        daemon.meta("repository.Repository", "add_sandbox", msglog=self.msglog)
+        daemon.meta("repository.Repository", "add_debdev", msglog=self.msglog)
+        daemon.meta("repository.Repository", "pca_all", msglog=self.msglog)
+
+        # Chroots
+        daemon.meta("chroot.DirChroot", "add_base_sources", msglog=self.msglog)
+        daemon.meta("chroot.DirChroot", "pca_all", msglog=self.msglog)
+
+        daemon.start()
+
+
 class GetKey(Command):
     """Get GnuPG public key."""
     COMMAND = "getkey"
@@ -689,6 +722,7 @@ COMMANDS = [(COMMAND_GROUP, "Daemon commands"),
             (Stop.COMMAND, Stop),
             (PrintUploaders.COMMAND, PrintUploaders),
             (Meta.COMMAND, Meta),
+            (AutoSetup.COMMAND, AutoSetup),
             (COMMAND_GROUP, "Configuration convenience commands"),
             (GetKey.COMMAND, GetKey),
             (GetDputConf.COMMAND, GetDputConf),
