@@ -282,7 +282,10 @@ class AutoSetup(Command):
     """Auto setup / bootstrap."""
     COMMAND = "autosetup"
     AUTH = Command.ADMIN
-    ARGUMENTS = []
+    ARGUMENTS = [
+        (["--vendors", "-V"], {"action": "store", "metavar": "VENDORS",
+                               "default": "debian",
+                               "help": "comma-separated list of vendors to auto-setup for. Possible values: 'debian', 'ubuntu'"})]
 
     def run(self, daemon):
         daemon.stop()
@@ -292,8 +295,9 @@ class AutoSetup(Command):
 
         # Sources
         daemon.meta("source.Archive", "add_from_sources_list", msglog=self.msglog)
-        daemon.meta("source.Archive", "add_debian", msglog=self.msglog)
-        daemon.meta("source.Source", "add_debian", msglog=self.msglog)
+        for v in self.args["vendors"].split(","):
+            daemon.meta("source.Archive", "add_{}".format(v), msglog=self.msglog)
+            daemon.meta("source.Source", "add_{}".format(v), msglog=self.msglog)
         daemon.meta("source.PrioritySource", "add_extras", msglog=self.msglog)
         daemon.meta("source.Source", "pca_all", msglog=self.msglog)
 
