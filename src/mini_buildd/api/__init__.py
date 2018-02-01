@@ -285,7 +285,11 @@ class AutoSetup(Command):
     ARGUMENTS = [
         (["--vendors", "-V"], {"action": "store", "metavar": "VENDORS",
                                "default": "debian",
-                               "help": "comma-separated list of vendors to auto-setup for. Possible values: 'debian', 'ubuntu'"})]
+                               "help": "comma-separated list of vendors to auto-setup for. Possible values: 'debian', 'ubuntu'"}),
+        (["--repositories", "-R"], {"action": "store", "metavar": "REPOS",
+                                    "default": "test",
+                                    "help": "comma-separated list of repositories to auto-setup for. Possible values: 'test', 'debdev'"})
+    ]
 
     def run(self, daemon):
         daemon.stop()
@@ -304,8 +308,8 @@ class AutoSetup(Command):
         # Repositories
         daemon.meta("repository.Layout", "create_defaults", msglog=self.msglog)
         daemon.meta("repository.Distribution", "add_base_sources", msglog=self.msglog)
-        daemon.meta("repository.Repository", "add_sandbox", msglog=self.msglog)
-        daemon.meta("repository.Repository", "add_debdev", msglog=self.msglog)
+        for r in self.args["repositories"].split(","):
+            daemon.meta("repository.Repository", "add_{}".format(r), msglog=self.msglog)
         daemon.meta("repository.Repository", "pca_all", msglog=self.msglog)
 
         # Chroots

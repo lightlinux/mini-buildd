@@ -714,16 +714,16 @@ Example:
                 s.mbd_build_test_packages(msglog.request)
 
         @classmethod
-        def mbd_meta_add_sandbox(cls, msglog):
+        def mbd_meta_add_test(cls, msglog):
             "Add sandbox repository 'test'."
-            sandbox_repo, created = Repository.mbd_get_or_create(
+            test_repo, created = Repository.mbd_get_or_create(
                 msglog,
                 identity="test",
                 allow_unauthenticated_uploads=True,
                 layout=Layout.objects.get(name__exact="Default"))
             if created:
                 for d in Distribution.objects.all():
-                    sandbox_repo.distributions.add(d)
+                    test_repo.distributions.add(d)
 
         @classmethod
         def mbd_meta_add_debdev(cls, msglog):
