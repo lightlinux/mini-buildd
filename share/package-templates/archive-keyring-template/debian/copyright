@@ -1,5 +1,5 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Maintainer: Stephan Sürken <absurd@debian.org>
+Upstream-Contact: Stephan Sürken <absurd@debian.org>
 Source: http://ftp.debian.org/debian/pool/main/m/mini-buildd/
 Comment:
  Inspired by the debian-edu keyring package. This sources from a general

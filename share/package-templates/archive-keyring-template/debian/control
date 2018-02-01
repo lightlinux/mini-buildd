@@ -2,11 +2,12 @@ Source: %ID%-archive-keyring
 Section: misc
 Priority: optional
 Maintainer: %MAINT%
-Standards-Version: 3.9.1
+Build-Depends: debhelper (>= 9)
+Standards-Version: 4.0.0
 
 Package: %ID%-archive-keyring
 Architecture: all
-Depends: gnupg, apt
+Depends: ${misc:Depends}
 Description: mini-buildd archive keys (and sources.lists) for %ID%
  Automatic archive keys and APT sources.list library for
  mini-buildd instance id %ID%.

@@ -2,18 +2,17 @@
 
 set -e
 
-APT_KEY="/usr/bin/apt-key"
-
-case "${1}" in
-	configure)
-		if [ -x "${APT_KEY}" ]; then
-			${APT_KEY} add /usr/share/keyrings/%ID%-archive-keyring.gpg
+# Remove keys from trusted.gpg -- now in trusted.gpg.d/
+# (Adapted code from postinst from debian-archive-keyring)
+if [ "$1" = 'configure' -a -n "$2" ]; then
+	if which gpg > /dev/null && which apt-key > /dev/null; then
+		TRUSTEDFILE='/etc/apt/trusted.gpg'
+		eval $(apt-config shell TRUSTEDFILE Apt::GPGV::TrustedKeyring)
+		eval $(apt-config shell TRUSTEDFILE Dir::Etc::Trusted/f)
+		if [ -e "$TRUSTEDFILE" ]; then
+			apt-key --keyring "$TRUSTEDFILE" del %KEY_ID% > /dev/null 2>&1 || :
 		fi
-		;;
-	abort-upgrade|abort-remove|abort-deconfigure)
-		;;
-	*)
-		echo "postinst: Unknown argument \`${1}'" >&2
-		exit 1
-		;;
-esac
+	fi
+fi
+
+#DEBHELPER#

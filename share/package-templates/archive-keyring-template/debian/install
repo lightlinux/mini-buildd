@@ -1,0 +1,3 @@
+%ID%-archive-keyring.gpg usr/share/keyrings/
+%ID%-archive-keyring.gpg etc/apt/trusted.gpg.d/
+*.list usr/share/mini-buildd/sources.list.d/
