@@ -4,6 +4,7 @@ import os
 import re
 import tempfile
 import shutil
+import glob
 import logging
 
 import mini_buildd.misc
@@ -124,10 +125,7 @@ class BaseGnuPG(object):
 
     def import_pub_key(self, keyserver, identity):
         # 1st, try keyrings on local system
-        for keyring in ["/usr/share/keyrings/debian-archive-keyring.gpg",
-                        "/usr/share/keyrings/debian-archive-removed-keys.gpg",
-                        "/usr/share/keyrings/ubuntu-archive-keyring.gpg",
-                        "/usr/share/keyrings/ubuntu-archive-removed-keys.gpg"]:
+        for keyring in glob.glob("/usr/share/keyrings/*.gpg"):
             try:
                 # Note that gpg --export succeeds even if nothing can be exported, --import however fails on empty input
                 key = mini_buildd.call.Call(self.gpg_cmd + ["--armor", "--keyring", keyring, "--export", identity]).log().check().stdout
