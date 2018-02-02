@@ -283,12 +283,15 @@ class AutoSetup(Command):
     COMMAND = "autosetup"
     AUTH = Command.ADMIN
     ARGUMENTS = [
-        (["--vendors", "-V"], {"action": "store", "metavar": "VENDORS",
+        (["--vendors", "-V"], {"action": "store",
                                "default": "debian",
                                "help": "comma-separated list of vendors to auto-setup for. Possible values: 'debian', 'ubuntu'"}),
-        (["--repositories", "-R"], {"action": "store", "metavar": "REPOS",
+        (["--repositories", "-R"], {"action": "store",
                                     "default": "test",
-                                    "help": "comma-separated list of repositories to auto-setup for. Possible values: 'test', 'debdev'"})
+                                    "help": "comma-separated list of repositories to auto-setup for. Possible values: 'test', 'debdev'"}),
+        (["--chroot-backend", "-C"], {"action": "store",
+                                      "default": "Dir",
+                                      "help": "chroot backend to use, or empty string to not create chroots. Possible values: 'Dir', 'File', 'LVM', 'LoopLVM', 'BtrfsSnapshot'"})
     ]
 
     def run(self, daemon):
@@ -313,8 +316,10 @@ class AutoSetup(Command):
         daemon.meta("repository.Repository", "pca_all", msglog=self.msglog)
 
         # Chroots
-        daemon.meta("chroot.DirChroot", "add_base_sources", msglog=self.msglog)
-        daemon.meta("chroot.DirChroot", "pca_all", msglog=self.msglog)
+        if self.args["chroot_backend"]:
+            cb_class = "chroot.{}Chroot".format(self.args["chroot_backend"])
+            daemon.meta(cb_class, "add_base_sources", msglog=self.msglog)
+            daemon.meta(cb_class, "pca_all", msglog=self.msglog)
 
         daemon.start()
 
