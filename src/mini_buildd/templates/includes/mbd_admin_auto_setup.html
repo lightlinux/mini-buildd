@@ -1,0 +1,22 @@
+<form action="/mini_buildd/api" method="get">
+	<div>
+		<input type="hidden" name="command" value="autosetup" />
+		<input type="submit" class="mbd-wizard" title="Auto Setup" value="Auto Setup" />
+		<select name="vendors" title="Vendors" size="2" id="vendors" multiple="multiple" style="height: initial; min-height: initial;">
+			<option value="debian" selected="selected">Debian</option>
+			<option value="ubuntu">Ubuntu</option>
+		</select>
+		<select name="repositories" title="Repositories" size="2" id="repositories" multiple="multiple" style="height: initial; min-height: initial;">
+			<option value="test" selected="selected">Sandbox repo "test"</option>
+			<option value="debdev">Developer repo "debdev"</option>
+		</select>
+		<select name="chroot_backend" title="Chroot Backend" id="chroot_backend">
+			<option value="Dir" selected="selected">Dir</option>
+			<option value="File">File</option>
+			<option value="LVM">LVM</option>
+			<option value="LoopLVM">LoopLVM</option>
+			<option value="BtrfsSnapshot">BtrfsSnapshot</option>
+			<option value="">None</option>
+		</select>
+	</div>
+</form>

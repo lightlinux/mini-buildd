@@ -22,6 +22,11 @@
 
 {% block content %}
 	<div id="mbd_index_status">
+
+		{% if not daemon.is_running %}
+			{% mbd_admin_auto_setup %}
+		{% endif %}
+
 		<div id="mbd_index_repositories">
 			<div class="box">
 				<h1 class="box-caption">

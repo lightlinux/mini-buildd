@@ -26,6 +26,9 @@
 	</div>
 
 	<div id="content-main">
+
+		{% mbd_admin_auto_setup %}
+
 		{% if app_list %}
 			{% for app in app_list %}
 				{% if app.name == "Mini_Buildd" %}

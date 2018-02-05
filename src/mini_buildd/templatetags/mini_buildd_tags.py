@@ -101,6 +101,11 @@ def mbd_admin_index_table_row(app,  # pylint: disable=too-many-arguments
             "wiz2_title": wiz2_title}
 
 
+@register.inclusion_tag("includes/mbd_admin_auto_setup.html")
+def mbd_admin_auto_setup():
+    return {}
+
+
 def _mbd_e2n(func, *args, **kwargs):
     try:
         return func(*args, **kwargs)
