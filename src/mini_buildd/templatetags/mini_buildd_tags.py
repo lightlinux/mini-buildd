@@ -106,6 +106,11 @@ def mbd_admin_auto_setup():
     return {}
 
 
+@register.inclusion_tag("includes/mbd_api_call.html")
+def mbd_api_call(api_cmd):
+    return {"api_cmd": api_cmd}
+
+
 def _mbd_e2n(func, *args, **kwargs):
     try:
         return func(*args, **kwargs)
