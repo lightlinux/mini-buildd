@@ -1,19 +1,27 @@
 {% load mini_buildd_tags %}
 
-<b>{{ api_cmd.COMMAND }}</b> API call (<a id="mbd-current-api-command_header" href="javascript:mbdToggleElement('mbd-current-api-command','mbd-current-api-command_header','hide parameter','show parameter')">show parameter</a>)
-<div id="mbd-current-api-command">
-	<form action="/mini_buildd/api" method="get">
-		<div>
-			<input type="hidden" name="command" value="{{ api_cmd.COMMAND }}" />
-			{% for k, v in api_cmd.args.items %}
-			<p>
-				{% with help=api_cmd.args_help|mbd_dict_get:k %}
-				<kbd>{{ k }}</kbd>=<input type="text" size="{{ v | length}}" name="{{ k }}" value="{{ v }}" />
-				<kbd><small>{{ help }}</small></kbd>
-				{% endwith %}
-			</p>
-			{% endfor %}
-			<input type="submit" value="Refine" title="Refined API call" style="width: 4em" />
-		</div>
-	</form>
-</div>
+<form action="/mini_buildd/api" method="get">
+	<input type="hidden" name="command" value="{{ api_cmd.COMMAND }}" />
+	<input type="submit" value="{{ api_cmd.COMMAND }}" title="Run API command {{ api_cmd.COMMAND }}" style="" />
+
+	(<a id="mbd-api-call-{{ api_cmd.COMMAND }}_header"
+			href="#"
+			onclick="javascript:mbdToggleElement('mbd-api-call-{{ api_cmd.COMMAND }}-parameter','mbd-api-call-{{ api_cmd.COMMAND }}_header','hide parameter','show parameter')">show parameter</a>)
+
+	<div id="mbd-api-call-{{ api_cmd.COMMAND }}-parameter" style="display: none;">
+		<select name="output" title="Output type">
+			<option value="html" selected="selected">html</option>
+			<option value="plain">plain</option>
+			<option value="python">python</option>
+		</select>
+
+		{% for k, v in api_cmd.args.items %}
+		<p>
+			{% with help=api_cmd.args_help|mbd_dict_get:k %}
+			<kbd>{{ k }}</kbd>=<input type="text" size="{{ v | length}}" name="{{ k }}" value="{{ v }}" />
+			<kbd><small>{{ help }}</small></kbd>
+			{% endwith %}
+		</p>
+		{% endfor %}
+	</div>
+</form>
