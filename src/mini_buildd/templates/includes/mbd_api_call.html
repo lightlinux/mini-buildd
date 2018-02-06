@@ -5,11 +5,11 @@
 	<input type="hidden" name="command" value="{{ api_cmd.COMMAND }}" />
 	<input type="submit" value="{{ api_cmd.COMMAND }}" title="Run API command {{ api_cmd.COMMAND }}" style="" />
 
-	(<a id="mbd-api-call-{{ api_cmd.COMMAND }}_header"
+	(<a id="{{ tag_id }}-header"
 			href="#"
-			onclick="javascript:mbdToggleElement('mbd-api-call-{{ api_cmd.COMMAND }}-parameter','mbd-api-call-{{ api_cmd.COMMAND }}_header','hide parameter','show parameter')">show parameter</a>)
+			onclick="javascript:mbdToggleElement('{{ tag_id }}-parameter','{{ tag_id }}-header','hide parameter','show parameter')">show parameter</a>)
 
-	<div id="mbd-api-call-{{ api_cmd.COMMAND }}-parameter" style="display: none;">
+	<div id="{{ tag_id }}-parameter" style="display: none;">
 		<select name="output" title="Output type">
 			<option value="html" selected="selected">html</option>
 			<option value="plain">plain</option>

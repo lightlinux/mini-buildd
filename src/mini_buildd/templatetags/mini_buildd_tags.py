@@ -2,10 +2,13 @@
 
 import os
 import logging
+import string
+import random
 
 import django
 import django.utils.safestring
 import mini_buildd
+import mini_buildd.api
 
 
 LOG = logging.getLogger(__name__)
@@ -108,8 +111,8 @@ def mbd_admin_auto_setup():
 
 @register.inclusion_tag("includes/mbd_api_call.html")
 def mbd_api_call(cmd):
-    from mini_buildd.api import COMMANDS_DEFAULTS_DICT
-    return {"api_cmd": COMMANDS_DEFAULTS_DICT.get(cmd, None)}
+    return {"api_cmd": mini_buildd.api.COMMANDS_DEFAULTS_DICT.get(cmd, None),
+            "tag_id": "mbd-api-call-{}".format("".join(random.choices(string.ascii_lowercase + string.digits, k=16)))}
 
 
 def _mbd_e2n(func, *args, **kwargs):
