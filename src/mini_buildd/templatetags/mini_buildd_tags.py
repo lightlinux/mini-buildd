@@ -107,8 +107,9 @@ def mbd_admin_auto_setup():
 
 
 @register.inclusion_tag("includes/mbd_api_call.html")
-def mbd_api_call(api_cmd):
-    return {"api_cmd": api_cmd}
+def mbd_api_call(cmd):
+    from mini_buildd.api import COMMANDS_DEFAULTS_DICT
+    return {"api_cmd": COMMANDS_DEFAULTS_DICT.get(cmd, None)}
 
 
 def _mbd_e2n(func, *args, **kwargs):

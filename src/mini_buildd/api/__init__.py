@@ -753,7 +753,6 @@ COMMANDS = [(COMMAND_GROUP, "Daemon commands"),
             (SetUserKey.COMMAND, SetUserKey),
             (Subscription.COMMAND, Subscription),
            ]
-
 COMMANDS_DICT = dict(COMMANDS)
-
 COMMANDS_DEFAULTS = [(cmd, cls(cls.get_default_args()) if cmd != COMMAND_GROUP else cls) for cmd, cls in COMMANDS]
+COMMANDS_DEFAULTS_DICT = dict(COMMANDS_DEFAULTS)
