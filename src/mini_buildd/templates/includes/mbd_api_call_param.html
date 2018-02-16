@@ -1,0 +1,7 @@
+{% load i18n %}
+{% load mini_buildd_tags %}
+
+{% with v=api_cmd.args|mbd_dict_get:param help=api_cmd.args_help|mbd_dict_get:param %}
+<input type="text" size="{{ v | length}}" name="{{ param }}" title="{{ param }}: {{ help }}" />
+<!-- <kbd><small>{{ help }}</small></kbd> -->
+{% endwith %}

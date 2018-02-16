@@ -1,28 +1,45 @@
 {% load i18n %}
+{% load staticfiles %}
 {% load mini_buildd_tags %}
 
 <form action="/mini_buildd/api" method="get">
 	<input type="hidden" name="command" value="{{ api_cmd.COMMAND }}" />
-	<input type="submit" value="{{ api_cmd.COMMAND }}" title="Run API command {{ api_cmd.COMMAND }}" style="" />
 
-	(<a id="{{ tag_id }}-header"
-			href="#"
-			onclick="javascript:mbdToggleElement('{{ tag_id }}-parameter','{{ tag_id }}-header','hide parameter','show parameter')">show parameter</a>)
+	<!-- Parameters with a predefined fixed value -->
+	{% for param, value in fix_params.items %}
+		<input type="hidden" name="{{ param }}" value="{{ value }}" />
+	{% endfor %}
 
-	<div id="{{ tag_id }}-parameter" style="display: none;">
-		<select name="output" title="Output type">
-			<option value="html" selected="selected">html</option>
-			<option value="plain">plain</option>
-			<option value="python">python</option>
-		</select>
+	<!-- Parameters that are always shown to the user -->
+	{% for param in api_cmd.args_mandatory %}
+		{% if param not in fix_params %}
+			{% include "includes/mbd_api_call_param.html" %}
+		{% endif %}
+	{% endfor %}
 
-		{% for k, v in api_cmd.args.items %}
-		<p>
-			{% with help=api_cmd.args_help|mbd_dict_get:k %}
-			<kbd>{{ k }}</kbd>=<input type="text" size="{{ v | length}}" name="{{ k }}" value="{{ v }}" />
-			<kbd><small>{{ help }}</small></kbd>
-			{% endwith %}
-		</p>
-		{% endfor %}
-	</div>
+	<input type="submit" value="{{ name|default_if_none:api_cmd.COMMAND }}" title="{{ title|default_if_none:api_cmd.docstring }}" />
+
+	{% if extra_params %}
+		<!-- Hide or show parameters -->
+		<a id="{{ tag_id }}-header"
+			 href="#"
+			 onclick="javascript:mbdToggleElement('{{ tag_id }}-parameter','{{ tag_id }}-header',
+			 '<img src={% static "img/mbd_params_hide.png" %} title=hide_params />',
+			 '<img src={% static "img/mbd_params_show.png" %} title=show_params />')"><img src={% static "img/mbd_params_show.png" title=show_params %} /></a>
+
+		<div id="{{ tag_id }}-parameter" style="display: none;">
+			<select name="output" title="Output type">
+				<option value="html" selected="selected">html</option>
+				<option value="plain">plain</option>
+				<option value="python">python</option>
+			</select>
+
+			<!-- Optional parameters, presented on demand only -->
+			{% for param in api_cmd.args.keys %}
+				{% if param not in api_cmd.args_mandatory and param not in fix_params %}
+					<p>{% include "includes/mbd_api_call_param.html" %}</p>
+				{% endif %}
+			{% endfor %}
+		</div>
+	{% endif %}
 </form>

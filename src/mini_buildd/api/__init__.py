@@ -54,7 +54,7 @@ different components), or just as safeguard
                                                 "help": "upload options (see user manual); separate multiple options by '|'"})
 
     @classmethod
-    def _filter_api_args(cls, args, args_help, set_if_missing=False):
+    def _filter_api_args(cls, args, args_help, args_mandatory, set_if_missing=False):
         def _get(key):
             try:
                 # django request.GET args
@@ -78,6 +78,8 @@ different components), or just as safeguard
 
             # Helper to access help via django templates
             args_help[arg] = kvsargs.get("help")
+            if "default" not in kvsargs:
+                args_mandatory.append(arg)
 
             # Check required
             if sargs[0][:2] != "--" or ("required" in kvsargs and kvsargs["required"]):
@@ -88,12 +90,14 @@ different components), or just as safeguard
 
     @classmethod
     def get_default_args(cls):
-        dummy = {}
-        return cls._filter_api_args({}, dummy, set_if_missing=True)
+        dummy0 = {}
+        dummy1 = []
+        return cls._filter_api_args({}, dummy0, dummy1, set_if_missing=True)
 
     def __init__(self, args, request=None, msglog=LOG):
-        self.args_help = {}
-        self.args = self._filter_api_args(args, self.args_help)
+        self.args_help = {}  # Helper for templates only
+        self.args_mandatory = []  # Helper for templates only
+        self.args = self._filter_api_args(args, self.args_help, self.args_mandatory)
         self.request = request
         self.msglog = msglog
         self._plain_result = ""

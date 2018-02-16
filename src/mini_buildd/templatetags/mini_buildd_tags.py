@@ -110,9 +110,13 @@ def mbd_admin_auto_setup():
 
 
 @register.inclusion_tag("includes/mbd_api_call.html")
-def mbd_api_call(cmd):
+def mbd_api_call(cmd, fix_params="", name=None, title=None, extra_params=True):
     return {"api_cmd": mini_buildd.api.COMMANDS_DEFAULTS_DICT.get(cmd, None),
-            "tag_id": "mbd-api-call-{}".format("".join(random.choices(string.ascii_lowercase + string.digits, k=16)))}
+            "tag_id": "mbd-api-call-{}".format("".join(random.choices(string.ascii_lowercase + string.digits, k=16))),
+            "fix_params": dict(param.split("=") for param in fix_params.split(",")) if fix_params else {},
+            "name": name,
+            "title": title,
+            "extra_params": extra_params}
 
 
 def _mbd_e2n(func, *args, **kwargs):
