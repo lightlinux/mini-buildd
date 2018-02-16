@@ -17,7 +17,10 @@
 		{% endif %}
 	{% endfor %}
 
-	<input type="submit" value="{{ name|default_if_none:api_cmd.COMMAND }}" title="{{ title|default_if_none:api_cmd.docstring }}" />
+	<input type="submit"
+				 value="{{ name|default_if_none:api_cmd.COMMAND }}"
+				 title="{% if auth_err %}{{ auth_err }}{% else %}{{ title|default_if_none:api_cmd.docstring }}{% endif %}"
+				 {% if auth_err %}disabled{% endif %} />
 
 	{% if extra_params %}
 		<!-- Hide or show parameters -->
