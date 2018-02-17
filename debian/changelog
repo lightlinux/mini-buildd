@@ -1,3 +1,52 @@
+mini-buildd (1.1.9) experimental; urgency=medium
+
+  ** 1.1.x are _development_ releases, use for testing only. **
+
+  This and that release: Updates the keyring package, promotes auto-setup
+  to an API call (Closes: #886126), improves GPG key importing and starts
+  an effort to generalize API call HTML code:
+
+  * [bac4106] [devel]: test suite: Always use dput --force (make local
+    package test work even if there's a changes around).
+  * [d28ee9d] api/__init__.py: Put http MAXHEADERS patch here (fixes mini-
+    buildd-tool, too), and pimp to 5000.
+  * [0be59f3] pylint-1.8.1: Make check work again.
+  * [246b478] [devel]: Add shortcut to view log.
+  * [4d33c89] [devel] Rewrite (test) sequencer code.
+  * [0e9a811] call.py: Fix: call_with_retry() would not raise exception on
+    error.
+  * [a5493bd] gnupg: Make public key importer more reliable.
+  * [6866e81] [devel] Add remove-only (non-purge) sequent.
+  * [c39f33b] test packages: Downgrade all to debhelper 9 + dh_autoreconf
+    (for compatibility down to squeeze).
+  * [347b3a2] keyring package template: Convert to debhelper (9); convert
+    to using trusted.gpg.d/ fragments. Thanks to Marc Haber (Closes:
+    790856)
+  * [4b2164c] gnupg.py: import_pub_key(): Try all files
+    /u/s/keyrings/*.gpg.
+  * [3398b00] New API command 'autosetup' (this makes the essential code
+    of the mbd-auto-setup script internal).
+  * [d430493] API autosetup: Add arg: --vendors.
+  * [662bb7b] API autosetup: Add arg: --repositories.
+  * [7eccd80] API autosetup: Add arg: --chroot-backend.
+  * [79c7aeb] Add auto setup to web app (initial support).
+  * [2c3bb5d] [html] Add templatetag for api_call (currently only
+    replacing flat impl in base).
+  * [377dd5f] includes/mbd_api_call.html: Simplify, form only, add output
+    type.
+  * [c01a981] [html] ttag 'mbd_api_call': Use command name (not obj) as
+    arg.
+  * [ef823c7] [html] ttag api_call: Use uniq random element ids.
+  * [8b55570] [html] ttag api_call: Get mandatory args from api && make
+    tag more versatile.
+  * [17ed07b] api/__init__.py: Add generic auth function.
+  * [fc8e192] [html] ttag api_call: "auth indicator" support.
+  * [1c3b9d7] mini_buildd/base.html: Use mbd_api_call for top level
+    show/list.
+  * [0086373] [html] Some smaller fixes for tidy test failure.
+
+ -- Stephan Sürken <absurd@debian.org>  Sat, 17 Feb 2018 11:29:20 +0100
+
 mini-buildd (1.1.8) experimental; urgency=medium
 
   ** 1.1.x are _development_ releases, use for testing only. **
