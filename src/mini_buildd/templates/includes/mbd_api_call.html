@@ -6,15 +6,13 @@
 	<input type="hidden" name="command" value="{{ api_cmd.COMMAND }}" />
 
 	<!-- Parameters with a predefined fixed value -->
-	{% for param, value in fix_params.items %}
-		<input type="hidden" name="{{ param }}" value="{{ value }}" />
+	{% for param in hidden_params %}
+		{% include "includes/mbd_api_call_param.html" with type="hidden" %}
 	{% endfor %}
 
 	<!-- Parameters that are always shown to the user -->
-	{% for param in api_cmd.args_mandatory %}
-		{% if param not in fix_params %}
-			{% include "includes/mbd_api_call_param.html" %}
-		{% endif %}
+	{% for param in show_params %}
+		{% include "includes/mbd_api_call_param.html" %}
 	{% endfor %}
 
 	<input type="submit"
@@ -23,7 +21,7 @@
 				 {% if auth_err %}disabled{% endif %} />
 
 	{% if extra_params %}
-		<!-- Hide or show parameters -->
+		<!-- Extra parameters, swap show/hide -->
 		<a id="{{ tag_id }}-header"
 			 href="#"
 			 onclick="javascript:mbdToggleElement('{{ tag_id }}-parameter','{{ tag_id }}-header',
@@ -38,10 +36,8 @@
 			</select>
 
 			<!-- Optional parameters, presented on demand only -->
-			{% for param in api_cmd.args.keys %}
-				{% if param not in api_cmd.args_mandatory and param not in fix_params %}
-					<p>{% include "includes/mbd_api_call_param.html" %}</p>
-				{% endif %}
+			{% for param in extra_params %}
+				<p>{% include "includes/mbd_api_call_param.html" %}</p>
 			{% endfor %}
 		</div>
 	{% endif %}

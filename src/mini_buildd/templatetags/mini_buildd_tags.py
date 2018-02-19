@@ -110,17 +110,26 @@ def mbd_admin_auto_setup():
 
 
 @register.inclusion_tag("includes/mbd_api_call.html")
-def mbd_api_call(cmd, user, fix_params="", name=None, title=None, extra_params=True):
+def mbd_api_call(cmd, user, hidden=None, show_extra=True, name=None, title=None, **kwargs):
+    def _kwargs(prefix):
+        return {k[len(prefix):]: v for k, v in kwargs.items() if k.startswith(prefix)}
+
     api_cls = mini_buildd.api.COMMANDS_DICT.get(cmd, None)
     auth_err = api_cls.auth_err(user)
-    api_cmd = api_cls(api_cls.get_default_args())
+    values = _kwargs("value_")
+    api_cmd = api_cls({**api_cls.get_default_args(), **values})
+
+    hidden_params = values.keys() if hidden is None else hidden.split(",")
+    show_params = [m for m in api_cmd.args_mandatory if m not in hidden_params]
+    extra_params = [key for key in api_cmd.args.keys() if key not in show_params] if show_extra else []
 
     return {"api_cmd": api_cmd,
             "tag_id": "mbd-api-call-{}".format("".join(random.choices(string.ascii_lowercase + string.digits, k=16))),
-            "fix_params": dict(param.split("=") for param in fix_params.split(",")) if fix_params else {},
+            "hidden_params": hidden_params,
+            "show_params": show_params,
+            "extra_params": extra_params,
             "name": name,
             "title": title,
-            "extra_params": extra_params,
             "auth_err": auth_err}
 
 
