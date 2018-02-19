@@ -112,7 +112,7 @@ def mbd_admin_auto_setup():
 @register.inclusion_tag("includes/mbd_api_call.html")
 def mbd_api_call(cmd, user, fix_params="", name=None, title=None, extra_params=True):
     api_cmd = mini_buildd.api.COMMANDS_DEFAULTS_DICT.get(cmd, None)
-    auth_err = mini_buildd.api.auth_err(user, api_cmd)
+    auth_err = api_cmd.auth_err(user)
 
     return {"api_cmd": api_cmd,
             "tag_id": "mbd-api-call-{}".format("".join(random.choices(string.ascii_lowercase + string.digits, k=16))),

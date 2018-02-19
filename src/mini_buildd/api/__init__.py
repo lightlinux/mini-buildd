@@ -127,6 +127,25 @@ different components), or just as safeguard
         value = self.args.get(key)
         return value if value else None
 
+    @classmethod
+    def auth_err(cls, user):
+        """Check if django user is authorized to call command. Empty string
+        means user is authorized.
+        """
+        def chk_login():
+            return user.is_authenticated and user.is_active
+
+        if (cls.AUTH == cls.LOGIN) and not chk_login():
+            return "API: '{c}': Needs user login".format(c=cls.COMMAND)
+
+        if (cls.AUTH == cls.STAFF) and not (chk_login() and user.is_staff):
+            return "API: '{c}': Needs staff user login".format(c=cls.COMMAND)
+
+        if (cls.AUTH == cls.ADMIN) and not (chk_login() and user.is_superuser):
+            return "API: '{c}': Needs superuser login".format(c=cls.COMMAND)
+
+        return ""
+
 
 class Status(Command):
     """Show the status of the mini-buildd instance."""
@@ -760,22 +779,3 @@ COMMANDS = [(COMMAND_GROUP, "Daemon commands"),
 COMMANDS_DICT = dict(COMMANDS)
 COMMANDS_DEFAULTS = [(cmd, cls(cls.get_default_args()) if cmd != COMMAND_GROUP else cls) for cmd, cls in COMMANDS]
 COMMANDS_DEFAULTS_DICT = dict(COMMANDS_DEFAULTS)
-
-
-def auth_err(user, command):
-    """Check if django user is authorized to call command. Empty string
-    means user is authorized.
-    """
-    def chk_login():
-        return user.is_authenticated and user.is_active
-
-    if (command.AUTH == command.LOGIN) and not chk_login():
-        return "API: '{c}': Needs user login".format(c=command.COMMAND)
-
-    if (command.AUTH == command.STAFF) and not (chk_login() and user.is_staff):
-        return "API: '{c}': Needs staff user login".format(c=command.COMMAND)
-
-    if (command.AUTH == command.ADMIN) and not (chk_login() and user.is_superuser):
-        return "API: '{c}': Needs superuser login".format(c=command.COMMAND)
-
-    return ""

@@ -172,7 +172,7 @@ def api(request):
         api_cls = mini_buildd.api.COMMANDS_DICT[command]
 
         # Authentication
-        auth_err = mini_buildd.api.auth_err(request.user, api_cls)
+        auth_err = api_cls.auth_err(request.user)
         if auth_err:
             return error401_unauthorized(request, auth_err)
 
