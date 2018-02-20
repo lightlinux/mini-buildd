@@ -515,7 +515,8 @@ a.hover-underline:hover
 	font-weight: bold;
 }
 
-#mbd-content a.button:link, #mbd-content a.button:visited
+/* API BUTTONS */
+#mbd-content input.button
 {
 	border-color: #dddddd #aaaaaa #aaaaaa #dddddd;
 	border-style: solid;
@@ -529,12 +530,12 @@ a.hover-underline:hover
 	background-color: #e7e7e7;
 }
 
-#mbd-content a.button:hover
+#mbd-content input.button:hover
 {
 	background-color: #f7f7f7;
 }
 
-#mbd-content a.button-remove:link, #mbd-content a.button-remove:visited
+#mbd-content input.button-remove
 {
 	background: url("../img/mbd_remove.png") no-repeat scroll 3px 50% #e7e7e7;
 	border-color: #dddddd #aaaaaa #aaaaaa #dddddd;
@@ -548,13 +549,13 @@ a.hover-underline:hover
 	color: #222222;
 }
 
-#mbd-content a.button-remove:hover
+#mbd-content input.button-remove:hover
 {
 	color: white;
 	background-color: #ff6060;
 }
 
-#mbd-content a.button-migrate:link, #mbd-content a.button-migrate:visited
+#mbd-content input.button-migrate
 {
 	background: url("../img/mbd_migrate.png") no-repeat scroll 3px 50% #e7e7e7;
 	border-color: #dddddd #aaaaaa #aaaaaa #dddddd;
@@ -569,12 +570,12 @@ a.hover-underline:hover
 	background-color: #e7e7e7;
 }
 
-#mbd-content a.button-migrate:hover
+#mbd-content input.button-migrate:hover
 {
 	background-color: #f7f7f7;
 }
 
-#mbd-content a.button-migrate-rollback:link, #mbd-content a.button-migrate-rollback:visited
+#mbd-content input.button-migrate-rollback
 {
 	background: url("../img/mbd_migrate_rollback.png") no-repeat scroll 3px 50% #e7e7e7;
 	border-color: #dddddd #aaaaaa #aaaaaa #dddddd;
@@ -589,12 +590,12 @@ a.hover-underline:hover
 	background-color: #e7e7e7;
 }
 
-#mbd-content a.button-migrate-rollback:hover
+#mbd-content input.button-migrate-rollback:hover
 {
 	background-color: #f7f7f7;
 }
 
-#mbd-content a.button-rebuild:link, #mbd-content a.button-rebuild:visited
+#mbd-content input.button-rebuild
 {
 	background: url("../img/mbd_rebuild.png") no-repeat scroll 3px 50% #e7e7e7;
 	border-color: #dddddd #aaaaaa #aaaaaa #dddddd;
@@ -609,9 +610,14 @@ a.hover-underline:hover
 	background-color: #e7e7e7;
 }
 
-#mbd-content a.button-rebuild:hover
+#mbd-content input.button-rebuild:hover
 {
 	background-color: #f7f7f7;
+}
+
+#mbd-content input:disabled, #mbd-content input.button-migrate:disabled, #mbd-content input.button-remove:disabled
+{
+	color: #bcbcbc;
 }
 
 #mbd-content span.emphasize-headline

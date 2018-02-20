@@ -16,6 +16,7 @@
 	{% endfor %}
 
 	<input type="submit"
+				 class="{{ style }}"
 				 value="{{ name|default_if_none:api_cmd.COMMAND }}"
 				 title="{% if auth_err %}{{ auth_err }}{% else %}{{ title|default_if_none:api_cmd.docstring }}{% endif %}"
 				 {% if auth_err %}disabled{% endif %} />

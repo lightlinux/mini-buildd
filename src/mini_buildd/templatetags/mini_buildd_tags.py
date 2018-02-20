@@ -110,7 +110,7 @@ def mbd_admin_auto_setup():
 
 
 @register.inclusion_tag("includes/mbd_api_call.html")
-def mbd_api_call(cmd, user, hidden=None, show_extra=True, name=None, title=None, **kwargs):
+def mbd_api_call(cmd, user, hidden=None, show_extra=True, name=None, title=None, style="button", **kwargs):
     def _kwargs(prefix):
         return {k[len(prefix):]: v for k, v in kwargs.items() if k.startswith(prefix)}
 
@@ -130,6 +130,7 @@ def mbd_api_call(cmd, user, hidden=None, show_extra=True, name=None, title=None,
             "extra_params": extra_params,
             "name": name,
             "title": title,
+            "style": style,
             "auth_err": auth_err}
 
 
