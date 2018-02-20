@@ -93,13 +93,15 @@ different components), or just as safeguard
         self.msglog = msglog
         self._plain_result = ""
 
-        self.html_hints = {"args_help": {}, "args_mandatory": {}}
+        self.html_hints = {"args": {},           # Copy of static arg description for each arg
+                           "args_mandatory": {}  # List of mandatory options
+        }
 
     def update_html_hints(self):
         for sargs, kvsargs in self.ARGUMENTS:
             # Helper to access help via django templates
             arg = sargs[0].replace("--", "", 1).replace("-", "_")
-            self.html_hints["args_help"][arg] = kvsargs.get("help")
+            self.html_hints["args"][arg] = kvsargs
             if "default" not in kvsargs:
                 self.html_hints["args_mandatory"][arg] = kvsargs.get("help")
 
