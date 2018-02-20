@@ -54,7 +54,7 @@ different components), or just as safeguard
                                                 "help": "upload options (see user manual); separate multiple options by '|'"})
 
     @classmethod
-    def _filter_api_args(cls, args, args_help, args_mandatory, set_if_missing=False):
+    def _filter_api_args(cls, args, set_if_missing=False):
         def _get(key):
             try:
                 # django request.GET args
@@ -76,11 +76,6 @@ different components), or just as safeguard
             elif set_if_missing:
                 result[arg] = arg.upper()
 
-            # Helper to access help via django templates
-            args_help[arg] = kvsargs.get("help")
-            if "default" not in kvsargs:
-                args_mandatory.append(arg)
-
             # Check required
             if sargs[0][:2] != "--" or ("required" in kvsargs and kvsargs["required"]):
                 if arg not in result or not result[arg]:
@@ -90,17 +85,23 @@ different components), or just as safeguard
 
     @classmethod
     def get_default_args(cls):
-        dummy0 = {}
-        dummy1 = []
-        return cls._filter_api_args({}, dummy0, dummy1, set_if_missing=True)
+        return cls._filter_api_args({}, set_if_missing=True)
 
     def __init__(self, args, request=None, msglog=LOG):
-        self.args_help = {}  # Helper for templates only
-        self.args_mandatory = []  # Helper for templates only
-        self.args = self._filter_api_args(args, self.args_help, self.args_mandatory)
+        self.args = self._filter_api_args(args)
         self.request = request
         self.msglog = msglog
         self._plain_result = ""
+
+        self.html_hints = {"args_help": {}, "args_mandatory": {}}
+
+    def update_html_hints(self):
+        for sargs, kvsargs in self.ARGUMENTS:
+            # Helper to access help via django templates
+            arg = sargs[0].replace("--", "", 1).replace("-", "_")
+            self.html_hints["args_help"][arg] = kvsargs.get("help")
+            if "default" not in kvsargs:
+                self.html_hints["args_mandatory"][arg] = kvsargs.get("help")
 
     def __getstate__(self):
         "Log object cannot be pickled."

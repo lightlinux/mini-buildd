@@ -1,9 +1,9 @@
 {% load i18n %}
 {% load mini_buildd_tags %}
 
-{% with v=api_cmd.args|mbd_dict_get:param help=api_cmd.args_help|mbd_dict_get:param %}
-<input type="{{ type|default:"text" }}" size="{{ v | length}}" value="{{ v }}" name="{{ param }}" title="{{ param }}: {{ help }}" />
-{% comment %}
-<!-- <kbd><small>{{ help }}</small></kbd> -->
-{% endcomment %}
+{% with value=api_cmd.args|mbd_dict_get:param help=api_cmd.html_hints.args_help|mbd_dict_get:param %}
+	<input type="{{ type|default:"text" }}" size="{{ value | length}}" value="{{ value }}" name="{{ param }}" title="{{ param }}: {{ help }}" />
+	{% comment %}
+		<!-- <kbd><small>{{ help }}</small></kbd> -->
+	{% endcomment %}
 {% endwith %}
