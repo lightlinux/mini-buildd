@@ -1,9 +1,39 @@
 {% load i18n %}
 {% load mini_buildd_tags %}
 
-{% with value=api_cmd.args|mbd_dict_get:param help=api_cmd.html_hints.args|mbd_dict_get:param|mbd_dict_get:"help" %}
-	<input type="{{ type|default:"text" }}" size="{{ value | length}}" value="{{ value }}" name="{{ param }}" title="{{ param }}: {{ help }}" />
+{% with value=api_cmd.args|mbd_dict_get:param type=api_cmd.ARGUMENTS_TYPES|mbd_dict_get:param|default:"text" help=api_cmd.html_hints.args|mbd_dict_get:param|mbd_dict_get:"help" %}
 	{% comment %}
 		<!-- <kbd><small>{{ help }}</small></kbd> -->
 	{% endcomment %}
+
+	{% if hidden %}
+		<input type="hidden" value="{{ value }}" name="{{ param }}" />
+	{% elif type == "text" %}
+		<input type="{{ type|default:"text" }}" size="{{ value | length}}" value="{{ value }}" name="{{ param }}" title="{{ param }}: {{ help }}" />
+	{% elif type == "bool" %}
+		<input type="checkbox" value="True" {% if value %}checked{% endif %} name="{{ param }}" title="{{ param }}: {{ help }}" />
+	{% elif type == "select" %}
+		<select value="{{ value }}" name="{{ param }}" title="{{ param }}: {{ help }}">
+			{% for choice in api_cmd.html_hints.choices|mbd_dict_get:param %}
+				<option value="{{ choice }}">{{ choice }}</option>
+			{% endfor %}
+		</select>
+	{% elif type == "select-multi" %}
+		<input id="{{ tag_id }}-{{ param }}-regexfilter" type="text" title="Bulk-select {{ param }} via regex" onchange="mbdSelectByRegex('{{ tag_id }}-{{ param }}-regexfilter-target', '{{ tag_id }}-{{ param }}-regexfilter')"/>
+		<br />
+		<select id="{{ tag_id }}-{{ param }}-regexfilter-target" multiple="multiple" value="{{ value }}" name="{{ param }}" title="{{ param }}: {{ help }}">
+			{% for choice in api_cmd.html_hints.choices|mbd_dict_get:param %}
+				<option value="{{ choice }}">{{ choice }}</option>
+			{% endfor %}
+		</select>
+	{% else %}
+		Internal error: Unkown parameter type {{ type }}.
+	{% endif %}
+
+	{% if verbosity == "verbose" %}
+		{{ param }}
+	{% elif verbosity == "doc" %}
+		{{ param }}: {{ help}}
+	{% endif %}
+
 {% endwith %}

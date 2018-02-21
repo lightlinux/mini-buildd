@@ -36,6 +36,7 @@ class Command(object):
     CONFIRM = False
     NEEDS_RUNNING_DAEMON = False
     ARGUMENTS = []
+    ARGUMENTS_TYPES = {}
 
     # Used in: migrate, remove, port
     COMMON_ARG_VERSION = (["--version", "-V"], {"action": "store",
@@ -93,11 +94,11 @@ different components), or just as safeguard
         self.msglog = msglog
         self._plain_result = ""
 
-        self.html_hints = {"args": {},           # Copy of static arg description for each arg
-                           "args_mandatory": {}  # List of mandatory options
-        }
+        self.html_hints = {"args": {},            # Copy of static arg description for each arg
+                           "args_mandatory": {},  # List of mandatory options
+                           "choices": {}}         # List of dynamic choices for selected args
 
-    def update_html_hints(self):
+    def update_html_hints(self, daemon=None):  # pylint: disable=unused-argument
         for sargs, kvsargs in self.ARGUMENTS:
             # Helper to access help via django templates
             arg = sargs[0].replace("--", "", 1).replace("-", "_")

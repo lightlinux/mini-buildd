@@ -2,12 +2,13 @@
 {% load staticfiles %}
 {% load mini_buildd_tags %}
 
+{# <form action="/mini_buildd/api" method="post">{% csrf_token %}  # if we would support post... #}
 <form action="/mini_buildd/api" method="get">
 	<input type="hidden" name="command" value="{{ api_cmd.COMMAND }}" />
 
 	<!-- Parameters with a predefined fixed value -->
 	{% for param in hidden_params %}
-		{% include "includes/mbd_api_call_param.html" with type="hidden" %}
+		{% include "includes/mbd_api_call_param.html" with hidden=True %}
 	{% endfor %}
 
 	<!-- Parameters that are always shown to the user -->
@@ -30,16 +31,20 @@
 			 '<img src={% static "img/mbd_params_show.png" %} alt=show_params title=show_params />')"><img src={% static "img/mbd_params_show.png" %} alt="show_params" title="show_params" /></a>
 
 		<div id="{{ tag_id }}-parameter" style="display: none;">
+
+			{% if verbosity == "doc" %}<pre>{{ api_cmd.docstring }}</pre>{% endif %}
+
+			<!-- Optional parameters, presented on demand only -->
+			{% for param in extra_params %}
+				{% include "includes/mbd_api_call_param.html" %}
+				<br />
+			{% endfor %}
+			<br />
 			<select name="output" title="Output type">
 				<option value="html" selected="selected">html</option>
 				<option value="plain">plain</option>
 				<option value="python">python</option>
 			</select>
-
-			<!-- Optional parameters, presented on demand only -->
-			{% for param in extra_params %}
-				<p>{% include "includes/mbd_api_call_param.html" %}</p>
-			{% endfor %}
 		</div>
 	{% endif %}
 </form>
