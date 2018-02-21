@@ -12,23 +12,11 @@
 		</p>
 		{% for name, cmd in COMMANDS %}
 			{% if name == COMMAND_GROUP %}
-				<hr />
 				<h1>{{ cmd }}</h1>
-				<hr />
 			{% else %}
-				<form action="/mini_buildd/api" method="get">
-					<div>
-						<input type="hidden" name="command" value="{{ name }}" />
-
-						<input type="submit" title="Run API command" value="{{ name }}" />
-						{% for k, v in cmd.args.items %}
-							{% with help=cmd.args_help|mbd_dict_get:k %}
-								<kbd>{{ k }}=</kbd><input type="text" title="{{ help }}" size="16" name="{{ k }}" value="{{ v }}" />
-							{% endwith %}
-						{% endfor %}
-					</div>
-				</form>
-				<pre>{{ cmd.docstring }}</pre>
+				<div style="border-style: solid; border-width: thin;">
+					{% mbd_api_call name user verbosity="doc" style="button-link" %}
+				</div>
 			{% endif %}
 		{% endfor %}
 	</div>
