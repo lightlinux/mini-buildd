@@ -252,7 +252,7 @@ mbd_run:00:12:pyflakes()
 	)
 }
 
-mbd_run:01:11:pylint()
+mbd_run:01:10:pylint()
 {
 	_check_prog pylint3
 	(
