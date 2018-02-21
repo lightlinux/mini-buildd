@@ -535,6 +535,22 @@ a.hover-underline:hover
 	background-color: #f7f7f7;
 }
 
+#mbd-content input.button-link
+{
+	text-align: left;
+	color: #5b80b2;
+	background: inherit;
+	margin: 1;
+	padding: 1;
+	border: none;
+	cursor: pointer;
+}
+
+#mbd-content input.button-link:hover
+{
+	background-color: lighter;
+}
+
 #mbd-content input.button-remove
 {
 	background: url("../img/mbd_remove.png") no-repeat scroll 3px 50% #e7e7e7;
