@@ -93,20 +93,14 @@ class Command(object):
     ARGUMENTS_TYPES = {}
 
     # Used in: migrate, remove, port
-    COMMON_ARG_VERSION = (["--version", "-V"], {"action": "store",
-                                                "metavar": "VERSION",
-                                                "default": "",
-                                                "help": """
+    COMMON_ARG_VERSION = StringArgument(["--version", "-V"], default="", doc="""
 limit command to that version. Use it for the rare case of
 multiple version of the same package in one distribution (in
 different components), or just as safeguard
-"""})
+""")
 
     # Used in: port, portext
-    COMMON_ARG_OPTIONS = (["--options", "-O"], {"action": "store",
-                                                "metavar": "OPTIONS",
-                                                "default": "ignore-lintian=true",
-                                                "help": "upload options (see user manual); separate multiple options by '|'"})
+    COMMON_ARG_OPTIONS = StringArgument(["--options", "-O"], default="ignore-lintian=true", doc="upload options (see user manual); separate multiple options by '|'")
 
     @classmethod
     def _filter_api_args(cls, args, set_if_missing=False):
@@ -119,7 +113,10 @@ different components), or just as safeguard
                 return args[key]
 
         result = {}
-        for sargs, kvsargs in cls.ARGUMENTS:
+        for argument in cls.ARGUMENTS:
+            sargs = argument.id_list
+            kvsargs = argument.argparse_kvsargs
+
             # Sanitize args
             # '--with-xyz' -> 'with_xyz'
             arg = sargs[0].replace("--", "", 1).replace("-", "_")
@@ -153,12 +150,11 @@ different components), or just as safeguard
                            "choices": {}}         # List of dynamic choices for selected args
 
     def update_html_hints(self, daemon=None):  # pylint: disable=unused-argument
-        for sargs, kvsargs in self.ARGUMENTS:
-            # Helper to access help via django templates
-            arg = sargs[0].replace("--", "", 1).replace("-", "_")
-            self.html_hints["args"][arg] = kvsargs
-            if "default" not in kvsargs:
-                self.html_hints["args_mandatory"][arg] = kvsargs.get("help")
+        for argument in self.ARGUMENTS:
+            arg = argument.identity
+            self.html_hints["args"][arg] = argument.argparse_kvsargs
+            if "default" not in argument.argparse_kvsargs:
+                self.html_hints["args_mandatory"][arg] = argument.argparse_kvsargs.get("help")
 
     def __getstate__(self):
         "Log object cannot be pickled."
@@ -302,10 +298,7 @@ class Start(Command):
     """Start the Daemon (engine)."""
     COMMAND = "start"
     AUTH = Command.ADMIN
-    ARGUMENTS = [
-        (["--force-check", "-C"], {"action": "store_true",
-                                   "default": False,
-                                   "help": "run checks on instances even if already checked."})]
+    ARGUMENTS = [BoolArgument(["--force-check", "-C"], default=False, doc="run checks on instances even if already checked.")]
 
     def run(self, daemon):
         if not daemon.start(force_check=self.has_flag("force_check"), msglog=self.msglog):
@@ -330,10 +323,7 @@ class PrintUploaders(Command):
     COMMAND = "printuploaders"
     AUTH = Command.ADMIN
     NEEDS_RUNNING_DAEMON = True
-    ARGUMENTS = [
-        (["--repository", "-R"], {"action": "store", "metavar": "REPO",
-                                  "default": ".*",
-                                  "help": "repository name regex."})]
+    ARGUMENTS = [StringArgument(["--repository", "-R"], default=".*", doc="repository name regex.")]
 
     def _uploader_lines(self, daemon):
         for r in daemon.get_active_repositories().filter(identity__regex=r"^{r}$".format(r=self.args["repository"])):
@@ -351,9 +341,8 @@ class Meta(Command):
     """Call arbitrary meta functions for models; usually for internal use only."""
     COMMAND = "meta"
     AUTH = Command.ADMIN
-    ARGUMENTS = [
-        (["model"], {"help": "Model path, for example 'source.Archive'"}),
-        (["function"], {"help": "Meta function to call, for example 'add_from_sources_list'"})]
+    ARGUMENTS = [StringArgument(["model"], doc="Model path, for example 'source.Archive'"),
+                 StringArgument(["function"], doc="Meta function to call, for example 'add_from_sources_list'")]
 
     def run(self, daemon):
         daemon.meta(self.args["model"], self.args["function"], msglog=self.msglog)
@@ -364,15 +353,9 @@ class AutoSetup(Command):
     COMMAND = "autosetup"
     AUTH = Command.ADMIN
     ARGUMENTS = [
-        (["--vendors", "-V"], {"action": "store",
-                               "default": "debian",
-                               "help": "comma-separated list of vendors to auto-setup for. Possible values: 'debian', 'ubuntu'"}),
-        (["--repositories", "-R"], {"action": "store",
-                                    "default": "test",
-                                    "help": "comma-separated list of repositories to auto-setup for. Possible values: 'test', 'debdev'"}),
-        (["--chroot-backend", "-C"], {"action": "store",
-                                      "default": "Dir",
-                                      "help": "chroot backend to use, or empty string to not create chroots. Possible values: 'Dir', 'File', 'LVM', 'LoopLVM', 'BtrfsSnapshot'"})
+        MultiSelectArgument(["--vendors", "-V"], default="debian", doc="comma-separated list of vendors to auto-setup for. Possible values: 'debian', 'ubuntu'"),
+        MultiSelectArgument(["--repositories", "-R"], default="test", doc="comma-separated list of repositories to auto-setup for. Possible values: 'test', 'debdev'"),
+        SelectArgument(["--chroot-backend", "-C"], default="Dir", doc="chroot backend to use, or empty string to not create chroots. Possible values: 'Dir', 'File', 'LVM', 'LoopLVM', 'BtrfsSnapshot'")
     ]
 
     def run(self, daemon):
@@ -431,19 +414,12 @@ class GetSourcesList(Command):
     """
     COMMAND = "getsourceslist"
     ARGUMENTS = [
-        (["codename"], {"help": "codename (base distribution) to get apt lines for"}),
-        (["--repository", "-R"], {"action": "store", "metavar": "REPO",
-                                  "default": ".*",
-                                  "help": "repository name regex."}),
-        (["--suite", "-S"], {"action": "store", "metavar": "SUITE",
-                             "default": ".*",
-                             "help": "suite name regex."}),
-        (["--with-deb-src", "-s"], {"action": "store_true",
-                                    "default": False,
-                                    "help": "also list deb-src apt lines."}),
-        (["--with-extra-sources", "-x"], {"action": "store_true",
-                                          "default": False,
-                                          "help": "also list extra sources needed."})]
+        StringArgument(["codename"], doc="codename (base distribution) to get apt lines for"),
+        StringArgument(["--repository", "-R"], default=".*", doc="repository name regex."),
+        StringArgument(["--suite", "-S"], default=".*", doc="suite name regex."),
+        BoolArgument(["--with-deb-src", "-s"], default=False, doc="also list deb-src apt lines."),
+        BoolArgument(["--with-extra-sources", "-x"], default=False, doc="also list extra sources needed.")
+    ]
 
     def run(self, daemon):
         self._plain_result = daemon.mbd_get_sources_list(self.args["codename"],
@@ -459,9 +435,8 @@ class LogCat(Command):
     COMMAND = "logcat"
     AUTH = Command.STAFF
     ARGUMENTS = [
-        (["--lines", "-n"], {"action": "store", "metavar": "N", "type": int,
-                             "default": 500,
-                             "help": "cat (approx.) the last N lines"})]
+        IntArgument(["--lines", "-n"], default=500, doc="cat (approx.) the last N lines")
+    ]
 
     def run(self, daemon):
         self._plain_result = daemon.logcat(lines=int(self.args["lines"]))
@@ -492,16 +467,11 @@ class List(Command):
     COMMAND = "list"
     AUTH = Command.LOGIN
     ARGUMENTS = [
-        (["pattern"], {"help": "limit packages by name (glob pattern)"}),
-        (["--with-rollbacks", "-r"], {"action": "store_true",
-                                      "default": False,
-                                      "help": "also list packages on rollback distributions"}),
-        (["--distribution", "-D"], {"action": "store", "metavar": "DIST",
-                                    "default": "",
-                                    "help": "limit distributions by name (regex)"}),
-        (["--type", "-T"], {"action": "store", "metavar": "TYPE",
-                            "default": "",
-                            "help": "package type: dsc, deb or udeb (like reprepo --type)"})]
+        StringArgument(["pattern"], doc="limit packages by name (glob pattern)"),
+        BoolArgument(["--with-rollbacks", "-r"], default=False, doc="also list packages on rollback distributions"),
+        StringArgument(["--distribution", "-D"], default="", doc="limit distributions by name (regex)"),
+        StringArgument(["--type", "-T"], default="", doc="package type: dsc, deb or udeb (like reprepo --type)")
+    ]
 
     def __init__(self, args, request=None, msglog=LOG):
         super().__init__(args, request, msglog)
@@ -552,10 +522,9 @@ class Show(Command):
 
     COMMAND = "show"
     ARGUMENTS = [
-        (["package"], {"help": "source package name"}),
-        (["--verbose", "-v"], {"action": "store_true",
-                               "default": False,
-                               "help": "verbose output"})]
+        StringArgument(["package"], doc="source package name"),
+        BoolArgument(["--verbose", "-v"], default=False, doc="verbose output")
+    ]
 
     def __init__(self, args, request=None, msglog=LOG):
         super().__init__(args, request, msglog)
@@ -618,9 +587,10 @@ class Migrate(Command):
     AUTH = Command.STAFF
     CONFIRM = True
     ARGUMENTS = [
-        (["package"], {"help": "source package name"}),
-        (["distribution"], {"help": "distribution to migrate from (if this is a '-rollbackN' distribution, this will perform a rollback restore)"}),
-        Command.COMMON_ARG_VERSION]
+        StringArgument(["package"], doc="source package name"),
+        StringArgument(["distribution"], doc="distribution to migrate from (if this is a '-rollbackN' distribution, this will perform a rollback restore)"),
+        Command.COMMON_ARG_VERSION
+    ]
 
     def run(self, daemon):
         repository, distribution, suite, rollback = daemon.parse_distribution(self.args["distribution"])
@@ -639,9 +609,10 @@ class Remove(Command):
     AUTH = Command.ADMIN
     CONFIRM = True
     ARGUMENTS = [
-        (["package"], {"help": "source package name"}),
-        (["distribution"], {"help": "distribution to remove from"}),
-        Command.COMMON_ARG_VERSION]
+        StringArgument(["package"], doc="source package name"),
+        StringArgument(["distribution"], doc="distribution to remove from"),
+        Command.COMMON_ARG_VERSION
+    ]
 
     def run(self, daemon):
         repository, distribution, suite, rollback = daemon.parse_distribution(self.args["distribution"])
@@ -665,9 +636,9 @@ class Port(Command):
     NEEDS_RUNNING_DAEMON = True
     CONFIRM = True
     ARGUMENTS = [
-        (["package"], {"help": "source package name"}),
-        (["from_distribution"], {"help": "distribution to port from"}),
-        (["to_distributions"], {"help": "comma-separated list of distributions to port to (when this equals the from-distribution, a rebuild will be done)"}),
+        StringArgument(["package"], doc="source package name"),
+        StringArgument(["from_distribution"], doc="distribution to port from"),
+        MultiSelectArgument(["to_distributions"], doc="comma-separated list of distributions to port to (when this equals the from-distribution, a rebuild will be done)"),
         Command.COMMON_ARG_VERSION,
         Command.COMMON_ARG_OPTIONS]
 
@@ -696,9 +667,10 @@ class PortExt(Command):
     NEEDS_RUNNING_DAEMON = True
     CONFIRM = True
     ARGUMENTS = [
-        (["dsc"], {"help": "URL of any Debian source package (dsc) to port"}),
-        (["distributions"], {"help": "comma-separated list of distributions to port to"}),
-        Command.COMMON_ARG_OPTIONS]
+        StringArgument(["dsc"], doc="URL of any Debian source package (dsc) to port"),
+        MultiSelectArgument(["distributions"], doc="comma-separated list of distributions to port to"),
+        Command.COMMON_ARG_OPTIONS
+    ]
 
     def run(self, daemon):
         # Parse and pre-check all dists
@@ -718,11 +690,10 @@ class Retry(Command):
     NEEDS_RUNNING_DAEMON = True
     CONFIRM = True
     ARGUMENTS = [
-        (["package"], {"help": "source package name"}),
-        (["version"], {"help": "source package's version"}),
-        (["--repository", "-R"], {"action": "store", "metavar": "REPO",
-                                  "default": "*",
-                                  "help": "Repository name -- use only in case of multiple matches."})]
+        StringArgument(["package"], doc="source package name"),
+        StringArgument(["version"], doc="source package's version"),
+        StringArgument(["--repository", "-R"], default="*", doc="Repository name -- use only in case of multiple matches.")
+    ]
 
     def run(self, daemon):
         pkg_log = mini_buildd.misc.PkgLog(self.args["repository"], False, self.args["package"], self.args["version"])
@@ -741,7 +712,8 @@ class SetUserKey(Command):
     AUTH = Command.LOGIN
     CONFIRM = True
     ARGUMENTS = [
-        (["key"], {"help": "GnuPG public key; multiline inputs will be handled as ascii armored full key, one-liners as key ids"})]
+        StringArgument(["key"], doc="GnuPG public key; multiline inputs will be handled as ascii armored full key, one-liners as key ids")
+    ]
 
     def run(self, _daemon):
         uploader = self.request.user.uploader
@@ -773,8 +745,9 @@ class Subscription(Command):
     COMMAND = "subscription"
     AUTH = Command.LOGIN
     ARGUMENTS = [
-        (["action"], {"choices": ["list", "add", "remove"], "help": "action to run"}),
-        (["subscription"], {"help": "subscription pattern"})]
+        SelectArgument(["action"], doc="action to run", choices=["list", "add", "remove"]),
+        StringArgument(["subscription"], doc="subscription pattern")
+    ]
 
     def run(self, daemon):
         package, _sep, distribution = self.args["subscription"].partition(":")

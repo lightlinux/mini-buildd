@@ -144,7 +144,9 @@ SUBPARSERS = PARSER.add_subparsers(title="API commands (run 'mini-buildd-tool ''
 for cmd, cmd_cls in mini_buildd.api.COMMANDS:
     if cmd != mini_buildd.api.COMMAND_GROUP:
         cmd_parser = SUBPARSERS.add_parser(cmd, help=cmd_cls.docstring())
-        for cmd_args, cmd_kvargs in cmd_cls.ARGUMENTS:
+        for argument in cmd_cls.ARGUMENTS:
+            cmd_args = argument.id_list
+            cmd_kvargs = argument.argparse_kvsargs
             cmd_parser.add_argument(*cmd_args, **cmd_kvargs)
 
         if cmd_cls.CONFIRM:
