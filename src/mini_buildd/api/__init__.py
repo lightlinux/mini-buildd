@@ -23,6 +23,60 @@ def django_pseudo_configure():
     call_command("migrate", interactive=False, run_syncdb=True, verbosity=0)
 
 
+class Argument(object):
+    def __init__(self, id_list, doc="Undocumented", default=None):
+        """
+        :param id_list: List like '['--with-rollbacks', '-R']' for option or '['distributions']' for positionals; 1st entry always denotes the id.
+
+        >>> vars(Argument(["--long-id", "-s"]))
+        {'id_list': ['--long-id', '-s'], 'doc': 'Undocumented', 'default': None, 'identity': 'long_id', 'argparse_kvsargs': {'help': 'Undocumented'}}
+        >>> vars(Argument(["posi-tional"]))
+        {'id_list': ['posi-tional'], 'doc': 'Undocumented', 'default': None, 'identity': 'posi_tional', 'argparse_kvsargs': {'help': 'Undocumented'}}
+        """
+        self.id_list = id_list
+        self.doc = doc
+        self.default = default
+
+        # identity: 1st of id_list with leading '--' removed and hyphens turned to underscores
+        self.identity = id_list[0][2 if id_list[0].startswith("--") else 0:].replace("-", "_")
+
+        # kvsargs for argparse
+        self.argparse_kvsargs = {}
+        self.argparse_kvsargs["help"] = doc
+        if default is not None:
+            self.argparse_kvsargs["default"] = default
+
+
+class StringArgument(Argument):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.argparse_kvsargs["action"] = "store"
+
+
+class IntArgument(Argument):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.argparse_kvsargs["action"] = "store"
+        self.argparse_kvsargs["type"] = int
+
+
+class BoolArgument(Argument):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.argparse_kvsargs["action"] = "store_true"
+
+
+class SelectArgument(Argument):
+    def __init__(self, *args, choices=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if choices is not None:
+            self.argparse_kvsargs["choices"] = choices
+
+
+class MultiSelectArgument(SelectArgument):
+    pass
+
+
 class Command(object):
     COMMAND = None
 
