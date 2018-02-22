@@ -114,24 +114,17 @@ different components), or just as safeguard
 
         result = {}
         for argument in cls.ARGUMENTS:
-            sargs = argument.id_list
-            kvsargs = argument.argparse_kvsargs
-
-            # Sanitize args
-            # '--with-xyz' -> 'with_xyz'
-            arg = sargs[0].replace("--", "", 1).replace("-", "_")
-            if arg in args:
-                result[arg] = _get(arg)
-
-            elif "default" in kvsargs:
-                result[arg] = kvsargs["default"]
+            if argument.identity in args:
+                result[argument.identity] = _get(argument.identity)
+            elif argument.default is not None:
+                result[argument.identity] = argument.default
             elif set_if_missing:
-                result[arg] = arg.upper()
+                result[argument.identity] = argument.identity.upper()
 
             # Check required
-            if sargs[0][:2] != "--" or ("required" in kvsargs and kvsargs["required"]):
-                if arg not in result or not result[arg]:
-                    raise Exception("Missing required argument '{a}'".format(a=arg))
+            if argument.id_list[0][:2] != "--" or ("required" in argument.argparse_kvsargs and argument.argparse_kvsargs["required"]):
+                if argument.identity not in result or not result[argument.identity]:
+                    raise Exception("Missing required argument '{a}'".format(a=argument.identity))
 
         return result
 
