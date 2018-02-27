@@ -48,12 +48,14 @@ class Argument(object):
 
 
 class StringArgument(Argument):
+    TYPE = "string"
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.argparse_kvsargs["action"] = "store"
 
 
 class IntArgument(Argument):
+    TYPE = "int"
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.argparse_kvsargs["action"] = "store"
@@ -61,12 +63,14 @@ class IntArgument(Argument):
 
 
 class BoolArgument(Argument):
+    TYPE = "bool"
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.argparse_kvsargs["action"] = "store_true"
 
 
 class SelectArgument(Argument):
+    TYPE = "select"
     def __init__(self, *args, choices=None, **kwargs):
         super().__init__(*args, **kwargs)
         if choices is not None:
@@ -74,6 +78,7 @@ class SelectArgument(Argument):
 
 
 class MultiSelectArgument(SelectArgument):
+    TYPE = "multiselect"
     pass
 
 
