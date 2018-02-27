@@ -49,6 +49,7 @@ class Argument(object):
 
 class StringArgument(Argument):
     TYPE = "string"
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.argparse_kvsargs["action"] = "store"
@@ -56,6 +57,7 @@ class StringArgument(Argument):
 
 class IntArgument(Argument):
     TYPE = "int"
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.argparse_kvsargs["action"] = "store"
@@ -64,6 +66,7 @@ class IntArgument(Argument):
 
 class BoolArgument(Argument):
     TYPE = "bool"
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.argparse_kvsargs["action"] = "store_true"
@@ -71,6 +74,7 @@ class BoolArgument(Argument):
 
 class SelectArgument(Argument):
     TYPE = "select"
+
     def __init__(self, *args, choices=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.choices = choices
@@ -80,7 +84,6 @@ class SelectArgument(Argument):
 
 class MultiSelectArgument(SelectArgument):
     TYPE = "multiselect"
-    pass
 
 
 class Command(object):
@@ -96,7 +99,6 @@ class Command(object):
     CONFIRM = False
     NEEDS_RUNNING_DAEMON = False
     ARGUMENTS = []
-    ARGUMENTS_TYPES = {}
 
     # Used in: migrate, remove, port
     COMMON_ARG_VERSION = StringArgument(["--version", "-V"], default="", doc="""

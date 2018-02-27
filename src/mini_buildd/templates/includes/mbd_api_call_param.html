@@ -1,28 +1,30 @@
 {% load i18n %}
 {% load mini_buildd_tags %}
 
-{% with value=api_cmd.args|mbd_dict_get:param type=api_cmd.ARGUMENTS_TYPES|mbd_dict_get:param|default:"text" help=api_cmd.html_hints.args|mbd_dict_get:param|mbd_dict_get:"help" %}
+{% with value=api_cmd.args|mbd_dict_get:param.identity %}
 	{% comment %}
-		<!-- <kbd><small>{{ help }}</small></kbd> -->
+		<!-- <kbd><small>{{ param.doc }}</small></kbd> -->
 	{% endcomment %}
 
 	{% if hidden %}
-		<input type="hidden" value="{{ value }}" name="{{ param }}" />
-	{% elif type == "text" %}
-		<input type="{{ type|default:"text" }}" size="{{ value | length}}" value="{{ value }}" name="{{ param }}" title="{{ param }}: {{ help }}" />
-	{% elif type == "bool" %}
-		<input type="checkbox" value="True" {% if value %}checked{% endif %} name="{{ param }}" title="{{ param }}: {{ help }}" />
-	{% elif type == "select" %}
-		<select value="{{ value }}" name="{{ param }}" title="{{ param }}: {{ help }}">
-			{% for choice in api_cmd.html_hints.choices|mbd_dict_get:param %}
+		<input type="hidden" value="{{ value }}" name="{{ param.identity }}" />
+	{% elif param.TYPE == "string" %}
+		<input type="{{ type|default:"text" }}" size="25" value="{{ value }}" name="{{ param.identity }}" title="{{ param.identity }}: {{ param.doc }}" />
+	{% elif param.TYPE == "int" %}
+		<input type="{{ type|default:"text" }}" size="5" value="{{ value }}" name="{{ param.identity }}" title="{{ param.identity }}: {{ param.doc }}" />
+	{% elif param.TYPE == "bool" %}
+		<input type="checkbox" value="True" {% if value %}checked{% endif %} name="{{ param.identity }}" title="{{ param.identity }}: {{ param.doc }}" />
+	{% elif param.TYPE == "select" %}
+		<select value="{{ value }}" name="{{ param.identity }}" title="{{ param.identity }}: {{ param.doc }}">
+			{% for choice in param.choices %}
 				<option value="{{ choice }}">{{ choice }}</option>
 			{% endfor %}
 		</select>
-	{% elif type == "select-multi" %}
-		<input id="{{ tag_id }}-{{ param }}-regexfilter" type="text" title="Bulk-select {{ param }} via regex" onchange="mbdSelectByRegex('{{ tag_id }}-{{ param }}-regexfilter-target', '{{ tag_id }}-{{ param }}-regexfilter')"/>
+	{% elif param.TYPE == "multiselect" %}
+		<input id="{{ tag_id }}-{{ param.identity }}-regexfilter" type="text" title="Bulk-select {{ param.identity }} via regex" onchange="mbdSelectByRegex('{{ tag_id }}-{{ param.identity }}-regexfilter-target', '{{ tag_id }}-{{ param.identity }}-regexfilter')"/>
 		<br />
-		<select id="{{ tag_id }}-{{ param }}-regexfilter-target" multiple="multiple" value="{{ value }}" name="{{ param }}" title="{{ param }}: {{ help }}">
-			{% for choice in api_cmd.html_hints.choices|mbd_dict_get:param %}
+		<select id="{{ tag_id }}-{{ param.identity }}-regexfilter-target" multiple="multiple" value="{{ value }}" name="{{ param.identity }}" title="{{ param.identity }}: {{ param.doc }}">
+			{% for choice in param.choices %}
 				<option value="{{ choice }}">{{ choice }}</option>
 			{% endfor %}
 		</select>
@@ -31,9 +33,9 @@
 	{% endif %}
 
 	{% if verbosity == "verbose" %}
-		{{ param }}
+		{{ param.identity }}
 	{% elif verbosity == "doc" %}
-		{{ param }}: {{ help}}
+		{{ param.identity }}: {{ param.doc }}
 	{% endif %}
 
 {% endwith %}
