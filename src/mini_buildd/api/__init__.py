@@ -73,6 +73,7 @@ class SelectArgument(Argument):
     TYPE = "select"
     def __init__(self, *args, choices=None, **kwargs):
         super().__init__(*args, **kwargs)
+        self.choices = choices
         if choices is not None:
             self.argparse_kvsargs["choices"] = choices
 
