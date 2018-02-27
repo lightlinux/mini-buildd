@@ -374,7 +374,7 @@ mbd_run()  # [<levelRegex>=00] [<name>]
 	local -a info=()
 	local func totalStartStamp=$(date +%s)
 	for func in $(declare -F | cut -d" " -f3- | grep "^mbd_run:[[:alnum:]][[:alnum:]]:${levelRegex}:${name}" | sort || true); do
-		printf "=> Running %s...\n" "${func}"
+		printf "I: Running %s...\n" "${func}"
 		local startStamp=$(date +%s)
 		${func}
 		info+=("$(printf "OK (%03d seconds): %s" "$(($(date +%s) - startStamp))" "${func}")")
