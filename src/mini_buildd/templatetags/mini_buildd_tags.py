@@ -117,7 +117,7 @@ def mbd_api_call(cmd, user, hidden=None, show_extra=True, name=None, title=None,
     api_cls = mini_buildd.api.COMMANDS_DICT.get(cmd, None)
     auth_err = api_cls.auth_err(user)
     values = _kwargs("value_")
-    api_cmd = api_cls({**api_cls.get_default_args(), **values})
+    api_cmd = api_cls(values)
 
     api_cmd.update_html_hints(mini_buildd.daemon.get())
 
@@ -127,9 +127,9 @@ def mbd_api_call(cmd, user, hidden=None, show_extra=True, name=None, title=None,
 
     return {"api_cmd": api_cmd,
             "tag_id": "mbd-api-call-{}".format("".join(random.choices(string.ascii_lowercase + string.digits, k=16))),
-            "hidden_params": [a for a in api_cls.ARGUMENTS if a.identity in hidden_params],
-            "show_params": [a for a in api_cls.ARGUMENTS if a.identity in show_params],
-            "extra_params": [a for a in api_cls.ARGUMENTS if a.identity in extra_params],
+            "hidden_params": [a for a in api_cmd.args.values() if a.identity in hidden_params],
+            "show_params": [a for a in api_cmd.args.values() if a.identity in show_params],
+            "extra_params": [a for a in api_cmd.args.values() if a.identity in extra_params],
             "name": name,
             "title": title,
             "style": style,

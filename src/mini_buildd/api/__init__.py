@@ -29,13 +29,15 @@ class Argument(object):
         :param id_list: List like '['--with-rollbacks', '-R']' for option or '['distributions']' for positionals; 1st entry always denotes the id.
 
         >>> vars(Argument(["--long-id", "-s"]))
-        {'id_list': ['--long-id', '-s'], 'doc': 'Undocumented', 'default': None, 'identity': 'long_id', 'argparse_kvsargs': {'help': 'Undocumented'}}
+        {'id_list': ['--long-id', '-s'], 'doc': 'Undocumented', 'default': None, 'raw_value': None, 'identity': 'long_id', 'argparse_kvsargs': {'help': 'Undocumented'}}
         >>> vars(Argument(["posi-tional"]))
-        {'id_list': ['posi-tional'], 'doc': 'Undocumented', 'default': None, 'identity': 'posi_tional', 'argparse_kvsargs': {'help': 'Undocumented'}}
+        {'id_list': ['posi-tional'], 'doc': 'Undocumented', 'default': None, 'raw_value': None, 'identity': 'posi_tional', 'argparse_kvsargs': {'help': 'Undocumented'}}
         """
         self.id_list = id_list
         self.doc = doc
+        # default, value: Always the str representation (as given on the command line)
         self.default = default
+        self.raw_value = default
 
         # identity: 1st of id_list with leading '--' removed and hyphens turned to underscores
         self.identity = id_list[0][2 if id_list[0].startswith("--") else 0:].replace("-", "_")
@@ -46,6 +48,11 @@ class Argument(object):
         if default is not None:
             self.argparse_kvsargs["default"] = default
 
+    @property
+    def value(self):
+        """Get value, including convenience transformations."""
+        return self.raw_value
+
 
 class StringArgument(Argument):
     TYPE = "string"
@@ -55,13 +62,16 @@ class StringArgument(Argument):
         self.argparse_kvsargs["action"] = "store"
 
 
-class IntArgument(Argument):
+class IntArgument(StringArgument):
     TYPE = "int"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.argparse_kvsargs["action"] = "store"
         self.argparse_kvsargs["type"] = int
+
+    @property
+    def value(self):
+        return int(self.raw_value) if self.raw_value is not None else None
 
 
 class BoolArgument(Argument):
@@ -70,6 +80,10 @@ class BoolArgument(Argument):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.argparse_kvsargs["action"] = "store_true"
+
+    @property
+    def value(self):
+        return self.raw_value in ("True", "true", "1") if self.raw_value is not None else None
 
 
 class SelectArgument(Argument):
@@ -84,6 +98,14 @@ class SelectArgument(Argument):
 
 class MultiSelectArgument(SelectArgument):
     TYPE = "multiselect"
+
+    def __init__(self, *args, separator=",", **kwargs):
+        super().__init__(*args, **kwargs)
+        self.separator = separator
+
+    @property
+    def value(self):
+        return self.raw_value.split(self.separator) if self.raw_value is not None else None
 
 
 class Command(object):
@@ -108,40 +130,29 @@ different components), or just as safeguard
 """)
 
     # Used in: port, portext
-    COMMON_ARG_OPTIONS = StringArgument(["--options", "-O"], default="ignore-lintian=true", doc="upload options (see user manual); separate multiple options by '|'")
+    COMMON_ARG_OPTIONS = MultiSelectArgument(["--options", "-O"], separator="|", default="ignore-lintian=true", doc="upload options (see user manual); separate multiple options by '|'")
 
-    @classmethod
-    def _filter_api_args(cls, args, set_if_missing=False):
+    def _filter_api_args(self, given_args, set_if_missing=False):
         def _get(key):
             try:
                 # django request.GET args
-                return ",".join(args.getlist(key))
+                return ",".join(given_args.getlist(key))
             except BaseException:
                 # dict arg (like from get_default_args)
-                return args[key]
+                return given_args[key]
 
-        result = {}
-        for argument in cls.ARGUMENTS:
-            if argument.identity in args:
-                result[argument.identity] = _get(argument.identity)
-            elif argument.default is not None:
-                result[argument.identity] = argument.default
+        for argument in self.args.values():
+            if argument.identity in given_args:
+                argument.raw_value = _get(argument.identity)
             elif set_if_missing:
-                result[argument.identity] = argument.identity.upper()
+                argument.raw_value = argument.identity.upper()
 
-            # Check required
-            if argument.id_list[0][:2] != "--" or ("required" in argument.argparse_kvsargs and argument.argparse_kvsargs["required"]):
-                if argument.identity not in result or not result[argument.identity]:
-                    raise Exception("Missing required argument '{a}'".format(a=argument.identity))
+    def __init__(self, given_args, request=None, msglog=LOG):
+        self.args = {}
+        for arg in self.ARGUMENTS:
+            self.args[arg.identity] = arg
+        self._filter_api_args(given_args)
 
-        return result
-
-    @classmethod
-    def get_default_args(cls):
-        return cls._filter_api_args({}, set_if_missing=True)
-
-    def __init__(self, args, request=None, msglog=LOG):
-        self.args = self._filter_api_args(args)
         self.request = request
         self.msglog = msglog
         self._plain_result = ""
@@ -149,6 +160,18 @@ different components), or just as safeguard
         self.html_hints = {"args": {},            # Copy of static arg description for each arg
                            "args_mandatory": {},  # List of mandatory options
                            "choices": {}}         # List of dynamic choices for selected args
+
+    def _run(self, daemon):
+        pass
+
+    def run(self, daemon):
+        # Sanity checks
+        for argument in self.args.values():
+            if argument.raw_value is None:
+                raise Exception("Missing required argument '{a}'".format(a=argument.identity))
+
+        # Run
+        self._run(daemon)
 
     def update_html_hints(self, daemon=None):  # pylint: disable=unused-argument
         for argument in self.ARGUMENTS:
@@ -221,7 +244,7 @@ class Status(Command):
         self.packaging = []
         self.building = []
 
-    def run(self, daemon):
+    def _run(self, daemon):
         # version string
         self.version = mini_buildd.__version__
 
@@ -301,7 +324,7 @@ class Start(Command):
     AUTH = Command.ADMIN
     ARGUMENTS = [BoolArgument(["--force-check", "-C"], default=False, doc="run checks on instances even if already checked.")]
 
-    def run(self, daemon):
+    def _run(self, daemon):
         if not daemon.start(force_check=self.has_flag("force_check"), msglog=self.msglog):
             raise Exception("Could not start Daemon (check logs and messages).")
         self._plain_result = "{d}\n".format(d=daemon)
@@ -313,7 +336,7 @@ class Stop(Command):
     AUTH = Command.ADMIN
     ARGUMENTS = []
 
-    def run(self, daemon):
+    def _run(self, daemon):
         if not daemon.stop(msglog=self.msglog):
             raise Exception("Could not stop Daemon (check logs and messages).")
         self._plain_result = "{d}\n".format(d=daemon)
@@ -327,14 +350,14 @@ class PrintUploaders(Command):
     ARGUMENTS = [StringArgument(["--repository", "-R"], default=".*", doc="repository name regex.")]
 
     def _uploader_lines(self, daemon):
-        for r in daemon.get_active_repositories().filter(identity__regex=r"^{r}$".format(r=self.args["repository"])):
+        for r in daemon.get_active_repositories().filter(identity__regex=r"^{r}$".format(r=self.args["repository"].value)):
             yield "Uploader keys for repository '{r}':".format(r=r.identity)
             if r.allow_unauthenticated_uploads:
                 yield " WARNING: Unauthenticated uploads allowed anyway"
             for u in daemon.keyrings.get_uploaders()[r.identity].get_pub_colons():
                 yield " {u}".format(u=u)
 
-    def run(self, daemon):
+    def _run(self, daemon):
         self._plain_result = "\n".join(self._uploader_lines(daemon)) + "\n"
 
 
@@ -345,8 +368,8 @@ class Meta(Command):
     ARGUMENTS = [StringArgument(["model"], doc="Model path, for example 'source.Archive'"),
                  StringArgument(["function"], doc="Meta function to call, for example 'add_from_sources_list'")]
 
-    def run(self, daemon):
-        daemon.meta(self.args["model"], self.args["function"], msglog=self.msglog)
+    def _run(self, daemon):
+        daemon.meta(self.args["model"].value, self.args["function"].value, msglog=self.msglog)
 
 
 class AutoSetup(Command):
@@ -359,7 +382,7 @@ class AutoSetup(Command):
         SelectArgument(["--chroot-backend", "-C"], default="Dir", doc="chroot backend to use, or empty string to not create chroots. Possible values: 'Dir', 'File', 'LVM', 'LoopLVM', 'BtrfsSnapshot'")
     ]
 
-    def run(self, daemon):
+    def _run(self, daemon):
         daemon.stop()
 
         # Daemon
@@ -367,7 +390,7 @@ class AutoSetup(Command):
 
         # Sources
         daemon.meta("source.Archive", "add_from_sources_list", msglog=self.msglog)
-        for v in self.args["vendors"].split(","):
+        for v in self.args["vendors"].value:
             daemon.meta("source.Archive", "add_{}".format(v), msglog=self.msglog)
             daemon.meta("source.Source", "add_{}".format(v), msglog=self.msglog)
         daemon.meta("source.PrioritySource", "add_extras", msglog=self.msglog)
@@ -376,13 +399,13 @@ class AutoSetup(Command):
         # Repositories
         daemon.meta("repository.Layout", "create_defaults", msglog=self.msglog)
         daemon.meta("repository.Distribution", "add_base_sources", msglog=self.msglog)
-        for r in self.args["repositories"].split(","):
+        for r in self.args["repositories"].value:
             daemon.meta("repository.Repository", "add_{}".format(r), msglog=self.msglog)
         daemon.meta("repository.Repository", "pca_all", msglog=self.msglog)
 
         # Chroots
-        if self.args["chroot_backend"]:
-            cb_class = "chroot.{}Chroot".format(self.args["chroot_backend"])
+        if self.args["chroot_backend"].value:
+            cb_class = "chroot.{}Chroot".format(self.args["chroot_backend"].value)
             daemon.meta(cb_class, "add_base_sources", msglog=self.msglog)
             daemon.meta(cb_class, "pca_all", msglog=self.msglog)
 
@@ -393,7 +416,7 @@ class GetKey(Command):
     """Get GnuPG public key."""
     COMMAND = "getkey"
 
-    def run(self, daemon):
+    def _run(self, daemon):
         self._plain_result = daemon.model.mbd_get_pub_key()
 
 
@@ -404,7 +427,7 @@ class GetDputConf(Command):
     """
     COMMAND = "getdputconf"
 
-    def run(self, daemon):
+    def _run(self, daemon):
         self._plain_result = daemon.model.mbd_get_dput_conf()
 
 
@@ -422,12 +445,12 @@ class GetSourcesList(Command):
         BoolArgument(["--with-extra-sources", "-x"], default=False, doc="also list extra sources needed.")
     ]
 
-    def run(self, daemon):
-        self._plain_result = daemon.mbd_get_sources_list(self.args["codename"],
-                                                         self.args["repository"],
-                                                         self.args["suite"],
-                                                         ["deb ", "deb-src "] if self.has_flag("with_deb_src") else ["deb "],
-                                                         self.has_flag("with_extra_sources"))
+    def _run(self, daemon):
+        self._plain_result = daemon.mbd_get_sources_list(self.args["codename"].value,
+                                                         self.args["repository"].value,
+                                                         self.args["suite"].value,
+                                                         ["deb ", "deb-src "] if self.args["with_deb_src"].value else ["deb "],
+                                                         self.args["with_extra_sources"].value)
 
 
 class LogCat(Command):
@@ -439,8 +462,8 @@ class LogCat(Command):
         IntArgument(["--lines", "-n"], default=500, doc="cat (approx.) the last N lines")
     ]
 
-    def run(self, daemon):
-        self._plain_result = daemon.logcat(lines=int(self.args["lines"]))
+    def _run(self, daemon):
+        self._plain_result = daemon.logcat(lines=self.args["lines"].value)
 
 
 def _get_table_format(dct, cols):
@@ -478,13 +501,13 @@ class List(Command):
         super().__init__(*args, **kwargs)
         self.repositories = {}
 
-    def run(self, daemon):
+    def _run(self, daemon):
         # Save all results of all repos in a top-level dict (don't add repos with empty results).
         for r in daemon.get_active_repositories():
-            r_result = r.mbd_package_list(self.args["pattern"],
+            r_result = r.mbd_package_list(self.args["pattern"].value,
                                           typ=self.arg_false2none("type"),
-                                          with_rollbacks=self.has_flag("with_rollbacks"),
-                                          dist_regex=self.args["distribution"])
+                                          with_rollbacks=self.args["with_rollbacks"].value,
+                                          dist_regex=self.args["distribution"].value)
             if r_result:
                 self.repositories[r.identity] = r_result
 
@@ -532,10 +555,10 @@ class Show(Command):
         # List of tuples: (repository, result)
         self.repositories = []
 
-    def run(self, daemon):
+    def _run(self, daemon):
         # Save all results of all repos in a top-level dict (don't add repos with empty results).
         for r in daemon.get_active_repositories():
-            r_result = r.mbd_package_show(self.args["package"])
+            r_result = r.mbd_package_show(self.args["package"].value)
             if r_result:
                 self.repositories.append((r, r_result))
 
@@ -593,9 +616,9 @@ class Migrate(Command):
         Command.COMMON_ARG_VERSION
     ]
 
-    def run(self, daemon):
-        repository, distribution, suite, rollback = daemon.parse_distribution(self.args["distribution"])
-        self._plain_result = repository.mbd_package_migrate(self.args["package"],
+    def _run(self, daemon):
+        repository, distribution, suite, rollback = daemon.parse_distribution(self.args["distribution"].value)
+        self._plain_result = repository.mbd_package_migrate(self.args["package"].value,
                                                             distribution,
                                                             suite,
                                                             rollback=rollback,
@@ -615,9 +638,9 @@ class Remove(Command):
         Command.COMMON_ARG_VERSION
     ]
 
-    def run(self, daemon):
-        repository, distribution, suite, rollback = daemon.parse_distribution(self.args["distribution"])
-        self._plain_result = repository.mbd_package_remove(self.args["package"],
+    def _run(self, daemon):
+        repository, distribution, suite, rollback = daemon.parse_distribution(self.args["distribution"].value)
+        self._plain_result = repository.mbd_package_remove(self.args["package"].value,
                                                            distribution,
                                                            suite,
                                                            rollback=rollback,
@@ -643,16 +666,16 @@ class Port(Command):
         Command.COMMON_ARG_VERSION,
         Command.COMMON_ARG_OPTIONS]
 
-    def run(self, daemon):
+    def _run(self, daemon):
         # Parse and pre-check all dists
-        for to_distribution in self.args["to_distributions"].split(","):
-            info = "Port {p}/{d} -> {to_d}".format(p=self.args["package"], d=self.args["from_distribution"], to_d=to_distribution)
+        for to_distribution in self.args["to_distributions"].value:
+            info = "Port {p}/{d} -> {to_d}".format(p=self.args["package"].value, d=self.args["from_distribution"].value, to_d=to_distribution)
             self.msglog.info("Trying: {i}".format(i=info))
-            daemon.port(self.args["package"],
-                        self.args["from_distribution"],
+            daemon.port(self.args["package"].value,
+                        self.args["from_distribution"].value,
                         to_distribution,
                         version=self.arg_false2none("version"),
-                        options=self.args["options"].split("|"))
+                        options=self.args["options"].value)
             self.msglog.info("Requested: {i}".format(i=info))
             self._plain_result += to_distribution + " "
 
@@ -673,12 +696,12 @@ class PortExt(Command):
         Command.COMMON_ARG_OPTIONS
     ]
 
-    def run(self, daemon):
+    def _run(self, daemon):
         # Parse and pre-check all dists
-        for d in self.args["distributions"].split(","):
-            info = "External port {dsc} -> {d}".format(dsc=self.args["dsc"], d=d)
+        for d in self.args["distributions"].value:
+            info = "External port {dsc} -> {d}".format(dsc=self.args["dsc"].value, d=d)
             self.msglog.info("Trying: {i}".format(i=info))
-            daemon.portext(self.args["dsc"], d, options=self.args["options"].split("|"))
+            daemon.portext(self.args["dsc"].value, d, options=self.args["options"].value)
             self.msglog.info("Requested: {i}".format(i=info))
             self._plain_result += d + " "
 
@@ -696,8 +719,8 @@ class Retry(Command):
         StringArgument(["--repository", "-R"], default="*", doc="Repository name -- use only in case of multiple matches.")
     ]
 
-    def run(self, daemon):
-        pkg_log = mini_buildd.misc.PkgLog(self.args["repository"], False, self.args["package"], self.args["version"])
+    def _run(self, daemon):
+        pkg_log = mini_buildd.misc.PkgLog(self.args["repository"].value, False, self.args["package"].value, self.args["version"].value)
         if not pkg_log.changes:
             raise Exception("No matching changes found for your retry query.")
         daemon.incoming_queue.put(pkg_log.changes)
@@ -716,10 +739,10 @@ class SetUserKey(Command):
         StringArgument(["key"], doc="GnuPG public key; multiline inputs will be handled as ascii armored full key, one-liners as key ids")
     ]
 
-    def run(self, _daemon):
+    def _run(self, _daemon):
         uploader = self.request.user.uploader
         uploader.Admin.mbd_remove(self.request, uploader)
-        key = self.args["key"]
+        key = self.args["key"].value
 
         if "\n" in key:
             self.msglog.info("Using given key argument as full ascii-armored GPG key")
@@ -750,8 +773,8 @@ class Subscription(Command):
         StringArgument(["subscription"], doc="subscription pattern")
     ]
 
-    def run(self, daemon):
-        package, _sep, distribution = self.args["subscription"].partition(":")
+    def _run(self, daemon):
+        package, _sep, distribution = self.args["subscription"].value.partition(":")
 
         def _filter():
             for s in daemon.get_subscription_objects().filter(subscriber=self.request.user):
@@ -763,24 +786,24 @@ class Subscription(Command):
             subscription.delete()
             return result
 
-        if self.args["action"] == "list":
+        if self.args["action"].value == "list":
             self._plain_result = "\n".join(["{s}.".format(s=subscription) for subscription in _filter()])
 
-        elif self.args["action"] == "add":
+        elif self.args["action"].value == "add":
             subscription, created = daemon.get_subscription_objects().get_or_create(subscriber=self.request.user,
                                                                                     package=package,
                                                                                     distribution=distribution)
             self._plain_result = "{a}: {s}.".format(a="Added" if created else "Exists", s=subscription)
 
-        elif self.args["action"] == "remove":
+        elif self.args["action"].value == "remove":
             self._plain_result = "\n".join(["Removed: {s}.".format(s=_delete(subscription)) for subscription in _filter()])
 
         else:
-            raise Exception("Unknown action '{c}': Use one of 'list', 'add' or 'remove'.".format(c=self.args["action"]))
+            raise Exception("Unknown action '{c}': Use one of 'list', 'add' or 'remove'.".format(c=self.args["action"].value))
 
         # For convenience, say something if nothing matched
         if not self._plain_result:
-            self._plain_result = "No matching subscriptions ({s}).".format(s=self.args["subscription"])
+            self._plain_result = "No matching subscriptions ({s}).".format(s=self.args["subscription"].value)
 
 
 COMMAND_GROUP = "__GROUP__"
@@ -809,5 +832,5 @@ COMMANDS = [(COMMAND_GROUP, "Daemon commands"),
             (Subscription.COMMAND, Subscription),
            ]
 COMMANDS_DICT = dict(COMMANDS)
-COMMANDS_DEFAULTS = [(cmd, cls(cls.get_default_args()) if cmd != COMMAND_GROUP else cls) for cmd, cls in COMMANDS]
+COMMANDS_DEFAULTS = [(cmd, cls({}) if cmd != COMMAND_GROUP else cls) for cmd, cls in COMMANDS]
 COMMANDS_DEFAULTS_DICT = dict(COMMANDS_DEFAULTS)

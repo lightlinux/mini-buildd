@@ -1,41 +1,38 @@
 {% load i18n %}
 {% load mini_buildd_tags %}
 
-{% with value=api_cmd.args|mbd_dict_get:param.identity %}
-	{% comment %}
-		<!-- <kbd><small>{{ param.doc }}</small></kbd> -->
-	{% endcomment %}
+{% comment %}
+	<!-- <kbd><small>{{ param.doc }}</small></kbd> -->
+{% endcomment %}
 
-	{% if hidden %}
-		<input type="hidden" value="{{ value }}" name="{{ param.identity }}" />
-	{% elif param.TYPE == "string" %}
-		<input type="{{ type|default:"text" }}" size="25" value="{{ value }}" name="{{ param.identity }}" title="{{ param.identity }}: {{ param.doc }}" />
-	{% elif param.TYPE == "int" %}
-		<input type="{{ type|default:"text" }}" size="5" value="{{ value }}" name="{{ param.identity }}" title="{{ param.identity }}: {{ param.doc }}" />
-	{% elif param.TYPE == "bool" %}
-		<input type="checkbox" value="True" {% if value %}checked{% endif %} name="{{ param.identity }}" title="{{ param.identity }}: {{ param.doc }}" />
-	{% elif param.TYPE == "select" %}
-		<select value="{{ value }}" name="{{ param.identity }}" title="{{ param.identity }}: {{ param.doc }}">
-			{% for choice in param.choices %}
-				<option value="{{ choice }}">{{ choice }}</option>
-			{% endfor %}
-		</select>
-	{% elif param.TYPE == "multiselect" %}
-		<input id="{{ tag_id }}-{{ param.identity }}-regexfilter" type="text" title="Bulk-select {{ param.identity }} via regex" onchange="mbdSelectByRegex('{{ tag_id }}-{{ param.identity }}-regexfilter-target', '{{ tag_id }}-{{ param.identity }}-regexfilter')"/>
-		<br />
-		<select id="{{ tag_id }}-{{ param.identity }}-regexfilter-target" multiple="multiple" value="{{ value }}" name="{{ param.identity }}" title="{{ param.identity }}: {{ param.doc }}">
-			{% for choice in param.choices %}
-				<option value="{{ choice }}">{{ choice }}</option>
-			{% endfor %}
-		</select>
-	{% else %}
-		Internal error: Unkown parameter type {{ type }}.
-	{% endif %}
+{% if hidden %}
+	<input type="hidden" value="{{ param.value }}" name="{{ param.identity }}" />
+{% elif param.TYPE == "string" %}
+	<input type="{{ type|default:"text" }}" size="25" value="{{ param.value }}" name="{{ param.identity }}" title="{{ param.identity }}: {{ param.doc }}" />
+{% elif param.TYPE == "int" %}
+	<input type="{{ type|default:"text" }}" size="5" value="{{ param.value }}" name="{{ param.identity }}" title="{{ param.identity }}: {{ param.doc }}" />
+{% elif param.TYPE == "bool" %}
+	<input type="checkbox" value="True" {% if param.value %}checked{% endif %} name="{{ param.identity }}" title="{{ param.identity }}: {{ param.doc }}" />
+{% elif param.TYPE == "select" %}
+	<select value="{{ param.value }}" name="{{ param.identity }}" title="{{ param.identity }}: {{ param.doc }}">
+		{% for choice in param.choices %}
+			<option value="{{ choice }}">{{ choice }}</option>
+		{% endfor %}
+	</select>
+{% elif param.TYPE == "multiselect" %}
+	<input id="{{ tag_id }}-{{ param.identity }}-regexfilter" type="text" title="Bulk-select {{ param.identity }} via regex" onchange="mbdSelectByRegex('{{ tag_id }}-{{ param.identity }}-regexfilter-target', '{{ tag_id }}-{{ param.identity }}-regexfilter')"/>
+	<br />
+	<select id="{{ tag_id }}-{{ param.identity }}-regexfilter-target" multiple="multiple" value="{{ param.value }}" name="{{ param.identity }}" title="{{ param.identity }}: {{ param.doc }}">
+		{% for choice in param.choices %}
+			<option value="{{ choice }}">{{ choice }}</option>
+		{% endfor %}
+	</select>
+{% else %}
+	Internal error: Unkown parameter type {{ type }}.
+{% endif %}
 
-	{% if verbosity == "verbose" %}
-		{{ param.identity }}
-	{% elif verbosity == "doc" %}
-		{{ param.identity }}: {{ param.doc }}
-	{% endif %}
-
-{% endwith %}
+{% if verbosity == "verbose" %}
+	{{ param.identity }}
+{% elif verbosity == "doc" %}
+	{{ param.identity }}: {{ param.doc }}
+{% endif %}
