@@ -207,8 +207,8 @@ class Status(Command):
 
     COMMAND = "status"
 
-    def __init__(self, args, request=None, msglog=LOG):
-        super().__init__(args, request, msglog)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
         self.version = "-1"
         self.http = ""
@@ -474,8 +474,8 @@ class List(Command):
         StringArgument(["--type", "-T"], default="", doc="package type: dsc, deb or udeb (like reprepo --type)")
     ]
 
-    def __init__(self, args, request=None, msglog=LOG):
-        super().__init__(args, request, msglog)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.repositories = {}
 
     def run(self, daemon):
@@ -527,8 +527,8 @@ class Show(Command):
         BoolArgument(["--verbose", "-v"], default=False, doc="verbose output")
     ]
 
-    def __init__(self, args, request=None, msglog=LOG):
-        super().__init__(args, request, msglog)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         # List of tuples: (repository, result)
         self.repositories = []
 
