@@ -53,6 +53,10 @@ class Argument(object):
         """Get value, including convenience transformations."""
         return self.raw_value
 
+    # do we really need that?
+    def false2none(self):
+        return self.raw_value if self.raw_value else None
+
 
 class StringArgument(Argument):
     TYPE = "string"
@@ -206,10 +210,6 @@ different components), or just as safeguard
 
     def has_flag(self, flag):
         return self.args.get(flag, "False") == "True"
-
-    def arg_false2none(self, key):
-        value = self.args.get(key)
-        return value if value else None
 
     @classmethod
     def auth_err(cls, user):
@@ -511,7 +511,7 @@ class List(Command):
         # Save all results of all repos in a top-level dict (don't add repos with empty results).
         for r in self.daemon.get_active_repositories():
             r_result = r.mbd_package_list(self.args["pattern"].value,
-                                          typ=self.arg_false2none("type"),
+                                          typ=self.args["type"].false2none(),
                                           with_rollbacks=self.args["with_rollbacks"].value,
                                           dist_regex=self.args["distribution"].value)
             if r_result:
@@ -628,7 +628,7 @@ class Migrate(Command):
                                                             distribution,
                                                             suite,
                                                             rollback=rollback,
-                                                            version=self.arg_false2none("version"),
+                                                            version=self.args["version"].false2none(),
                                                             msglog=self.msglog)
 
 
@@ -650,7 +650,7 @@ class Remove(Command):
                                                            distribution,
                                                            suite,
                                                            rollback=rollback,
-                                                           version=self.arg_false2none("version"),
+                                                           version=self.args["version"].false2none(),
                                                            msglog=self.msglog)
 
 
@@ -680,7 +680,7 @@ class Port(Command):
             self.daemon.port(self.args["package"].value,
                              self.args["from_distribution"].value,
                              to_distribution,
-                             version=self.arg_false2none("version"),
+                             version=self.args["version"].false2none(),
                              options=self.args["options"].value)
             self.msglog.info("Requested: {i}".format(i=info))
             self._plain_result += to_distribution + " "
