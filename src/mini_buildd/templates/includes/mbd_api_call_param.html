@@ -14,17 +14,17 @@
 {% elif param.TYPE == "bool" %}
 	<input type="checkbox" value="True" {% if param.value %}checked{% endif %} name="{{ param.identity }}" title="{{ param.identity }}: {{ param.doc }}" />
 {% elif param.TYPE == "select" %}
-	<select value="{{ param.value }}" name="{{ param.identity }}" title="{{ param.identity }}: {{ param.doc }}">
+	<select name="{{ param.identity }}" title="{{ param.identity }}: {{ param.doc }}">
 		{% for choice in param.choices %}
-			<option value="{{ choice }}">{{ choice }}</option>
+			<option {% if choice == param.value %}selected{% endif %}>{{ choice }}</option>
 		{% endfor %}
 	</select>
 {% elif param.TYPE == "multiselect" %}
 	<input id="{{ tag_id }}-{{ param.identity }}-regexfilter" type="text" title="Bulk-select {{ param.identity }} via regex" onchange="mbdSelectByRegex('{{ tag_id }}-{{ param.identity }}-regexfilter-target', '{{ tag_id }}-{{ param.identity }}-regexfilter')"/>
 	<br />
-	<select id="{{ tag_id }}-{{ param.identity }}-regexfilter-target" multiple="multiple" value="{{ param.value }}" name="{{ param.identity }}" title="{{ param.identity }}: {{ param.doc }}">
+	<select id="{{ tag_id }}-{{ param.identity }}-regexfilter-target" multiple="multiple" name="{{ param.identity }}" title="{{ param.identity }}: {{ param.doc }}">
 		{% for choice in param.choices %}
-			<option value="{{ choice }}">{{ choice }}</option>
+			<option {% if choice in param.value %}selected{% endif %}>{{ choice }}</option>
 		{% endfor %}
 	</select>
 {% else %}

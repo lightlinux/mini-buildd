@@ -132,7 +132,23 @@ different components), or just as safeguard
     # Used in: port, portext
     COMMON_ARG_OPTIONS = MultiSelectArgument(["--options", "-O"], separator="|", default="ignore-lintian=true", doc="upload options (see user manual); separate multiple options by '|'")
 
-    def _filter_api_args(self, given_args, set_if_missing=False):
+    def __init__(self, given_args, request=None, msglog=LOG):
+        self.args = {}
+        for arg in self.ARGUMENTS:
+            self.args[arg.identity] = arg
+
+        self.request = request
+        self.msglog = msglog
+        self._plain_result = ""
+
+        # DEPRECATED: old html_hints
+        self.html_hints = {"args": {},            # Copy of static arg description for each arg
+                           "args_mandatory": {},  # List of mandatory options
+                           "choices": {}}         # List of dynamic choices for selected args
+
+        self.update(given_args)
+
+    def update(self, given_args):
         def _get(key):
             try:
                 # django request.GET args
@@ -144,25 +160,18 @@ different components), or just as safeguard
         for argument in self.args.values():
             if argument.identity in given_args:
                 argument.raw_value = _get(argument.identity)
-            elif set_if_missing:
-                argument.raw_value = argument.identity.upper()
 
-    def __init__(self, given_args, request=None, msglog=LOG):
-        self.args = {}
-        for arg in self.ARGUMENTS:
-            self.args[arg.identity] = arg
-        self._filter_api_args(given_args)
+        self._update(given_args)
 
-        self.request = request
-        self.msglog = msglog
-        self._plain_result = ""
+        # DEPRECATED: old html_hints
+        for argument in self.ARGUMENTS:
+            arg = argument.identity
+            self.html_hints["args"][arg] = argument.argparse_kvsargs
+            if "default" not in argument.argparse_kvsargs:
+                self.html_hints["args_mandatory"][arg] = argument.argparse_kvsargs.get("help")
 
-        self.html_hints = {"args": {},            # Copy of static arg description for each arg
-                           "args_mandatory": {},  # List of mandatory options
-                           "choices": {}}         # List of dynamic choices for selected args
-
-    def _run(self, daemon):
-        pass
+    def _update(self, _given_args):
+        LOG.warning("No _update() function defined for: {}".format(self.COMMAND))
 
     def run(self, daemon):
         # Sanity checks
@@ -173,12 +182,8 @@ different components), or just as safeguard
         # Run
         self._run(daemon)
 
-    def update_html_hints(self, daemon=None):  # pylint: disable=unused-argument
-        for argument in self.ARGUMENTS:
-            arg = argument.identity
-            self.html_hints["args"][arg] = argument.argparse_kvsargs
-            if "default" not in argument.argparse_kvsargs:
-                self.html_hints["args_mandatory"][arg] = argument.argparse_kvsargs.get("help")
+    def _run(self, _daemon):
+        raise Exception("No _run() function defined for: {}".format(self.COMMAND))
 
     def __getstate__(self):
         "Log object cannot be pickled."
