@@ -665,7 +665,7 @@ class Daemon(object):
         from_repository, from_distribution, from_suite, _from_rollback = self.parse_distribution(from_dist)
         p = from_repository.mbd_package_find(package, distribution=from_dist, version=version)
         if not p:
-            raise Exception("Port failed: Package (version) for '{p}' not found in '{d}'".format(p=package, d=from_dist))
+            raise Exception("Port failed: Package '{p}' ({v}) not found in '{d}'".format(p=package, v=version, d=from_dist))
 
         # check to_dist
         to_repository, to_distribution, to_suite, to_rollback = self.parse_distribution(to_dist)
