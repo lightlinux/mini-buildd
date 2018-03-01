@@ -5,14 +5,14 @@
 		<b>{{ api_cmd.COMMAND }}</b>
 		{% for k, v in api_cmd.args.items %}
 			{% if v %}
-				{{ k }}=<b>{{ v }}</b>
+				{{ k }}=<b>{{ v.raw_value }}</b>
 			{% endif %}
 		{% endfor %}
 		<form action="/mini_buildd/api" method="get">
 			<div>
 				<input type="hidden" name="command" value="{{ api_cmd.COMMAND }}" />
 				{% for k, v in api_cmd.args.items %}
-					<input type="hidden" name="{{ k }}" value="{{ v }}" />
+					<input type="hidden" name="{{ k }}" value="{{ v.raw_value }}" />
 				{% endfor %}
 				<input type="hidden" name="confirm" value="{{ api_cmd.COMMAND }}" />
 				{% if referer %}
