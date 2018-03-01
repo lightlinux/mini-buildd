@@ -145,9 +145,7 @@ for cmd, cmd_cls in mini_buildd.api.COMMANDS:
     if cmd != mini_buildd.api.COMMAND_GROUP:
         cmd_parser = SUBPARSERS.add_parser(cmd, help=cmd_cls.docstring())
         for argument in cmd_cls.ARGUMENTS:
-            cmd_args = argument.id_list
-            cmd_kvargs = argument.argparse_kvsargs
-            cmd_parser.add_argument(*cmd_args, **cmd_kvargs)
+            cmd_parser.add_argument(*argument.id_list, **argument.argparse_kvsargs)
 
         if cmd_cls.CONFIRM:
             cmd_parser.add_argument("--confirm", action="store", default="", metavar="COMMAND",
