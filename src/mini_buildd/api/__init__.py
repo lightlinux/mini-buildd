@@ -132,11 +132,12 @@ different components), or just as safeguard
     # Used in: port, portext
     COMMON_ARG_OPTIONS = MultiSelectArgument(["--options", "-O"], separator="|", default="ignore-lintian=true", doc="upload options (see user manual); separate multiple options by '|'")
 
-    def __init__(self, given_args, request=None, msglog=LOG):
+    def __init__(self, given_args, daemon=None, request=None, msglog=LOG):
         self.args = {}
         for arg in self.ARGUMENTS:
             self.args[arg.identity] = copy.copy(arg)
 
+        self.daemon = daemon
         self.request = request
         self.msglog = msglog
         self._plain_result = ""
@@ -173,16 +174,16 @@ different components), or just as safeguard
     def _update(self, _given_args):
         LOG.warning("No _update() function defined for: {}".format(self.COMMAND))
 
-    def run(self, daemon):
+    def run(self):
         # Sanity checks
         for argument in self.args.values():
             if argument.raw_value is None:
                 raise Exception("Missing required argument '{a}'".format(a=argument.identity))
 
         # Run
-        self._run(daemon)
+        self._run()
 
-    def _run(self, _daemon):
+    def _run(self):
         raise Exception("No _run() function defined for: {}".format(self.COMMAND))
 
     def __getstate__(self):
@@ -249,37 +250,37 @@ class Status(Command):
         self.packaging = []
         self.building = []
 
-    def _run(self, daemon):
+    def _run(self):
         # version string
         self.version = mini_buildd.__version__
 
         # hopo string
-        self.http = daemon.model.mbd_get_http_hopo().string
+        self.http = self.daemon.model.mbd_get_http_hopo().string
 
         # hopo string
-        self.ftp = daemon.model.mbd_get_ftp_hopo().string
+        self.ftp = self.daemon.model.mbd_get_ftp_hopo().string
 
         # bool
-        self.running = daemon.is_running()
+        self.running = self.daemon.is_running()
 
         # float value: 0 =< load <= 1+
-        self.load = daemon.build_queue.load
+        self.load = self.daemon.build_queue.load
 
         # chroots: {"squeeze": ["i386", "amd64"], "wheezy": ["amd64"]}
-        for c in daemon.get_active_chroots():
+        for c in self.daemon.get_active_chroots():
             self.chroots.setdefault(c.source.codename, [])
             self.chroots[c.source.codename].append(c.architecture.name)
 
         # repositories: {"repo1": ["sid", "wheezy"], "repo2": ["squeeze"]}
-        for r in daemon.get_active_repositories():
+        for r in self.daemon.get_active_repositories():
             self.repositories[r.identity] = [d.base_source.codename for d in r.distributions.all()]
 
         # remotes: ["host1.xyz.org:8066", "host2.xyz.org:8066"]
-        self.remotes = [r.http for r in daemon.get_active_or_auto_reactivate_remotes()]
+        self.remotes = [r.http for r in self.daemon.get_active_or_auto_reactivate_remotes()]
 
         # packaging/building: string/unicode
-        self.packaging = ["{0}".format(p) for p in list(daemon.packages.values())]
-        self.building = ["{0}".format(b) for b in list(daemon.builds.values())]
+        self.packaging = ["{0}".format(p) for p in list(self.daemon.packages.values())]
+        self.building = ["{0}".format(b) for b in list(self.daemon.builds.values())]
 
         self._plain_result = """\
 http://{h} ({v}):
@@ -329,10 +330,10 @@ class Start(Command):
     AUTH = Command.ADMIN
     ARGUMENTS = [BoolArgument(["--force-check", "-C"], default=False, doc="run checks on instances even if already checked.")]
 
-    def _run(self, daemon):
-        if not daemon.start(force_check=self.has_flag("force_check"), msglog=self.msglog):
+    def _run(self):
+        if not self.daemon.start(force_check=self.has_flag("force_check"), msglog=self.msglog):
             raise Exception("Could not start Daemon (check logs and messages).")
-        self._plain_result = "{d}\n".format(d=daemon)
+        self._plain_result = "{d}\n".format(d=self.daemon)
 
 
 class Stop(Command):
@@ -341,10 +342,10 @@ class Stop(Command):
     AUTH = Command.ADMIN
     ARGUMENTS = []
 
-    def _run(self, daemon):
-        if not daemon.stop(msglog=self.msglog):
+    def _run(self):
+        if not self.daemon.stop(msglog=self.msglog):
             raise Exception("Could not stop Daemon (check logs and messages).")
-        self._plain_result = "{d}\n".format(d=daemon)
+        self._plain_result = "{d}\n".format(d=self.daemon)
 
 
 class PrintUploaders(Command):
@@ -354,16 +355,16 @@ class PrintUploaders(Command):
     NEEDS_RUNNING_DAEMON = True
     ARGUMENTS = [StringArgument(["--repository", "-R"], default=".*", doc="repository name regex.")]
 
-    def _uploader_lines(self, daemon):
-        for r in daemon.get_active_repositories().filter(identity__regex=r"^{r}$".format(r=self.args["repository"].value)):
+    def _uploader_lines(self):
+        for r in self.daemon.get_active_repositories().filter(identity__regex=r"^{r}$".format(r=self.args["repository"].value)):
             yield "Uploader keys for repository '{r}':".format(r=r.identity)
             if r.allow_unauthenticated_uploads:
                 yield " WARNING: Unauthenticated uploads allowed anyway"
-            for u in daemon.keyrings.get_uploaders()[r.identity].get_pub_colons():
+            for u in self.daemon.keyrings.get_uploaders()[r.identity].get_pub_colons():
                 yield " {u}".format(u=u)
 
-    def _run(self, daemon):
-        self._plain_result = "\n".join(self._uploader_lines(daemon)) + "\n"
+    def _run(self):
+        self._plain_result = "\n".join(self._uploader_lines()) + "\n"
 
 
 class Meta(Command):
@@ -373,8 +374,8 @@ class Meta(Command):
     ARGUMENTS = [StringArgument(["model"], doc="Model path, for example 'source.Archive'"),
                  StringArgument(["function"], doc="Meta function to call, for example 'add_from_sources_list'")]
 
-    def _run(self, daemon):
-        daemon.meta(self.args["model"].value, self.args["function"].value, msglog=self.msglog)
+    def _run(self):
+        self.daemon.meta(self.args["model"].value, self.args["function"].value, msglog=self.msglog)
 
 
 class AutoSetup(Command):
@@ -387,42 +388,42 @@ class AutoSetup(Command):
         SelectArgument(["--chroot-backend", "-C"], default="Dir", choices=["Dir", "File", "LVM", "LoopLVM", "BtrfsSnapshot"], doc="chroot backend to use, or empty string to not create chroots.")
     ]
 
-    def _run(self, daemon):
-        daemon.stop()
+    def _run(self):
+        self.daemon.stop()
 
         # Daemon
-        daemon.meta("daemon.Daemon", "pca_all", msglog=self.msglog)
+        self.daemon.meta("daemon.Daemon", "pca_all", msglog=self.msglog)
 
         # Sources
-        daemon.meta("source.Archive", "add_from_sources_list", msglog=self.msglog)
+        self.daemon.meta("source.Archive", "add_from_sources_list", msglog=self.msglog)
         for v in self.args["vendors"].value:
-            daemon.meta("source.Archive", "add_{}".format(v), msglog=self.msglog)
-            daemon.meta("source.Source", "add_{}".format(v), msglog=self.msglog)
-        daemon.meta("source.PrioritySource", "add_extras", msglog=self.msglog)
-        daemon.meta("source.Source", "pca_all", msglog=self.msglog)
+            self.daemon.meta("source.Archive", "add_{}".format(v), msglog=self.msglog)
+            self.daemon.meta("source.Source", "add_{}".format(v), msglog=self.msglog)
+        self.daemon.meta("source.PrioritySource", "add_extras", msglog=self.msglog)
+        self.daemon.meta("source.Source", "pca_all", msglog=self.msglog)
 
         # Repositories
-        daemon.meta("repository.Layout", "create_defaults", msglog=self.msglog)
-        daemon.meta("repository.Distribution", "add_base_sources", msglog=self.msglog)
+        self.daemon.meta("repository.Layout", "create_defaults", msglog=self.msglog)
+        self.daemon.meta("repository.Distribution", "add_base_sources", msglog=self.msglog)
         for r in self.args["repositories"].value:
-            daemon.meta("repository.Repository", "add_{}".format(r), msglog=self.msglog)
-        daemon.meta("repository.Repository", "pca_all", msglog=self.msglog)
+            self.daemon.meta("repository.Repository", "add_{}".format(r), msglog=self.msglog)
+        self.daemon.meta("repository.Repository", "pca_all", msglog=self.msglog)
 
         # Chroots
         if self.args["chroot_backend"].value:
             cb_class = "chroot.{}Chroot".format(self.args["chroot_backend"].value)
-            daemon.meta(cb_class, "add_base_sources", msglog=self.msglog)
-            daemon.meta(cb_class, "pca_all", msglog=self.msglog)
+            self.daemon.meta(cb_class, "add_base_sources", msglog=self.msglog)
+            self.daemon.meta(cb_class, "pca_all", msglog=self.msglog)
 
-        daemon.start()
+        self.daemon.start()
 
 
 class GetKey(Command):
     """Get GnuPG public key."""
     COMMAND = "getkey"
 
-    def _run(self, daemon):
-        self._plain_result = daemon.model.mbd_get_pub_key()
+    def _run(self):
+        self._plain_result = self.daemon.model.mbd_get_pub_key()
 
 
 class GetDputConf(Command):
@@ -432,8 +433,8 @@ class GetDputConf(Command):
     """
     COMMAND = "getdputconf"
 
-    def _run(self, daemon):
-        self._plain_result = daemon.model.mbd_get_dput_conf()
+    def _run(self):
+        self._plain_result = self.daemon.model.mbd_get_dput_conf()
 
 
 class GetSourcesList(Command):
@@ -450,12 +451,12 @@ class GetSourcesList(Command):
         BoolArgument(["--with-extra-sources", "-x"], default=False, doc="also list extra sources needed.")
     ]
 
-    def _run(self, daemon):
-        self._plain_result = daemon.mbd_get_sources_list(self.args["codename"].value,
-                                                         self.args["repository"].value,
-                                                         self.args["suite"].value,
-                                                         ["deb ", "deb-src "] if self.args["with_deb_src"].value else ["deb "],
-                                                         self.args["with_extra_sources"].value)
+    def _run(self):
+        self._plain_result = self.daemon.mbd_get_sources_list(self.args["codename"].value,
+                                                              self.args["repository"].value,
+                                                              self.args["suite"].value,
+                                                              ["deb ", "deb-src "] if self.args["with_deb_src"].value else ["deb "],
+                                                              self.args["with_extra_sources"].value)
 
 
 class LogCat(Command):
@@ -467,8 +468,8 @@ class LogCat(Command):
         IntArgument(["--lines", "-n"], default=500, doc="cat (approx.) the last N lines")
     ]
 
-    def _run(self, daemon):
-        self._plain_result = daemon.logcat(lines=self.args["lines"].value)
+    def _run(self):
+        self._plain_result = self.daemon.logcat(lines=self.args["lines"].value)
 
 
 def _get_table_format(dct, cols):
@@ -506,9 +507,9 @@ class List(Command):
         super().__init__(*args, **kwargs)
         self.repositories = {}
 
-    def _run(self, daemon):
+    def _run(self):
         # Save all results of all repos in a top-level dict (don't add repos with empty results).
-        for r in daemon.get_active_repositories():
+        for r in self.daemon.get_active_repositories():
             r_result = r.mbd_package_list(self.args["pattern"].value,
                                           typ=self.arg_false2none("type"),
                                           with_rollbacks=self.args["with_rollbacks"].value,
@@ -560,9 +561,9 @@ class Show(Command):
         # List of tuples: (repository, result)
         self.repositories = []
 
-    def _run(self, daemon):
+    def _run(self):
         # Save all results of all repos in a top-level dict (don't add repos with empty results).
-        for r in daemon.get_active_repositories():
+        for r in self.daemon.get_active_repositories():
             r_result = r.mbd_package_show(self.args["package"].value)
             if r_result:
                 self.repositories.append((r, r_result))
@@ -621,8 +622,8 @@ class Migrate(Command):
         Command.COMMON_ARG_VERSION
     ]
 
-    def _run(self, daemon):
-        repository, distribution, suite, rollback = daemon.parse_distribution(self.args["distribution"].value)
+    def _run(self):
+        repository, distribution, suite, rollback = self.daemon.parse_distribution(self.args["distribution"].value)
         self._plain_result = repository.mbd_package_migrate(self.args["package"].value,
                                                             distribution,
                                                             suite,
@@ -643,8 +644,8 @@ class Remove(Command):
         Command.COMMON_ARG_VERSION
     ]
 
-    def _run(self, daemon):
-        repository, distribution, suite, rollback = daemon.parse_distribution(self.args["distribution"].value)
+    def _run(self):
+        repository, distribution, suite, rollback = self.daemon.parse_distribution(self.args["distribution"].value)
         self._plain_result = repository.mbd_package_remove(self.args["package"].value,
                                                            distribution,
                                                            suite,
@@ -671,16 +672,16 @@ class Port(Command):
         Command.COMMON_ARG_VERSION,
         Command.COMMON_ARG_OPTIONS]
 
-    def _run(self, daemon):
+    def _run(self):
         # Parse and pre-check all dists
         for to_distribution in self.args["to_distributions"].value:
             info = "Port {p}/{d} -> {to_d}".format(p=self.args["package"].value, d=self.args["from_distribution"].value, to_d=to_distribution)
             self.msglog.info("Trying: {i}".format(i=info))
-            daemon.port(self.args["package"].value,
-                        self.args["from_distribution"].value,
-                        to_distribution,
-                        version=self.arg_false2none("version"),
-                        options=self.args["options"].value)
+            self.daemon.port(self.args["package"].value,
+                             self.args["from_distribution"].value,
+                             to_distribution,
+                             version=self.arg_false2none("version"),
+                             options=self.args["options"].value)
             self.msglog.info("Requested: {i}".format(i=info))
             self._plain_result += to_distribution + " "
 
@@ -701,12 +702,12 @@ class PortExt(Command):
         Command.COMMON_ARG_OPTIONS
     ]
 
-    def _run(self, daemon):
+    def _run(self):
         # Parse and pre-check all dists
         for d in self.args["distributions"].value:
             info = "External port {dsc} -> {d}".format(dsc=self.args["dsc"].value, d=d)
             self.msglog.info("Trying: {i}".format(i=info))
-            daemon.portext(self.args["dsc"].value, d, options=self.args["options"].value)
+            self.daemon.portext(self.args["dsc"].value, d, options=self.args["options"].value)
             self.msglog.info("Requested: {i}".format(i=info))
             self._plain_result += d + " "
 
@@ -724,11 +725,11 @@ class Retry(Command):
         StringArgument(["--repository", "-R"], default="*", doc="Repository name -- use only in case of multiple matches.")
     ]
 
-    def _run(self, daemon):
+    def _run(self):
         pkg_log = mini_buildd.misc.PkgLog(self.args["repository"].value, False, self.args["package"].value, self.args["version"].value)
         if not pkg_log.changes:
             raise Exception("No matching changes found for your retry query.")
-        daemon.incoming_queue.put(pkg_log.changes)
+        self.daemon.incoming_queue.put(pkg_log.changes)
         self.msglog.info("Retrying: {c}".format(c=os.path.basename(pkg_log.changes)))
 
         self._plain_result = os.path.basename(os.path.basename(pkg_log.changes))
@@ -744,7 +745,7 @@ class SetUserKey(Command):
         StringArgument(["key"], doc="GnuPG public key; multiline inputs will be handled as ascii armored full key, one-liners as key ids")
     ]
 
-    def _run(self, _daemon):
+    def _run(self):
         uploader = self.request.user.uploader
         uploader.Admin.mbd_remove(self.request, uploader)
         key = self.args["key"].value
@@ -778,11 +779,11 @@ class Subscription(Command):
         StringArgument(["subscription"], doc="subscription pattern")
     ]
 
-    def _run(self, daemon):
+    def _run(self):
         package, _sep, distribution = self.args["subscription"].value.partition(":")
 
         def _filter():
-            for s in daemon.get_subscription_objects().filter(subscriber=self.request.user):
+            for s in self.daemon.get_subscription_objects().filter(subscriber=self.request.user):
                 if (package == "" or s.package == package) and (distribution == "" or s.distribution == distribution):
                     yield s
 
@@ -795,9 +796,9 @@ class Subscription(Command):
             self._plain_result = "\n".join(["{s}.".format(s=subscription) for subscription in _filter()])
 
         elif self.args["action"].value == "add":
-            subscription, created = daemon.get_subscription_objects().get_or_create(subscriber=self.request.user,
-                                                                                    package=package,
-                                                                                    distribution=distribution)
+            subscription, created = self.daemon.get_subscription_objects().get_or_create(subscriber=self.request.user,
+                                                                                         package=package,
+                                                                                         distribution=distribution)
             self._plain_result = "{a}: {s}.".format(a="Added" if created else "Exists", s=subscription)
 
         elif self.args["action"].value == "remove":

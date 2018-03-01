@@ -177,7 +177,7 @@ def api(request):
             return error401_unauthorized(request, auth_err)
 
         # Generate command object
-        api_cmd = api_cls(request.GET, request, msglog=MsgLog(LOG, request))
+        api_cmd = api_cls(request.GET, daemon=mini_buildd.daemon.get(), request=request, msglog=MsgLog(LOG, request))
 
         # HTML output by default
         output = request.GET.get("output", "html")
@@ -199,7 +199,7 @@ def api(request):
         api_cmd.msglog.info("API call '{c}' by user '{u}'".format(c=command, u=request.user))
 
         # Run API call (dep-injection via daemon object)
-        api_cmd.run(mini_buildd.daemon.get())
+        api_cmd.run()
 
         # Generate API call output
         response = None

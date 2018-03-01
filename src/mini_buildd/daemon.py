@@ -514,8 +514,8 @@ class Daemon(object):
         return not self.is_busy() and bool(self.thread)
 
     def get_status(self):
-        status = mini_buildd.api.Status([])
-        status.run(self)
+        status = mini_buildd.api.Status({}, daemon=self)
+        status.run()
         return status
 
     def get_title(self):
