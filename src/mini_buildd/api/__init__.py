@@ -135,7 +135,7 @@ different components), or just as safeguard
     def __init__(self, given_args, request=None, msglog=LOG):
         self.args = {}
         for arg in self.ARGUMENTS:
-            self.args[arg.identity] = arg
+            self.args[arg.identity] = copy.copy(arg)
 
         self.request = request
         self.msglog = msglog
