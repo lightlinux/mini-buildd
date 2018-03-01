@@ -121,7 +121,7 @@ def mbd_api_call(cmd, user, hidden=None, show_extra=True, name=None, title=None,
 
     hidden_params = values.keys() if hidden is None else hidden.split(",")
     show_params = [] if verbosity == "doc" else [m for m in api_cmd.html_hints["args_mandatory"] if m not in hidden_params]
-    extra_params = [key for key in api_cmd.args.keys() if key not in show_params] if show_extra else []
+    extra_params = [key for key in api_cmd.args.keys() if key not in show_params and key not in hidden_params] if show_extra else []
 
     return {"api_cmd": api_cmd,
             "tag_id": "mbd-api-call-{}".format("".join(random.choices(string.ascii_lowercase + string.digits, k=16))),
