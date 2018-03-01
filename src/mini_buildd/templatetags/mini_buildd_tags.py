@@ -117,7 +117,7 @@ def mbd_api_call(cmd, user, hidden=None, show_extra=True, name=None, title=None,
     api_cls = mini_buildd.api.COMMANDS_DICT.get(cmd, None)
     auth_err = api_cls.auth_err(user)
     values = _kwargs("value_")
-    api_cmd = api_cls(values)
+    api_cmd = api_cls(values, daemon=mini_buildd.daemon.get())
 
     hidden_params = values.keys() if hidden is None else hidden.split(",")
     show_params = [] if verbosity == "doc" else [m for m in api_cmd.html_hints["args_mandatory"] if m not in hidden_params]
