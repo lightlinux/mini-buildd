@@ -377,9 +377,9 @@ class AutoSetup(Command):
     COMMAND = "autosetup"
     AUTH = Command.ADMIN
     ARGUMENTS = [
-        MultiSelectArgument(["--vendors", "-V"], default="debian", doc="comma-separated list of vendors to auto-setup for. Possible values: 'debian', 'ubuntu'"),
-        MultiSelectArgument(["--repositories", "-R"], default="test", doc="comma-separated list of repositories to auto-setup for. Possible values: 'test', 'debdev'"),
-        SelectArgument(["--chroot-backend", "-C"], default="Dir", doc="chroot backend to use, or empty string to not create chroots. Possible values: 'Dir', 'File', 'LVM', 'LoopLVM', 'BtrfsSnapshot'")
+        MultiSelectArgument(["--vendors", "-V"], default="debian", choices=["debian", "ubuntu"], doc="comma-separated list of vendors to auto-setup for."),
+        MultiSelectArgument(["--repositories", "-R"], default="test", choices=["test", "debdev"], doc="comma-separated list of repositories to auto-setup for."),
+        SelectArgument(["--chroot-backend", "-C"], default="Dir", choices=["Dir", "File", "LVM", "LoopLVM", "BtrfsSnapshot"], doc="chroot backend to use, or empty string to not create chroots.")
     ]
 
     def _run(self, daemon):
