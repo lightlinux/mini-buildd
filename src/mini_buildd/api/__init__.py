@@ -166,7 +166,7 @@ different components), or just as safeguard
             if argument.identity in given_args:
                 argument.raw_value = _get(argument.identity)
 
-        self._update(given_args)
+        self._update()
 
         # DEPRECATED: old html_hints
         for argument in self.ARGUMENTS:
@@ -175,7 +175,7 @@ different components), or just as safeguard
             if "default" not in argument.argparse_kvsargs:
                 self.html_hints["args_mandatory"][arg] = argument.argparse_kvsargs.get("help")
 
-    def _update(self, _given_args):
+    def _update(self):
         LOG.warning("No _update() function defined for: {}".format(self.COMMAND))
 
     def run(self):
@@ -671,6 +671,11 @@ class Port(Command):
         MultiSelectArgument(["to_distributions"], doc="comma-separated list of distributions to port to (when this equals the from-distribution, a rebuild will be done)"),
         Command.COMMON_ARG_VERSION,
         Command.COMMON_ARG_OPTIONS]
+
+    def _update(self):
+        if self.daemon:
+            repository, _distribution, suite, _rollback_no = self.daemon.parse_distribution(self.args["from_distribution"].value)
+            self.args["to_distributions"].choices = repository.mbd_distribution_strings(uploadable=True, experimental=suite.experimental)
 
     def _run(self):
         # Parse and pre-check all dists
