@@ -6,23 +6,25 @@
 <form action="/mini_buildd/api" method="get">
 	<input type="hidden" name="command" value="{{ api_cmd.COMMAND }}" />
 
-	<!-- Parameters with a predefined fixed value -->
-	{% for param in hidden_params %}
-		{% include "includes/mbd_api_call_param.html" with hidden=True %}
+	{# Pre-button args #}
+	{% for arg in api_cmd.args.values %}
+		{% if arg.given %}
+			{# Fixed hidden values #}
+			{% include "includes/mbd_api_call_param.html" with hidden=True %}
+		{% elif arg.raw_value is None %}
+			{# Mandatory input #}
+			{% include "includes/mbd_api_call_param.html" with show_label=False show_doc=False %}
+		{% endif %}
 	{% endfor %}
 
-	<!-- Parameters that are always shown to the user -->
-	{% for param in show_params %}
-		{% include "includes/mbd_api_call_param.html" %}
-	{% endfor %}
-
+	{# Submit button #}
 	<input type="submit"
 				 class="{{ style }}"
 				 value="{{ name|default_if_none:api_cmd.COMMAND }}"
 				 title="{% if auth_err %}{{ auth_err }}{% else %}{{ title|default_if_none:api_cmd.docstring }}{% endif %}"
 				 {% if auth_err %}disabled{% endif %} />
 
-	{% if extra_params or verbosity == "doc" %}
+	{% if show_more %}
 		<!-- Extra parameters, swap show/hide -->
 		<a id="{{ tag_id }}-header"
 			 href="#"
@@ -32,12 +34,14 @@
 
 		<div id="{{ tag_id }}-parameter" style="display: none;">
 
-			{% if verbosity == "doc" %}<pre>{{ api_cmd.docstring }}</pre>{% endif %}
+			{% if show_doc %}<pre>{{ api_cmd.docstring }}</pre>{% endif %}
 
 			<!-- Optional parameters, presented on demand only -->
-			{% for param in extra_params %}
-				{% include "includes/mbd_api_call_param.html" %}
-				<br />
+			{% for arg in api_cmd.args.values %}
+				{% if not arg.given and not arg.raw_value is None %}
+					{% include "includes/mbd_api_call_param.html" with show_label=True %}
+					<br />
+				{% endif %}
 			{% endfor %}
 			<br />
 			<select name="output" title="Output type">

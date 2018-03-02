@@ -38,6 +38,7 @@ class Argument(object):
         # default, value: Always the str representation (as given on the command line)
         self.default = default
         self.raw_value = default
+        self.given = False
 
         # identity: 1st of id_list with leading '--' removed and hyphens turned to underscores
         self.identity = id_list[0][2 if id_list[0].startswith("--") else 0:].replace("-", "_")
@@ -47,6 +48,11 @@ class Argument(object):
         self.argparse_kvsargs["help"] = doc
         if default is not None:
             self.argparse_kvsargs["default"] = default
+
+    def set(self, raw_value):
+        """Get value, including convenience transformations."""
+        self.raw_value = raw_value
+        self.given = True
 
     @property
     def value(self):
@@ -164,7 +170,7 @@ different components), or just as safeguard
 
         for argument in self.args.values():
             if argument.identity in given_args:
-                argument.raw_value = _get(argument.identity)
+                argument.set(_get(argument.identity))
 
         self._update()
 
@@ -673,7 +679,7 @@ class Port(Command):
         Command.COMMON_ARG_OPTIONS]
 
     def _update(self):
-        if self.daemon:
+        if self.daemon and self.args["from_distribution"].value:
             repository, _distribution, suite, _rollback_no = self.daemon.parse_distribution(self.args["from_distribution"].value)
             self.args["to_distributions"].choices = repository.mbd_distribution_strings(uploadable=True, experimental=suite.experimental)
 

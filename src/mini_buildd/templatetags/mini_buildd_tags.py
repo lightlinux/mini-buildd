@@ -110,28 +110,20 @@ def mbd_admin_auto_setup():
 
 
 @register.inclusion_tag("includes/mbd_api_call.html")
-def mbd_api_call(cmd, user, hidden=None, show_extra=True, name=None, title=None, style="button", verbosity="quiet", **kwargs):
+def mbd_api_call(cmd, user, show_more=True, name=None, title=None, style="button", **kwargs):
     def _kwargs(prefix):
         return {k[len(prefix):]: v for k, v in kwargs.items() if k.startswith(prefix)}
 
     api_cls = mini_buildd.api.COMMANDS_DICT.get(cmd, None)
     auth_err = api_cls.auth_err(user)
-    values = _kwargs("value_")
-    api_cmd = api_cls(values, daemon=mini_buildd.daemon.get())
-
-    hidden_params = values.keys() if hidden is None else hidden.split(",")
-    show_params = [] if verbosity == "doc" else [m for m in api_cmd.html_hints["args_mandatory"] if m not in hidden_params]
-    extra_params = [key for key in api_cmd.args.keys() if key not in show_params and key not in hidden_params] if show_extra else []
+    api_cmd = api_cls(_kwargs("value_"), daemon=mini_buildd.daemon.get())
 
     return {"api_cmd": api_cmd,
             "tag_id": "mbd-api-call-{}".format("".join(random.choices(string.ascii_lowercase + string.digits, k=16))),
-            "hidden_params": [a for a in api_cmd.args.values() if a.identity in hidden_params],
-            "show_params": [a for a in api_cmd.args.values() if a.identity in show_params],
-            "extra_params": [a for a in api_cmd.args.values() if a.identity in extra_params],
+            "show_more": show_more,
             "name": name,
             "title": title,
             "style": style,
-            "verbosity": verbosity,
             "auth_err": auth_err}
 
 
