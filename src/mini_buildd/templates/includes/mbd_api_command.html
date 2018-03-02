@@ -11,10 +11,10 @@
 		{% for arg in api_cmd.args.values %}
 			{% if arg.given %}
 				{# Fixed hidden values #}
-				{% include "includes/mbd_api_call_param.html" with hidden=True %}
+				{% include "includes/mbd_api_command_arg.html" with hidden=True %}
 			{% elif arg.raw_value is None %}
 				{# Mandatory input #}
-				{% include "includes/mbd_api_call_param.html" with show_label=False show_doc=False %}
+				{% include "includes/mbd_api_command_arg.html" with show_label=False show_doc=False %}
 			{% endif %}
 		{% endfor %}
 
@@ -40,7 +40,7 @@
 				<!-- Optional parameters, presented on demand only -->
 				{% for arg in api_cmd.args.values %}
 					{% if not arg.given and not arg.raw_value is None %}
-						{% include "includes/mbd_api_call_param.html" with show_label=True %}
+						{% include "includes/mbd_api_command_arg.html" with show_label=True %}
 						<br />
 					{% endif %}
 				{% endfor %}
