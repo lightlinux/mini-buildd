@@ -152,11 +152,6 @@ different components), or just as safeguard
         self.msglog = msglog
         self._plain_result = ""
 
-        # DEPRECATED: old html_hints
-        self.html_hints = {"args": {},            # Copy of static arg description for each arg
-                           "args_mandatory": {},  # List of mandatory options
-                           "choices": {}}         # List of dynamic choices for selected args
-
         self.update(given_args)
 
     def update(self, given_args):
@@ -173,13 +168,6 @@ different components), or just as safeguard
                 argument.set(_get(argument.identity))
 
         self._update()
-
-        # DEPRECATED: old html_hints
-        for argument in self.ARGUMENTS:
-            arg = argument.identity
-            self.html_hints["args"][arg] = argument.argparse_kvsargs
-            if "default" not in argument.argparse_kvsargs:
-                self.html_hints["args_mandatory"][arg] = argument.argparse_kvsargs.get("help")
 
     def _update(self):
         LOG.warning("No _update() function defined for: {}".format(self.COMMAND))
