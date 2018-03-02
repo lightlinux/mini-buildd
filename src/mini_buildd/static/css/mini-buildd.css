@@ -647,6 +647,16 @@ a.hover-underline:hover
 	font-style: italic;
 }
 
+#mbd-content div.command, #mbd-page-header div.command
+{
+	border-color: darkgrey;
+	border-style: groove;
+	border-width: thin;
+	background: lightgrey;
+	margin: 1px 1px 1px 1px;
+	padding: 2px 2px 2px 2px;
+}
+
 #mbd-content li.idle
 {
 	color: #888888;
