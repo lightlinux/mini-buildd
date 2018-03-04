@@ -2,7 +2,7 @@
 {% load staticfiles %}
 {% load mini_buildd_tags %}
 
-<div class="command">
+<div class="mbd-api-box-{{ show_more }}">
 	{# <form action="/mini_buildd/api" method="post">{% csrf_token %}  # if we would support post... #}
 	<form action="/mini_buildd/api" method="get">
 		<input type="hidden" name="command" value="{{ api_cmd.COMMAND }}" />

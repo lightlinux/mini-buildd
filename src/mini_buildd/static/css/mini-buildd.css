@@ -476,6 +476,22 @@ a.hover-underline:hover
 }
 
 /* API COMMANDS */
+/* Box around the whole api call in case more options can be revealed */
+div.mbd-api-box-True
+{
+	border-color: darkgrey;
+	border-style: groove;
+	border-width: thin;
+	background: lightgrey;
+	margin: 1px 1px 1px 1px;
+	padding: 2px 2px 2px 2px;
+}
+
+div.mbd-api-box-False
+{
+	display: inline-block;
+}
+
 input.mbd-api
 {
 	border-color: #dddddd #aaaaaa #aaaaaa #dddddd;
@@ -541,16 +557,6 @@ input.mbd-api-autosetup
 {
 	font-family: monospace;
 	font-style: italic;
-}
-
-#mbd-content div.command, #mbd-page-header div.command
-{
-	border-color: darkgrey;
-	border-style: groove;
-	border-width: thin;
-	background: lightgrey;
-	margin: 1px 1px 1px 1px;
-	padding: 2px 2px 2px 2px;
 }
 
 #mbd-content li.idle
