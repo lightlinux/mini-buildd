@@ -7,9 +7,9 @@
 {% block page_sub_title %}
 	{% if not daemon.is_busy %}
 		{% if daemon.is_running %}
-			{% mbd_api "stop" user show_more=False %}
+			{% mbd_api "stop" user show_more=False output="referer" %}
 		{% else %}
-			{% mbd_api "start" user show_more=False %}
+			{% mbd_api "start" user show_more=False output="referer" %}
 		{% endif %}
 	{% endif %}
 	<span class="status {% if daemon.is_busy %}busy{% elif daemon.is_running %}running{% else %}stopped{% endif %}">
