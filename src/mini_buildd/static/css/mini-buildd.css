@@ -136,46 +136,6 @@ a.hover-underline:hover
 
 /* PAGE_HEADER */
 
-#mbd-page-header a.button-start:link, #mbd-page-header a.button-start:visited
-{
-	background: url("../img/mbd_start.png") no-repeat scroll 3px 50% #e7e7e7;
-	border-color: #dddddd #aaaaaa #aaaaaa #dddddd;
-	border-style: solid;
-	border-width: 1px;
-	margin: 0px 0px 0px 0px;
-	padding: 2px 6px 2px 16px;
-	text-decoration: none;
-	font-size: 11px;
-	font-weight: normal;
-	color: #222222;
-	background-color: #e7e7e7;
-}
-
-#mbd-page-header a.button-start:hover
-{
-	background-color: #f7f7f7;
-}
-
-#mbd-page-header a.button-stop:link, #mbd-content a.button-stop:visited
-{
-	background: url("../img/mbd_stop.png") no-repeat scroll 3px 50% #e7e7e7;
-	border-color: #dddddd #aaaaaa #aaaaaa #dddddd;
-	border-style: solid;
-	border-width: 1px;
-	margin: 0px 0px 0px 0px;
-	padding: 2px 6px 2px 16px;
-	text-decoration: none;
-	font-size: 11px;
-	font-weight: normal;
-	color: #222222;
-}
-
-#mbd-page-header a.button-stop:hover
-{
-	color: white;
-	background-color: #ff6060;
-}
-
 /* CONTENT */
 
 #mbd-content
@@ -631,6 +591,47 @@ a.hover-underline:hover
 	background-color: #f7f7f7;
 }
 
+#mbd-page-header input.button-start, #mbd-content input.button-start
+{
+	background: url("../img/mbd_start.png") no-repeat scroll 3px 50% #e7e7e7;
+	border-color: #dddddd #aaaaaa #aaaaaa #dddddd;
+	border-style: solid;
+	border-width: 1px;
+	margin: 0px 0px 0px 0px;
+	padding: 2px 6px 2px 16px;
+	text-decoration: none;
+	font-size: 11px;
+	font-weight: normal;
+	color: #222222;
+	background-color: #e7e7e7;
+}
+
+#mbd-page-header input.button-start:hover, #mbd-content input.button-start:hover
+{
+	background-color: #f7f7f7;
+}
+
+#mbd-page-header input.button-stop, #mbd-content input.button-stop
+{
+	background: url("../img/mbd_stop.png") no-repeat scroll 3px 50% #e7e7e7;
+	border-color: #dddddd #aaaaaa #aaaaaa #dddddd;
+	border-style: solid;
+	border-width: 1px;
+	margin: 0px 0px 0px 0px;
+	padding: 2px 6px 2px 16px;
+	text-decoration: none;
+	font-size: 11px;
+	font-weight: normal;
+	color: #222222;
+}
+
+#mbd-page-header input.button-stop:hover, #mbd-content input.button-stop:hover
+{
+	color: white;
+	background-color: #ff6060;
+}
+
+/* Misc */
 #mbd-content input:disabled, #mbd-content input.button-migrate:disabled, #mbd-content input.button-remove:disabled
 {
 	color: #bcbcbc;
