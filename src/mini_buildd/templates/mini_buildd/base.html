@@ -15,13 +15,6 @@
 				<br />
 			{% endwith %}
 		{% endif %}
-		{% if api_cmd %}
-			<hr />
-			<a href="/mini_buildd/api?command={{ api_cmd.COMMAND|urlencode }}&amp;{% for k, v in api_cmd.args.items %}{{ k|urlencode }}={{ v|urlencode }}&amp;{% endfor %}output=plain" title="This API call with plain output">API: plain</a>
-			<br />
-			<a href="/mini_buildd/api?command={{ api_cmd.COMMAND|urlencode }}&amp;{% for k, v in api_cmd.args.items %}{{ k|urlencode }}={{ v|urlencode }}&amp;{% endfor %}output=python" title="This API call with python output">API: python</a>
-			<br />
-		{% endif %}
 	</div>
 	<div class="center">
 		<div class="title">{% block page_title %}{% endblock %}</div><div class="sub-title">{% block page_sub_title %}{% endblock %}</div>
