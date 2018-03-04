@@ -475,8 +475,8 @@ a.hover-underline:hover
 	font-weight: bold;
 }
 
-/* API BUTTONS */
-#mbd-content input.button
+/* API COMMANDS */
+input.mbd-api
 {
 	border-color: #dddddd #aaaaaa #aaaaaa #dddddd;
 	border-style: solid;
@@ -490,153 +490,48 @@ a.hover-underline:hover
 	background-color: #e7e7e7;
 }
 
-#mbd-content input.button:hover
+input.mbd-api:hover
 {
 	background-color: #f7f7f7;
 }
 
-#mbd-content input.button-link
-{
-	text-align: left;
-	color: #5b80b2;
-	background: inherit;
-	margin: 1;
-	padding: 1;
-	border: none;
-	cursor: pointer;
-}
-
-#mbd-content input.button-link:hover
-{
-	background-color: lighter;
-}
-
-#mbd-content input.button-remove
-{
-	background: url("../img/mbd_remove.png") no-repeat scroll 3px 50% #e7e7e7;
-	border-color: #dddddd #aaaaaa #aaaaaa #dddddd;
-	border-style: solid;
-	border-width: 1px;
-	margin: 0px 0px 0px 0px;
-	padding: 4px 6px 4px 16px;
-	text-decoration: none;
-	font-size: 11px;
-	font-weight: normal;
-	color: #222222;
-}
-
-#mbd-content input.button-remove:hover
-{
-	color: white;
-	background-color: #ff6060;
-}
-
-#mbd-content input.button-migrate
-{
-	background: url("../img/mbd_migrate.png") no-repeat scroll 3px 50% #e7e7e7;
-	border-color: #dddddd #aaaaaa #aaaaaa #dddddd;
-	border-style: solid;
-	border-width: 1px;
-	margin: 0px 0px 0px 0px;
-	padding: 4px 6px 4px 16px;
-	text-decoration: none;
-	font-size: 11px;
-	font-weight: normal;
-	color: #222222;
-	background-color: #e7e7e7;
-}
-
-#mbd-content input.button-migrate:hover
-{
-	background-color: #f7f7f7;
-}
-
-#mbd-content input.button-migrate-rollback
-{
-	background: url("../img/mbd_migrate_rollback.png") no-repeat scroll 3px 50% #e7e7e7;
-	border-color: #dddddd #aaaaaa #aaaaaa #dddddd;
-	border-style: solid;
-	border-width: 1px;
-	margin: 0px 0px 0px 0px;
-	padding: 4px 6px 4px 16px;
-	text-decoration: none;
-	font-size: 11px;
-	font-weight: normal;
-	color: #222222;
-	background-color: #e7e7e7;
-}
-
-#mbd-content input.button-migrate-rollback:hover
-{
-	background-color: #f7f7f7;
-}
-
-#mbd-content input.button-rebuild
-{
-	background: url("../img/mbd_rebuild.png") no-repeat scroll 3px 50% #e7e7e7;
-	border-color: #dddddd #aaaaaa #aaaaaa #dddddd;
-	border-style: solid;
-	border-width: 1px;
-	margin: 0px 0px 0px 0px;
-	padding: 4px 6px 4px 16px;
-	text-decoration: none;
-	font-size: 11px;
-	font-weight: normal;
-	color: #222222;
-	background-color: #e7e7e7;
-}
-
-#mbd-content input.button-rebuild:hover
-{
-	background-color: #f7f7f7;
-}
-
-#mbd-page-header input.button-start, #mbd-content input.button-start
-{
-	background: url("../img/mbd_start.png") no-repeat scroll 3px 50% #e7e7e7;
-	border-color: #dddddd #aaaaaa #aaaaaa #dddddd;
-	border-style: solid;
-	border-width: 1px;
-	margin: 0px 0px 0px 0px;
-	padding: 2px 6px 2px 16px;
-	text-decoration: none;
-	font-size: 11px;
-	font-weight: normal;
-	color: #222222;
-	background-color: #e7e7e7;
-}
-
-#mbd-page-header input.button-start:hover, #mbd-content input.button-start:hover
-{
-	background-color: #f7f7f7;
-}
-
-#mbd-page-header input.button-stop, #mbd-content input.button-stop
-{
-	background: url("../img/mbd_stop.png") no-repeat scroll 3px 50% #e7e7e7;
-	border-color: #dddddd #aaaaaa #aaaaaa #dddddd;
-	border-style: solid;
-	border-width: 1px;
-	margin: 0px 0px 0px 0px;
-	padding: 2px 6px 2px 16px;
-	text-decoration: none;
-	font-size: 11px;
-	font-weight: normal;
-	color: #222222;
-}
-
-#mbd-page-header input.button-stop:hover, #mbd-content input.button-stop:hover
-{
-	color: white;
-	background-color: #ff6060;
-}
-
-/* Misc */
-#mbd-content input:disabled, #mbd-content input.button-migrate:disabled, #mbd-content input.button-remove:disabled
+input.mbd-api:disabled
 {
 	color: #bcbcbc;
 }
 
+/* Customizations per command -- i.e., use images where available */
+input.mbd-api-start
+{
+	background: url("../img/mbd_start.png") no-repeat scroll 3px 50% #e7e7e7;
+	padding: 2px 6px 2px 16px;
+}
+
+input.mbd-api-stop
+{
+	background: url("../img/mbd_stop.png") no-repeat scroll 3px 50% #e7e7e7;
+	padding: 2px 6px 2px 16px;
+}
+
+input.mbd-api-remove
+{
+	background: url("../img/mbd_remove.png") no-repeat scroll 3px 50% #e7e7e7;
+	padding: 2px 6px 2px 16px;
+}
+
+input.mbd-api-migrate
+{
+	background: url("../img/mbd_migrate.png") no-repeat scroll 3px 50% #e7e7e7;
+	padding: 2px 6px 2px 16px;
+}
+
+input.mbd-api-autosetup
+{
+	background: url("../img/mbd_wizard.png") no-repeat scroll 3px 50% #e7e7e7;
+	padding: 2px 6px 2px 32px;
+}
+
+/* Misc */
 #mbd-content span.emphasize-headline
 {
 	font-style: italic;

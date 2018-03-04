@@ -110,7 +110,7 @@ def mbd_admin_auto_setup():
 
 
 @register.inclusion_tag("includes/mbd_api_command.html")
-def mbd_api_command(cmd, user, show_more=True, name=None, title=None, style="button", **kwargs):
+def mbd_api_command(cmd, user, show_more=True, name=None, title=None, **kwargs):
     def _kwargs(prefix):
         return {k[len(prefix):]: v for k, v in kwargs.items() if k.startswith(prefix)}
 
@@ -119,12 +119,11 @@ def mbd_api_command(cmd, user, show_more=True, name=None, title=None, style="but
     api_cmd = api_cls(_kwargs("value_"), daemon=mini_buildd.daemon.get())
 
     return {"api_cmd": api_cmd,
-            "tag_id": "mbd-api-call-{}".format("".join(random.choices(string.ascii_lowercase + string.digits, k=16))),
+            "auth_err": auth_err,
             "show_more": show_more,
             "name": name,
             "title": title,
-            "style": style,
-            "auth_err": auth_err}
+            "tag_id": "mbd-api-call-{}".format("".join(random.choices(string.ascii_lowercase + string.digits, k=16)))}
 
 
 def _mbd_e2n(func, *args, **kwargs):
