@@ -1,6 +1,7 @@
 /* mini-buildd specific style definitions. */
 
 @import url(mini-buildd_messagelist.css);
+@import url(mini-buildd_api.css);
 
 /* GLOBAL */
 
@@ -473,79 +474,6 @@ a.hover-underline:hover
 	color: #a7a7a7;
 	font-size: 11px;
 	font-weight: bold;
-}
-
-/* API COMMANDS */
-/* Box around the whole api call in case more options can be revealed */
-div.mbd-api-box-True
-{
-	border-color: darkgrey;
-	border-style: groove;
-	border-width: thin;
-	background: lightgrey;
-	margin: 1px 1px 1px 1px;
-	padding: 2px 2px 2px 2px;
-	display: inline-block;
-}
-
-div.mbd-api-box-False
-{
-	display: inline-block;
-}
-
-input.mbd-api
-{
-	border-color: #dddddd #aaaaaa #aaaaaa #dddddd;
-	border-style: solid;
-	border-width: 1px;
-	margin: 0px 0px 0px 0px;
-	padding: 4px 6px 4px 6px;
-	text-decoration: none;
-	font-size: 11px;
-	font-weight: normal;
-	color: #222222;
-	background-color: #e7e7e7;
-}
-
-input.mbd-api:hover
-{
-	background-color: #f7f7f7;
-}
-
-input.mbd-api:disabled
-{
-	color: #bcbcbc;
-}
-
-/* Customizations per command -- i.e., use images where available */
-input.mbd-api-start
-{
-	background: url("../img/mbd_start.png") no-repeat scroll 3px 50% #e7e7e7;
-	padding: 2px 6px 2px 16px;
-}
-
-input.mbd-api-stop
-{
-	background: url("../img/mbd_stop.png") no-repeat scroll 3px 50% #e7e7e7;
-	padding: 2px 6px 2px 16px;
-}
-
-input.mbd-api-remove
-{
-	background: url("../img/mbd_remove.png") no-repeat scroll 3px 50% #e7e7e7;
-	padding: 2px 6px 2px 16px;
-}
-
-input.mbd-api-migrate
-{
-	background: url("../img/mbd_migrate.png") no-repeat scroll 3px 50% #e7e7e7;
-	padding: 2px 6px 2px 16px;
-}
-
-input.mbd-api-autosetup
-{
-	background: url("../img/mbd_wizard.png") no-repeat scroll 3px 50% #e7e7e7;
-	padding: 2px 6px 2px 32px;
 }
 
 /* Misc */

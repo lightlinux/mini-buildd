@@ -1,6 +1,7 @@
 /* New mini-buildd specific style definitions. */
 
 @import url(mini-buildd_messagelist.css);
+@import url(mini-buildd_api.css);
 
 #mbd-django-admin-branding h1
 {
