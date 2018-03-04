@@ -70,40 +70,6 @@ def mbd_manage_subscriptions(repositories, package=""):
             "package": package}
 
 
-@register.inclusion_tag("includes/mbd_admin_index_table_header.html")
-def mbd_admin_index_table_header(title):
-    return {"title": title}
-
-
-@register.inclusion_tag("includes/mbd_admin_index_table_row.html")
-def mbd_admin_index_table_row(app,  # pylint: disable=too-many-arguments
-                              model_name,
-                              model_path,
-                              hide_add=False,
-                              wiz0_function="",
-                              wiz0_name="",
-                              wiz0_title="",
-                              wiz1_function="",
-                              wiz1_name="",
-                              wiz1_title="",
-                              wiz2_function="",
-                              wiz2_name="",
-                              wiz2_title=""):
-    return {"app": app,
-            "model_name": model_name,
-            "model_path": model_path,
-            "hide_add": hide_add,
-            "wiz0_function": wiz0_function,
-            "wiz0_name": wiz0_name,
-            "wiz0_title": wiz0_title,
-            "wiz1_function": wiz1_function,
-            "wiz1_name": wiz1_name,
-            "wiz1_title": wiz1_title,
-            "wiz2_function": wiz2_function,
-            "wiz2_name": wiz2_name,
-            "wiz2_title": wiz2_title}
-
-
 @register.inclusion_tag("includes/mbd_api.html")
 def mbd_api(cmd, user, show_more=True, name=None, title=None, **kwargs):
     def _kwargs(prefix):
