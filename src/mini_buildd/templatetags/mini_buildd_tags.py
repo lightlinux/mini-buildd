@@ -109,8 +109,8 @@ def mbd_admin_auto_setup():
     return {}
 
 
-@register.inclusion_tag("includes/mbd_api_command.html")
-def mbd_api_command(cmd, user, show_more=True, name=None, title=None, **kwargs):
+@register.inclusion_tag("includes/mbd_api.html")
+def mbd_api(cmd, user, show_more=True, name=None, title=None, **kwargs):
     def _kwargs(prefix):
         return {k[len(prefix):]: v for k, v in kwargs.items() if k.startswith(prefix)}
 

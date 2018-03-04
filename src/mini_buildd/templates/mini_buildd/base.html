@@ -27,7 +27,7 @@
 		<div class="title">{% block page_title %}{% endblock %}</div><div class="sub-title">{% block page_sub_title %}{% endblock %}</div>
 	</div>
 	<div class="right">
-		{% mbd_api_command "show" user %}
-		{% mbd_api_command "list" user %}
+		{% mbd_api "show" user %}
+		{% mbd_api "list" user %}
 	</div>
 {% endblock %}
