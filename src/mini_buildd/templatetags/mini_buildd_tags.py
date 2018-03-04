@@ -71,7 +71,7 @@ def mbd_manage_subscriptions(repositories, package=""):
 
 
 @register.inclusion_tag("includes/mbd_api.html")
-def mbd_api(cmd, user, show_more=True, name=None, title=None, **kwargs):
+def mbd_api(cmd, user, show_more=True, name=None, title=None, output="html", **kwargs):
     def _kwargs(prefix):
         return {k[len(prefix):]: v for k, v in kwargs.items() if k.startswith(prefix)}
 
@@ -84,6 +84,7 @@ def mbd_api(cmd, user, show_more=True, name=None, title=None, **kwargs):
             "show_more": show_more,
             "name": name,
             "title": title,
+            "output": output,
             "tag_id": "mbd-api-call-{}".format("".join(random.choices(string.ascii_lowercase + string.digits, k=16)))}
 
 

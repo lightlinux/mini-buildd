@@ -33,23 +33,25 @@
 				 '<img src={% static "img/mbd_params_hide.png" %} alt=Less title=Less />',
 				 '<img src={% static "img/mbd_params_show.png" %} alt=More title=More />')"><img src={% static "img/mbd_params_show.png" %} alt="More" title="More" />
 			</a>
-
-			<div id="{{ tag_id }}-parameter" style="display: none;">
-				{% if show_doc %}<pre>{{ api_cmd.docstring }}</pre>{% endif %}
-
-				<!-- Optional parameters, presented on demand only -->
-				{% for arg in api_cmd.args.values %}
-					{% if not arg.given and not arg.raw_value is None %}
-						{% include "includes/mbd_api_arg.html" with show_label=True %}
-						<br />
-					{% endif %}
-				{% endfor %}
-				<select name="output" title="Output type">
-					<option value="html" selected="selected">html</option>
-					<option value="plain">plain</option>
-					<option value="python">python</option>
-				</select>
-			</div>
 		{% endif %}
+
+		<div id="{{ tag_id }}-parameter" style="display: none;">
+			{% if show_doc %}<pre>{{ api_cmd.docstring }}</pre>{% endif %}
+
+			<!-- Optional parameters, presented on demand only -->
+			{% for arg in api_cmd.args.values %}
+				{% if not arg.given and not arg.raw_value is None %}
+					{% include "includes/mbd_api_arg.html" with show_label=True %}
+					<br />
+				{% endif %}
+			{% endfor %}
+			<select name="output" title="Output type">
+				{% with "referer html plain python" as options %}
+					{% for o in options.split %}
+						<option value="{{ o }}" {% if o == output %}selected="selected"{% endif %}>{{ o }}</option>
+					{% endfor %}
+				{% endwith %}
+			</select>
+		</div>
 	</form>
 </div>
