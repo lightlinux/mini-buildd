@@ -46,12 +46,8 @@
 				</div>
 
 				<h2 title="Repositories in use">Repositories:
-					<a class="button-rebuild"
-						 href="/mini_buildd/api?command=meta&amp;model=repository.Repository&amp;function=build_keyring_packages&amp;output=referer"
-						 title="(Re-)Build keyring packages for all active repositories">Keyring packages</a>
-					<a class="button-rebuild"
-						 href="/mini_buildd/api?command=meta&amp;model=repository.Repository&amp;function=build_test_packages&amp;output=referer"
-						 title="(Re-)Build internal test packages for all active repositories">Test packages</a>
+					{% mbd_api "meta" user show_more=False name="Keyring packages" title="(Re-)Build keyring packages for all active repositories" value_model="repository.Repository" value_function="build_keyring_packages" %}
+					{% mbd_api "meta" user show_more=False name="Test packages" title="(Re-)Build internal test packages for all active repositories" value_model="repository.Repository" value_function="build_test_packages" %}
 				</h2>
 
 				<ul>
