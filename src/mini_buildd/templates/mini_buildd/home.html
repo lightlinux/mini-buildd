@@ -48,6 +48,7 @@
 				<h2 title="Repositories in use">Repositories:
 					{% mbd_api "meta" user show_more=False name="Keyring packages" title="(Re-)Build keyring packages for all active repositories" value_model="repository.Repository" value_function="build_keyring_packages" %}
 					{% mbd_api "meta" user show_more=False name="Test packages" title="(Re-)Build internal test packages for all active repositories" value_model="repository.Repository" value_function="build_test_packages" %}
+					{% mbd_api "portext" user show_more=True %}
 				</h2>
 
 				<ul>
@@ -58,24 +59,6 @@
 							{% if r.external_home_url %}
 								(<a href="{{ r.external_home_url }}" title="Link to the repository's external documentation">ExtHome</a>)
 							{% endif %}
-							(<a id="mbd_repository_{{ r.identity }}_portext_header" href="javascript:mbdToggleElement('mbd_repository_{{ r.identity }}_portext','mbd_repository_{{ r.identity }}_portext_header','Portext','Portext')" >Portext</a>)
-							<div id="mbd_repository_{{ r.identity }}_portext" style="display: none">
-								<form action="/mini_buildd/api" method="get">
-									<div>
-										<input type="hidden" name="command" value="portext" />
-										<input type="hidden" name="output" value="referer" />
-										<input name="dsc" type="text" size="80" title="URL of any Debian source package (dsc)" value="" />
-										<br />
-										<input id="mbd_portext_filter_{{ r.identity }}" type="text" title="Bulk-select distributions via regex" onchange="mbdSelectByRegex('mbd_portext_distributions_{{ r.identity }}', 'mbd_portext_filter_{{ r.identity }}')"/>
-										<br />
-										<select id="mbd_portext_distributions_{{ r.identity }}" name="distributions" multiple="multiple" size="10" title="Distribution(s) to port to">
-											{% mbd_distribution_options r uploadable=True %}
-										</select>
-										<br />
-										<input type="submit" value="Port external DSC" title="Port this external Debian Source package" />
-									</div>
-								</form>
-							</div>
 						</li>
 					{% empty %}
 						<li>No repositories.</li>
