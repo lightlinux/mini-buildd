@@ -104,11 +104,6 @@ def mbd_admin_index_table_row(app,  # pylint: disable=too-many-arguments
             "wiz2_title": wiz2_title}
 
 
-@register.inclusion_tag("includes/mbd_admin_auto_setup.html")
-def mbd_admin_auto_setup():
-    return {}
-
-
 @register.inclusion_tag("includes/mbd_api.html")
 def mbd_api(cmd, user, show_more=True, name=None, title=None, **kwargs):
     def _kwargs(prefix):

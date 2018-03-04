@@ -27,7 +27,7 @@
 
 	<div id="content-main">
 
-		{% mbd_admin_auto_setup %}
+		{% mbd_api "autosetup" user %}
 
 		{% if app_list %}
 			{% for app in app_list %}

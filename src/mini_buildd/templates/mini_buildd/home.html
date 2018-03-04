@@ -24,7 +24,7 @@
 	<div id="mbd_index_status">
 
 		{% if not daemon.is_running %}
-			{% mbd_admin_auto_setup %}
+			{% mbd_api "autosetup" user %}
 		{% endif %}
 
 		<div id="mbd_index_repositories">
