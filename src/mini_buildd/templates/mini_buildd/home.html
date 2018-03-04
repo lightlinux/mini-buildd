@@ -7,9 +7,9 @@
 {% block page_sub_title %}
 	{% if not daemon.is_busy %}
 		{% if daemon.is_running %}
-			<a class="button-stop" title="Stop" href="/mini_buildd/api?command=stop&amp;output=referer">Stop</a>
+			{% mbd_api "stop" user show_more=False %}
 		{% else %}
-			<a class="button-start" title="Start" href="/mini_buildd/api?command=start&amp;output=referer">Start</a>
+			{% mbd_api "start" user show_more=False %}
 		{% endif %}
 	{% endif %}
 	<span class="status {% if daemon.is_busy %}busy{% elif daemon.is_running %}running{% else %}stopped{% endif %}">
