@@ -157,8 +157,8 @@ different components), or just as safeguard
     def update(self, given_args):
         def _get(key):
             try:
-                # django request.GET args
-                return ",".join(given_args.getlist(key))
+                # django request.GET args. Only consider non-empty values.
+                return ",".join([v for v in given_args.getlist(key) if v])
             except BaseException:
                 # dict arg (like from get_default_args)
                 return given_args[key]
