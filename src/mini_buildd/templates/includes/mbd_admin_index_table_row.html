@@ -10,27 +10,15 @@
 			<td class="right">
 				<!-- Support up to three wizards (repeated three times, found no good way yet to do this more nicely) -->
 				{% if wiz0_function %}
-					<a class="mbd-wizard"
-						 href="/mini_buildd/api?command=meta&amp;model={{ model_path }}&amp;function={{ wiz0_function }}&amp;output=referer"
-						 title="Wizard: {{ wiz0_title }}">
-						{{ wiz0_name }}
-					</a>
+					{% mbd_api "meta" user show_more=False name=wiz0_name output="referer" title=wiz0_title value_model=model_path value_function=wiz0_function %}
 				{% endif %}
 
 				{% if wiz1_function %}
-					<a class="mbd-wizard"
-						 href="/mini_buildd/api?command=meta&amp;model={{ model_path }}&amp;function={{ wiz1_function }}&amp;output=referer"
-						 title="Wizard: {{ wiz1_title }}">
-						{{ wiz1_name }}
-					</a>
+					{% mbd_api "meta" user show_more=False name=wiz1_name output="referer" title=wiz1_title value_model=model_path value_function=wiz1_function %}
 				{% endif %}
 
 				{% if wiz2_function %}
-					<a class="mbd-wizard"
-						 href="/mini_buildd/api?command=meta&amp;model={{ model_path }}&amp;function={{ wiz2_function }}&amp;output=referer"
-						 title="Wizard: {{ wiz2_title }}">
-						{{ wiz2_name }}
-					</a>
+					{% mbd_api "meta" user show_more=False name=wiz2_name output="referer" title=wiz2_title value_model=model_path value_function=wiz2_function %}
 				{% endif %}
 
 				&nbsp;&nbsp;
