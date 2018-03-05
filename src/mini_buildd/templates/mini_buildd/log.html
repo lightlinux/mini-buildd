@@ -13,16 +13,12 @@
 					<h2 class="{{ key }}">{{ key }}</h2>
 					{% ifequal key "Failed" %}
 						<p>
-							<a class="button-rebuild"
-								 href="/mini_buildd/api?command=retry&amp;package={{ package|urlencode }}&amp;version={{ version|urlencode }}&amp;repository={{ repository|urlencode }}"
-								 title="Retry {{ repository }}/{{ package }}/{{ version }}">
-								Retry now
-							</a>
+							{% mbd_api "retry" user show_more=False value_package=package value_version=version value_repository=repository %}
 						</p>
 					{% endifequal %}
 					<p>
 						<a title="Browse log directory" href="/log/{{ repository }}{% ifequal key "Failed" %}/_failed{% endifequal %}/{{ package }}/{{ version }}/">Browse files</a>
-						<a title="Show {{ package }} source package" href="/mini_buildd/api?command=show&amp;package={{ package|urlencode }}">Show package</a>
+						{% mbd_api "show" user show_more=False value_package=package %}
 					</p>
 					<hr/>
 
