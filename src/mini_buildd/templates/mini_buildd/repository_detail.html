@@ -8,7 +8,7 @@
 {% block content %}
 
 	<div id="mbd_repository">
-		(<a title="Print uploaders" href="/mini_buildd/api?command=printuploaders&amp;repository={{ object.identity }}&amp;output=referer">Print uploaders</a>)
+		{% mbd_api "printuploaders" user value_repository=object.identity %}
 
 		{% for d in object.distributions.all %}
 			<div class="inner-box">
@@ -41,9 +41,9 @@
 						<ul id="mbd_dist_{{ d.base_source.codename }}_{{ s.suite.name }}" style="display: none">
 							<li>APT line
 								(Download:
-								<a href="/mini_buildd/api?command=getkey&output=plain">apt key</a>,
-								<a href="/mini_buildd/api?command=getsourceslist&suite={{ s.suite.name }}&codename={{ d.base_source.codename }}&with_extra_sources=False&repository={{ object.identity }}&with_deb_src=False&output=plain">deb</a>,
-								<a href="/mini_buildd/api?command=getsourceslist&suite={{ s.suite.name }}&codename={{ d.base_source.codename }}&with_extra_sources=False&repository={{ object.identity }}&with_deb_src=True&output=plain">deb+src</a>)
+								{% mbd_api "getkey" user name="APT key" output="plain" show_more=False %}
+								{% mbd_api "getsourceslist" user output="plain" show_more=False value_suite=s.suite.name value_codename=d.base_source.codename value_with_extra_sources=False value_repository=object.identity name="deb" value_with_deb_src=False %}
+								{% mbd_api "getsourceslist" user output="plain" show_more=False value_suite=s.suite.name value_codename=d.base_source.codename value_with_extra_sources=False value_repository=object.identity name="deb+src" value_with_deb_src=True %})
 								:
 								<pre class="pre-block">{% mbd_distribution_apt_line d object s %}</pre></li>
 							{% if s.uploadable %}
