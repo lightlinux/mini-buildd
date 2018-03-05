@@ -49,15 +49,26 @@ class Argument(object):
         if default is not None:
             self.argparse_kvsargs["default"] = default
 
-    def set(self, raw_value):
-        """Get value, including convenience transformations."""
-        self.raw_value = raw_value
+    def _r2v(self):
+        """Raw to value. Pre: self.raw_value is not None."""
+        return self.raw_value
+
+    @classmethod
+    def _v2r(cls, value):
+        """Value to raw."""
+        return str(value)
+
+    def set(self, value):
+        if isinstance(value, str):
+            self.raw_value = value
+        else:
+            self.raw_value = self._v2r(value)
         self.given = True
 
     @property
     def value(self):
         """Get value, including convenience transformations."""
-        return self.raw_value
+        return self._r2v() if self.raw_value is not None else None
 
     # do we really need that?
     def false2none(self):
@@ -79,9 +90,8 @@ class IntArgument(StringArgument):
         super().__init__(*args, **kwargs)
         self.argparse_kvsargs["type"] = int
 
-    @property
-    def value(self):
-        return int(self.raw_value) if self.raw_value is not None else None
+    def _r2v(self):
+        return int(self.raw_value)
 
 
 class BoolArgument(Argument):
@@ -91,9 +101,8 @@ class BoolArgument(Argument):
         super().__init__(*args, **kwargs)
         self.argparse_kvsargs["action"] = "store_true"
 
-    @property
-    def value(self):
-        return self.raw_value in ("True", "true", "1") if self.raw_value is not None else None
+    def _r2v(self):
+        return self.raw_value in ("True", "true", "1")
 
 
 class SelectArgument(Argument):
@@ -113,9 +122,11 @@ class MultiSelectArgument(SelectArgument):
         super().__init__(*args, **kwargs)
         self.separator = separator
 
-    @property
-    def value(self):
-        return self.raw_value.split(self.separator) if self.raw_value is not None else None
+    def _r2v(self):
+        return self.raw_value.split(self.separator)
+
+    def _v2r(self, value):
+        return self.separator.join(value)
 
 
 class Command(object):
