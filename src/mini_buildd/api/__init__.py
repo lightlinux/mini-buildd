@@ -196,10 +196,15 @@ different components), or just as safeguard
         raise Exception("No _run() function defined for: {}".format(self.COMMAND))
 
     def __getstate__(self):
-        "Log object cannot be pickled."
+        """This is a workaround so objects of this class can be pickled.
+
+        .. note:: This must be removed eventually. RoadMap: 1.11: API: Fix up result handling, and use json instead of pickle/python to interchange computable data.
+        """
         pstate = copy.copy(self.__dict__)
         del pstate["msglog"]
         del pstate["request"]
+        del pstate["args"]
+        del pstate["daemon"]
         return pstate
 
     def __str__(self):
