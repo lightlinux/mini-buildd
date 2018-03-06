@@ -9,10 +9,7 @@
 
 		{# Pre-button args #}
 		{% for arg in api_cmd.args.values %}
-			{% if arg.given %}
-				{# Fixed hidden values #}
-				{% include "includes/mbd_api_arg.html" with hidden=True %}
-			{% elif arg.raw_value is None %}
+			{% if arg.raw_value is None %}
 				{# Mandatory input #}
 				{% include "includes/mbd_api_arg.html" with show_label=False show_doc=False %}
 			{% endif %}
@@ -40,7 +37,7 @@
 
 			<!-- Optional parameters, presented on demand only -->
 			{% for arg in api_cmd.args.values %}
-				{% if not arg.given and not arg.raw_value is None %}
+				{% if arg.raw_value is not None %}
 					{% include "includes/mbd_api_arg.html" with show_label=True %}
 					<br />
 				{% endif %}

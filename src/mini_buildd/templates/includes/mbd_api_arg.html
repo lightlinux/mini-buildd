@@ -1,44 +1,40 @@
 {% load i18n %}
 {% load mini_buildd_tags %}
 
-{% if hidden %}
-	<input type="hidden" value="{{ arg.raw_value }}" name="{{ arg.identity }}" />
-{% else %}
-	<label title="{{ arg.identity }}: {{ arg.doc }}">
-		{% if show_label %}<em>{{ arg.identity }}</em>{% endif %}
+<label title="{{ arg.identity }}: {{ arg.doc }}">
+	{% if show_label %}<em>{{ arg.identity }}</em>{% endif %}
 
-		{% if arg.TYPE == "string" %}
-			<input type="text" size="15" value="{{ arg.value }}" name="{{ arg.identity }}" />
-		{% elif arg.TYPE == "int" %}
-			<input type="text" size="5" value="{{ arg.value }}" name="{{ arg.identity }}" />
-		{% elif arg.TYPE == "bool" %}
-			<input type="checkbox" value="True" {% if arg.value %}checked{% endif %} name="{{ arg.identity }}" />
-		{% elif arg.TYPE == "select" %}
-			<select name="{{ arg.identity }}">
+	{% if arg.TYPE == "string" %}
+		<input type="text" size="15" value="{{ arg.value }}" name="{{ arg.identity }}" />
+	{% elif arg.TYPE == "int" %}
+		<input type="text" size="5" value="{{ arg.value }}" name="{{ arg.identity }}" />
+	{% elif arg.TYPE == "bool" %}
+		<input type="checkbox" value="True" {% if arg.value %}checked{% endif %} name="{{ arg.identity }}" />
+	{% elif arg.TYPE == "select" %}
+		<select name="{{ arg.identity }}">
+			{% for choice in arg.choices %}
+				<option {% if choice == arg.value %}selected{% endif %}>{{ choice }}</option>
+			{% endfor %}
+		</select>
+	{% elif arg.TYPE == "multiselect" %}
+		{% if arg.choices %}
+			<input id="{{ tag_id }}-{{ arg.identity }}-regexfilter"
+						 type="text"
+						 size="15"
+						 title="Bulk-select {{ arg.identity }} via regex"
+						 onchange="mbdSelectByRegex('{{ tag_id }}-{{ arg.identity }}-regexfilter-target', '{{ tag_id }}-{{ arg.identity }}-regexfilter')"/>
+			<br />
+			<select id="{{ tag_id }}-{{ arg.identity }}-regexfilter-target" multiple="multiple" name="{{ arg.identity }}">
 				{% for choice in arg.choices %}
-					<option {% if choice == arg.value %}selected{% endif %}>{{ choice }}</option>
+					<option {% if choice in arg.value %}selected{% endif %}>{{ choice }}</option>
 				{% endfor %}
 			</select>
-		{% elif arg.TYPE == "multiselect" %}
-			{% if arg.choices %}
-				<input id="{{ tag_id }}-{{ arg.identity }}-regexfilter"
-							 type="text"
-							 size="15"
-							 title="Bulk-select {{ arg.identity }} via regex"
-							 onchange="mbdSelectByRegex('{{ tag_id }}-{{ arg.identity }}-regexfilter-target', '{{ tag_id }}-{{ arg.identity }}-regexfilter')"/>
-				<br />
-				<select id="{{ tag_id }}-{{ arg.identity }}-regexfilter-target" multiple="multiple" name="{{ arg.identity }}">
-					{% for choice in arg.choices %}
-						<option {% if choice in arg.value %}selected{% endif %}>{{ choice }}</option>
-					{% endfor %}
-				</select>
-				<br />
-			{% endif %}
-			<input type="text" size="15" name="{{ arg.identity }}" />
-		{% else %}
-			{{ arg.identity }}: Internal error: Unkown argument type {{ arg.TYPE }}.
+			<br />
 		{% endif %}
+		<input type="text" size="15" name="{{ arg.identity }}" />
+	{% else %}
+		{{ arg.identity }}: Internal error: Unkown argument type {{ arg.TYPE }}.
+	{% endif %}
 
-		{% if show_doc %}<pre>{{ arg.doc }}</pre>{% endif %}
-	</label>
-{% endif %}
+	{% if show_doc %}<pre>{{ arg.doc }}</pre>{% endif %}
+</label>
