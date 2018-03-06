@@ -368,80 +368,87 @@ mbd_run:16:22:extra-packages()
 	[ ! -d ../test-packages/ ] || dput --force --unchecked --no-upload-log mini-buildd-$(hostname) ../test-packages/*.changes
 }
 
+mbd_sequence()  # [<levelRegex>=00] [<name>] <hr>
+{
+	local levelRegex="${1:-00}" name="${2}" hr="${3}"
+	for func in $(declare -F | cut -d" " -f3- | grep "^mbd_run:[[:alnum:]][[:alnum:]]:${levelRegex}:${name}" | sort || true); do
+		if [ -n "${hr}" ]; then
+			printf "%s " "$(cut -d: -f4 <<<${func})"
+		else
+			printf "%s " "${func}"
+		fi
+	done
+}
+
 mbd_run()  # [<levelRegex>=00] [<name>]
 {
-	local levelRegex="${1:-00}" name="${2}"
 	local -a info=()
 	local func totalStartStamp=$(date +%s)
-	for func in $(declare -F | cut -d" " -f3- | grep "^mbd_run:[[:alnum:]][[:alnum:]]:${levelRegex}:${name}" | sort || true); do
+	local -i count=0
+	for func in $(mbd_sequence "${1}" "${2}"); do
 		printf "I: Running %s...\n" "${func}"
 		local startStamp=$(date +%s)
 		${func}
+		count+=1
 		info+=("$(printf "OK (%03d seconds): %s" "$(($(date +%s) - startStamp))" "${func}")")
 	done
+	if ((count <= 0)); then
+		printf "E: No runs for this sequence filter: ${1} ${2}"
+		return 1
+	fi
 	printf "\nSequence results (%03d seconds):\n" "$(($(date +%s) - totalStartStamp))"
 	printf "%s\n" "${info[@]}"
-	printf "\nOK, all runs succeeded ($(date)).\n"
+	printf "\nOK, %s runs succeeded ($(date)).\n" "${count}"
 }
 
 # Shortcuts
-mbd_update()         { mbd_run "00"; }
-mbd_updatecheck()    { mbd_run "[01]0"; }
-mbd_updatecheckmost(){ mbd_run "[01][01]"; }
-mbd_updatecheckall() { mbd_run "[01][0-9]"; }
-mbd_updatetest()     { mbd_run "[012]0"; }
-mbd_updatetestmost() { mbd_run "[012][01]"; }
-mbd_updatetestall()  { mbd_run "[012][0-9]"; }
+declare -A MBD_RUN_SHORTCUTS=(
+	["update"]="00"
+	["updatecheck"]="[01]0"
+	["updatecheckmost"]="[01][01]"
+	["updatecheckall"]="[01][0-9]"
+	["updatetest"]="[012]0"
+	["updatetestmost"]="[012][01]"
+	["updatetestall"]="[012][0-9]"
+)
+# We can't iterate through the associative array in the given order later, so we at least want a sorted key list as helper
+MBD_RUN_SHORTCUTS_SORTED="$(printf '%s\n' "${!MBD_RUN_SHORTCUTS[@]}" | sort -n)"
 
 mbd_logcat()
 {
 	tail --follow=name --retry /var/lib/mini-buildd/var/log/daemon.log /var/lib/mini-buildd/var/log/access.log
 }
 
-# Usage trap
-_usage()
+main()
 {
-	_list_sequents()
-	{
-		local a
-		for a in $(declare -F | cut -d" " -f3- | grep "^mbd_run:[[:alnum:]]" || true); do
-			printf "%s | " "${a:14}"
-		done
-	}
-	local sep="" c p="./$(basename "${0}")" b=$(tput bold) i=$(tput sitm) r=$(tput sgr0)
-	for c in $(compgen -A function | grep '^mbd_'); do
-		ACTIONS+="${sep}${c:4}"
-		sep="|"
-	done
-
-	cat <<EOF
-
-Usage: ${i}${p} <action> [arg..]${r}
+	if [ -z "${1}" ]; then
+		local p="./$(basename "${0}")" b=$(tput bold) i=$(tput sitm) r=$(tput sgr0)
+		cat <<EOF
+Usage: ${i}${p} <shortcut-or-runner-or-special> | run <groupRegex><levelRegex>${r}
 
 mini-buildd development helper.
 
-${b}Sequence runs${r}:
- ${i}${p} run <groupRegex><levelRegex>${r}: generic sequence runner.
+${b}Sequence filter shortcuts${r}:
+$(for s in ${MBD_RUN_SHORTCUTS_SORTED}; do printf "  ${i}${p} %-15s${r}: (%-10s) %s\n" "${s}" "${MBD_RUN_SHORTCUTS[${s}]}" "$(mbd_sequence "${MBD_RUN_SHORTCUTS[${s}]}" "" "hr")"; done)
 
- ${b}Shortcuts${r}:
-  ${i}${p} update${r}         : only deployment, no checks.
-  ${i}${p} updatecheck${r}    : deployment, basic static tests.
-  ${i}${p} updatecheckmost${r}: deployment, most static tests.
-  ${i}${p} updatecheckall${r} : deployment, all static tests.
-  ${i}${p} updatetest${r}     : deployment, basic static and live tests.
-  ${i}${p} updatetestmost${r} : deployment, most basic static and live tests.
-  ${i}${p} updatetestall${r}  : deployment, all static and live tests.
+${b}Runners${r}:
+ ${i}${p} $(mbd_sequence ".." "" "hr" | tr " " "|")
 
- ${b}Individual sequents${r}:
-  ${i}${p} run ".." $(_list_sequents)
-
-${b}Other targets${r}:
+${b}Special (non-runner) targets${r}:
  ${i}${p} logcat${r}: Follow all logs (daemon and access).
  ...-> Check source for other possible esoteric calls.
 EOF
-
+	else
+		# Store sc and furnction
+		local f="mbd_${1}" s="${MBD_RUN_SHORTCUTS[${1}]}"
+		if [ "$(type -t "${f}")" = "function" ]; then
+			${f} "${@:2}"
+		elif [ -n "${s}" ]; then
+			mbd_run "${s}"
+		else
+			mbd_run ".." "${1}"
+		fi
+	fi
 }
-trap "_usage" ERR
 
-# Run
-mbd_${1} "${@:2}"
+main "${@}"
