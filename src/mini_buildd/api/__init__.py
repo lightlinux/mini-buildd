@@ -387,6 +387,7 @@ class AutoSetup(Command):
     """Auto setup / bootstrap."""
     COMMAND = "autosetup"
     AUTH = Command.ADMIN
+    CONFIRM = True
     ARGUMENTS = [
         MultiSelectArgument(["--vendors", "-V"], default="debian", choices=["debian", "ubuntu"], doc="comma-separated list of vendors to auto-setup for."),
         MultiSelectArgument(["--repositories", "-R"], default="test", choices=["test", "debdev"], doc="comma-separated list of repositories to auto-setup for."),
