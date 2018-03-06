@@ -381,7 +381,7 @@ mbd_run()  # [<levelRegex>=00] [<name>]
 	done
 	printf "\nSequence results (%03d seconds):\n" "$(($(date +%s) - totalStartStamp))"
 	printf "%s\n" "${info[@]}"
-	printf "\nOK, all runs succeeded.\n"
+	printf "\nOK, all runs succeeded ($(date)).\n"
 }
 
 # Shortcuts
