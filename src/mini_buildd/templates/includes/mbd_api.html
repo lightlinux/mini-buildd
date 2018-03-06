@@ -22,7 +22,7 @@
 		<input type="submit"
 					 class="mbd-api mbd-api-{{ api_cmd.COMMAND }}"
 					 value="{{ name|default_if_none:api_cmd.COMMAND }}"
-					 title="{% if auth_err %}{{ auth_err }}{% else %}{{ title|default_if_none:api_cmd.docstring }}{% endif %}"
+					 title="{% if auth_err %}{{ auth_err }}&#13;&#10;&#13;&#10;{% endif %}{{ title|default_if_none:api_cmd.docstring }}"
 					 {% if auth_err %}disabled{% endif %} />
 
 		{% if show_more %}
