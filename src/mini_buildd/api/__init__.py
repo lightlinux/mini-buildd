@@ -28,10 +28,10 @@ class Argument(object):
         """
         :param id_list: List like '['--with-rollbacks', '-R']' for option or '['distributions']' for positionals; 1st entry always denotes the id.
 
-        >>> vars(Argument(["--long-id", "-s"]))
-        {'id_list': ['--long-id', '-s'], 'doc': 'Undocumented', 'default': None, 'raw_value': None, 'identity': 'long_id', 'argparse_kvsargs': {'help': 'Undocumented'}}
-        >>> vars(Argument(["posi-tional"]))
-        {'id_list': ['posi-tional'], 'doc': 'Undocumented', 'default': None, 'raw_value': None, 'identity': 'posi_tional', 'argparse_kvsargs': {'help': 'Undocumented'}}
+        >>> Argument(["--long-id", "-s"]).identity
+        'long_id'
+        >>> Argument(["posi-tional"]).identity
+        'posi_tional'
         """
         self.id_list = id_list
         self.doc = doc
