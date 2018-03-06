@@ -46,12 +46,7 @@
 					{% endif %}
 				</div>
 
-				<h2 title="Repositories in use">Repositories:
-					{% mbd_api "meta" user show_more=False name="Keyring packages" title="(Re-)Build keyring packages for all active repositories" value_model="repository.Repository" value_function="build_keyring_packages" %}
-					{% mbd_api "meta" user show_more=False name="Test packages" title="(Re-)Build internal test packages for all active repositories" value_model="repository.Repository" value_function="build_test_packages" %}
-					{% mbd_api "portext" user show_more=True %}
-				</h2>
-
+				<h2 title="Repositories in use">Repositories:</h2>
 				<ul>
 					{% for r in repositories %}
 						<li>
@@ -65,6 +60,12 @@
 						<li>No repositories.</li>
 					{% endfor %}
 				</ul>
+
+				<h3 title="Extra functionality">Extras:
+					{% mbd_api "portext" user show_more=True %}
+					{% mbd_api "meta" user name="Keyring packages" title="(Re-)Build keyring packages for all active repositories" value_model="repository.Repository" value_function="build_keyring_packages" %}
+					{% mbd_api "meta" user name="Test packages" title="(Re-)Build internal test packages for all active repositories" value_model="repository.Repository" value_function="build_test_packages" %}
+				</h3>
 			</div>
 		</div>
 
