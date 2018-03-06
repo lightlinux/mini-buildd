@@ -2,7 +2,7 @@
 {% load mini_buildd_tags %}
 
 {% if hidden %}
-	<input type="hidden" value="{{ arg.value }}" name="{{ arg.identity }}" />
+	<input type="hidden" value="{{ arg.raw_value }}" name="{{ arg.identity }}" />
 {% else %}
 	<label title="{{ arg.identity }}: {{ arg.doc }}">
 		{% if show_label %}<em>{{ arg.identity }}</em>{% endif %}
