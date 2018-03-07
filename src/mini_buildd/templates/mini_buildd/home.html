@@ -17,9 +17,6 @@
 		{% if daemon.is_busy %}Busy...{% elif daemon.is_running %}Running{% else %}Stopped{% endif %}: {{ daemon.model }}
 	</span>
 {% endblock %}
-{% block mbd_page_footer %}
-	{% mbd_api "getkey" user show_more=False name="Archive Key" %}: <kbd>{{ daemon.model.mbd_gnupg_long_id }}: {{ daemon.model.mbd_gnupg_fingerprint }}</kbd>
-{% endblock %}
 
 {% block content %}
 	<div id="mbd_index_status">
@@ -117,4 +114,8 @@
 			</div>
 		</div>
 	</div>
+{% endblock %}
+
+{% block mbd_page_footer %}
+	{% mbd_api "getkey" user show_more=False name="Archive Key" %}: <kbd>{{ daemon.model.mbd_gnupg_long_id }}: {{ daemon.model.mbd_gnupg_fingerprint }}</kbd>
 {% endblock %}
