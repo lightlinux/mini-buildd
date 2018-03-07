@@ -79,9 +79,7 @@
 
 								<td>
 									{% if values.sourceversion and values.uploadable %}
-										<a class="button-rebuild"
-											 title="...in {{ values.distribution }}"
-											 href="/mini_buildd/api?command=port&amp;package={{ values.source|urlencode }}&amp;from_distribution={{ values.distribution|urlencode }}&amp;to_distributions={{ values.distribution|urlencode }}&amp;version={{ values.sourceversion|urlencode }}&amp;output=referer">Rebuild</a>
+										{% mbd_api "port" user name="Rebuild" title="...in "|add:values.distribution show_more=False value_package=values.source value_from_distribution=values.distribution value_to_distributions=values.distribution value_version=values.sourceversion output=referer %}
 									{% endif %}
 								</td>
 								<td>
