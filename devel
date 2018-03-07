@@ -162,7 +162,7 @@ mbd_service()
 		sudo /etc/init.d/mini-buildd ${1}
 		sudo mv /lib/lsb/init-functions.d/40-systemd.DISABLED /lib/lsb/init-functions.d/40-systemd || true
 	else
-		service mini-buildd "${1}"
+		sudo service mini-buildd "${1}"
 	fi
 }
 
