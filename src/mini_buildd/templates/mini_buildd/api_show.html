@@ -35,7 +35,7 @@
 								<td>{{ values.component }}</td>
 								<td class="version">
 									{% if values.sourceversion %}
-										<a href="/mini_buildd/log/{{ repository.identity }}/{{ api_cmd.args.package }}/{{ values.sourceversion }}/" title="Build logs">{{ values.sourceversion }}</a>
+										<a href="/mini_buildd/log/{{ repository.identity }}/{{ api_cmd.args.package.value }}/{{ values.sourceversion }}/" title="Build logs">{{ values.sourceversion }}</a>
 									{% endif %}
 								</td>
 								<td>
