@@ -7,9 +7,9 @@
 {% block page_sub_title %}
 	{% if not daemon.is_busy %}
 		{% if daemon.is_running %}
-			{% mbd_api "stop" user show_more=False output="referer" %}
+			{% mbd_api "stop" user output="referer" %}
 		{% else %}
-			{% mbd_api "start" user show_more=False output="referer" %}
+			{% mbd_api "start" user output="referer" %}
 		{% endif %}
 	{% endif %}
 	{% mbd_api "logcat" user show_more=False %}
