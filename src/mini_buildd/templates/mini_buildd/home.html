@@ -12,10 +12,13 @@
 			{% mbd_api "start" user output="referer" %}
 		{% endif %}
 	{% endif %}
-	{% mbd_api "logcat" user show_more=False %}
 	<span class="status {% if daemon.is_busy %}busy{% elif daemon.is_running %}running{% else %}stopped{% endif %}">
 		{% if daemon.is_busy %}Busy...{% elif daemon.is_running %}Running{% else %}Stopped{% endif %}: {{ daemon.model }}
 	</span>
+	<br />
+	{% mbd_api "getkey" user %}
+	{% mbd_api "getdputconf" user %}
+	{% mbd_api "logcat" user %}
 {% endblock %}
 
 {% block content %}
@@ -59,7 +62,6 @@
 				</ul>
 
 				<h3 title="Extra functionality">Extras:</h3>
-				{% mbd_api "getdputconf" user %}
 				{% mbd_api "portext" user show_more=True %}
 				{% mbd_api "meta" user name="Keyring packages" title="(Re-)Build keyring packages for all active repositories" value_model="repository.Repository" value_function="build_keyring_packages" %}
 				{% mbd_api "meta" user name="Test packages" title="(Re-)Build internal test packages for all active repositories" value_model="repository.Repository" value_function="build_test_packages" %}
