@@ -1,6 +1,7 @@
 {% extends "mini_buildd/api.html" %}
+{% load mini_buildd_tags %}
 
-{% block page_title %}{{ api_cmd.args.pattern }}{% endblock %}
+{% block page_title %}{{ api_cmd.args.pattern.value }}{% endblock %}
 {% block page_sub_title %}Source and binary package matches{% endblock %}
 
 {% block content %}
@@ -31,7 +32,7 @@
 							<td>{{ package.distribution }}</td>
 							<td>{{ package.component }}</td>
 							<td>{{ package.version }}</td>
-							<td><a href="/mini_buildd/api?command=show&amp;package={{ package.source|urlencode }}">{{ package.source }}</a></td>
+							<td>{{ package.source|urlencode }}{% mbd_api "show" user value_package=package.source %}</td>
 						</tr>
 					{% endfor %}
 				</table>
