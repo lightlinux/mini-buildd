@@ -16,7 +16,7 @@
 				<option {% if choice == arg.value %}selected{% endif %}>{{ choice }}</option>
 			{% endfor %}
 		</select>
-		<input type="text" value="{% if arg.raw_value in arg.choices %}{% else %}{{ arg.raw_value }}{% endif %}" size="15" name="{{ arg.identity }}" title="Custom entry" />
+		<input type="text" value="{% if arg.raw_value is None or arg.raw_value in arg.choices %}{% else %}{{ arg.raw_value }}{% endif %}" size="15" name="{{ arg.identity }}" />
 	{% elif arg.TYPE == "multiselect" %}
 		{% if arg.choices %}
 			<input id="{{ tag_id }}-{{ arg.identity }}-regexfilter"
@@ -32,7 +32,7 @@
 			</select>
 			<br />
 		{% endif %}
-		<input type="text" value="{% if arg.raw_value is None or arg.raw_value in arg.choices %}{% else %}{{ arg.raw_value }}{% endif %}" size="15" name="{{ arg.identity }}" title="Custom entry" />
+		<input type="text" value="{% if arg.raw_value is None or arg.raw_value in arg.choices %}{% else %}{{ arg.raw_value }}{% endif %}" size="15" name="{{ arg.identity }}" />
 	{% else %}
 		{{ arg.identity }}: Internal error: Unkown argument type {{ arg.TYPE }}.
 	{% endif %}
