@@ -110,8 +110,8 @@ class SelectArgument(Argument):
 
     def __init__(self, *args, choices=None, **kwargs):
         super().__init__(*args, **kwargs)
-        self.choices = choices
-        if choices is not None:
+        self.choices = [] if choices is None else choices
+        if choices:
             self.argparse_kvsargs["choices"] = choices
 
 
@@ -792,8 +792,15 @@ class Subscription(Command):
     AUTH = Command.LOGIN
     ARGUMENTS = [
         SelectArgument(["action"], doc="action to run", choices=["list", "add", "remove"]),
-        StringArgument(["subscription"], doc="subscription pattern")
+        SelectArgument(["subscription"], doc="subscription pattern")
     ]
+
+    def _update(self):
+        if self.daemon and self.args["subscription"].value:
+            self.args["subscription"].choices = [self.args["subscription"].value]
+            package, _sep, _distribution = self.args["subscription"].value.partition(":")
+            for r in self.daemon.get_active_repositories():
+                self.args["subscription"].choices += ["{}:{}".format(package, d) for d in r.mbd_distribution_strings()]
 
     def _run(self):
         package, _sep, distribution = self.args["subscription"].value.partition(":")
