@@ -65,10 +65,10 @@
 
 		<!-- Footer -->
 		<div id="mbd-footer">
-			<p>
-				<span class="version-info" title="{% for package, version in mbd_components.items %}{{ package }}-{{ version }}&#013;&#010;{% endfor %}">{{ mbd_version }}</span>
-				<span class="page-footer">{% block mbd_page_footer %}{% endblock %}</span>
-			</p>
+			<span class="mbd-footer-version" title="{% for package, version in mbd_components.items %}{{ package }}-{{ version }}&#013;&#010;{% endfor %}">{{ mbd_version }}</span>
+			{% if daemon.model.mbd_gnupg_long_id %}
+				<span class="mbd-footer-key" title="Archive key and fingerprint">&raquo; <kbd>{{ daemon.model.mbd_gnupg_long_id }}: {{ daemon.model.mbd_gnupg_fingerprint }}</kbd></span>
+			{% endif %}
 		</div>
 	</body>
 </html>

@@ -114,7 +114,3 @@
 		</div>
 	</div>
 {% endblock %}
-
-{% block mbd_page_footer %}
-	{% mbd_api "getkey" user show_more=False name="Archive Key" %}: <kbd>{{ daemon.model.mbd_gnupg_long_id }}: {{ daemon.model.mbd_gnupg_fingerprint }}</kbd>
-{% endblock %}
