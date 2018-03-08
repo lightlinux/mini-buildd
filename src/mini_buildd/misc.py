@@ -115,14 +115,14 @@ class TmpDir(object):
 
     @classmethod
     def file_dir(cls, file_name):  # pylint: disable=inconsistent-return-statements
-        # nf "/var/lib/mini-buildd/tmp/t123/xyz.file
-        # nd "/var/lib/mini-buildd/tmp/t123"
-        # nt "/var/lib/mini-buildd/tmp"
-        nf = os.path.normpath(file_name)
-        nd = os.path.dirname(nf)
-        nt = os.path.normpath(mini_buildd.setup.TMP_DIR)
-        if nf.startswith(nt) and nd != nt:
-            return nd
+        # norm_f="/var/lib/mini-buildd/tmp/t123/xyz.file
+        # norm_d="/var/lib/mini-buildd/tmp/t123"
+        # norm_t="/var/lib/mini-buildd/tmp"
+        norm_f = os.path.normpath(file_name)
+        norm_d = os.path.dirname(norm_f)
+        norm_t = os.path.normpath(mini_buildd.setup.TMP_DIR)
+        if norm_f.startswith(norm_t) and norm_d != norm_t:
+            return norm_d
 
 
 class ConfFile(object):
@@ -553,7 +553,7 @@ class UserURL(object):
     def __init__(self, url, username=None):
         parsed = urllib.parse.urlparse(url)
         if parsed.password:
-            raise Exception("UserURL: We don't allow to give pasword in URL")
+            raise Exception("UserURL: We don't allow to give password in URL")
         if parsed.username and username:
             raise Exception("UserURL: Username given in twice, in URL and parameter")
         if not parsed.username and not username:

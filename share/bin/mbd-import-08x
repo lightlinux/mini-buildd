@@ -89,7 +89,7 @@ input("Start import (dry_run={d}) (Ctrl-C to cancel)?".format(d=ARGS.dry_run))
 print()
 
 for package, versions in PACKAGES.items():
-    # The only possible check is to check that repropro's ls ouput is empty
+    # The only possible check is to check that repropro's ls output is empty
     res, output = call("reprepro list {d} {p}".format(d=ARGS.distribution, p=package), show=False)
     if output:
         print("** Skipping {p}: Already in dist '{d}'".format(d=ARGS.distribution, p=package))

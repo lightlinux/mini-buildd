@@ -106,7 +106,7 @@ when this feature is enabled for the resp. repository).
 
 Use '.*' to allow all -- it's however recommended to put this to
 s.th. like '.*@myemail.domain', to avoid original package
-maintainers to be accidentially spammed.
+maintainers to be accidentally spammed.
 """)
 
     custom_hooks_directory = django.db.models.CharField(max_length=255, default="", blank=True, help_text="For future use.")
@@ -290,7 +290,7 @@ Manage your account : {url}accounts/login/
             package = changes.get("Source", None)
             real_distribution = distribution
             if real_distribution is None:
-                # If distribution was not given explicitely, try from changes, resolving meta dists if needed.
+                # If distribution was not given explicitly, try from changes, resolving meta dists if needed.
                 changes_dist = changes.get("Distribution", "")
                 real_distribution = mini_buildd.models.repository.map_incoming_distribution(changes_dist)
             return self.mbd_get_daemon().get_subscription_objects().filter(package__in=[package, ""], distribution__in=[real_distribution, ""])

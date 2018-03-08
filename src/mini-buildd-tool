@@ -99,7 +99,7 @@ def cmd_call(args):
     except BaseException:
         pass
 
-    # Log in if user given explicitely, or required by the command
+    # Log in if user given explicitly, or required by the command
     if user or args.command_class.AUTH != mini_buildd.api.Command.NONE:
         mini_buildd.misc.web_login(host, user, KEYRING)
 
