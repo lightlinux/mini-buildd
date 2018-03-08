@@ -104,6 +104,6 @@
 	</div>
 
 	<!-- Manage package specific subscriptions -->
-	{% mbd_manage_subscriptions repositories api_cmd.args.package.value %}
+	{% mbd_api "subscription" user value_subscription=api_cmd.args.package.value|add:":" output=referer %}
 
 {% endblock %}

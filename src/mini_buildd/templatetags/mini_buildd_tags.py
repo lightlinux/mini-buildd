@@ -64,12 +64,6 @@ def mbd_builder_status(builds):
     return {"builds": builds}
 
 
-@register.inclusion_tag("includes/mbd_manage_subscriptions.html")
-def mbd_manage_subscriptions(repositories, package=""):
-    return {"repositories": repositories,
-            "package": package}
-
-
 @register.inclusion_tag("includes/mbd_api.html")
 def mbd_api(cmd, user, show_more=True, name=None, title=None, output="html", **kwargs):
     def _kwargs(prefix):

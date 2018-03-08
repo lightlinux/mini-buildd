@@ -11,7 +11,7 @@
 		when viewing a source package's overview ("show").
 	</p>
 	<p>
-		{% mbd_manage_subscriptions repositories %}
+		{% mbd_api "subscription" user value_subscription=":" output=referer %}
 	</p>
 	<hr/>
 
