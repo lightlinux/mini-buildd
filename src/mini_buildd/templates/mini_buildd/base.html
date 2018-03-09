@@ -8,7 +8,7 @@
 		</div>
 		{% if api_cmd.args.package %}
 			{% with api_cmd.args.package.value as package %}
-				{% mbd_api "show" user show_more=False title=package value_package=package %}
+				{% mbd_api "show" show_more=False title=package value_package=package %}
 				<br />
 				<a href="https://tracker.debian.org/pkg/{{ package|urlencode }}" title="Show {{ package }} source package in the Debian Package Tracker">Show Debian</a>
 				(<a href="http://packages.qa.debian.org/common/index.html?src={{ package|urlencode }}" title="Show {{ package }} source package in the (traditional) Debian PTS">Old</a>)
@@ -20,8 +20,8 @@
 		<div class="title">{% block page_title %}{% endblock %}</div><div class="sub-title">{% block page_sub_title %}{% endblock %}</div>
 	</div>
 	<div class="right">
-		{% mbd_api "show" user %}
+		{% mbd_api "show" %}
 		<br />
-		{% mbd_api "list" user %}
+		{% mbd_api "list" %}
 	</div>
 {% endblock %}

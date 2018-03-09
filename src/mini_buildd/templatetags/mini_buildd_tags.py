@@ -54,13 +54,13 @@ def mbd_model_count(model):
     return ret
 
 
-@register.inclusion_tag("includes/mbd_api.html")
-def mbd_api(cmd, user, show_more=True, name=None, title=None, output="html", **kwargs):
+@register.inclusion_tag("includes/mbd_api.html", takes_context=True)
+def mbd_api(context, cmd, show_more=True, name=None, title=None, output="html", **kwargs):
     def _kwargs(prefix):
         return {k[len(prefix):]: v for k, v in kwargs.items() if k.startswith(prefix)}
 
     api_cls = mini_buildd.api.COMMANDS_DICT.get(cmd, None)
-    auth_err = api_cls.auth_err(user)
+    auth_err = api_cls.auth_err(context.get("user"))
     api_cmd = api_cls(_kwargs("value_"), daemon=mini_buildd.daemon.get())
 
     return {"api_cmd": api_cmd,

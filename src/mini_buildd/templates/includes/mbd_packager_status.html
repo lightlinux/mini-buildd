@@ -13,7 +13,7 @@
 	{% for p in packages %}
 		<tr>
 			<td class="status nowrap smaller">{{ p.started|date:"r" }}</td>
-			<td class="status nowrap">{% mbd_api "show" user show_more=False name=p.changes.source value_package=p.changes.source %}</td>
+			<td class="status nowrap">{% mbd_api "show" show_more=False name=p.changes.source value_package=p.changes.source %}</td>
 			<td class="status nowrap">{{ p.changes.distribution }}</td>
 			<td class="status nowrap">
 				{% if p.log %}

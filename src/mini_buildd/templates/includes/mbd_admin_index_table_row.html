@@ -10,15 +10,15 @@
 			<td class="right">
 				<!-- Support up to three wizards (repeated three times, found no good way yet to do this more nicely) -->
 				{% if wiz0_function %}
-					{% mbd_api "meta" user show_more=False name=wiz0_name output="referer" title=wiz0_title value_model=model_path value_function=wiz0_function %}
+					{% mbd_api "meta" show_more=False name=wiz0_name output="referer" title=wiz0_title value_model=model_path value_function=wiz0_function %}
 				{% endif %}
 
 				{% if wiz1_function %}
-					{% mbd_api "meta" user show_more=False name=wiz1_name output="referer" title=wiz1_title value_model=model_path value_function=wiz1_function %}
+					{% mbd_api "meta" show_more=False name=wiz1_name output="referer" title=wiz1_title value_model=model_path value_function=wiz1_function %}
 				{% endif %}
 
 				{% if wiz2_function %}
-					{% mbd_api "meta" user show_more=False name=wiz2_name output="referer" title=wiz2_title value_model=model_path value_function=wiz2_function %}
+					{% mbd_api "meta" show_more=False name=wiz2_name output="referer" title=wiz2_title value_model=model_path value_function=wiz2_function %}
 				{% endif %}
 
 				&nbsp;&nbsp;

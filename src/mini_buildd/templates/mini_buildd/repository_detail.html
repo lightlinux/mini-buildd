@@ -7,7 +7,7 @@
 {% block content %}
 
 	<div id="mbd_repository">
-		{% mbd_api "printuploaders" user value_repository=object.identity %}
+		{% mbd_api "printuploaders" value_repository=object.identity %}
 
 		{% for d in object.distributions.all %}
 			<div class="inner-box">
@@ -40,9 +40,9 @@
 						<ul id="mbd_dist_{{ d.base_source.codename }}_{{ s.suite.name }}" style="display: none">
 							<li>APT line
 								(Download:
-								{% mbd_api "getkey" user name="APT key" output="plain" show_more=False %}
-								{% mbd_api "getsourceslist" user output="plain" show_more=False value_suite=s.suite.name value_codename=d.base_source.codename value_with_extra_sources=False value_repository=object.identity name="deb" value_with_deb_src=False %}
-								{% mbd_api "getsourceslist" user output="plain" show_more=False value_suite=s.suite.name value_codename=d.base_source.codename value_with_extra_sources=False value_repository=object.identity name="deb+src" value_with_deb_src=True %})
+								{% mbd_api "getkey" name="APT key" output="plain" show_more=False %}
+								{% mbd_api "getsourceslist" output="plain" show_more=False value_suite=s.suite.name value_codename=d.base_source.codename value_with_extra_sources=False value_repository=object.identity name="deb" value_with_deb_src=False %}
+								{% mbd_api "getsourceslist" output="plain" show_more=False value_suite=s.suite.name value_codename=d.base_source.codename value_with_extra_sources=False value_repository=object.identity name="deb+src" value_with_deb_src=True %})
 								:
 								<pre class="pre-block">{% mbd_distribution_apt_line d object s %}</pre></li>
 							{% if s.uploadable %}

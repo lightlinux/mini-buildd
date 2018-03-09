@@ -32,7 +32,7 @@
 							<td>{{ package.distribution }}</td>
 							<td>{{ package.component }}</td>
 							<td>{{ package.version }}</td>
-							<td>{{ package.source|urlencode }}{% mbd_api "show" user value_package=package.source %}</td>
+							<td>{{ package.source|urlencode }}{% mbd_api "show" value_package=package.source %}</td>
 						</tr>
 					{% endfor %}
 				</table>

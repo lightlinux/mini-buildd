@@ -11,7 +11,7 @@
 		when viewing a source package's overview ("show").
 	</p>
 	<p>
-		{% mbd_api "subscription" user value_subscription=":" output=referer %}
+		{% mbd_api "subscription" value_subscription=":" output=referer %}
 	</p>
 	<hr/>
 
@@ -26,5 +26,5 @@
 		needs to (verify your key and) manually re-activate you
 		later.
 	</p>
-	{% mbd_api "setuserkey" user value_key=user.uploader.key output=referer %}
+	{% mbd_api "setuserkey" value_key=user.uploader.key output=referer %}
 {% endblock %}

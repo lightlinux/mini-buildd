@@ -12,12 +12,12 @@
 					<h2 class="{{ key }}">{{ key }}</h2>
 					{% ifequal key "Failed" %}
 						<p>
-							{% mbd_api "retry" user show_more=False value_package=package value_version=version value_repository=repository %}
+							{% mbd_api "retry" show_more=False value_package=package value_version=version value_repository=repository %}
 						</p>
 					{% endifequal %}
 					<p>
 						<a title="Browse log directory" href="/log/{{ repository }}{% ifequal key "Failed" %}/_failed{% endifequal %}/{{ package }}/{{ version }}/">Browse files</a>
-						{% mbd_api "show" user show_more=False value_package=package %}
+						{% mbd_api "show" show_more=False value_package=package %}
 					</p>
 					<hr/>
 

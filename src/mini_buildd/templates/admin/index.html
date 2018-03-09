@@ -17,17 +17,17 @@
 			{% if "dummy"|mbd_daemon_is_running %}
 				<span class="warning">Warning:</span>
 				The daemon is <span style="font-weight: bold">running</span>!&nbsp;
-				It's recommended to {% mbd_api "stop" user show_more=False %} for extensive maintenance.
+				It's recommended to {% mbd_api "stop" show_more=False %} for extensive maintenance.
 			{% else %}
 				The daemon is <span style="font-weight: bold">stopped</span>!&nbsp;
-				 {% mbd_api "stop" user show_more=False name="Restart it" %} when done.
+				 {% mbd_api "stop" show_more=False name="Restart it" %} when done.
 			{% endif %}
 		</p>
 	</div>
 
 	<div id="content-main">
 
-		{% mbd_api "autosetup" user %}
+		{% mbd_api "autosetup" %}
 
 		{% if app_list %}
 			{% for app in app_list %}
