@@ -54,16 +54,6 @@ def mbd_model_count(model):
     return ret
 
 
-@register.inclusion_tag("includes/mbd_packager_status.html")
-def mbd_packager_status(packages):
-    return {"packages": packages}
-
-
-@register.inclusion_tag("includes/mbd_builder_status.html")
-def mbd_builder_status(builds):
-    return {"builds": builds}
-
-
 @register.inclusion_tag("includes/mbd_api.html")
 def mbd_api(cmd, user, show_more=True, name=None, title=None, output="html", **kwargs):
     def _kwargs(prefix):
