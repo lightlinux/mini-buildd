@@ -26,17 +26,5 @@
 		needs to (verify your key and) manually re-activate you
 		later.
 	</p>
-
-	<div id="mbd-registration">
-		<form action="/mini_buildd/api" method="get">
-			<div>
-				<input type="hidden" name="command" value="setuserkey" />
-				<textarea name="key" title="Full ascii-armored GnuPG public key or one-line key ID (to be found on the keyserver)" cols="80" rows="10">{{ user.uploader.key }}</textarea>
-				<input type="hidden" name="output" value="referer" />
-			</div>
-			<div>
-				<button type="submit" title="Set new user GPG public key">Set new key</button>
-			</div>
-		</form>
-	</div>
+	{% mbd_api "setuserkey" user value_key=user.uploader.key output=referer %}
 {% endblock %}
