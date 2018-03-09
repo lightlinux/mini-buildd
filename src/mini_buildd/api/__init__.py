@@ -83,6 +83,10 @@ class StringArgument(Argument):
         self.argparse_kvsargs["action"] = "store"
 
 
+class TextArgument(StringArgument):
+    TYPE = "text"
+
+
 class IntArgument(StringArgument):
     TYPE = "int"
 
@@ -758,7 +762,7 @@ class SetUserKey(Command):
     AUTH = Command.LOGIN
     CONFIRM = True
     ARGUMENTS = [
-        StringArgument(["key"], doc="GnuPG public key; multiline inputs will be handled as ascii armored full key, one-liners as key ids")
+        TextArgument(["key"], doc="GnuPG public key; multiline inputs will be handled as ascii armored full key, one-liners as key ids")
     ]
 
     def _run(self):
