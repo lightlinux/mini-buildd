@@ -349,19 +349,19 @@ codeversion is only used for base sources.""")
                                    [keys["archive_current"], keys["archive_2012"]],
                                    "Codename: xenial\nSuite: xenial-backports")
 
-            # yakkety: 16.10
-            cls._mbd_get_or_create(msglog, "Ubuntu", "yakkety",
-                                   [keys["archive_current"], keys["archive_2012"]])
-            cls._mbd_get_or_create(msglog, "Ubuntu", "yakkety-backports",
-                                   [keys["archive_current"], keys["archive_2012"]],
-                                   "Codename: yakkety\nSuite: yakkety-backports")
-
             # zesty: 17.04
             cls._mbd_get_or_create(msglog, "Ubuntu", "zesty",
                                    [keys["archive_current"], keys["archive_2012"]])
             cls._mbd_get_or_create(msglog, "Ubuntu", "zesty-backports",
                                    [keys["archive_current"], keys["archive_2012"]],
                                    "Codename: zesty\nSuite: zesty-backports")
+
+            # artful: 17.10
+            cls._mbd_get_or_create(msglog, "Ubuntu", "artful",
+                                   [keys["archive_current"], keys["archive_2012"]])
+            cls._mbd_get_or_create(msglog, "Ubuntu", "artful-backports",
+                                   [keys["archive_current"], keys["archive_2012"]],
+                                   "Codename: artful\nSuite: artful-backports")
 
         @classmethod
         def mbd_filter_active_base_sources(cls):
