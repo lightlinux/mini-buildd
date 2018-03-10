@@ -1,7 +1,7 @@
 /* API */
 
 /* Box around the whole api call in case more options can be revealed */
-div.mbd-api-box-True
+div.mbd-api-box
 {
 	border-color: darkgrey;
 	border-style: groove;
@@ -12,7 +12,7 @@ div.mbd-api-box-True
 	display: inline-block;
 }
 
-div.mbd-api-box-False
+details.mbd-api
 {
 	display: inline-block;
 }

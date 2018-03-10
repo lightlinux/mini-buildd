@@ -62,7 +62,7 @@
 				</ul>
 
 				<h3 title="Extra functionality">Extras:</h3>
-				{% mbd_api "portext" show_more=True %}
+				{% mbd_api "portext" %}
 				{% mbd_api "meta" name="Keyring packages" title="(Re-)Build keyring packages for all active repositories" value_model="repository.Repository" value_function="build_keyring_packages" %}
 				{% mbd_api "meta" name="Test packages" title="(Re-)Build internal test packages for all active repositories" value_model="repository.Repository" value_function="build_test_packages" %}
 			</div>

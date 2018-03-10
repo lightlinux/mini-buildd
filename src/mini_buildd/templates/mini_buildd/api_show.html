@@ -46,7 +46,7 @@
 								<td>
 									{% if values.migrates_to %}
 										{% if values.sourceversion and not values.is_migrated %}
-											{% mbd_api "migrate" title="...to "|add:values.migrates_to show_more=False value_package=values.source value_distribution=values.distribution value_version=values.sourceversion output=referer %}
+											{% mbd_api "migrate" title="...to "|add:values.migrates_to value_package=values.source value_distribution=values.distribution value_version=values.sourceversion output=referer %}
 										{% elif values.sourceversion %}
 											<div title="...to {{ values.migrates_to }}"><b>Migrated</b></div>
 										{% else %}
@@ -56,7 +56,7 @@
 								</td>
 								<td>
 									{% if values.sourceversion %}
-										{% mbd_api "remove" title="...from "|add:values.distribution show_more=False value_package=values.source value_distribution=values.distribution value_version=values.sourceversion output=referer %}
+										{% mbd_api "remove" title="...from "|add:values.distribution value_package=values.source value_distribution=values.distribution value_version=values.sourceversion output=referer %}
 									{% endif %}
 								</td>
 								<td>
@@ -65,9 +65,9 @@
 										{% for rollback in values.rollbacks|dictsort:"no" %}
 											<br />
 											<div>
-												{% mbd_api "remove" name=rollback.no title="Remove "|add:rollback.sourceversion|add:" from "|add:rollback.distribution show_more=False value_package=rollback.source value_distribution=rollback.distribution value_version=rollback.sourceversion output=referer %}
+												{% mbd_api "remove" name=rollback.no title="Remove "|add:rollback.sourceversion|add:" from "|add:rollback.distribution value_package=rollback.source value_distribution=rollback.distribution value_version=rollback.sourceversion output=referer %}
 												{% if not values.sourceversion %}
-													{% mbd_api "migrate" name=rollback.no title="Restore rollback "|add:rollback.sourceversion|add:" from "|add:rollback.distribution show_more=False value_package=rollback.source value_distribution=rollback.distribution value_version=rollback.sourceversion output=referer %}
+													{% mbd_api "migrate" name=rollback.no title="Restore rollback "|add:rollback.sourceversion|add:" from "|add:rollback.distribution value_package=rollback.source value_distribution=rollback.distribution value_version=rollback.sourceversion output=referer %}
 												{% endif %}
 												[<a title="Get dsc of {{ rollback.sourceversion }} from {{ rollback.distribution }}"
 														href="{{ rollback.dsc_path }}">dsc</a>|<a href="/mini_buildd/log/{{ repository.identity }}/{{ api_cmd.args.package }}/{{ rollback.sourceversion }}/" title="Build logs">logs</a>]
@@ -79,7 +79,7 @@
 
 								<td>
 									{% if values.sourceversion and values.uploadable %}
-										{% mbd_api "port" name="Rebuild" title="...in "|add:values.distribution show_more=False value_package=values.source value_from_distribution=values.distribution value_to_distributions=values.distribution value_version=values.sourceversion output=referer %}
+										{% mbd_api "port" name="Rebuild" title="...in "|add:values.distribution value_package=values.source value_from_distribution=values.distribution value_to_distributions=values.distribution value_version=values.sourceversion output=referer %}
 									{% endif %}
 								</td>
 								<td>

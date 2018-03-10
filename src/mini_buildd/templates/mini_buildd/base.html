@@ -8,7 +8,7 @@
 		</div>
 		{% if api_cmd.args.package %}
 			{% with api_cmd.args.package.value as package %}
-				{% mbd_api "show" show_more=False title=package value_package=package %}
+				{% mbd_api "show" title=package value_package=package %}
 				<br />
 				<a href="https://tracker.debian.org/pkg/{{ package|urlencode }}" title="Show {{ package }} source package in the Debian Package Tracker">Show Debian</a>
 				(<a href="http://packages.qa.debian.org/common/index.html?src={{ package|urlencode }}" title="Show {{ package }} source package in the (traditional) Debian PTS">Old</a>)

@@ -55,7 +55,7 @@ def mbd_model_count(model):
 
 
 @register.inclusion_tag("includes/mbd_api.html", takes_context=True)
-def mbd_api(context, cmd, show_more=True, name=None, title=None, output="html", **kwargs):
+def mbd_api(context, cmd, name=None, title=None, output="html", **kwargs):
     def _kwargs(prefix):
         return {k[len(prefix):]: v for k, v in kwargs.items() if k.startswith(prefix)}
 
@@ -65,7 +65,6 @@ def mbd_api(context, cmd, show_more=True, name=None, title=None, output="html", 
 
     return {"api_cmd": api_cmd,
             "auth_err": auth_err,
-            "show_more": show_more,
             "name": name,
             "title": title,
             "output": output,
