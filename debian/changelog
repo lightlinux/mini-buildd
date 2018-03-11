@@ -1,3 +1,169 @@
+mini-buildd (1.1.10) experimental; urgency=medium
+
+  ** 1.1.x are _development_ releases, use for testing only. **
+
+  This release concludes the generalization of "API-HTML-embedding",
+  triggering quite some related html/template and API cleanups on
+  the way:
+
+  [ Stephan Sürken ]
+  * [bbbd972] api/__init__.py: Promote auth_err() function to class
+    method.
+  * [f3444b0] mini_buildd_tags.py: api call tag: Use actual command
+    object, not class.
+  * [20d3112] [html] api call ttag: Fixup param config.
+  * [3589ec6] [html] ttag api call: Add option to set style (per css
+    class).
+  * [4abd029] api/__init__.py: Add extra func to produce new 'html_hints'
+    only when needed.
+  * [953f144] api/__init__.py: Deliver _all_ static arg description in
+    html hints.
+  * [ca60bd7] css: Add link-style class for api buttons.
+  * [a24230c] [html] ttag api call: Add verbosity support; add per arg
+    type support.
+  * [30f6e69] [devel]: mv pylint check to level 0.
+  * [9514aa5] api_index.html: Use new api call tag.
+  * [5538d0d] api/__init__.py: Add Argument abstraction classes.
+  * [fb17dc1] api: Replace all arguments config with *Argument() objects.
+  * [3d8d14a] api/__init__.py: arg filter: Code cleanup.
+  * [75a6e8e] api/__init__.py: Add TYPE attr to each arg class.
+  * [a549174] api/__init__.py: multi select: Set 'choices' as class var as
+    well.
+  * [052ab47] [html] Use new arguments for api call ttag.
+  * [3e8034e] [devel]: Fix logging of script run (so it does not interfere
+    w/ traditional compile error parsing).
+  * [aca5f8c] api/__init__.py: Fix command init && super calls to not
+    repeat the args.
+  * [1da9e72] api code: Make args a copy of arguments, and also carry
+    argument values for command objects.
+  * [e972651] api: autosetup: Properly use choices.
+  * [079900a] src/mini-buildd-tool: with new argument classes: Cleanup
+    add_arg call.
+  * [09e08eb] api/__init__.py: Introducte update() and _update() hooks.
+  * [5ec56f8] api/__init__.py: Fix: Object args must be copies.
+  * [94d5a0f] api/__init__.py: Move daemon to class var / constr.
+  * [4811280] mini_buildd_tags.py: api call tag: Fix extra_params.
+  * [2853a5f] api_confirm.html: Temporary fixup for new arguments.
+  * [d06b243] daemon.py: Fix strange wording in port exception.
+  * [6faf389] api/__init__.py: Mv false2none (obsolete?) to argument
+    class.
+  * [fd989a3] mini_buildd_tags.py: api_call: Supply daemon to command.
+  * [c711d7c] api/__init__.py: Port: Initial updater hook for
+    to_distributions choices (POC).
+  * [88583b5] [html] More updates to api_call tag; make show/hide/more
+    lists in ttag obsolete.
+  * [2583759] api/__init__.py: Remove now really obsoleted html_hints.
+  * [e189374] [html] Addcss class for api command.
+  * [dc5b4a3] ttags: Rename api_call -> api_command.
+  * [dcae8e0] mini-buildd.css: Fix start/stop styles: input, not a && move
+    to other button css.
+  * [239ea70] mini-buildd.css: Remove most redundancies from "button/api
+    classes"; remove 'style' option now from api_command tag.
+  * [66156dc] html,mini-buildd.css: Rename 'command' class (div box) to
+    mbd-api-box-True, and use only when show_more=True.
+  * [13e3f54] [html] Simplify ttag name: mbd_api_command -> mbd_api.
+  * [53ac173] mini_buildd/home.html: ttag mbd_api(): Migrate start/stop.
+  * [e417f55] mini_buildd/home.html: ttag mbd_api(): Migrate getkey.
+  * [431edfd] mini_buildd/home.html: ttag mbd_api(): Migrate keyring and
+    test packages buttons.
+  * [571d61a] mini_buildd/home.html: ttag mbd_api(): Migrate portext.
+  * [845231a] [html]: ttag mbd_api(): Migrate autosetup.
+  * [3760fe7] [html]: ttag mbd_api(): Migrate start/stop in admin index.
+  * [3be1757] api/__init__.py: Fix: Only consider non-empty list values
+    from get requests.
+  * [ffe8b61] [html]: ttag mbd_api(): Migrate logcat/degtdputconf in main
+    menu.
+  * [687016e] mini_buildd/base.html: Remove obsolete extra support to run
+    api w/ different output.
+  * [75b32c6] [html]: ttag mbd_api(): Migrate show in mbd base tpl.
+  * [fb8bcaf] admin/index.html: Migrate to includes w/ parameters
+    (obsoletes extra templatetags).
+  * [7d1f3b6] mini_buildd_tags.py: mbd_api ttag: Add output support.
+  * [fb57bc2] mini_buildd/home.html: Make start/stop api calls return to
+    referer.
+  * [bbc90e4] [html]: Put api css in separate file, and use for admin
+    also.
+  * [eb95aa6] mini-buildd_api.css: Make meta also use the wizard image for
+    now.
+  * [bcaf41f] mbd_admin_index_table_row.html: Migrate to mbd_api ttag.
+  * [b26fc20] api/__init__.py: Fixup argument so set(value) accepts both
+    raw and specific types.
+  * [e7e6815] repository_detail.html: Migrate to ttag mbd_api.
+  * [aa207ed] log: Migrate to ttag mbd_api.
+  * [4effc27] api_show.html: Update remove+migrate to ttag mbd_api.
+  * [0eade81] includes/mbd_api_arg.html: Fix: hidden args must use raw
+    (str) arg value.
+  * [4aa5020] django_settings.py: Add request context.
+  * [c4497b7] registration/login.html: On login, set next to referer.
+  * [fbb3ca4] [devel]: Add timestamp output at end of runs.
+  * [a286837] api/__init__.py: Fix doctests for Argument.
+  * [b2d634b] [devel]: Yet some more poking on sequencer and usage.
+  * [7271b11] api/__init__.py: autosetup should be confirmed.
+  * [c39a7da] api/__init__.py: Fixup __getstate__ so 'Command' objects can
+    be pickled again.
+  * [1bfae9f] [html] Move logcat from main menu next to start|stop.
+  * [e1b3605] [html] home.html: Put repository-related extra api calls
+    into separate section.
+  * [8a8ba72] [html] Move dputconf from main menu to
+    "home.repositories.extras".
+  * [2902d57] includes/mbd_api.html: Include doc in tooltip even on
+    auth_err.
+  * [25e9f8e] includes/mbd_api.html: Don't fully hide given args, also
+    show them with "more".
+  * [2489b54] [html] Use "API Index" for main menu and API index title.
+  * [55510c1] mini_buildd/home.html: Put page footer down, where it
+    belongs...
+  * [1b10cde] mini_buildd/api.html: mbd_api call as title.
+  * [c8c1e7f] mini_buildd/api_show.html: Fix log link for new api.Command.
+  * [4453296] includes/mbd_api_arg.html: Fix custom entry support for
+    select and multiselect types.
+  * [4d27514] api_show.html: Update rebuild to ttag mbd_api.
+  * [a1dd1af] includes/mbd_api_arg.html: Use empty string resp. 0 values
+    for string resp. int types if None.
+  * [aacca48] api_show.html: Update port to ttag mbd_api.
+  * [db41bcc] mini_buildd/home.html: Fix tidy error on extras.
+  * [75e76d8] [html] Simplify footer.
+  * [12ff6b1] mini_buildd/home.html: "Show more" for start and stop.
+  * [a225b00] [html] Mv getdputconf and add getkey to daemon part.
+  * [ca0fd24] api_list.html: Update show to ttag mbd_api.
+  * [7125d66] includes/mbd_api_arg.html: More fixes for the custom select
+    values text inputs.
+  * [964a6f4] api/__init__.py: Add (choices) updater for the Subscription
+    command.
+  * [0501ff9] Fix a handful of typos/warnings that emerged with new
+    codespell 1.11.
+  * [a0eaa59] [html]: Update subscription to ttag mbd_api (also obsoletes
+    extra include, ttag and css entry).
+  * [7643a60] includes/mbd_packager_status.html: Upgrade to mbd_api ttag.
+  * [ba45f78] mini_buildd/templates/base.html: When logged in, link to
+    profile by default for "Manage account".
+  * [f4d5c6e] api: Add 'Text' (multiline string) argument type.
+  * [447ae2c] account_profile.html: Update setuserkey to ttag mbd_api.
+
+  [ Gerhard A. Dittes ]
+  * [da58afe] devel: Fix missing "sudo" when using "service" command.
+  * [0fa339f] images: Split mini-buildd-graphics.svg into several files
+    providing each item separately (in "Inkscape SVG" format).
+
+  [ Stephan Sürken ]
+  * [69264b1] mini_buildd/home.html: Use direct includes for packager and
+    builder stati (and remove resp. template tags).
+  * [572c37f] api/__init__.py: auth_err: Also handle user=None, and renice
+    error texts.
+  * [d0590ef] templatetags/mini_buildd_tags.py: Take context for mbd_api
+    (obsoletes extra user arg).
+  * [8e8f7c8] Setup Wizards/Ubuntu: Drop yakkety, add artful.
+  * [0ac3a8e] html, ttags: Use html5 '<details>' tag (instead of js) for
+    'more args', and remove 'show_more' option on ttag mbd_api.
+  * [0617b5e] includes/mbd_api.html: Put "no width space" entity to
+    summary top avoid tidy warnings.
+  * [49eef56] repository_detail.html: Replace "js toggle" by "html5
+    details".
+  * [4a1972e] api_show.html: Replace "js toggle" by "html5 details".
+  * [c8acb08] home.html: Replace "js toggle" by "html5 details".
+
+ -- Stephan Sürken <absurd@debian.org>  Sun, 11 Mar 2018 14:49:28 +0100
+
 mini-buildd (1.1.9) experimental; urgency=medium
 
   ** 1.1.x are _development_ releases, use for testing only. **
