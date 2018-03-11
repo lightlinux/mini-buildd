@@ -11,18 +11,11 @@
 
 		{% for d in object.distributions.all %}
 			<div class="inner-box">
-				<h1 class="inner-box-caption">
-					<a href="javascript:mbdToggleElement('mbd_dist_{{ d.base_source.codename }}','mbd_dist_{{ d.base_source.codename }}_header','(hide)','(show)')"
-						 style="color: white">
-						{{ d }}
-						<span id="mbd_dist_{{ d.base_source.codename }}_header" style="float: right">(show)</span>
-					</a>
-				</h1>
-
-				<div id="mbd_dist_{{ d.base_source.codename }}" style="display: none">
+				<details>
+					<summary class="header">{{ d }}</summary>
 					{% for s in object.layout.suiteoption_set.all %}
-						<h2>
-							<a href="javascript:mbdToggleElement('mbd_dist_{{ d.base_source.codename }}_{{ s.suite.name }}','mbd_dist_{{ d.base_source.codename }}_{{ s.suite.name }}_header','(hide)','(show)')">
+						<details>
+							<summary class="header">
 								<span style="color: black">{{ d.base_source.codename }}-{{ object.identity }}-{{ s.suite.name }}</span>:
 								<span class="emphasize-headline">{% mbd_repository_desc object d s %}</span>
 								{% if s.uploadable %}
@@ -35,30 +28,28 @@
 								{% if s.migrates_to %}
 									<kbd style="font-size: 0.8em; color: green"> =&gt; {{ s.migrates_to.suite.name }}</kbd>
 								{% endif %}
-							</a>
-						</h2>
-						<ul id="mbd_dist_{{ d.base_source.codename }}_{{ s.suite.name }}" style="display: none">
-							<li>APT line
-								(Download:
-								{% mbd_api "getkey" name="APT key" output="plain" %}
-								{% mbd_api "getsourceslist" output="plain" value_suite=s.suite.name value_codename=d.base_source.codename value_with_extra_sources=False value_repository=object.identity name="deb" value_with_deb_src=False %}
-								{% mbd_api "getsourceslist" output="plain" value_suite=s.suite.name value_codename=d.base_source.codename value_with_extra_sources=False value_repository=object.identity name="deb+src" value_with_deb_src=True %})
-								:
-								<pre class="pre-block">{% mbd_distribution_apt_line d object s %}</pre></li>
-							{% if s.uploadable %}
-								<li>Building with APT sources.list:<div class="pre-block"><pre>{% mbd_distribution_apt_sources_list d object s %}</pre></div></li>
-								<li>Building with APT preferences:<div class="pre-block"><pre>{% mbd_distribution_apt_preferences d object s %}</pre></div></li>
-							{% endif %}
-							<li>Browse repository:
-								<a href="/repositories/{{ object.identity }}/pool/">pool/</a>
-								<a href="/repositories/{{ object.identity }}/dists/{{ d.base_source.codename }}-{{ object.identity }}-{{ s.suite.name }}/">dists/</a>
-							</li>
-						</ul>
+							</summary>
+							<ul>
+								<li>APT line
+									(Download:
+									{% mbd_api "getkey" name="APT key" output="plain" %}
+									{% mbd_api "getsourceslist" output="plain" value_suite=s.suite.name value_codename=d.base_source.codename value_with_extra_sources=False value_repository=object.identity name="deb" value_with_deb_src=False %}
+									{% mbd_api "getsourceslist" output="plain" value_suite=s.suite.name value_codename=d.base_source.codename value_with_extra_sources=False value_repository=object.identity name="deb+src" value_with_deb_src=True %})
+									:
+									<pre class="pre-block">{% mbd_distribution_apt_line d object s %}</pre></li>
+								{% if s.uploadable %}
+									<li>Building with APT sources.list:<div class="pre-block"><pre>{% mbd_distribution_apt_sources_list d object s %}</pre></div></li>
+									<li>Building with APT preferences:<div class="pre-block"><pre>{% mbd_distribution_apt_preferences d object s %}</pre></div></li>
+								{% endif %}
+								<li>Browse repository:
+									<a href="/repositories/{{ object.identity }}/pool/">pool/</a>
+									<a href="/repositories/{{ object.identity }}/dists/{{ d.base_source.codename }}-{{ object.identity }}-{{ s.suite.name }}/">dists/</a>
+								</li>
+							</ul>
+						</details>
 					{% endfor %}
-				</div>
+				</details>
 			</div>
 		{% endfor %}
-
 	</div>
-
 {% endblock %}

@@ -287,7 +287,7 @@ a.hover-underline:hover
 	padding: 3px 0px 3px 5px;
 }
 
-#mbd-content h1, #mbd-content h2, #mbd-content h3, #mbd-content h4, #mbd-content h5
+#mbd-content h1, #mbd-content h2, #mbd-content h3, #mbd-content h4, #mbd-content h5, #mbd-content summary.header
 {
 	color: #417690;
 	font-weight: bold;
