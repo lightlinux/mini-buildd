@@ -500,16 +500,6 @@ a.hover-underline:hover
 	padding:5px;
 }
 
-#mbd-last-builds
-{
-	display: none;
-}
-
-#mbd-last-packages
-{
-	display: none;
-}
-
 /* FOOTER */
 
 #mbd-footer
