@@ -60,8 +60,9 @@
 									{% endif %}
 								</td>
 								<td>
-									{{ values.rollbacks|length }}/{{ values.rollback }} (<a id="rollbacks_{{ values.distribution }}_header" href="javascript:mbdToggleElement('rollbacks_{{ values.distribution }}','rollbacks_{{ values.distribution }}_header','hide','show')" >show</a>)
-									<div id="rollbacks_{{ values.distribution }}" style="display: none;">
+									{{ values.rollbacks|length }}/{{ values.rollback }}
+									<details>
+										<summary>Rollbacks</summary>
 										{% for rollback in values.rollbacks|dictsort:"no" %}
 											<br />
 											<div>
@@ -72,8 +73,8 @@
 												[<a title="Get dsc of {{ rollback.sourceversion }} from {{ rollback.distribution }}"
 														href="{{ rollback.dsc_path }}">dsc</a>|<a href="/mini_buildd/log/{{ repository.identity }}/{{ api_cmd.args.package }}/{{ rollback.sourceversion }}/" title="Build logs">logs</a>]
 											</div>
-											 {% endfor %}
-									</div>
+										{% endfor %}
+									</details>
 
 								</td>
 
@@ -84,11 +85,10 @@
 								</td>
 								<td>
 									{% if values.sourceversion %}
-										Port (<a id="port_{{ values.distribution }}_header"
-														 href="javascript:mbdToggleElement('port_{{ values.distribution }}','port_{{ values.distribution }}_header','hide','show')" >show</a>)
-										<div id="port_{{ values.distribution }}" style="display: none;">
+										<details>
+											<summary>Port Options</summary>
 											{% mbd_api "port" title="Port this package version to other distribution(s)" value_package=values.source value_from_distribution=values.distribution value_version=values.sourceversion output=referer %}
-										</div>
+										</details>
 									{% endif %}
 								</td>
 							</tr>
