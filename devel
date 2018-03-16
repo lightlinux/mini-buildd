@@ -278,6 +278,7 @@ mbd_run:01:11:pydoctests()
 	)
 }
 
+# Build package as fast as possible
 mbd_run:02:00:build()
 {
 	# Checking changelog (must be unchanged)...
@@ -285,7 +286,13 @@ mbd_run:02:00:build()
 	trap "git checkout debian/changelog" EXIT
 
 	gbp dch --snapshot --auto
-	DEB_BUILD_OPTIONS+=" nocheck" gbp buildpackage --git-ignore-new --git-ignore-branch -us -uc
+	DEB_BUILD_OPTIONS+="nodoc nocheck" debuild --no-lintian -us -uc
+}
+
+# Build package again (build must have been run) w/ checks && doc
+mbd_run:03:10:buildcheck()
+{
+	debuild --no-lintian -us -uc
 }
 
 mbd_run:03:11:lintian()
@@ -293,6 +300,7 @@ mbd_run:03:11:lintian()
 	lintian --fail-on-warnings --suppress-tags=changelog-should-mention-nmu,source-nmu-has-incorrect-version-number,newer-standards-version --info ../mini-buildd_$(dpkg-parsechangelog --show-field=Version)_$(dpkg --print-architecture).changes
 }
 
+# This also checks "full" package building (with doc and check)
 mbd_run:04:21:debrepro()
 {
 	debrepro
@@ -403,13 +411,11 @@ mbd_run()  # [<levelRegex>=00] [<name>]
 
 # Shortcuts
 declare -A MBD_RUN_SHORTCUTS=(
+	["check"]="10"
 	["update"]="00"
 	["updatecheck"]="[01]0"
-	["updatecheckmost"]="[01][01]"
-	["updatecheckall"]="[01][0-9]"
-	["updatetest"]="[012]0"
-	["updatetestmost"]="[012][01]"
-	["updatetestall"]="[012][0-9]"
+	["updatetest"]="[0-9][01]"
+	["updatetestall"]="[0-9][0-9]"
 )
 # We can't iterate through the associative array in the given order later, so we at least want a sorted key list as helper
 MBD_RUN_SHORTCUTS_SORTED="$(printf '%s\n' "${!MBD_RUN_SHORTCUTS[@]}" | sort -n)"
@@ -439,8 +445,8 @@ ${b}Special (non-runner) targets${r}:
  ...-> Check source for other possible esoteric calls.
 EOF
 	else
-		# Store sc and furnction
-		local f="mbd_${1}" s="${MBD_RUN_SHORTCUTS[${1}]}"
+		local f="mbd_${1}"                    # function
+		local s="${MBD_RUN_SHORTCUTS[${1}]}"  # shortcut
 		if [ "$(type -t "${f}")" = "function" ]; then
 			${f} "${@:2}"
 		elif [ -n "${s}" ]; then
