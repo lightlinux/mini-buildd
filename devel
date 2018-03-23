@@ -224,24 +224,32 @@ mbd_run:00:11:codespell()
 	fi
 }
 
-mbd_run:00:11:css()
+mbd_run:00:11:htmlmisc()
 {
 	local class errors=0 ignoreRegex="mbd-action-.*"
 
-	for class in $(grep -h -o "#mbd[[:alnum:]\-]\+" src/mini_buildd/static/css/*.css | sort -r | uniq); do
-		if [[ ${class:1} =~ ${ignoreRegex} ]]; then
-			printf "Skipping %s.\n" "${class}"
+	local templateTags=$(grep "^def [[:alnum:]]" src/mini_buildd/templatetags/mini_buildd_tags.py | cut -d" " -f2 | cut -d "(" -f1 | tr "\n" " ")
+	printf "I: Found django template tags: %s\n" "${templateTags}" >&2
+	local idSelectors=$(grep -h -o "#mbd[[:alnum:]\-]\+" src/mini_buildd/static/css/*.css | sort -r | uniq | cut -c 2- | tr "\n" " ")
+	printf "I: Found CSS ID selectors: %s\n" "${idSelectors}" >&2
+
+	for token in ${templateTags} ${idSelectors}; do
+		if [[ ${token} =~ ${ignoreRegex} ]]; then
+			printf "Skipping %s.\n" "${token}"
 		else
-			if ! grep -r -q "${class:1}" src/mini_buildd/templates/; then
-				printf "E: CSS class unused: %s:\n" "${class}" >&2
-				grep -l "${class}" src/mini_buildd/static/css/*.css
+			if ! grep -r -q "${token}" src/mini_buildd/templates/; then
+				printf "\nE: Token unused: %s:\n" "${token}" >&2
+				grep -r "${token}" src/
+				printf "\n"
 				errors+=1
 			fi
 		fi
 	done
-	printf "CSS: %s unused classes found.\n" "${errors}"
+	printf "HTML: %s unused tokens found.\n" "${errors}"
 	return ${errors}
 }
+
+
 
 mbd_run:00:12:pyflakes()
 {
