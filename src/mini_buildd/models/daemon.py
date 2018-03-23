@@ -87,7 +87,7 @@ automatically added.""")
         help_text="Degree of parallelism per build (via sbuild's '--jobs' option).")
 
     # EMail options
-    # DEPRECTATED/UNUSED: With the switch to django mail framework, this is now configured via the --smtp command line argument.
+    # DEPRECATED/UNUSED: With the switch to django mail framework, this is now configured via the --smtp command line argument.
     smtp_server = django.db.models.CharField(
         max_length=254,
         default="localhost:25",

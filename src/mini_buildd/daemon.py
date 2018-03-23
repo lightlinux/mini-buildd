@@ -555,7 +555,7 @@ class Daemon(object):
     @classmethod
     def parse_distribution(cls, dist):
         """
-        Get repository, distribution and suite model objects (plus rollback no) from distribtion string.
+        Get repository, distribution and suite model objects (plus rollback no) from distribution string.
         """
         # Check and parse changes distribution string
         dist_parsed = mini_buildd.misc.Distribution(mini_buildd.models.repository.map_incoming_distribution(dist))

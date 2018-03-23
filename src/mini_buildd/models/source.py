@@ -462,7 +462,7 @@ codeversion is only used for base sources.""")
                     # Get release if this archive serves us, else exception
                     release = archive.mbd_get_matching_release(request, self, gpg)
                     if release:
-                        # Implicitely save ping value for this archive
+                        # Implicitly save ping value for this archive
                         self.archives.add(archive)
                         self.description = release["Description"]
 

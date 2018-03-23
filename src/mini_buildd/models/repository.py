@@ -843,7 +843,7 @@ Example:
     def mbd_get_internal_suite_dependencies(self, suite_option):
         result = []
 
-        # Add ourselfs
+        # Add ourselves
         result.append(suite_option)
 
         if suite_option.experimental:

@@ -8,7 +8,7 @@ Naming conventions
 Model class and field names
 ---------------------------
 All model class names and all field names must be **human
-readable with no abbrevations** (as django, per default,
+readable with no abbreviations** (as django, per default,
 displays the internal names intelligently to the end user).
 
 *Model class names* must be in **CamelCase**.
