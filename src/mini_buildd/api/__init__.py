@@ -366,7 +366,11 @@ class PrintUploaders(Command):
     COMMAND = "printuploaders"
     AUTH = Command.ADMIN
     NEEDS_RUNNING_DAEMON = True
-    ARGUMENTS = [StringArgument(["--repository", "-R"], default=".*", doc="repository name regex.")]
+    ARGUMENTS = [SelectArgument(["--repository", "-R"], default=".*", doc="repository name regex.")]
+
+    def _update(self):
+        if self.daemon:
+            self.args["repository"].choices = [r.identity for r in self.daemon.get_active_repositories()] + [".*", ""]
 
     def _uploader_lines(self):
         for r in self.daemon.get_active_repositories().filter(identity__regex=r"^{r}$".format(r=self.args["repository"].value)):
