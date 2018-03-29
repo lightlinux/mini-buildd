@@ -15,10 +15,13 @@
 	{% elif arg.TYPE == "select" %}
 		<select name="{{ arg.identity }}">
 			{% for choice in arg.choices %}
-				<option {% if choice == arg.value %}selected{% endif %}>{{ choice }}</option>
+				<option value="{{ choice }}" {% if choice == arg.value %}selected{% endif %}>{{ choice|default:"Custom value"}}</option>
 			{% endfor %}
 		</select>
-		<input type="text" value="{% if arg.raw_value is None or arg.raw_value in arg.choices %}{% else %}{{ arg.raw_value }}{% endif %}" size="15" name="{{ arg.identity }}" />
+		<details>
+			<summary title="Custom value">&#8203;</summary>
+			<input type="text" value="{% if arg.raw_value is None or arg.raw_value in arg.choices %}{% else %}{{ arg.raw_value }}{% endif %}" size="15" name="{{ arg.identity }}" />
+		</details>
 	{% elif arg.TYPE == "multiselect" %}
 		{% if arg.choices %}
 			<input id="{{ tag_id }}-{{ arg.identity }}-regexfilter"
