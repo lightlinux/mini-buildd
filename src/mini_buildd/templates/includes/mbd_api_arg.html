@@ -6,6 +6,8 @@
 
 	{% if arg.TYPE == "string" %}
 		<input type="text" size="15" value="{{ arg.value|default:"" }}" name="{{ arg.identity }}" />
+	{% elif arg.TYPE == "url" %}
+		<input type="url" value="{{ arg.value|default:"" }}" name="{{ arg.identity }}" />
 	{% elif arg.TYPE == "text" %}
 		<textarea cols="80" rows="10" name="{{ arg.identity }}">{{ arg.value|default:"" }}</textarea>
 	{% elif arg.TYPE == "int" %}

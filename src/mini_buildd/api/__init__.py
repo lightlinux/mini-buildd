@@ -83,6 +83,10 @@ class StringArgument(Argument):
         self.argparse_kvsargs["action"] = "store"
 
 
+class URLArgument(StringArgument):
+    TYPE = "url"
+
+
 class TextArgument(StringArgument):
     TYPE = "text"
 
@@ -759,10 +763,15 @@ class PortExt(Command):
     NEEDS_RUNNING_DAEMON = True
     CONFIRM = True
     ARGUMENTS = [
-        StringArgument(["dsc"], doc="URL of any Debian source package (dsc) to port"),
+        URLArgument(["dsc"], doc="URL of any Debian source package (dsc) to port"),
         MultiSelectArgument(["distributions"], doc="comma-separated list of distributions to port to"),
         Command.COMMON_ARG_OPTIONS
     ]
+
+    def _update(self):
+        if self.daemon:
+            for r in self.daemon.get_active_repositories():
+                self.args["distributions"].choices += r.mbd_distribution_strings(uploadable=True)
 
     def _run(self):
         # Parse and pre-check all dists
