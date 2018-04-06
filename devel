@@ -298,7 +298,7 @@ mbd_run:02:00:build()
 }
 
 # Build package again (build must have been run) w/ checks && doc
-mbd_run:03:10:buildcheck()
+mbd_run:03:11:buildcheck()
 {
 	debuild --no-lintian -us -uc
 }
