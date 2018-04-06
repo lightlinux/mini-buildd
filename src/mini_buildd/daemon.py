@@ -471,7 +471,7 @@ class Daemon(object):
             mini_buildd.setup.log_exception(LOG, "Error adding persisted last builds/packages (ignoring)", e, logging.WARN)
 
     def update_to_model(self):
-        # Save pickled persistend state
+        # Save pickled persistent state
         self.model.mbd_set_pickled_data((self.last_packages, self.last_builds))
 
     def start(self, force_check=False, msglog=LOG):
