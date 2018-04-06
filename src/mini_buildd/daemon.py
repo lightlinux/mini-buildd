@@ -532,6 +532,9 @@ class Daemon(object):
         with mini_buildd.misc.open_utf8(mini_buildd.setup.LOG_FILE) as lf:
             return "".join(collections.deque(lf, lines))
 
+    def get_last_packages(self):
+        return sorted({p.changes["source"] for p in self.last_packages})
+
     @classmethod
     def get_active_chroots(cls):
         return mini_buildd.models.chroot.Chroot.mbd_get_active()

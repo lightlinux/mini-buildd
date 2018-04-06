@@ -576,7 +576,7 @@ class Show(Command):
 
     COMMAND = "show"
     ARGUMENTS = [
-        StringArgument(["package"], doc="source package name"),
+        SelectArgument(["package"], doc="source package name"),
         BoolArgument(["--verbose", "-v"], default=False, doc="verbose output")
     ]
 
@@ -584,6 +584,10 @@ class Show(Command):
         super().__init__(*args, **kwargs)
         # List of tuples: (repository, result)
         self.repositories = []
+
+    def _update(self):
+        if self.daemon:
+            self.args["package"].choices = self.daemon.get_last_packages()
 
     def _run(self):
         # Save all results of all repos in a top-level dict (don't add repos with empty results).
