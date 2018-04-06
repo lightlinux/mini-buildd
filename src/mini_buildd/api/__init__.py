@@ -681,10 +681,17 @@ class Remove(Command):
     AUTH = Command.ADMIN
     CONFIRM = True
     ARGUMENTS = [
-        StringArgument(["package"], doc="source package name"),
-        StringArgument(["distribution"], doc="distribution to remove from"),
+        SelectArgument(["package"], doc="source package name"),
+        SelectArgument(["distribution"], doc="distribution to remove from"),
         Command.COMMON_ARG_VERSION
     ]
+
+    def _update(self):
+        if self.daemon:
+            self.args["package"].choices = self.daemon.get_last_packages()
+            self.args["distribution"].choices = []
+            for r in self.daemon.get_active_repositories():
+                self.args["distribution"].choices += r.mbd_distribution_strings()
 
     def _run(self):
         repository, distribution, suite, rollback = self.daemon.parse_distribution(self.args["distribution"].value)
