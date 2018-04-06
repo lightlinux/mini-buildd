@@ -541,6 +541,10 @@ class Daemon(object):
         return mini_buildd.models.repository.Repository.mbd_get_active()
 
     @classmethod
+    def get_suites(cls):
+        return mini_buildd.models.repository.Suite.objects.all()
+
+    @classmethod
     def get_active_codenames(cls):
         codenames = []
         for r in cls.get_active_repositories():
