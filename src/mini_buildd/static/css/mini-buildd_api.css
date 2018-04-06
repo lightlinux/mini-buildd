@@ -36,7 +36,7 @@ input.mbd-api:hover
 	background-color: #f7f7f7;
 }
 
-input.mbd-api:disabled
+input.mbd-api-needs-login
 {
 	color: #bcbcbc;
 }

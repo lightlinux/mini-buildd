@@ -4,8 +4,12 @@
 
 <div class="mbd-api-box">
 	{# <form action="/mini_buildd/api" method="post">{% csrf_token %}  # if we would support post... #}
-	<form action="/mini_buildd/api" method="get">
-		<input type="hidden" name="command" value="{{ api_cmd.COMMAND }}" />
+	{% if auth_err %}
+		<form action="/accounts/login/" method="get">
+	{% else %}
+		<form action="/mini_buildd/api" method="get">
+	{% endif %}
+	<input type="hidden" name="command" value="{{ api_cmd.COMMAND }}" />
 
 		<details class="mbd-api">
 			<summary title="More arguments">&#8203;</summary>
@@ -37,9 +41,8 @@
 
 		{# Submit button #}
 		<input type="submit"
-					 class="mbd-api mbd-api-{{ api_cmd.COMMAND }}"
+					 class="mbd-api mbd-api-{{ api_cmd.COMMAND }} {% if auth_err %}mbd-api-needs-login{% endif %} "
 					 value="{{ name|default_if_none:api_cmd.COMMAND }}"
-					 title="{% if auth_err %}{{ auth_err }}&#13;&#10;&#13;&#10;{% endif %}{{ title|default_if_none:api_cmd.docstring }}"
-					 {% if auth_err %}disabled{% endif %} />
+					 title="{% if auth_err %}{{ auth_err }}&#13;&#10;&#13;&#10;{% endif %}{{ title|default_if_none:api_cmd.docstring }}" />
 	</form>
 </div>
