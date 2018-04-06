@@ -541,6 +541,15 @@ class Daemon(object):
         return mini_buildd.models.repository.Repository.mbd_get_active()
 
     @classmethod
+    def get_active_codenames(cls):
+        codenames = []
+        for r in cls.get_active_repositories():
+            for d in r.distributions.all():
+                if d.base_source.codename not in codenames:
+                    codenames.append(d.base_source.codename)
+        return codenames
+
+    @classmethod
     def get_active_remotes(cls):
         return mini_buildd.models.gnupg.Remote.mbd_get_active()
 
