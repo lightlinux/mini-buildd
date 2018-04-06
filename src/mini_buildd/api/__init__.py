@@ -462,12 +462,18 @@ class GetSourcesList(Command):
     """
     COMMAND = "getsourceslist"
     ARGUMENTS = [
-        StringArgument(["codename"], doc="codename (base distribution) to get apt lines for"),
-        StringArgument(["--repository", "-R"], default=".*", doc="repository name regex."),
-        StringArgument(["--suite", "-S"], default=".*", doc="suite name regex."),
+        SelectArgument(["codename"], doc="codename (base distribution) to get apt lines for"),
+        SelectArgument(["--repository", "-R"], default=".*", doc="repository name regex."),
+        SelectArgument(["--suite", "-S"], default=".*", doc="suite name regex."),
         BoolArgument(["--with-deb-src", "-s"], default=False, doc="also list deb-src apt lines."),
         BoolArgument(["--with-extra-sources", "-x"], default=False, doc="also list extra sources needed.")
     ]
+
+    def _update(self):
+        if self.daemon:
+            self.args["codename"].choices = self.daemon.get_active_codenames()
+            self.args["repository"].choices = [r.identity for r in self.daemon.get_active_repositories()] + [".*", ""]
+            self.args["suite"].choices = [s.name for s in self.daemon.get_suites()] + [".*", ""]
 
     def _run(self):
         self._plain_result = self.daemon.mbd_get_sources_list(self.args["codename"].value,
