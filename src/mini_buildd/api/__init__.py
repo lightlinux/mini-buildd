@@ -370,7 +370,7 @@ class PrintUploaders(Command):
 
     def _update(self):
         if self.daemon:
-            self.args["repository"].choices = [r.identity for r in self.daemon.get_active_repositories()] + [".*", ""]
+            self.args["repository"].choices = [r.identity for r in self.daemon.get_active_repositories()]
 
     def _uploader_lines(self):
         for r in self.daemon.get_active_repositories().filter(identity__regex=r"^{r}$".format(r=self.args["repository"].value)):
@@ -472,8 +472,8 @@ class GetSourcesList(Command):
     def _update(self):
         if self.daemon:
             self.args["codename"].choices = self.daemon.get_active_codenames()
-            self.args["repository"].choices = [r.identity for r in self.daemon.get_active_repositories()] + [".*", ""]
-            self.args["suite"].choices = [s.name for s in self.daemon.get_suites()] + [".*", ""]
+            self.args["repository"].choices = [r.identity for r in self.daemon.get_active_repositories()]
+            self.args["suite"].choices = [s.name for s in self.daemon.get_suites()]
 
     def _run(self):
         self._plain_result = self.daemon.mbd_get_sources_list(self.args["codename"].value,
