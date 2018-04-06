@@ -521,15 +521,22 @@ class List(Command):
     COMMAND = "list"
     AUTH = Command.LOGIN
     ARGUMENTS = [
-        StringArgument(["pattern"], doc="limit packages by name (glob pattern)"),
+        SelectArgument(["pattern"], doc="limit packages by name (glob pattern)"),
         BoolArgument(["--with-rollbacks", "-r"], default=False, doc="also list packages on rollback distributions"),
-        StringArgument(["--distribution", "-D"], default="", doc="limit distributions by name (regex)"),
-        StringArgument(["--type", "-T"], default="", doc="package type: dsc, deb or udeb (like reprepo --type)")
+        SelectArgument(["--distribution", "-D"], default="", doc="limit distributions by name (regex)"),
+        SelectArgument(["--type", "-T"], default="", choices=["dsc", "deb", "udeb"], doc="package type: dsc, deb or udeb (like reprepo --type)")
     ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.repositories = {}
+
+    def _update(self):
+        if self.daemon:
+            self.args["distribution"].choices = []
+            for r in self.daemon.get_active_repositories():
+                self.args["distribution"].choices += r.mbd_distribution_strings()
+            self.args["pattern"].choices = self.daemon.get_last_packages()
 
     def _run(self):
         # Save all results of all repos in a top-level dict (don't add repos with empty results).
