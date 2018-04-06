@@ -715,16 +715,24 @@ class Port(Command):
     NEEDS_RUNNING_DAEMON = True
     CONFIRM = True
     ARGUMENTS = [
-        StringArgument(["package"], doc="source package name"),
-        StringArgument(["from_distribution"], doc="distribution to port from"),
+        SelectArgument(["package"], doc="source package name"),
+        SelectArgument(["from_distribution"], doc="distribution to port from"),
         MultiSelectArgument(["to_distributions"], doc="comma-separated list of distributions to port to (when this equals the from-distribution, a rebuild will be done)"),
         Command.COMMON_ARG_VERSION,
         Command.COMMON_ARG_OPTIONS]
 
     def _update(self):
-        if self.daemon and self.args["from_distribution"].value:
-            repository, _distribution, suite, _rollback_no = self.daemon.parse_distribution(self.args["from_distribution"].value)
-            self.args["to_distributions"].choices = repository.mbd_distribution_strings(uploadable=True, experimental=suite.experimental)
+        if self.daemon:
+            self.args["package"].choices = self.daemon.get_last_packages()
+            self.args["from_distribution"].choices = []
+            for r in self.daemon.get_active_repositories():
+                self.args["from_distribution"].choices += r.mbd_distribution_strings()
+            if self.args["from_distribution"].value:
+                repository, _distribution, suite, _rollback_no = self.daemon.parse_distribution(self.args["from_distribution"].value)
+                self.args["to_distributions"].choices = repository.mbd_distribution_strings(uploadable=True, experimental=suite.experimental)
+            else:
+                for r in self.daemon.get_active_repositories():
+                    self.args["to_distributions"].choices += r.mbd_distribution_strings(uploadable=True)
 
     def _run(self):
         # Parse and pre-check all dists
