@@ -18,7 +18,7 @@
 		<input type="text" list="{{ tag_id }}-{{ arg.identity }}-datalist" size="15" value="{{ arg.value|default:"" }}" name="{{ arg.identity }}" />
 		<datalist id="{{ tag_id }}-{{ arg.identity }}-datalist">
 			{% for choice in arg.choices %}
-				<option value="{{ choice }}" />
+				<option value="{{ choice }}"></option>
 			{% endfor %}
 		</datalist>
 	{% elif arg.TYPE == "multiselect" %}
