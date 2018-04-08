@@ -535,6 +535,9 @@ class Daemon(object):
     def get_last_packages(self):
         return sorted({p.changes["source"] for p in self.last_packages})
 
+    def get_last_versions(self, package):
+        return sorted({p.changes["version"] for p in self.last_packages if p.changes["source"] == package})
+
     @classmethod
     def get_active_chroots(cls):
         return mini_buildd.models.chroot.Chroot.mbd_get_active()

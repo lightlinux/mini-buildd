@@ -791,10 +791,17 @@ class Retry(Command):
     NEEDS_RUNNING_DAEMON = True
     CONFIRM = True
     ARGUMENTS = [
-        StringArgument(["package"], doc="source package name"),
-        StringArgument(["version"], doc="source package's version"),
-        StringArgument(["--repository", "-R"], default="*", doc="Repository name -- use only in case of multiple matches.")
+        SelectArgument(["package"], doc="source package name"),
+        SelectArgument(["version"], doc="source package's version"),
+        SelectArgument(["--repository", "-R"], default="*", doc="Repository name -- use only in case of multiple matches.")
     ]
+
+    def _update(self):
+        if self.daemon:
+            self.args["repository"].choices = [r.identity for r in self.daemon.get_active_repositories()]
+            self.args["package"].choices = self.daemon.get_last_packages()
+            if self.args["package"].value:
+                self.args["version"].choices = self.daemon.get_last_versions(self.args["package"].value)
 
     def _run(self):
         pkg_log = mini_buildd.misc.PkgLog(self.args["repository"].value, False, self.args["package"].value, self.args["version"].value)
