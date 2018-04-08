@@ -4,38 +4,13 @@
 
 <div class="mbd-api-box">
 	{# <form action="/mini_buildd/api" method="post">{% csrf_token %}  # if we would support post... #}
-	{% if auth_err %}
-		<form action="/accounts/login/" method="get">
-	{% else %}
-		<form action="/mini_buildd/api" method="get">
-	{% endif %}
-	<input type="hidden" name="command" value="{{ api_cmd.COMMAND }}" />
-
-		<details class="mbd-api">
-			<summary title="More arguments">&#8203;</summary>
-			{% if show_doc %}<pre>{{ api_cmd.docstring }}</pre>{% endif %}
-
-			<!-- Optional parameters, presented on demand only -->
-			{% for arg in api_cmd.args.values %}
-				{% if arg.raw_value is not None %}
-					{% include "includes/mbd_api_arg.html" with show_label=True %}
-					<br />
-				{% endif %}
-			{% endfor %}
-			<select name="output" title="Output type">
-				{% with "referer html plain python" as options %}
-					{% for o in options.split %}
-						<option value="{{ o }}" {% if o == output %}selected="selected"{% endif %}>{{ o }}</option>
-					{% endfor %}
-				{% endwith %}
-			</select>
-		</details>
-
+	{% if auth_err %}<form action="/accounts/login/" method="get">{% else %}<form action="/mini_buildd/api" method="get">{% endif %}
+		<input type="hidden" name="command" value="{{ api_cmd.COMMAND }}" />
 		{# Pre-button args #}
 		{% for arg in api_cmd.args.values %}
 			{% if arg.raw_value is None %}
 				{# Mandatory input #}
-				{% include "includes/mbd_api_arg.html" with show_label=False show_doc=False %}
+				{% include "includes/mbd_api_arg.html" %}
 			{% endif %}
 		{% endfor %}
 
@@ -44,5 +19,35 @@
 					 class="mbd-api mbd-api-{{ api_cmd.COMMAND }} {% if auth_err %}mbd-api-needs-login{% endif %} "
 					 value="{{ name|default_if_none:api_cmd.COMMAND }}"
 					 title="{% if auth_err %}{{ auth_err }}&#13;&#10;&#13;&#10;{% endif %}{{ title|default_if_none:api_cmd.docstring }}" />
+
+		<details class="mbd-api">
+			<summary title="More arguments">&#8203;</summary>
+			{% if show_doc %}<pre>{{ api_cmd.docstring }}</pre>{% endif %}
+
+			{# Optional parameters, presented on demand only #}
+			<table>
+				{% for arg in api_cmd.args.values %}
+					{% if arg.raw_value is not None %}
+						<tr>
+							<td><em>{{ arg.identity }}</em></td>
+							<td>{% include "includes/mbd_api_arg.html" %}</td>
+						</tr>
+					{% endif %}
+				{% endfor %}
+				<tr><td colspan=2><hr /></td></tr>
+				<tr>
+					<td><em>output</em></td>
+					<td>
+						<select name="output" title="output">
+							{% with "referer html plain python" as options %}
+								{% for o in options.split %}
+									<option value="{{ o }}" {% if o == output %}selected="selected"{% endif %}>{{ o }}</option>
+								{% endfor %}
+							{% endwith %}
+						</select>
+					</td>
+				</tr>
+			</table>
+		</details>
 	</form>
 </div>

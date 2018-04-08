@@ -2,8 +2,6 @@
 {% load mini_buildd_tags %}
 
 <label title="{{ arg.identity }}: {{ arg.doc }}">
-	{% if show_label %}<em>{{ arg.identity }}</em>{% endif %}
-
 	{% if arg.TYPE == "string" %}
 		<input type="text" size="15" value="{{ arg.value|default:"" }}" name="{{ arg.identity }}" />
 	{% elif arg.TYPE == "url" %}
