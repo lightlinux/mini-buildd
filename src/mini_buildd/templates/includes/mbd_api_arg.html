@@ -3,17 +3,17 @@
 
 <label title="{{ arg.identity }}: {{ arg.doc }}">
 	{% if arg.TYPE == "string" %}
-		<input type="text" size="15" value="{{ arg.value|default:"" }}" name="{{ arg.identity }}" />
+		<input class="mbd-api" type="text" size="15" value="{{ arg.value|default:"" }}" name="{{ arg.identity }}" />
 	{% elif arg.TYPE == "url" %}
-		<input type="url" value="{{ arg.value|default:"" }}" name="{{ arg.identity }}" />
+		<input class="mbd-api" type="url" value="{{ arg.value|default:"" }}" name="{{ arg.identity }}" />
 	{% elif arg.TYPE == "text" %}
-		<textarea cols="80" rows="10" name="{{ arg.identity }}">{{ arg.value|default:"" }}</textarea>
+		<textarea class="mbd-api" cols="80" rows="10" name="{{ arg.identity }}">{{ arg.value|default:"" }}</textarea>
 	{% elif arg.TYPE == "int" %}
-		<input type="text" size="5" value="{{ arg.value|default:0 }}" name="{{ arg.identity }}" />
+		<input class="mbd-api" type="text" size="5" value="{{ arg.value|default:0 }}" name="{{ arg.identity }}" />
 	{% elif arg.TYPE == "bool" %}
-		<input type="checkbox" value="True" {% if arg.value %}checked{% endif %} name="{{ arg.identity }}" />
+		<input class="mbd-api" type="checkbox" value="True" {% if arg.value %}checked{% endif %} name="{{ arg.identity }}" />
 	{% elif arg.TYPE == "select" %}
-		<input type="text" list="{{ tag_id }}-{{ arg.identity }}-datalist" size="15" value="{{ arg.value|default:"" }}" name="{{ arg.identity }}" />
+		<input class="mbd-api" type="text" list="{{ tag_id }}-{{ arg.identity }}-datalist" size="15" value="{{ arg.value|default:"" }}" name="{{ arg.identity }}" />
 		<datalist id="{{ tag_id }}-{{ arg.identity }}-datalist">
 			{% for choice in arg.choices %}
 				<option value="{{ choice }}"></option>
@@ -21,20 +21,24 @@
 		</datalist>
 	{% elif arg.TYPE == "multiselect" %}
 		{% if arg.choices %}
-			<input id="{{ tag_id }}-{{ arg.identity }}-regexfilter"
-						 type="text"
-						 size="15"
-						 title="Bulk-select {{ arg.identity }} via regex"
-						 onchange="mbdSelectByRegex('{{ tag_id }}-{{ arg.identity }}-regexfilter-target', '{{ tag_id }}-{{ arg.identity }}-regexfilter')"/>
-			<br />
-			<select id="{{ tag_id }}-{{ arg.identity }}-regexfilter-target" multiple="multiple" name="{{ arg.identity }}">
+			<select class="mbd-api" id="{{ tag_id }}-{{ arg.identity }}-regexfilter-target" multiple="multiple" name="{{ arg.identity }}">
 				{% for choice in arg.choices %}
 					<option {% if choice in arg.value %}selected{% endif %}>{{ choice }}</option>
 				{% endfor %}
 			</select>
-			<br />
+			<details class="mbd-api">
+				<summary title="Regex select"></summary>
+				<input id="{{ tag_id }}-{{ arg.identity }}-regexfilter"
+							 type="text"
+							 size="15"
+							 title="Bulk-select {{ arg.identity }} via regex"
+							 onchange="mbdSelectByRegex('{{ tag_id }}-{{ arg.identity }}-regexfilter-target', '{{ tag_id }}-{{ arg.identity }}-regexfilter')" />
+			</details>
 		{% endif %}
-		<input type="text" value="{% if arg.raw_value is None or arg.raw_value in arg.choices %}{% else %}{{ arg.raw_value }}{% endif %}" size="15" name="{{ arg.identity }}" />
+		<details class="mbd-api">
+			<summary title="Manual value">&#8203;</summary>
+			<input type="text" value="{% if arg.raw_value is None or arg.raw_value in arg.choices %}{% else %}{{ arg.raw_value }}{% endif %}" size="15" name="{{ arg.identity }}" />
+		</details>
 	{% else %}
 		{{ arg.identity }}: Internal error: Unkown argument type {{ arg.TYPE }}.
 	{% endif %}

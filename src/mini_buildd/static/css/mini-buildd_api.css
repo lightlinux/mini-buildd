@@ -17,7 +17,7 @@ details.mbd-api
 	display: inline-block;
 }
 
-input.mbd-api
+input.mbd-api, details.mbd-api, select.mbd-api
 {
 	border-color: #dddddd #aaaaaa #aaaaaa #dddddd;
 	border-style: solid;
@@ -29,6 +29,7 @@ input.mbd-api
 	font-weight: normal;
 	color: #222222;
 	background-color: #e7e7e7;
+	vertical-align: top;
 }
 
 input.mbd-api:hover
