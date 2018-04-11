@@ -5,7 +5,7 @@ ul.messagelist
 	margin: 0;
 }
 
-ul.messagelist li
+li.messagelist
 {
 	font-size: 12px;
 	display: block;
@@ -13,28 +13,31 @@ ul.messagelist li
 	margin: 0 0 3px 0;
 	border-bottom: 1px solid #ddd;
 	color: #666;
+	background-color: #ffc;
+	background-repeat: no-repeat;
+	background-position: 5px .3em;
 }
 
-ul.messagelist li.debug
+li.debug
 {
-	background: #ffc url(../img/mbd_message_debug.png) 5px .3em no-repeat;
+	background-image: url(../img/mbd_message_debug.png);
 	color: blue;
 }
 
-ul.messagelist li.info, ul.messagelist li.success
+li.success, li.info
 {
-	background: #ffc url(../img/mbd_message_info.png) 5px .3em no-repeat;
+	background-image: url(../img/mbd_message_info.png);
 	color: green;
 }
 
-ul.messagelist li.warning
+li.warning
 {
-	background: #ffc url(../img/mbd_message_warning.png) 5px .3em no-repeat;
+	background-image: url(../img/mbd_message_warning.png);
 	color: purple;
 }
 
-ul.messagelist li.error
+li.error
 {
-	background: #ffc url(../img/mbd_message_error.png) 5px .3em no-repeat;
+	background-image: url(../img/mbd_message_error.png);
 	color: red;
 }
