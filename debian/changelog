@@ -1,3 +1,65 @@
+mini-buildd (1.1.11) experimental; urgency=medium
+
+  ** 1.1.x are _development_ releases, use for testing only. **
+
+  This release mainly implements internal 'choice generator'
+  functionality for the API calls, and quite some kerfuffle
+  on the html/django side (still does not really look nice,
+  though).
+
+  * [13a75e8] rules: Add support for "nodoc".
+  * [30c4d29] [devel]: Yet another cleanup for the run shortcuts; also
+    makes most-used "./devel update" faster.
+  * [e4921c7] [devel]: Add ttag check to css check (and rename it to
+    htmlmisc).
+  * [10ae200] mini_buildd_tags.py: Remove obsolete tag
+    "mbd_distribution_options".
+  * [f20b45a] Fix a handful of new typo findings (with new codespell
+    1.12).
+  * [47e62ec] includes/mbd_api_arg.html: Select: Make empty choice denote
+    custom entries (and hide custom entry field).
+  * [c6e8c5f] api/__init__.py: printuploaders: Implement updater
+    (choices).
+  * [d8fb337] daemon.py: Add helper function get_active_codenames().
+  * [b2648b3] daemon.py: Add helper function get_suites().
+  * [a94cabb] api/__init__.py: getsourceslist: Implement updater
+    (choices).
+  * [96c0e62] [devel]: buildcheck should be "test level".
+  * [3dc4b1d] daemon.py: Cosmetic: Fix typo/wrong spelling in comment.
+  * [7dbe00b] includes/mbd_api_arg.html: Use HTML5 'datalist' for select
+    type.
+  * [b0ba2a8] api/__init__.py: show: Implement updater (choices).
+  * [ca8663c] api/__init__.py: list: Implement updater (choices).
+  * [0532031] api/__init__.py: migrate: Implement updater (choices).
+  * [2942d8f] api/__init__.py: remove: Implement updater (choices).
+  * [909ecfd] registration/login.html: Also use QUERY_STRING for next
+    value.
+  * [a26362e] includes/mbd_api.html: Instead of just disabling the button,
+    refer back to login if API call needs login.
+  * [bc38a8f] api/__init__.py: port: Complete updater (choices).
+  * [907c9aa] api/__init__.py: portext: Implement updater (choices); also
+    adds URLArgument class.
+  * [81264c9] includes/mbd_api_arg.html: Fix options tag to avoid tidy
+    warning.
+  * [715b1b8] api/__init__.py: retry: Implement updater (choices).
+  * [64c7623] includes/mbd_api.html: Use table to increase readability of
+    extra arguments.
+  * [5ce0b45] mini-buildd_api.css: Fix witn classes.
+  * [53b0dca] mini-buildd_messagelist.css: Try to remove some
+    redundancies.
+  * [5973317] control: Update Vcs URLs after salsa move.
+  * [ae1fb67] control: Rm X-Python3-Version (lintian says: no longer
+    needed, satisfied down to oldstable).
+  * [11f75b1] templates/registration/login.html: Don't add query string if
+    referer already has get params.
+  * [502538b] api/__init__.py: "options" option: Fix back from multiselect
+    to string (multiselect does not work here) && fixup documentation.
+  * [749067f] builder.py: sbuild: Explicitly add '--no-run-lintian' option
+    when lintian is disabled (effectively makes mini-buildd's 'run-
+    lintian=false' option actually work ;).
+
+ -- Stephan Sürken <absurd@debian.org>  Fri, 11 May 2018 22:35:36 +0200
+
 mini-buildd (1.1.10) experimental; urgency=medium
 
   ** 1.1.x are _development_ releases, use for testing only. **
