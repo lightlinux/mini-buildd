@@ -159,7 +159,19 @@ different components), or just as safeguard
 """)
 
     # Used in: port, portext
-    COMMON_ARG_OPTIONS = MultiSelectArgument(["--options", "-O"], separator="|", default="ignore-lintian=true", doc="upload options (see user manual); separate multiple options by '|'")
+    COMMON_ARG_OPTIONS = StringArgument(["--options", "-O"],
+                                        default="ignore-lintian=true",
+                                        doc="""list of upload options, separated by '|' (see user manual for complete docs). Some useful examples:
+
+ignore-lintian=true:
+  Ignore lintian failures (install anyway).
+run-lintian=false:
+  Avoid lintian run in the 1st place.
+internal-apt-priority=500:
+  Install newer versions from our repo (even if deps don't require it).
+auto-ports=buster-test-unstable
+  List of distributions (comma-separated) to automatically run ports for after successful install.
+""")
 
     def __init__(self, given_args, daemon=None, request=None, msglog=LOG):
         self.args = {}
@@ -747,7 +759,7 @@ class Port(Command):
                              self.args["from_distribution"].value,
                              to_distribution,
                              version=self.args["version"].false2none(),
-                             options=self.args["options"].value)
+                             options=self.args["options"].value.split("|"))
             self.msglog.info("Requested: {i}".format(i=info))
             self._plain_result += to_distribution + " "
 
@@ -778,7 +790,7 @@ class PortExt(Command):
         for d in self.args["distributions"].value:
             info = "External port {dsc} -> {d}".format(dsc=self.args["dsc"].value, d=d)
             self.msglog.info("Trying: {i}".format(i=info))
-            self.daemon.portext(self.args["dsc"].value, d, options=self.args["options"].value)
+            self.daemon.portext(self.args["dsc"].value, d, options=self.args["options"].value.split("|"))
             self.msglog.info("Requested: {i}".format(i=info))
             self._plain_result += d + " "
 
