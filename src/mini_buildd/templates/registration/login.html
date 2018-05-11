@@ -20,7 +20,7 @@
 		</table>
 		<p>
 			<input type="submit" value="Login" />
-			<input type="hidden" name="next" value="{% if not request.META.HTTP_REFERER or '/accounts/' in request.META.HTTP_REFERER %}/{% else %}{{ request.META.HTTP_REFERER }}?{{ request.META.QUERY_STRING }}{% endif %}" />
+			<input type="hidden" name="next" value="{% if not request.META.HTTP_REFERER or '/accounts/' in request.META.HTTP_REFERER %}/{% else %}{{ request.META.HTTP_REFERER }}{% if '?' in request.META.HTTP_REFERER%}{% else %}?{{ request.META.QUERY_STRING }}{% endif %}{% endif %}" />
 		</p>
 	</form>
 {% endblock %}
