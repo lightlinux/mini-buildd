@@ -2,7 +2,6 @@ Source: mini-buildd
 Section: devel
 Priority: optional
 Maintainer: Stephan Sürken <absurd@debian.org>
-X-Python3-Version: >= 3.2
 Build-Depends:
 	debhelper (>= 10),
 	dh-python,
