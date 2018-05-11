@@ -202,6 +202,8 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
             if mini_buildd.misc.Distribution(self.distribution).has_lintian_suppress():
                 sbuild_cmd += ["--lintian-opts", "--suppress-tags=bad-distribution-in-changes-file"]
             sbuild_cmd += ["--lintian-opts", self._breq["Run-Lintian"]]
+        else:
+            sbuild_cmd += ["--no-run-lintian"]
 
         if "sbuild" in mini_buildd.setup.DEBUG:
             sbuild_cmd += ["--debug"]
