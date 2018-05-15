@@ -135,6 +135,29 @@ class StaticWithIndex(cherrypy._cptools.HandlerTool):  # pylint: disable=protect
         super().__init__(self._mbd_serve)
 
 
+def _error_manual_missing(status, message, traceback, version):  # Exact arg names needed (cherrypy calls back with named arguments)  # pylint: disable=unused-argument
+    return mini_buildd.setup.DOC_MISSING_HTML_TEMPLATE.format(status=status)
+
+
+def add_static_handler(path, root, with_index=False, match="", with_manual_missing_error=False):
+    "Shortcut to add a static handler."
+    mime_text_plain = "text/plain; charset={charset}".format(charset=mini_buildd.setup.CHAR_ENCODING)
+
+    ht = StaticWithIndex() if with_index else cherrypy.tools.staticdir
+
+    cherrypy.tree.mount(
+        ht.handler("/",
+                   "",
+                   root=root,
+                   match=match,
+                   content_types={"log": mime_text_plain,
+                                  "buildlog": mime_text_plain,
+                                  "changes": mime_text_plain,
+                                  "dsc": mime_text_plain}),
+        path,
+        config={"/": {"error_page.default": _error_manual_missing} if with_manual_missing_error else {}})
+
+
 def setup(bind, wsgi_app):
     """
     Run the CherryPy WSGI Web Server.
@@ -145,32 +168,6 @@ def setup(bind, wsgi_app):
     :type wsgi_app: WSGI-application
 
     """
-
-    def _error_manual_missing(status, message, traceback, version):  # Exact arg names needed (cherrypy calls back with named arguments)  # pylint: disable=unused-argument
-        return """\
-<html><body>
-<h1>{} (<tt>mini-buildd-doc</tt> not installed?)</h1>
-Maybe package <b><tt>mini-buildd-doc</tt></b> needs to be installed to make the manual available.
-</body></html>
-""".format(status)
-
-    def add_static_handler(path, root, with_index=False, match="", config=None):
-        "Shortcut to add a static handler."
-        mime_text_plain = "text/plain; charset={charset}".format(charset=mini_buildd.setup.CHAR_ENCODING)
-
-        ht = StaticWithIndex() if with_index else cherrypy.tools.staticdir
-
-        cherrypy.tree.mount(
-            ht.handler("/",
-                       "",
-                       root=root,
-                       match=match,
-                       content_types={"log": mime_text_plain,
-                                      "buildlog": mime_text_plain,
-                                      "changes": mime_text_plain,
-                                      "dsc": mime_text_plain}),
-            path,
-            config={"/": config if config else {}})
 
     debug = "http" in mini_buildd.setup.DEBUG
     cherrypy.config.update({"server.socket_host": str(mini_buildd.misc.HoPo(bind).host),
@@ -196,32 +193,6 @@ Maybe package <b><tt>mini-buildd-doc</tt></b> needs to be installed to make the 
     handler.setLevel(logging.DEBUG)
     handler.setFormatter(cherrypy._cplogging.logfmt)  # pylint: disable=protected-access
     cherrypy.log.access_log.addHandler(handler)
-
-    # Serve mini_buildd webapp's static directory
-    add_static_handler(mini_buildd.setup.STATIC_URL,
-                       "{p}/mini_buildd/static".format(p=mini_buildd.setup.PY_PACKAGE_PATH))
-
-    # Serve django admin webapp's static directory.
-    # Note: 'STATIC_URL' has trailing "/"; cherrypy does not like double slashes inside path like add_static_handler("/my//path").
-    add_static_handler("{p}admin/".format(p=mini_buildd.setup.STATIC_URL),
-                       "{p}/django/contrib/admin/static/admin".format(p=mini_buildd.setup.PY_PACKAGE_PATH))
-
-    # Serve mini-buildd's HTML manual
-    add_static_handler("/doc/",
-                       mini_buildd.setup.MANUAL_DIR,
-                       config={"error_page.default": _error_manual_missing})
-
-    # Serve repositories with index support
-    add_static_handler("/repositories/",
-                       mini_buildd.setup.REPOSITORIES_DIR,
-                       with_index=True,
-                       match=r"^/.+/(pool|dists)/.*")
-
-    # Serve logs with index support
-    add_static_handler("/log/",
-                       mini_buildd.setup.LOG_DIR,
-                       with_index=True,
-                       match=r"^/.+/.*")
 
     # Register wsgi app (django)
     cherrypy.tree.graft(wsgi_app)
