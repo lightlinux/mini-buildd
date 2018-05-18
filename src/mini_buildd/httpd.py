@@ -10,6 +10,13 @@ LOG = logging.getLogger(__name__)
 
 
 class HttpD(metaclass=abc.ABCMeta):
+    DOC_MISSING_HTML_TEMPLATE = """\
+<html><body>
+<h1>{status} (<tt>mini-buildd-doc</tt> not installed?)</h1>
+Maybe package <b><tt>mini-buildd-doc</tt></b> needs to be installed to make the manual available.
+</body></html>
+"""
+
     @abc.abstractmethod
     def add_static_handler(self, path, root, with_index=False, match="", with_manual_missing_error=False):
         "Serve static files from a directory."

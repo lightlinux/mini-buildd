@@ -138,7 +138,7 @@ class Backend(mini_buildd.httpd.HttpD):
 
     @classmethod
     def _error_manual_missing(cls, status, message, traceback, version):  # Exact arg names needed (cherrypy calls back with named arguments)  # pylint: disable=unused-argument
-        return mini_buildd.setup.DOC_MISSING_HTML_TEMPLATE.format(status=status)
+        return cls.DOC_MISSING_HTML_TEMPLATE.format(status=status)
 
     def add_static_handler(self, path, root, with_index=False, match="", with_manual_missing_error=False):
         "Shortcut to add a static handler."
