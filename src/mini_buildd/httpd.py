@@ -32,11 +32,6 @@ class HttpD(metaclass=abc.ABCMeta):
         self.add_static_handler(mini_buildd.setup.STATIC_URL,
                                 "{p}/mini_buildd/static".format(p=mini_buildd.setup.PY_PACKAGE_PATH))
 
-        # Serve django admin webapp's static directory.
-        # Note: 'STATIC_URL' has trailing "/"; cherrypy does not like double slashes inside path like add_static_handler("/my//path").
-        self.add_static_handler("{p}admin/".format(p=mini_buildd.setup.STATIC_URL),
-                                "{p}/django/contrib/admin/static/admin".format(p=mini_buildd.setup.PY_PACKAGE_PATH))
-
         # Serve mini-buildd's HTML manual
         self.add_static_handler("/doc/",
                                 mini_buildd.setup.MANUAL_DIR,

@@ -1,0 +1,3 @@
+# This really looks ugly.
+# However, this seems to be the easiest way to make django's "admin" static data (needed by the "Django admin site") available.
+usr/lib/python3/dist-packages/django/contrib/admin/static/admin usr/lib/python3/dist-packages/mini_buildd/static/admin
