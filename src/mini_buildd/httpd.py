@@ -18,7 +18,7 @@ Maybe package <b><tt>mini-buildd-doc</tt></b> needs to be installed to make the 
 """
 
     @abc.abstractmethod
-    def add_static_handler(self, path, root, with_index=False, match="", with_manual_missing_error=False):
+    def add_static(self, route, directory, with_index=False, match="", with_doc_missing_error=False):
         "Serve static files from a directory."
         pass
 
@@ -36,25 +36,25 @@ Maybe package <b><tt>mini-buildd-doc</tt></b> needs to be installed to make the 
 
     def __init__(self):
         # Serve mini_buildd webapp's static directory
-        self.add_static_handler("static",
-                                "{p}/mini_buildd/static".format(p=mini_buildd.setup.PY_PACKAGE_PATH))
+        self.add_static("static",
+                        "{p}/mini_buildd/static".format(p=mini_buildd.setup.PY_PACKAGE_PATH))
 
         # Serve mini-buildd's HTML manual
-        self.add_static_handler("doc",
-                                mini_buildd.setup.MANUAL_DIR,
-                                with_manual_missing_error=True)
+        self.add_static("doc",
+                        mini_buildd.setup.MANUAL_DIR,
+                        with_doc_missing_error=True)
 
         # Serve repositories with index support
-        self.add_static_handler("repositories",
-                                mini_buildd.setup.REPOSITORIES_DIR,
-                                with_index=True,
-                                match=r"^/.+/(pool|dists)/.*")
+        self.add_static("repositories",
+                        mini_buildd.setup.REPOSITORIES_DIR,
+                        with_index=True,
+                        match=r"^/.+/(pool|dists)/.*")
 
         # Serve logs with index support
-        self.add_static_handler("log",
-                                mini_buildd.setup.LOG_DIR,
-                                with_index=True,
-                                match=r"^/.+/.*")
+        self.add_static("log",
+                        mini_buildd.setup.LOG_DIR,
+                        with_index=True,
+                        match=r"^/.+/.*")
 
     @abc.abstractmethod
     def run(self):

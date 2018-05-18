@@ -137,10 +137,10 @@ class Backend(mini_buildd.httpd.HttpD):
             super().__init__(self._mbd_serve)
 
     @classmethod
-    def _error_manual_missing(cls, status, message, traceback, version):  # Exact arg names needed (cherrypy calls back with named arguments)  # pylint: disable=unused-argument
+    def _error_doc_missing(cls, status, message, traceback, version):  # Exact arg names needed (cherrypy calls back with named arguments)  # pylint: disable=unused-argument
         return cls.DOC_MISSING_HTML_TEMPLATE.format(status=status)
 
-    def add_static_handler(self, path, root, with_index=False, match="", with_manual_missing_error=False):
+    def add_static(self, route, directory, with_index=False, match="", with_doc_missing_error=False):
         "Shortcut to add a static handler."
         mime_text_plain = "text/plain; charset={charset}".format(charset=mini_buildd.setup.CHAR_ENCODING)
 
@@ -149,14 +149,14 @@ class Backend(mini_buildd.httpd.HttpD):
         cherrypy.tree.mount(
             ht.handler("/",
                        "",
-                       root=root,
+                       root=directory,
                        match=match,
                        content_types={"log": mime_text_plain,
                                       "buildlog": mime_text_plain,
                                       "changes": mime_text_plain,
                                       "dsc": mime_text_plain}),
-            "/{}/".format(path),  # cherrpy needs '/xyz/' notation!
-            config={"/": {"error_page.default": self._error_manual_missing} if with_manual_missing_error else {}})
+            "/{}/".format(route),  # cherrpy needs '/xyz/' notation!
+            config={"/": {"error_page.default": self._error_doc_missing} if with_doc_missing_error else {}})
 
     def __init__(self, bind, wsgi_app):
         """
