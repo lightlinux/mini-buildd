@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import glob
 import subprocess
 import distutils.command.clean
 
@@ -43,6 +44,17 @@ class Clean(distutils.command.clean.clean):
         super().run()
 
 
+def package_data_files(directory, extensions):
+    """
+    Little helper to collect file lists for package_data.
+    """
+    package_path = "src/mini_buildd"
+    result = []
+    for extension in extensions:
+        result += [f[len(package_path) + 1:] for f in glob.glob("{}/{}/**/*.{}".format(package_path, directory, extension), recursive=True)]
+    return result
+
+
 setuptools.setup(
     cmdclass={"build_py": BuildPy, "clean": Clean},
     name="mini-buildd",
@@ -53,16 +65,7 @@ setuptools.setup(
     author_email="absurd@debian.org",
     scripts=["src/mini-buildd", "src/mini-buildd-tool"],
     packages=["mini_buildd", "mini_buildd/api", "mini_buildd/models"],
-    package_data={"mini_buildd": ["templates/*.html",
-                                  "templates/includes/*.html",
-                                  "templates/mini_buildd/*.html",
-                                  "templates/admin/*.html",
-                                  "templates/admin/mini_buildd/*.html",
-                                  "templates/registration/*.html",
-                                  "templates/registration/*.txt",
-                                  "templatetags/*.py",
-                                  "static/css/*.css",
-                                  "static/js/*.js",
-                                  "static/img/*.png",
-                                  "static/img/*.gif",
-                                  "static/*.*"]})
+    package_data={"mini_buildd":
+                  package_data_files("templates", ["html", "txt"]) +
+                  package_data_files("templatetags", ["py"]) +
+                  package_data_files("static", ["css", "js", "png", "gif", "ico"])})
