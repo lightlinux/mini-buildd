@@ -29,22 +29,22 @@ class HttpD(metaclass=abc.ABCMeta):
 
     def __init__(self):
         # Serve mini_buildd webapp's static directory
-        self.add_static_handler("/static/",
+        self.add_static_handler("static",
                                 "{p}/mini_buildd/static".format(p=mini_buildd.setup.PY_PACKAGE_PATH))
 
         # Serve mini-buildd's HTML manual
-        self.add_static_handler("/doc/",
+        self.add_static_handler("doc",
                                 mini_buildd.setup.MANUAL_DIR,
                                 with_manual_missing_error=True)
 
         # Serve repositories with index support
-        self.add_static_handler("/repositories/",
+        self.add_static_handler("repositories",
                                 mini_buildd.setup.REPOSITORIES_DIR,
                                 with_index=True,
                                 match=r"^/.+/(pool|dists)/.*")
 
         # Serve logs with index support
-        self.add_static_handler("/log/",
+        self.add_static_handler("log",
                                 mini_buildd.setup.LOG_DIR,
                                 with_index=True,
                                 match=r"^/.+/.*")

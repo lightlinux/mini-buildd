@@ -155,7 +155,7 @@ class Backend(mini_buildd.httpd.HttpD):
                                       "buildlog": mime_text_plain,
                                       "changes": mime_text_plain,
                                       "dsc": mime_text_plain}),
-            path,
+            "/{}/".format(path),  # cherrpy needs '/xyz/' notation!
             config={"/": {"error_page.default": self._error_manual_missing} if with_manual_missing_error else {}})
 
     def __init__(self, bind, wsgi_app):
