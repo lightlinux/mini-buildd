@@ -30,9 +30,6 @@ CHAR_ENCODING = "UTF-8"
 # Compute python-version dependent install path
 PY_PACKAGE_PATH = "/usr/lib/python{major}/dist-packages".format(major=sys.version_info[0])
 
-# Location for static web data (needed for django ('STATIC_URL') and cherrypy). This *must* have trailing '/'.
-STATIC_URL = "/static/"
-
 # Static, and used by httpd*.py only. Should maybe moved back there when feasable.
 DOC_MISSING_HTML_TEMPLATE = """\
 <html><body>

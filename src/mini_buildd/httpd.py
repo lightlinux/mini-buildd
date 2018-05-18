@@ -29,7 +29,7 @@ class HttpD(metaclass=abc.ABCMeta):
 
     def __init__(self):
         # Serve mini_buildd webapp's static directory
-        self.add_static_handler(mini_buildd.setup.STATIC_URL,
+        self.add_static_handler("/static/",
                                 "{p}/mini_buildd/static".format(p=mini_buildd.setup.PY_PACKAGE_PATH))
 
         # Serve mini-buildd's HTML manual
