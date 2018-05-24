@@ -33,7 +33,7 @@ class StaticAndWSGI(object):
 
                 if os.path.isdir(translated_path):
                     start_response("200 OK", [('Content-type', 'text/html; charset=utf-8')])
-                    return [mini_buildd.httpd.HtmlIndex.html_index(translated_path, path_info, "wsgiref")]
+                    return [mini_buildd.httpd.html_index(translated_path, path_info, "wsgiref")]
                 if os.path.isfile(translated_path):
                     with open(translated_path, "rb") as f:
                         start_response("200 OK", [('Content-type', '{}'.format(mimetypes.guess_type(translated_path)[0] or "application/octet-stream"))])

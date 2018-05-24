@@ -50,7 +50,7 @@ class Backend(mini_buildd.httpd.HttpD):
                 cherrypy.lib.cptools.trailing_slash()
 
                 # Produce and deliver a new index
-                cherrypy.response.body = mini_buildd.httpd.HtmlIndex.html_index(path, cherrypy.request.path_info, "CherryPy {cp_version}".format(cp_version=cherrypy.__version__))
+                cherrypy.response.body = mini_buildd.httpd.html_index(path, cherrypy.request.path_info, "CherryPy {cp_version}".format(cp_version=cherrypy.__version__))
                 cherrypy.response.headers["Content-Type"] = "text/html"
                 return True
 
