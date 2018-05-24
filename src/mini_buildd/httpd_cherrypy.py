@@ -13,6 +13,7 @@ import cherrypy.lib.static
 import mini_buildd.misc
 import mini_buildd.setup
 import mini_buildd.httpd
+from mini_buildd.httpd_wsgiref import html_index
 
 LOG = logging.getLogger(__name__)
 
@@ -50,7 +51,7 @@ class Backend(mini_buildd.httpd.HttpD):
                 cherrypy.lib.cptools.trailing_slash()
 
                 # Produce and deliver a new index
-                cherrypy.response.body = mini_buildd.httpd.html_index(path, cherrypy.request.path_info, "CherryPy {cp_version}".format(cp_version=cherrypy.__version__))
+                cherrypy.response.body = html_index(path, cherrypy.request.path_info, "CherryPy {cp_version}".format(cp_version=cherrypy.__version__))
                 cherrypy.response.headers["Content-Type"] = "text/html"
                 return True
 
