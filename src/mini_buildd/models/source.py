@@ -286,7 +286,7 @@ codeversion is only used for base sources.""")
             """
 
             keys = {
-                "archive_stretch": "E0B11894F66AEC98",    # Debian Archive Automatic Signing Key (9/stretch) <ftpmaster@debian.org>
+                "archive_stretch": "E0B11894F66AEC98",    # Debian Archive Automatic Signing Key (9/stretch) <ftpmaster@debian.org>  (subkey 04EE7237B7D453EC)
                 "release_stretch": "EF0F382A1A7B6500",    # Debian Stable Release Key (9/stretch) <debian-release@lists.debian.org>
                 "archive_jessie": "7638D0442B90D010",     # Debian Archive Automatic Signing Key (8/jessie) <ftpmaster@debian.org>
                 "release_jessie": "CBF8D6FD518E17E1",     # Jessie Stable Release Key <debian-release@lists.debian.org>
@@ -321,10 +321,10 @@ codeversion is only used for base sources.""")
                                    [keys["archive_wheezy"], keys["archive_jessie"]])
 
             cls._mbd_get_or_create(msglog, "Debian", "buster",
-                                   [keys["archive_jessie"], keys["release_jessie"], keys["release_stretch"]])
+                                   [keys["archive_wheezy"], keys["archive_jessie"], keys["archive_stretch"]])
 
             cls._mbd_get_or_create(msglog, "Debian", "sid",
-                                   [keys["archive_wheezy"], keys["release_wheezy"], keys["archive_jessie"]])
+                                   [keys["archive_wheezy"], keys["archive_jessie"], keys["archive_stretch"]])
 
         @classmethod
         def mbd_meta_add_ubuntu(cls, msglog):
