@@ -72,5 +72,5 @@ def run(bind, wsgi_app):
     :type wsgi_app: WSGI-application
 
     """
-    from mini_buildd.httpd_wsgiref import Backend
+    from mini_buildd.httpd_cherrypy import Backend
     Backend(bind, wsgi_app).run()
