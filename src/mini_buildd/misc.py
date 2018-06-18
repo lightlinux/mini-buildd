@@ -428,7 +428,7 @@ class PkgLog(object):
 
 
 def subst_placeholders(template, placeholders):
-    """Substitue placeholders in string from a dict.
+    """Substitute placeholders in string from a dict.
 
     >>> subst_placeholders("Repoversionstring: %IDENTITY%%CODEVERSION%", { "IDENTITY": "test", "CODEVERSION": "60" })
     'Repoversionstring: test60'

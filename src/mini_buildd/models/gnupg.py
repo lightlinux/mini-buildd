@@ -110,7 +110,7 @@ class AptKey(GnuPGPublicKey):
 
 class KeyringKey(GnuPGPublicKey):
     """
-    Abtract class for GnuPG keys that influence the daemon's keyring.
+    Abstract class for GnuPG keys that influence the daemon's keyring.
 
     This basically means changes to remotes and users may be
     done on the fly (without stopping the daemon), to make this

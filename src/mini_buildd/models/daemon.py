@@ -42,7 +42,7 @@ choice.
     hostname = django.db.models.CharField(
         max_length=200,
         default=socket.getfqdn(),
-        help_text="Fully qualified hostname we can be accesed through by others over the network (i.e, from users, uploaders or remotes).")
+        help_text="Fully qualified hostname we can be accessed through by others over the network (i.e, from users, uploaders or remotes).")
 
     email_address = django.db.models.EmailField(max_length=255, default="mini-buildd@{h}".format(h=socket.getfqdn()),
                                                 help_text="""\
