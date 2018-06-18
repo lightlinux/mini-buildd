@@ -10,6 +10,7 @@ import email
 
 import mini_buildd.misc
 import mini_buildd.setup
+import mini_buildd.httpd
 
 LOG = logging.getLogger(__name__)
 
@@ -105,7 +106,7 @@ class StaticAndWSGI(object):
         return self._wsgi.__call__(environ, start_response)
 
 
-class Backend(mini_buildd.httpd.HttpD):
+class HttpD(mini_buildd.httpd.HttpD):
     def __init__(self, bind, wsgi_app):
         self.app = StaticAndWSGI(wsgi_app)
         self.server = wsgiref.simple_server.make_server('', mini_buildd.misc.HoPo(bind).port, self.app)

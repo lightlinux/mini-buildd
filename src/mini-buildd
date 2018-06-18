@@ -21,6 +21,7 @@ import mini_buildd.misc
 import mini_buildd.setup
 import mini_buildd.httpd
 import mini_buildd.django_settings
+from mini_buildd.httpd_cherrypy import HttpD
 
 
 # Early global log config (before the actual logging config steps in):
@@ -299,7 +300,7 @@ Comma-separated list of special debugging options:
 
     def run_daemon(self, webapp):
         # Start httpd webapp
-        mini_buildd.misc.run_as_thread(mini_buildd.httpd.run, name="httpd", daemon=True, bind=self._args.httpd_bind, wsgi_app=webapp)
+        mini_buildd.misc.run_as_thread(HttpD(bind=self._args.httpd_bind, wsgi_app=webapp).run, name="httpd", daemon=True)
 
         # Get the daemon manager instance (import here: We cannot import anything 'django' prior to django's configuration)
         from mini_buildd.daemon import Daemon

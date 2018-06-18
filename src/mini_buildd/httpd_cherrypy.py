@@ -18,7 +18,7 @@ from mini_buildd.httpd_wsgiref import html_index
 LOG = logging.getLogger(__name__)
 
 
-class Backend(mini_buildd.httpd.HttpD):
+class HttpD(mini_buildd.httpd.HttpD):
     class StaticWithIndex(cherrypy._cptools.HandlerTool):  # pylint: disable=protected-access
         @classmethod
         def _mbd_serve_index(cls, _section, directory, root="", match="", **_kwargs):

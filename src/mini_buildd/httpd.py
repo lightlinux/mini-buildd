@@ -60,17 +60,3 @@ Maybe package <b><tt>mini-buildd-doc</tt></b> needs to be installed to make the 
     def run(self):
         "Run the HTTP server. Must be implemented by backend."
         pass
-
-
-def run(bind, wsgi_app):
-    """
-    Run the Web Server.
-
-    :param bind: the bind address to use.
-    :type bind: string
-    :param wsgi_app: the web application to process.
-    :type wsgi_app: WSGI-application
-
-    """
-    from mini_buildd.httpd_cherrypy import Backend
-    Backend(bind, wsgi_app).run()

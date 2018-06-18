@@ -11,11 +11,12 @@ import twisted.python.log
 
 import mini_buildd.misc
 import mini_buildd.setup
+import mini_buildd.httpd
 
 LOG = logging.getLogger(__name__)
 
 
-class Backend(mini_buildd.httpd.HttpD):
+class HttpD(mini_buildd.httpd.HttpD):
     class RootResource(twisted.web.resource.Resource):
         """
         For some reason, twisted 'WSGIResource' cannot act as a root resource, so this workaround is needed
