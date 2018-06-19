@@ -25,29 +25,19 @@
 			{% if show_doc %}<pre>{{ api_cmd.docstring }}</pre>{% endif %}
 
 			{# Optional parameters, presented on demand only #}
-			<table>
-				{% for arg in api_cmd.args.values %}
-					{% if arg.raw_value is not None %}
-						<tr>
-							<td><em>{{ arg.identity }}</em></td>
-							<td>{% include "includes/mbd_api_arg.html" %}</td>
-						</tr>
-					{% endif %}
-				{% endfor %}
-				<tr><td colspan=2><hr /></td></tr>
-				<tr>
-					<td><em>output</em></td>
-					<td>
-						<select name="output" title="output">
-							{% with "referer html plain python" as options %}
-								{% for o in options.split %}
-									<option value="{{ o }}" {% if o == output %}selected="selected"{% endif %}>{{ o }}</option>
-								{% endfor %}
-							{% endwith %}
-						</select>
-					</td>
-				</tr>
-			</table>
+			{% for arg in api_cmd.args.values %}
+				{% if arg.raw_value is not None %}
+					{% include "includes/mbd_api_arg.html" %}<br/>
+				{% endif %}
+			{% endfor %}
+			<label class="mbd-api" for="{{ tag_id }}-output" title="Output type">output</label>
+			<select id="{{ tag_id }}-output" name="output" title="output">
+				{% with "referer html plain python" as options %}
+					{% for o in options.split %}
+						<option value="{{ o }}" {% if o == output %}selected="selected"{% endif %}>{{ o }}</option>
+					{% endfor %}
+				{% endwith %}
+			</select>
 		</details>
 	</form>
 </div>

@@ -557,3 +557,11 @@ a.hover-underline:hover
 {
 	color: red;
 }
+
+label.mbd-api
+{
+	display: inline-block;
+	width: 80px;
+	text-align: right;
+	font-style: italic;
+}​
