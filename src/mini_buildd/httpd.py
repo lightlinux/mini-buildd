@@ -35,26 +35,10 @@ Maybe package <b><tt>mini-buildd-doc</tt></b> needs to be installed to make the 
         pass
 
     def __init__(self):
-        # Serve mini_buildd webapp's static directory
-        self.add_static("static",
-                        "{p}/mini_buildd/static".format(p=mini_buildd.setup.PY_PACKAGE_PATH))
-
-        # Serve mini-buildd's HTML manual
-        self.add_static("doc",
-                        mini_buildd.setup.MANUAL_DIR,
-                        with_doc_missing_error=True)
-
-        # Serve repositories with index support
-        self.add_static("repositories",
-                        mini_buildd.setup.REPOSITORIES_DIR,
-                        with_index=True,
-                        match=r"^/.+/(pool|dists)/.*")
-
-        # Serve logs with index support
-        self.add_static("log",
-                        mini_buildd.setup.LOG_DIR,
-                        with_index=True,
-                        match=r"^/.+/.*")
+        self.add_static("static", "{p}/mini_buildd/static".format(p=mini_buildd.setup.PY_PACKAGE_PATH))                      # WebApp static directory
+        self.add_static("doc", mini_buildd.setup.MANUAL_DIR, with_doc_missing_error=True)                                    # HTML manual
+        self.add_static("repositories", mini_buildd.setup.REPOSITORIES_DIR, with_index=True, match=r"^/.+/(pool|dists)/.*")  # Repositories
+        self.add_static("log", mini_buildd.setup.LOG_DIR, with_index=True, match=r"^/.+/.*")                                 # Logs
 
     @abc.abstractmethod
     def run(self):
