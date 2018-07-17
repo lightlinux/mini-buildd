@@ -16,7 +16,7 @@ LOG = logging.getLogger(__name__)
 
 
 class HttpD(mini_buildd.httpd.HttpD):
-    def add_route(self, route, directory, with_index=False, match=".*", with_doc_missing_error=False):  # pylint: disable=unused-argument
+    def _add_route(self, route, directory, with_index=False, match=".*", with_doc_missing_error=False):  # pylint: disable=unused-argument
         # NOT IMPL: with_index, match, with_doc_missing_error
         self.tornado_app.add_handlers(
             r".*",  # match any host
@@ -36,7 +36,7 @@ class HttpD(mini_buildd.httpd.HttpD):
         self.server = tornado.httpserver.HTTPServer(self.tornado_app)
 
         # Generic
-        self.add_routes()
+        self._add_routes()
         self.tornado_app.add_handlers(
             r".*",  # match any host
             [

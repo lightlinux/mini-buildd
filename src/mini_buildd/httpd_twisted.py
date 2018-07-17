@@ -29,7 +29,7 @@ class HttpD(mini_buildd.httpd.HttpD):
             request.postpath.insert(0, path)
             return self._wsgi_resource
 
-    def add_route(self, route, directory, with_index=False, match="", with_doc_missing_error=False):  # pylint: disable=unused-argument
+    def _add_route(self, route, directory, with_index=False, match="", with_doc_missing_error=False):  # pylint: disable=unused-argument
         # NOT IMPL: with_index, match, with_doc_missing_error
         self.resource.putChild(bytes(route, encoding=self._char_encoding), twisted.web.static.File(directory))
 
@@ -46,7 +46,7 @@ class HttpD(mini_buildd.httpd.HttpD):
         self.endpoint.listen(self.site)
 
         # Generic
-        self.add_routes()
+        self._add_routes()
 
     def run(self):
         twisted.internet.reactor.run(installSignalHandlers=0)  # pylint: disable=no-member

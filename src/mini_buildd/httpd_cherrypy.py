@@ -107,9 +107,9 @@ class HttpD(mini_buildd.httpd.HttpD):
         # Register wsgi app (django)
         cherrypy.tree.graft(wsgi_app)
 
-        self.add_routes()
+        self._add_routes()
 
-    def add_route(self, route, directory, with_index=False, match="", with_doc_missing_error=False):
+    def _add_route(self, route, directory, with_index=False, match="", with_doc_missing_error=False):
         "Shortcut to add a static handler."
         mime_text_plain = "text/plain; charset={charset}".format(charset=self._char_encoding)
 

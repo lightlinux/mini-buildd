@@ -48,9 +48,9 @@ class HttpD(mini_buildd.httpd.HttpD):
         super().__init__()
         self.app = StaticAndWSGI(wsgi_app)
         self.server = wsgiref.simple_server.make_server('', mini_buildd.misc.HoPo(bind).port, self.app)
-        self.add_routes()
+        self._add_routes()
 
-    def add_route(self, route, directory, with_index=False, match="", with_doc_missing_error=False):  # pylint: disable=unused-argument
+    def _add_route(self, route, directory, with_index=False, match="", with_doc_missing_error=False):  # pylint: disable=unused-argument
         self.app.add_route(route, directory)
 
     def run(self):

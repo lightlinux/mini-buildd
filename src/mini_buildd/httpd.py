@@ -26,7 +26,7 @@ class HttpD(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def add_route(self, route, directory, with_index=False, match="", with_doc_missing_error=False):
+    def _add_route(self, route, directory, with_index=False, match="", with_doc_missing_error=False):
         "Serve static files from a directory."
         pass
 
@@ -48,11 +48,11 @@ Maybe package <b><tt>mini-buildd-doc</tt></b> needs to be installed to make the 
         self._access_log_file = mini_buildd.setup.ACCESS_LOG_FILE
         self._char_encoding = mini_buildd.setup.CHAR_ENCODING
 
-    def add_routes(self):
-        self.add_route("static", "{p}/mini_buildd/static".format(p=mini_buildd.setup.PY_PACKAGE_PATH))                      # WebApp static directory
-        self.add_route("doc", mini_buildd.setup.MANUAL_DIR, with_doc_missing_error=True)                                    # HTML manual
-        self.add_route("repositories", mini_buildd.setup.REPOSITORIES_DIR, with_index=True, match=r"^/.+/(pool|dists)/.*")  # Repositories
-        self.add_route("log", mini_buildd.setup.LOG_DIR, with_index=True, match=r"^/.+/.*")                                 # Logs
+    def _add_routes(self):
+        self._add_route("static", "{p}/mini_buildd/static".format(p=mini_buildd.setup.PY_PACKAGE_PATH))                      # WebApp static directory
+        self._add_route("doc", mini_buildd.setup.MANUAL_DIR, with_doc_missing_error=True)                                    # HTML manual
+        self._add_route("repositories", mini_buildd.setup.REPOSITORIES_DIR, with_index=True, match=r"^/.+/(pool|dists)/.*")  # Repositories
+        self._add_route("log", mini_buildd.setup.LOG_DIR, with_index=True, match=r"^/.+/.*")                                 # Logs
 
 
 # Helpers
