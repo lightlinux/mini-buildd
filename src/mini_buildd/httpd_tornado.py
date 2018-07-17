@@ -10,14 +10,13 @@ import tornado.httpserver
 import tornado.platform.asyncio
 
 import mini_buildd.misc
-import mini_buildd.setup
 import mini_buildd.httpd
 
 LOG = logging.getLogger(__name__)
 
 
 class HttpD(mini_buildd.httpd.HttpD):
-    def add_static(self, route, directory, with_index=False, match=".*", with_doc_missing_error=False):  # pylint: disable=unused-argument
+    def add_route(self, route, directory, with_index=False, match=".*", with_doc_missing_error=False):  # pylint: disable=unused-argument
         # NOT IMPL: with_index, match, with_doc_missing_error
         self.tornado_app.add_handlers(
             r".*",  # match any host
@@ -30,19 +29,22 @@ class HttpD(mini_buildd.httpd.HttpD):
             ])
 
     def __init__(self, bind, wsgi_app):
+        super().__init__()
+
         self.wsgi_container = tornado.wsgi.WSGIContainer(wsgi_app)
         self.tornado_app = tornado.web.Application()
         self.server = tornado.httpserver.HTTPServer(self.tornado_app)
 
         # Generic
-        super().__init__()
+        self.add_routes()
         self.tornado_app.add_handlers(
             r".*",  # match any host
             [
                 ('.*', tornado.web.FallbackHandler, dict(fallback=self.wsgi_container)),
             ])
+        self._bind = bind
 
     def run(self):
         asyncio.set_event_loop(asyncio.new_event_loop())  # See: https://github.com/tornadoweb/tornado/issues/2183
-        self.server.listen(8066)
+        self.server.listen(mini_buildd.misc.HoPo(self._bind).port)
         tornado.ioloop.IOLoop.instance().start()

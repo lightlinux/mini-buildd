@@ -11,9 +11,7 @@ import cherrypy.lib.httputil
 import cherrypy.lib.static
 
 import mini_buildd.misc
-import mini_buildd.setup
 import mini_buildd.httpd
-from mini_buildd.httpd_wsgiref import html_index
 
 LOG = logging.getLogger(__name__)
 
@@ -51,7 +49,7 @@ class HttpD(mini_buildd.httpd.HttpD):
                 cherrypy.lib.cptools.trailing_slash()
 
                 # Produce and deliver a new index
-                cherrypy.response.body = html_index(path, cherrypy.request.path_info, "CherryPy {cp_version}".format(cp_version=cherrypy.__version__))
+                cherrypy.response.body = mini_buildd.httpd.html_index(path, cherrypy.request.path_info, "CherryPy {cp_version}".format(cp_version=cherrypy.__version__))
                 cherrypy.response.headers["Content-Type"] = "text/html"
                 return True
 
@@ -67,13 +65,53 @@ class HttpD(mini_buildd.httpd.HttpD):
         def __init__(self):
             super().__init__(self._mbd_serve)
 
-    @classmethod
-    def _error_doc_missing(cls, status, message, traceback, version):  # Exact arg names needed (cherrypy calls back with named arguments)  # pylint: disable=unused-argument
-        return cls.DOC_MISSING_HTML_TEMPLATE.format(status=status)
+    def _error_doc_missing(self, status, message, traceback, version):  # Exact arg names needed (cherrypy calls back with named arguments)  # pylint: disable=unused-argument
+        return self._doc_missing_html_template.format(status=status)
 
-    def add_static(self, route, directory, with_index=False, match="", with_doc_missing_error=False):
+    def __init__(self, bind, wsgi_app):
+        """
+        Construct the CherryPy WSGI Web Server.
+
+        :param bind: the bind address to use.
+        :type bind: string
+        :param wsgi_app: the web application to process.
+        :type wsgi_app: WSGI-application
+
+        """
+        super().__init__()
+
+        cherrypy.config.update({"server.socket_host": str(mini_buildd.misc.HoPo(bind).host),
+                                "server.socket_port": mini_buildd.misc.HoPo(bind).port,
+                                "engine.autoreload.on": False,
+                                "checker.on": self._debug,
+                                "tools.log_headers.on": self._debug,
+                                "request.show_tracebacks": self._debug,
+                                "request.show_mismatched_params": self._debug,
+                                "log.error_file": None,
+                                "log.access_file": None,
+                                "log.screen": self._debug and self._foreground})
+
+        # Redirect cherrypy's error log to mini-buildd's logging
+        cherrypy.engine.subscribe("log", lambda msg, level: LOG.log(level, "CherryPy: {m}".format(m=msg)))
+
+        # Set up a rotating file handler for cherrypy's access log
+        handler = logging.handlers.RotatingFileHandler(
+            self._access_log_file,
+            maxBytes=5000000,
+            backupCount=9,
+            encoding="UTF-8")
+        handler.setLevel(logging.DEBUG)
+        handler.setFormatter(cherrypy._cplogging.logfmt)  # pylint: disable=protected-access
+        cherrypy.log.access_log.addHandler(handler)
+
+        # Register wsgi app (django)
+        cherrypy.tree.graft(wsgi_app)
+
+        self.add_routes()
+
+    def add_route(self, route, directory, with_index=False, match="", with_doc_missing_error=False):
         "Shortcut to add a static handler."
-        mime_text_plain = "text/plain; charset={charset}".format(charset=mini_buildd.setup.CHAR_ENCODING)
+        mime_text_plain = "text/plain; charset={charset}".format(charset=self._char_encoding)
 
         ht = self.StaticWithIndex() if with_index else cherrypy.tools.staticdir
 
@@ -88,47 +126,6 @@ class HttpD(mini_buildd.httpd.HttpD):
                                       "dsc": mime_text_plain}),
             "/{}/".format(route),  # cherrpy needs '/xyz/' notation!
             config={"/": {"error_page.default": self._error_doc_missing} if with_doc_missing_error else {}})
-
-    def __init__(self, bind, wsgi_app):
-        """
-        Construct the CherryPy WSGI Web Server.
-
-        :param bind: the bind address to use.
-        :type bind: string
-        :param wsgi_app: the web application to process.
-        :type wsgi_app: WSGI-application
-
-        """
-
-        debug = "http" in mini_buildd.setup.DEBUG
-        cherrypy.config.update({"server.socket_host": str(mini_buildd.misc.HoPo(bind).host),
-                                "server.socket_port": mini_buildd.misc.HoPo(bind).port,
-                                "engine.autoreload.on": False,
-                                "checker.on": debug,
-                                "tools.log_headers.on": debug,
-                                "request.show_tracebacks": debug,
-                                "request.show_mismatched_params": debug,
-                                "log.error_file": None,
-                                "log.access_file": None,
-                                "log.screen": debug and mini_buildd.setup.FOREGROUND})
-
-        # Redirect cherrypy's error log to mini-buildd's logging
-        cherrypy.engine.subscribe("log", lambda msg, level: LOG.log(level, "CherryPy: {m}".format(m=msg)))
-
-        # Set up a rotating file handler for cherrypy's access log
-        handler = logging.handlers.RotatingFileHandler(
-            mini_buildd.setup.ACCESS_LOG_FILE,
-            maxBytes=5000000,
-            backupCount=9,
-            encoding="UTF-8")
-        handler.setLevel(logging.DEBUG)
-        handler.setFormatter(cherrypy._cplogging.logfmt)  # pylint: disable=protected-access
-        cherrypy.log.access_log.addHandler(handler)
-
-        # Register wsgi app (django)
-        cherrypy.tree.graft(wsgi_app)
-
-        super().__init__()
 
     def run(self):
         """

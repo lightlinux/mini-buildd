@@ -10,7 +10,6 @@ import twisted.web.resource
 import twisted.python.log
 
 import mini_buildd.misc
-import mini_buildd.setup
 import mini_buildd.httpd
 
 LOG = logging.getLogger(__name__)
@@ -30,11 +29,13 @@ class HttpD(mini_buildd.httpd.HttpD):
             request.postpath.insert(0, path)
             return self._wsgi_resource
 
-    def add_static(self, route, directory, with_index=False, match="", with_doc_missing_error=False):  # pylint: disable=unused-argument
+    def add_route(self, route, directory, with_index=False, match="", with_doc_missing_error=False):  # pylint: disable=unused-argument
         # NOT IMPL: with_index, match, with_doc_missing_error
-        self.resource.putChild(bytes(route, encoding=mini_buildd.setup.CHAR_ENCODING), twisted.web.static.File(directory))
+        self.resource.putChild(bytes(route, encoding=self._char_encoding), twisted.web.static.File(directory))
 
     def __init__(self, bind, wsgi_app):
+        super().__init__()
+
         # Logging
         twisted.python.log.PythonLoggingObserver(loggerName=__name__).start()
 
@@ -45,7 +46,7 @@ class HttpD(mini_buildd.httpd.HttpD):
         self.endpoint.listen(self.site)
 
         # Generic
-        super().__init__()
+        self.add_routes()
 
     def run(self):
         twisted.internet.reactor.run(installSignalHandlers=0)  # pylint: disable=no-member
