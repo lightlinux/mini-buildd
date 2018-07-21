@@ -6,6 +6,7 @@ import datetime
 import shutil
 import glob
 import threading
+import ipaddress
 import socket
 import queue
 import multiprocessing
@@ -204,6 +205,62 @@ class HoPo(object):
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.bind(self.tuple)
         s.close()
+
+
+class Endpoint(object):
+    r"""Network server endpoint description parser (twisted-like).
+
+    Syntax and semantic of the description string should be like in
+    the twisted framework, see
+
+    https://twistedmatrix.com/documents/current/core/howto/endpoints.html#servers
+
+    Generic form: ':'-separated list of parameters:
+     <param>[:<param>]...
+    1st parameter is always the type, determining the syntax and semantics of the following parameters:
+     <type>[:<param>]...
+    A parameter may also be in key=value style, which we then call an option (can be accessed by its name):
+     <type>[:<option>=<value>]...
+
+    >>> Endpoint.hopo2desc("0.0.0.0:8066")
+    'tcp:port=8066:interface=0.0.0.0'
+    >>> print(Endpoint.hopo2desc(":::8066"))
+    tcp6:port=8066:interface=\:\:
+
+    """
+    @classmethod
+    def _escape(cls, string):
+        return string.replace(":", r"\:")
+
+    @classmethod
+    def _unescape(cls, string):
+        return string.replace(r"\:", ":")
+
+    def __init__(self, desc):
+        self.desc = desc
+        self._params = [self._unescape(p) for p in re.split(r"(?<!\\):", desc)]
+        self._options = {}
+        for p in self._params:
+            key = p.partition("=")
+            if key[1]:
+                self._options[key[0]] = key[2]
+
+    def param(self, index):
+        return self._params[index]
+
+    @property
+    def type(self):
+        return self.param(0)
+
+    def option(self, key, default=None):
+        return self._options.get(key, default)
+
+    @classmethod
+    def hopo2desc(cls, bind):
+        """Needed for HoPo compat."""
+        hopo = HoPo(bind)
+        typ = "tcp" if isinstance(ipaddress.ip_address(hopo.host), ipaddress.IPv4Address) else "tcp6"
+        return "{typ}:port={port}:interface={host}".format(typ=typ, port=hopo.port, host=cls._escape(hopo.host))
 
 
 def nop(*_args, **_kwargs):
