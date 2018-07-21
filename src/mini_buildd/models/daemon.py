@@ -225,7 +225,7 @@ prepare/remove actions will generate/remove the GnuPG key.
         return "ftp://{h}".format(h=self.mbd_get_ftp_hopo().string)
 
     def mbd_get_http_hopo(self):
-        return mini_buildd.misc.HoPo("{h}:{p}".format(h=self.hostname, p=mini_buildd.misc.HoPo(mini_buildd.setup.HTTPD_BIND).port))
+        return mini_buildd.misc.HoPo("{h}:{p}".format(h=self.hostname, p=mini_buildd.setup.HTTPD_ENDPOINTS[0].option("port", 0)))
 
     def mbd_get_http_url(self):
         return "http://{h}/".format(h=self.mbd_get_http_hopo().string)

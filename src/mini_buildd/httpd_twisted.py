@@ -33,7 +33,7 @@ class HttpD(mini_buildd.httpd.HttpD):
         # NOT IMPL: with_index, match, with_doc_missing_error
         self.resource.putChild(bytes(route, encoding=self._char_encoding), twisted.web.static.File(directory))
 
-    def __init__(self, bind, wsgi_app):
+    def __init__(self, wsgi_app):
         super().__init__()
 
         # Logging
@@ -42,8 +42,9 @@ class HttpD(mini_buildd.httpd.HttpD):
         # HTTP setup
         self.resource = self.RootResource(twisted.web.wsgi.WSGIResource(twisted.internet.reactor, twisted.internet.reactor.getThreadPool(), wsgi_app))  # pylint: disable=no-member
         self.site = twisted.web.server.Site(self.resource)
-        self.endpoint = twisted.internet.endpoints.TCP4ServerEndpoint(twisted.internet.reactor, mini_buildd.misc.HoPo(bind).port)
-        self.endpoint.listen(self.site)
+
+        for ep in self._endpoints:
+            twisted.internet.endpoints.serverFromString(twisted.internet.reactor, ep.desc).listen(self.site)
 
         # Generic
         self._add_routes()

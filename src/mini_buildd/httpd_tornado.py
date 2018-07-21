@@ -28,7 +28,7 @@ class HttpD(mini_buildd.httpd.HttpD):
                 ),
             ])
 
-    def __init__(self, bind, wsgi_app):
+    def __init__(self, wsgi_app):
         super().__init__()
 
         self.wsgi_container = tornado.wsgi.WSGIContainer(wsgi_app)
@@ -42,9 +42,8 @@ class HttpD(mini_buildd.httpd.HttpD):
             [
                 ('.*', tornado.web.FallbackHandler, dict(fallback=self.wsgi_container)),
             ])
-        self._bind = bind
 
     def run(self):
         asyncio.set_event_loop(asyncio.new_event_loop())  # See: https://github.com/tornadoweb/tornado/issues/2183
-        self.server.listen(mini_buildd.misc.HoPo(self._bind).port)
+        self.server.listen(int(self._endpoints[0].option("port")))
         tornado.ioloop.IOLoop.instance().start()

@@ -14,12 +14,10 @@ LOG = logging.getLogger(__name__)
 class HttpD(metaclass=abc.ABCMeta):
     # Abstract methods to be implemented by backend
     @abc.abstractmethod
-    def __init__(self, bind, wsgi_app):
+    def __init__(self, wsgi_app):
         """
         Setup HTTP server.
 
-        :param bind: the bind address to use.
-        :type bind: string
         :param wsgi_app: the web application to process.
         :type wsgi_app: WSGI-application
         """
@@ -47,6 +45,7 @@ Maybe package <b><tt>mini-buildd-doc</tt></b> needs to be installed to make the 
         self._foreground = mini_buildd.setup.FOREGROUND
         self._access_log_file = mini_buildd.setup.ACCESS_LOG_FILE
         self._char_encoding = mini_buildd.setup.CHAR_ENCODING
+        self._endpoints = mini_buildd.setup.HTTPD_ENDPOINTS
 
     def _add_routes(self):
         self._add_route("static", "{p}/mini_buildd/static".format(p=mini_buildd.setup.PY_PACKAGE_PATH))                      # WebApp static directory

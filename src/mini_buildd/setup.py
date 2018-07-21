@@ -6,7 +6,7 @@ import logging
 DEBUG = []
 FOREGROUND = False
 
-HTTPD_BIND = None
+HTTPD_ENDPOINTS = []
 
 #: Global directory paths
 HOME_DIR = None

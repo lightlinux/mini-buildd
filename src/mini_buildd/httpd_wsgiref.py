@@ -44,10 +44,15 @@ class StaticAndWSGI(object):
 
 
 class HttpD(mini_buildd.httpd.HttpD):
-    def __init__(self, bind, wsgi_app):
+    def __init__(self, wsgi_app):
         super().__init__()
         self.app = StaticAndWSGI(wsgi_app)
-        self.server = wsgiref.simple_server.make_server('', mini_buildd.misc.HoPo(bind).port, self.app)
+
+        if self._endpoints[0].type in ["tcp", "tcp6"]:
+            self.server = wsgiref.simple_server.make_server("", int(self._endpoints[0].option("port")), self.app)
+        else:
+            raise Exception("wsgiref does not support network endpoint type: {}".format(self._endpoints[0].type))
+
         self._add_routes()
 
     def _add_route(self, route, directory, with_index=False, match="", with_doc_missing_error=False):  # pylint: disable=unused-argument

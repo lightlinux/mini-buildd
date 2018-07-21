@@ -68,7 +68,7 @@ class HttpD(mini_buildd.httpd.HttpD):
     def _error_doc_missing(self, status, message, traceback, version):  # Exact arg names needed (cherrypy calls back with named arguments)  # pylint: disable=unused-argument
         return self._doc_missing_html_template.format(status=status)
 
-    def __init__(self, bind, wsgi_app):
+    def __init__(self, wsgi_app):
         """
         Construct the CherryPy WSGI Web Server.
 
@@ -80,9 +80,17 @@ class HttpD(mini_buildd.httpd.HttpD):
         """
         super().__init__()
 
-        cherrypy.config.update({"server.socket_host": str(mini_buildd.misc.HoPo(bind).host),
-                                "server.socket_port": mini_buildd.misc.HoPo(bind).port,
-                                "engine.autoreload.on": False,
+        # Note: This backend only supports one endpoint.
+        # Note: ssl type missing.
+        if self._endpoints[0].type in ["tcp", "tcp6"]:
+            cherrypy.config.update({"server.socket_host": self._endpoints[0].option("interface", "::"),
+                                    "server.socket_port": int(self._endpoints[0].option("port"))})
+        elif self._endpoints[0].type in ["unix"]:
+            cherrypy.config.update({"server.socket_file": self._endpoints[0].option("address")})
+        else:
+            raise Exception("cherrypy does not support network endpoint type: {}".format(self._endpoints[0].type))
+
+        cherrypy.config.update({"engine.autoreload.on": False,
                                 "checker.on": self._debug,
                                 "tools.log_headers.on": self._debug,
                                 "request.show_tracebacks": self._debug,

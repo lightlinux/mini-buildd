@@ -92,8 +92,19 @@ class Main(object):
 
         parser.add_argument("--version", action="version", version=mini_buildd.__version__)
         group_conf = parser.add_argument_group("daemon arguments")
+        group_conf.add_argument("-E", "--httpd-endpoints", action="store", default="tcp6:port=8066",
+                                help="""Comma-separated list of network endpoints for the http daemon (twisted-style). Examples:
+
+tcp6:port=8066
+
+ssl:port=8066:privateKey=<path>:certKey=<path>
+
+unix:address=/tmp/mini-buildd.sock
+
+See also: https://twistedmatrix.com/documents/current/core/howto/endpoints.html#servers
+""")
         group_conf.add_argument("-W", "--httpd-bind", action="store", default=":::8066",
-                                help="Web Server IP/Hostname and port to bind to.")
+                                help="DEPRECATED: Web Server IP/Hostname and port to bind to.")
         group_conf.add_argument("-S", "--smtp", action="store", default=":@smtp://localhost:25",
                                 help="SMTP credentials in format '[USER]:[PASSWORD]@smtp|ssmtp://HOST:PORT'.")
         group_conf.add_argument("-U", "--dedicated-user", action="store", default="mini-buildd",
@@ -144,6 +155,11 @@ Comma-separated list of special debugging options:
         args.home = os.path.expanduser(args.home)
         args.pidfile = os.path.expanduser(args.pidfile)
 
+        if parser.get_default("httpd_bind") != args.httpd_bind:
+            args.httpd_endpoints = mini_buildd.misc.Endpoint.hopo2desc(args.httpd_bind)
+            LOG.warning("Option '--httpd-bind' has been deprecated, please use '--httpd-endpoints' instead (see 'mini-buildd --help').")
+            LOG.warning("Compat --httpd-bind': Computed '--httpd-endpoints': {}".format(args.httpd_endpoints))
+
         return args
 
     def _setup(self):
@@ -154,7 +170,8 @@ Comma-separated list of special debugging options:
         mini_buildd.setup.DEBUG = self._args.debug.split(",")
         mini_buildd.setup.FOREGROUND = self._args.foreground
 
-        mini_buildd.setup.HTTPD_BIND = self._args.httpd_bind
+        for ep_desc in self._args.httpd_endpoints.split(","):
+            mini_buildd.setup.HTTPD_ENDPOINTS.append(mini_buildd.misc.Endpoint(ep_desc))
 
         mini_buildd.setup.HOME_DIR = self._args.home
 
@@ -300,7 +317,7 @@ Comma-separated list of special debugging options:
     def run_daemon(self, webapp):
         # Start httpd w/ webapp
         from mini_buildd.httpd_cherrypy import HttpD  # Note: Backend import must be here: daemonize() might close things created by backend module's initialization.
-        mini_buildd.misc.run_as_thread(HttpD(bind=self._args.httpd_bind, wsgi_app=webapp).run, name="httpd", daemon=True)
+        mini_buildd.misc.run_as_thread(HttpD(wsgi_app=webapp).run, name="httpd", daemon=True)
 
         # Get the daemon manager instance
         from mini_buildd.daemon import Daemon  # Note: Import here: We cannot import anything 'django' prior to django's configuration.
