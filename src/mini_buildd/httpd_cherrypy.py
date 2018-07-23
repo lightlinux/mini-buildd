@@ -81,14 +81,18 @@ class HttpD(mini_buildd.httpd.HttpD):
         super().__init__()
 
         # Note: This backend only supports one endpoint.
-        # Note: ssl type missing.
-        if self._endpoints[0].type in ["tcp", "tcp6"]:
+        if self._endpoints[0].type not in ["ssl", "tcp6", "tcp", "unix"]:
+            raise Exception("cherrypy does not support network endpoint type: {}".format(self._endpoints[0].type))
+
+        if self._endpoints[0].type in ["ssl", "tcp6", "tcp"]:
             cherrypy.config.update({"server.socket_host": self._endpoints[0].option("interface", "::"),
                                     "server.socket_port": int(self._endpoints[0].option("port"))})
         elif self._endpoints[0].type in ["unix"]:
             cherrypy.config.update({"server.socket_file": self._endpoints[0].option("address")})
-        else:
-            raise Exception("cherrypy does not support network endpoint type: {}".format(self._endpoints[0].type))
+
+        if self._endpoints[0].type in ["ssl"]:
+            cherrypy.config.update({"server.ssl_private_key": self._endpoints[0].option("privateKey"),
+                                    "server.ssl_certificate": self._endpoints[0].option("certKey")})
 
         cherrypy.config.update({"engine.autoreload.on": False,
                                 "checker.on": self._debug,
