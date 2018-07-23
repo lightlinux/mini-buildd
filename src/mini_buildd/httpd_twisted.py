@@ -34,7 +34,7 @@ class HttpD(mini_buildd.httpd.HttpD):
         self.resource.putChild(bytes(route, encoding=self._char_encoding), twisted.web.static.File(directory))
 
     def __init__(self, wsgi_app):
-        super().__init__()
+        super().__init__(["ssl", "tcp6", "tcp", "unix"])
 
         # Logging
         twisted.python.log.PythonLoggingObserver(loggerName=__name__).start()

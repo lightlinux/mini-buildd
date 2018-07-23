@@ -78,12 +78,9 @@ class HttpD(mini_buildd.httpd.HttpD):
         :type wsgi_app: WSGI-application
 
         """
-        super().__init__()
+        super().__init__(["ssl", "tcp6", "tcp", "unix"])
 
         # Note: This backend only supports one endpoint.
-        if self._endpoints[0].type not in ["ssl", "tcp6", "tcp", "unix"]:
-            raise Exception("cherrypy does not support network endpoint type: {}".format(self._endpoints[0].type))
-
         if self._endpoints[0].type in ["ssl", "tcp6", "tcp"]:
             cherrypy.config.update({"server.socket_host": self._endpoints[0].option("interface", "::"),
                                     "server.socket_port": int(self._endpoints[0].option("port"))})

@@ -29,7 +29,7 @@ class HttpD(mini_buildd.httpd.HttpD):
             ])
 
     def __init__(self, wsgi_app):
-        super().__init__()
+        super().__init__(["tcp6", "tcp"])
 
         self.wsgi_container = tornado.wsgi.WSGIContainer(wsgi_app)
         self.tornado_app = tornado.web.Application()

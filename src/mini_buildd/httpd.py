@@ -34,7 +34,7 @@ class HttpD(metaclass=abc.ABCMeta):
         pass
 
     # Base class implementations
-    def __init__(self):
+    def __init__(self, supported_types):
         self._doc_missing_html_template = """\
 <html><body>
 <h1>{status} (<tt>mini-buildd-doc</tt> not installed?)</h1>
@@ -46,6 +46,9 @@ Maybe package <b><tt>mini-buildd-doc</tt></b> needs to be installed to make the 
         self._access_log_file = mini_buildd.setup.ACCESS_LOG_FILE
         self._char_encoding = mini_buildd.setup.CHAR_ENCODING
         self._endpoints = mini_buildd.setup.HTTPD_ENDPOINTS
+        for ep in self._endpoints:
+            if ep.type not in supported_types:
+                raise Exception("HTTPd backend does not support network endpoint type: {}".format(self._endpoints[0].type))
 
     def _add_routes(self):
         self._add_route("static", "{p}/mini_buildd/static".format(p=mini_buildd.setup.PY_PACKAGE_PATH))                      # WebApp static directory
