@@ -29,12 +29,17 @@ class HttpD(mini_buildd.httpd.HttpD):
             ])
 
     def __init__(self, wsgi_app):
-        super().__init__(["tcp6", "tcp"])
+        super().__init__(["ssl", "tcp6", "tcp"])
 
         self.wsgi_container = tornado.wsgi.WSGIContainer(wsgi_app)
         self.tornado_app = tornado.web.Application()
-        self.server = tornado.httpserver.HTTPServer(self.tornado_app)
 
+        # Note: This backend only supports one endpoint.
+        if self._endpoints[0].type in ["ssl"]:
+            self.server = tornado.httpserver.HTTPServer(self.tornado_app, ssl_options={"certfile": self._endpoints[0].option("certKey"),
+                                                                                       "keyfile": self._endpoints[0].option("privateKey")})
+        elif self._endpoints[0].type in ["tcp6", "tcp"]:
+            self.server = tornado.httpserver.HTTPServer(self.tornado_app)
         # Generic
         self._add_routes()
         self.tornado_app.add_handlers(
