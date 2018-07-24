@@ -92,7 +92,13 @@ class Main(object):
 
         parser.add_argument("--version", action="version", version=mini_buildd.__version__)
         group_conf = parser.add_argument_group("daemon arguments")
-        group_conf.add_argument("-E", "--httpd-endpoints", action="store", default="tcp6:port=8066",
+
+        # Endpoint possible real-life defaults:
+        httpd_endpoints_default = "tcp6:port=8066"
+        # httpd_endpoints_default = "ssl:port=8066:privateKey=/etc/ssl/private/ssl-cert-snakeoil.key:certKey=/etc/ssl/certs/ssl-cert-snakeoil.pem"
+        # httpd_endpoints_default = "unix:address=/var/lib/mini-buildd/var/httpd.sock"
+
+        group_conf.add_argument("-E", "--httpd-endpoints", action="store", default=httpd_endpoints_default,
                                 help="""Comma-separated list of network endpoints for the http daemon (twisted-style). Examples:
 
 tcp6:port=8066
