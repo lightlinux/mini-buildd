@@ -4,6 +4,7 @@ import abc
 import logging
 import os
 import email
+import mimetypes
 
 import mini_buildd.misc
 import mini_buildd.setup
@@ -118,3 +119,32 @@ def html_index(directory, path_info, backend_info):
            table_rows="\n".join(table_rows(directory.rstrip(r"\/"))),
            mbd_version=mini_buildd.__version__,
            backend_info=backend_info), encoding=mini_buildd.setup.CHAR_ENCODING)
+
+
+class WSGIWithRoutes(object):
+    """
+    Simple WSGI helper app that also will also handle very basic static delivery.
+    """
+    def __init__(self, wsgi):
+        self._wsgi = wsgi
+        self._routes = {}
+
+    def add_route(self, route, directory):
+        self._routes[route] = directory
+
+    def __call__(self, environ, start_response):
+        path_info = environ.get("PATH_INFO", "/")
+        for route, directory in self._routes.items():
+            if path_info.startswith("/{}".format(route)):
+                translated_path = os.path.join(directory, path_info[1 + len(route):].strip("/"))
+                LOG.info("Static deliver translation: {} -> {}".format(path_info, translated_path))
+
+                if os.path.isdir(translated_path):
+                    start_response("200 OK", [('Content-type', 'text/html; charset=utf-8')])
+                    return [mini_buildd.httpd.html_index(translated_path, path_info, "wsgiref")]
+                if os.path.isfile(translated_path):
+                    with open(translated_path, "rb") as f:
+                        start_response("200 OK", [('Content-type', '{}'.format(mimetypes.guess_type(translated_path)[0] or "application/octet-stream"))])
+                        return [f.read()]
+
+        return self._wsgi.__call__(environ, start_response)
