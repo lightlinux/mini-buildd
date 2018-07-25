@@ -31,7 +31,10 @@ class HttpD(mini_buildd.httpd.HttpD):
 
     def _add_route(self, route, directory, with_index=False, match="", with_doc_missing_error=False):  # pylint: disable=unused-argument
         # NOT IMPL: with_index, match, with_doc_missing_error
-        self.resource.putChild(bytes(route, encoding=self._char_encoding), twisted.web.static.File(directory))
+        static = twisted.web.static.File(directory)
+        for k, v in self._mime_types.items():
+            static.contentTypes[".{}".format(k)] = v
+        self.resource.putChild(bytes(route, encoding=self._char_encoding), static)
 
     def __init__(self, wsgi_app):
         super().__init__(["ssl", "tcp6", "tcp", "unix"])

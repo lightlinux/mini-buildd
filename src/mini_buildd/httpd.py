@@ -29,6 +29,11 @@ Maybe package <b><tt>mini-buildd-doc</tt></b> needs to be installed to make the 
         self._foreground = mini_buildd.setup.FOREGROUND
         self._access_log_file = mini_buildd.setup.ACCESS_LOG_FILE
         self._char_encoding = mini_buildd.setup.CHAR_ENCODING
+        self._mime_text_plain = "text/plain; charset={charset}".format(charset=self._char_encoding)
+        self._mime_types = {"log": self._mime_text_plain,
+                            "buildlog": self._mime_text_plain,
+                            "changes": self._mime_text_plain,
+                            "dsc": self._mime_text_plain}
         self._endpoints = mini_buildd.setup.HTTPD_ENDPOINTS
         for ep in self._endpoints:
             if ep.type not in supported_types:

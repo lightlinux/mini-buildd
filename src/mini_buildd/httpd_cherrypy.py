@@ -120,8 +120,6 @@ class HttpD(mini_buildd.httpd.HttpD):
 
     def _add_route(self, route, directory, with_index=False, match="", with_doc_missing_error=False):
         "Shortcut to add a static handler."
-        mime_text_plain = "text/plain; charset={charset}".format(charset=self._char_encoding)
-
         ht = self.StaticWithIndex() if with_index else cherrypy.tools.staticdir
 
         cherrypy.tree.mount(
@@ -129,10 +127,7 @@ class HttpD(mini_buildd.httpd.HttpD):
                        "",
                        root=directory,
                        match=match,
-                       content_types={"log": mime_text_plain,
-                                      "buildlog": mime_text_plain,
-                                      "changes": mime_text_plain,
-                                      "dsc": mime_text_plain}),
+                       content_types=self._mime_types),
             "/{}/".format(route),  # cherrpy needs '/xyz/' notation!
             config={"/": {"error_page.default": self._error_doc_missing} if with_doc_missing_error else {}})
 
