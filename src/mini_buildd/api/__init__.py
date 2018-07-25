@@ -201,7 +201,7 @@ auto-ports=buster-test-unstable
         self._update()
 
     def _update(self):
-        LOG.warning("No _update() function defined for: {}".format(self.COMMAND))
+        pass
 
     def run(self):
         # Sanity checks
