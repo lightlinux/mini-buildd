@@ -13,28 +13,11 @@ LOG = logging.getLogger(__name__)
 
 
 class HttpD(metaclass=abc.ABCMeta):
-    # Abstract methods to be implemented by backend
-    @abc.abstractmethod
-    def __init__(self, wsgi_app):
-        """
-        Setup HTTP server.
-
-        :param wsgi_app: the web application to process.
-        :type wsgi_app: WSGI-application
-        """
-        pass
-
     @abc.abstractmethod
     def _add_route(self, route, directory, with_index=False, match="", with_doc_missing_error=False):
         "Serve static files from a directory."
         pass
 
-    @abc.abstractmethod
-    def run(self):
-        "Run the HTTP server. Must be implemented by backend."
-        pass
-
-    # Base class implementations
     def __init__(self, supported_types):
         self._doc_missing_html_template = """\
 <html><body>
@@ -56,6 +39,11 @@ Maybe package <b><tt>mini-buildd-doc</tt></b> needs to be installed to make the 
         self._add_route("doc", mini_buildd.setup.MANUAL_DIR, with_doc_missing_error=True)                                    # HTML manual
         self._add_route("repositories", mini_buildd.setup.REPOSITORIES_DIR, with_index=True, match=r"^/.+/(pool|dists)/.*")  # Repositories
         self._add_route("log", mini_buildd.setup.LOG_DIR, with_index=True, match=r"^/.+/.*")                                 # Logs
+
+    @abc.abstractmethod
+    def run(self):
+        "Run the HTTP server. Must be implemented by backend."
+        pass
 
 
 # Helpers
