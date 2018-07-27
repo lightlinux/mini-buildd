@@ -195,6 +195,8 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
 
         if "Arch-All" in self._breq:
             sbuild_cmd += ["--arch-all"]
+        else:
+            sbuild_cmd += ["--no-arch-all"]  # Be sure to set explicitly: sbuild >= 0.77 does not seem to use this as default any more?
 
         if "Run-Lintian" in self._breq:
             sbuild_cmd += ["--run-lintian"]
