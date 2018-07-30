@@ -292,14 +292,7 @@ codeversion is only used for base sources.""")
                 "release_jessie": "CBF8D6FD518E17E1",     # Jessie Stable Release Key <debian-release@lists.debian.org>
                 "archive_wheezy": "8B48AD6246925553",     # Debian Archive Automatic Signing Key (7.0/wheezy) <ftpmaster@debian.org>
                 "release_wheezy": "6FB2A1C265FFB764",     # Wheezy Stable Release Key <debian-release@lists.debian.org>
-                "archive_squeeze": "AED4B06F473041FA",    # Debian Archive Automatic Signing Key (6.0/squeeze) <ftpmaster@debian.org>
-                "release_squeeze": "64481591B98321F9"     # Squeeze Stable Release Key <debian-release@lists.debian.org>
             }
-
-            cls._mbd_get_or_create(msglog, "Debian", "squeeze",
-                                   [keys["archive_squeeze"], keys["release_squeeze"]])
-            cls._mbd_get_or_create(msglog, "Debian Backports", "squeeze-backports",
-                                   [keys["archive_squeeze"], keys["archive_wheezy"]])
 
             cls._mbd_get_or_create(msglog, "Debian", "wheezy",
                                    [keys["archive_wheezy"], keys["release_wheezy"], keys["archive_jessie"]])
