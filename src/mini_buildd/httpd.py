@@ -37,7 +37,7 @@ Maybe package <b><tt>mini-buildd-doc</tt></b> needs to be installed to make the 
         self._endpoints = mini_buildd.setup.HTTPD_ENDPOINTS
         for ep in self._endpoints:
             if ep.type not in supported_types:
-                raise Exception("HTTPd backend does not support network endpoint type: {}".format(self._endpoints[0].type))
+                raise Exception("HTTPd backend does not support network endpoint type: {}".format(ep.type))
 
     def _add_routes(self):
         self._add_route("static", "{p}/mini_buildd/static".format(p=mini_buildd.setup.PY_PACKAGE_PATH))                      # WebApp static directory
