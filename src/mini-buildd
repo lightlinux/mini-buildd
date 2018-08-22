@@ -94,21 +94,26 @@ class Main(object):
         group_conf = parser.add_argument_group("daemon arguments")
 
         # Endpoint possible real-life defaults:
-        httpd_endpoints_default = "tcp6:port=8066"
-        # httpd_endpoints_default = "ssl:port=8066:privateKey=/etc/ssl/private/ssl-cert-snakeoil.key:certKey=/etc/ssl/certs/ssl-cert-snakeoil.pem"
-        # httpd_endpoints_default = "unix:address=/var/lib/mini-buildd/var/httpd.sock"
+        httpd_endpoint_default = ["tcp6:port=8066"]
+        # httpd_endpoint_default.append("ssl:port=8068:privateKey=/etc/ssl/private/ssl-cert-snakeoil.key:certKey=/etc/ssl/certs/ssl-cert-snakeoil.pem")
+        # httpd_endpoint_default.append("unix:address=/var/lib/mini-buildd/var/httpd.sock")
 
-        group_conf.add_argument("-E", "--httpd-endpoints", action="store", default=httpd_endpoints_default,
-                                help="""Comma-separated list of network endpoints for the http daemon (twisted-style). Examples:
+        group_conf.add_argument("-E", "--httpd-endpoint", action="append",
+                                help="""Network endpoint for the http daemon (twisted-style). May be given multiple times. Examples:
 
 tcp6:port=8066
 
-ssl:port=8066:privateKey=<path>:certKey=<path>
+ssl:port=8068:privateKey=<path>:certKey=<path>
 
 unix:address=/tmp/mini-buildd.sock
 
 See also: https://twistedmatrix.com/documents/current/core/howto/endpoints.html#servers
-""")
+
+If none given, the default used is:
+
+{}
+
+""".format(httpd_endpoint_default))
         group_conf.add_argument("-W", "--httpd-bind", action="store", default=":::8066",
                                 help="DEPRECATED: Web Server IP/Hostname and port to bind to.")
         group_conf.add_argument("-S", "--smtp", action="store", default=":@smtp://localhost:25",
@@ -161,10 +166,15 @@ Comma-separated list of special debugging options:
         args.home = os.path.expanduser(args.home)
         args.pidfile = os.path.expanduser(args.pidfile)
 
+        # Warn when deprecated --httpd-bind is still used (unless you use the default)
         if parser.get_default("httpd_bind") != args.httpd_bind:
-            args.httpd_endpoints = mini_buildd.misc.Endpoint.hopo2desc(args.httpd_bind)
-            LOG.warning("Option '--httpd-bind' has been deprecated, please use '--httpd-endpoints' instead (see 'mini-buildd --help').")
-            LOG.warning("Compat --httpd-bind': Computed '--httpd-endpoints': {}".format(args.httpd_endpoints))
+            args.httpd_endpoint = [mini_buildd.misc.Endpoint.hopo2desc(args.httpd_bind)]
+            LOG.warning("Option '--httpd-bind' has been deprecated, please use '--httpd-endpoint' instead (see 'mini-buildd --help').")
+            LOG.warning("Compat --httpd-bind': Computed '--httpd-endpoints': {}".format(args.httpd_endpoint[0]))
+
+        # Manually set default for --httpd-endpoint ('default' option in add_argument() above can't be used, see https://bugs.python.org/issue16399).
+        if args.httpd_endpoint is None:
+            args.httpd_endpoint = httpd_endpoint_default
 
         return args
 
@@ -176,8 +186,7 @@ Comma-separated list of special debugging options:
         mini_buildd.setup.DEBUG = self._args.debug.split(",")
         mini_buildd.setup.FOREGROUND = self._args.foreground
 
-        for ep_desc in self._args.httpd_endpoints.split(","):
-            mini_buildd.setup.HTTPD_ENDPOINTS.append(mini_buildd.misc.Endpoint(ep_desc))
+        mini_buildd.setup.HTTPD_ENDPOINTS = [mini_buildd.misc.Endpoint(ep_desc) for ep_desc in self._args.httpd_endpoint]
 
         mini_buildd.setup.HOME_DIR = self._args.home
 
