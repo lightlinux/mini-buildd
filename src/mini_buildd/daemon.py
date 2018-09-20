@@ -705,7 +705,7 @@ class Daemon(object):
         if not path:
             raise Exception("Port failed: Can't find DSC for {p}-{v} in pool".format(p=package, v=p["sourceversion"]))
 
-        self._port("{}{}".format(self.model.mbd_get_http_url(), path), package, to_dist, port_version, options=options)
+        self._port(urllib.parse.urljoin(self.model.mbd_get_http_url(), path), package, to_dist, port_version, options=options)
 
     def portext(self, dsc_url, to_dist, options=None):
         # check to_dist

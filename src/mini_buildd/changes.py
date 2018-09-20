@@ -8,6 +8,7 @@ import logging
 import tarfile
 import socket
 import ftplib
+import urllib.parse
 import re
 import contextlib
 
@@ -269,7 +270,7 @@ class Changes(debian.deb822.Changes):
         return "/mini_buildd/live-buildlogs/{logfile}".format(logfile=self.live_buildlog_name)
 
     def get_live_buildlog_url(self, base_url):
-        return "{base_url}/{loc}".format(base_url=base_url, loc=self.get_live_buildlog_loc())
+        return urllib.parse.urljoin(base_url, self.get_live_buildlog_loc())
 
     def get_pkglog_dir(self, installed, relative=True):
         """
