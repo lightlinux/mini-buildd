@@ -1,3 +1,9 @@
+mini-buildd (1.1.12) UNRELEASED; urgency=medium
+
+  * d/changelog: Remove trailing whitespaces
+
+ -- Ondřej Nový <onovy@debian.org>  Mon, 01 Oct 2018 09:57:40 +0200
+
 mini-buildd (1.1.11) experimental; urgency=medium
 
   ** 1.1.x are _development_ releases, use for testing only. **
@@ -4371,14 +4377,14 @@ mini-buildd (0.7.9~ui40+1) etch-ui; urgency=low
   * Cosmetic fixes in control (lintian warnings).
   * Fix copyright file (lintian warnings).
   * Add LSB sections for both -rep and -bld init scripts.
-  * Explicitly use "bash" for *.config scripts, as we use bash addons. 
+  * Explicitly use "bash" for *.config scripts, as we use bash addons.
   * rules: Fix: Swap arch and indep targets.
 
  -- Stephan Suerken <stephan.suerken@1und1.de>  Fri, 08 Aug 2008 16:26:40 +0200
 
 mini-buildd (0.7.8~ui40+1) etch-ui; urgency=low
 
-  * Add numeric version support for lenny (5.0). 
+  * Add numeric version support for lenny (5.0).
 
  -- Stephan Suerken <stephan.suerken@1und1.de>  Fri, 08 Aug 2008 11:36:08 +0200
 
@@ -4482,7 +4488,7 @@ mini-buildd (0.7.0~ui40+1) etch-ui; urgency=low
       DIST/mbd.any.list      1x: Sources for the mbd repository (any arch).
       DIST/extra.any.list    1x: Extra sources (any arch).
       DIST/extra.ARCH.list   nx: Extra sources (special archs).
-      No extra files involved; all configured on -rep in ~/.mini-buildd.conf.			
+      No extra files involved; all configured on -rep in ~/.mini-buildd.conf.
     * Add hook for schroot: /etc/schroot/setup.d/99mini-buildd:
       * Automates creation of sources list on chroot creation.
       * Allows different sources.lists for -source or build chroots (snapshots),
@@ -4506,7 +4512,7 @@ mini-buildd (0.7.0~ui40+1) etch-ui; urgency=low
       * mini-buildd-rep.conf: -"mbd_debian_mirror" (obsoleted).
       * Fix all defaults/on-the fly defaults. In a standard install with default values,
         you now get a working buildd for localhost's native arch called etch-`hostname`.
-      * rep+bld postinstall: Update to new debconf scheme. 
+      * rep+bld postinstall: Update to new debconf scheme.
       * 99mini-buildd: Update to new debconf scheme.
       * new cruft added: bld/chroots/*/*.
       * Remove all bld extra file logs (lvm setup, chroot setup, chroot update), use
@@ -4589,7 +4595,7 @@ mini-buildd (0.7.0~ui40+1) etch-ui; urgency=low
     - @bug  [auto-lvm/deb]: When installing -bld only, setup-lvm is called before update-bld, and hence fails:
       /usr/lib/mini-buildd/mbd-setup-lvm: line 4: /home/mini-buildd/.mini-buildd.conf: No such file or directory
     - @todo [auto-lvm]: Debug problems on initial setup.
-	
+
  -- Stephan Suerken <stephan.suerken@1und1.de>  Tue,  3 Jun 2008 10:49:54 +0200
 
 mini-buildd (0.6.5~ui40+1) etch-ui; urgency=low
