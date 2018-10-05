@@ -384,6 +384,44 @@ mbd_run:16:22:extra-packages()
 	[ ! -d ../test-packages/ ] || dput --force --unchecked --no-upload-log mini-buildd-$(hostname) ../test-packages/*.changes
 }
 
+mbd_run:19:22:httpd-benchmark()
+{
+	_ab_val() { cut -d: -f2- | cut -d[ -f1 | tr -d '[:space:]'; }
+
+	local abRequests=50
+
+	# Create "big files" for testing
+	local fileSize fileItems="" filePath="repositories/test/pool/main/m/mbd-test-cpp"
+	for fileSize in 5 50 100; do
+		local id="file${fileSize}M"
+		sudo dd if=/dev/zero of=/var/lib/mini-buildd/${filePath}/${id}.bin count=${fileSize} bs=1M >/dev/null 2>&1
+		fileItems+="${id}:http://localhost:8066/${filePath}/file${fileSize}.bin "
+	done
+
+	for item in django:http://localhost:8066/mini_buildd/repositories/test/ index:http://localhost:8066/repositories/test/pool/main/m/mbd-test-cpp/ ${fileItems}; do
+		local id=$(cut -d: -f1 <<<${item})
+		local url=$(cut -d: -f2- <<<${item})
+		local c
+		for c in 1 4; do
+			local abResult=$(ab -n "${abRequests}" -c "${c}" "${url}")
+			local server=$(grep "^Server Software:.*" <<<${abResult} | _ab_val)
+			if (( c > 1 )); then
+				local tpr=$(grep "^Time per request:.*(mean, across all concurrent requests)" <<<${abResult} | _ab_val)
+			else
+				local tpr=$(grep "^Time per request:.*(mean)" <<<${abResult} | _ab_val)
+			fi
+			{
+				if grep "^Non-2xx responses:" <<<${abResult}; then
+					printf "%s" "${abResult}"
+					printf "\n\n%s\n" "E: Above ab call has non-200 responses!"
+					tpr="-1.0"
+				fi
+			} >&2
+			printf "[%20s] %-12s: % 8.3f\n" "${server}" "${id} c=${c}" "${tpr}"
+		done
+	done
+}
+
 mbd_sequence()  # [<levelRegex>=00] [<name>] <hr>
 {
 	local levelRegex="${1:-00}" name="${2}" hr="${3}"
