@@ -65,7 +65,8 @@ class HttpD(mini_buildd.httpd.HttpD):
         def __init__(self):
             super().__init__(self._mbd_serve)
 
-    def _error_doc_missing(self, status, message, traceback, version):  # Exact arg names needed (cherrypy calls back with named arguments)  # pylint: disable=unused-argument
+    # Note: Exact arg names needed (cherrypy calls back with named arguments)
+    def _error_doc_missing(self, status, message, traceback, version):  # pylint: disable=unused-argument
         return self._doc_missing_html_template.format(status=status)
 
     def __init__(self, wsgi_app):

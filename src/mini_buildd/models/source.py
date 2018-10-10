@@ -92,7 +92,8 @@ Use the 'directory' notation with exactly one trailing slash (like 'http://examp
     def __str__(self):
         return "{u} (ping {p} ms)".format(u=self.url, p=self.ping)
 
-    def clean(self, *args, **kwargs):  # https://github.com/PyCQA/pylint/issues/1553  # pylint: disable=arguments-differ
+    # Note: pylint false-positive: https://github.com/PyCQA/pylint/issues/1553
+    def clean(self, *args, **kwargs):  # pylint: disable=arguments-differ
         if self.url[-1] != "/" or self.url[-2] == "/":  # pylint: disable=unsubscriptable-object
             raise django.core.exceptions.ValidationError("The URL must have exactly one trailing slash (like 'http://example.org/path/').")
         super().clean(*args, **kwargs)

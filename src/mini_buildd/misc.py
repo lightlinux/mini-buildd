@@ -174,7 +174,8 @@ class BlockQueue(queue.Queue):
     def load(self):
         return round(float(self._active.qsize() + self._pending) / self._maxsize, 2)
 
-    def put(self, item, **kwargs):  # https://github.com/PyCQA/pylint/issues/1553  # pylint: disable=arguments-differ
+    # Note: pylint false-positive: https://github.com/PyCQA/pylint/issues/1553
+    def put(self, item, **kwargs):  # pylint: disable=arguments-differ
         self._pending += 1
         self._active.put(item)
         queue.Queue.put(self, item, **kwargs)
