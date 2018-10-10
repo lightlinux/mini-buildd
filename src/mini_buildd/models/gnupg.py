@@ -52,8 +52,7 @@ class GnuPGPublicKey(mini_buildd.models.base.StatusModel):
     @classmethod
     def mbd_filter_key(cls, key_id):
         regex = r"{k}$".format(k=key_id[-8:])
-        return cls.objects.filter(django.db.models.Q(key_long_id__iregex=regex) |
-                                  django.db.models.Q(key_id__iregex=regex))
+        return cls.objects.filter(django.db.models.Q(key_long_id__iregex=regex) | django.db.models.Q(key_id__iregex=regex))
 
     def mbd_prepare(self, _request):
         with contextlib.closing(mini_buildd.gnupg.TmpGnuPG()) as gpg:

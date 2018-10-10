@@ -470,8 +470,7 @@ this would mean losing all packages!
 
     @classmethod
     def mbd_get_active_or_auto_reactivate(cls):
-        return cls.objects.filter(django.db.models.Q(status__gte=cls.STATUS_ACTIVE) |
-                                  django.db.models.Q(last_checked=cls.CHECK_REACTIVATE))
+        return cls.objects.filter(django.db.models.Q(status__gte=cls.STATUS_ACTIVE) | django.db.models.Q(last_checked=cls.CHECK_REACTIVATE))
 
     @classmethod
     def mbd_get_prepared(cls):

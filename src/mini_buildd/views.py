@@ -41,8 +41,8 @@ def _add_messages(response, msgs):
 def _add_api_messages(response, api_cmd, msgs=None):
     "Add all user messages from api_cmd, plus optional extra messages."
     _add_messages(response,
-                  (api_cmd.msglog.plain.splitlines()[::-1] if api_cmd else []) +
-                  (msgs if msgs else []))
+                  (api_cmd.msglog.plain.splitlines()[::-1] if api_cmd else [])
+                  + (msgs if msgs else []))
 
 
 def _referer(request, output):

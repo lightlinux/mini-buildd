@@ -218,8 +218,7 @@ personality={p}
     def _mbd_schroot_run(self, call, namespace="chroot", user="root"):
         return mini_buildd.call.Call(["/usr/bin/schroot",
                                       "--chroot", "{n}:{c}".format(n=namespace, c=self.mbd_get_name()),
-                                      "--user", user] +
-                                     call).log().check().stdout
+                                      "--user", user] + call).log().check().stdout
 
     def mbd_check_sudo_workaround(self, request):
         """
@@ -388,9 +387,7 @@ file={t}
             (["/bin/tar",
               "--create",
               "--directory", self.mbd_get_tmp_dir(),
-              "--file", self.mbd_get_tar_file()] +
-             self.TAR_ARGS[self.compression] +
-             ["."],
+              "--file", self.mbd_get_tar_file()] + self.TAR_ARGS[self.compression] + ["."],
              []),
             (["/bin/rm", "--recursive", "--one-file-system", "--force", self.mbd_get_tmp_dir()],
              [])]

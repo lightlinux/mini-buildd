@@ -655,9 +655,8 @@ class Show(Command):
                         ": " + " ".join(["{n}:{v}".format(n=r["no"], v=r["sourceversion"]) for r in d["rollbacks"]])
 
             fmt, hdr, fmt_tle, sep0, sep1 = _get_table_format(codenames, rows)
-            results.append("{s}\n{t}\n".format(s=sep0, t=fmt_tle.format(t="Repository '{r}'".format(r=repository))) +
-                           "\n".join([p_codename(k, v) for k, v in codenames]) +
-                           "\n")
+            results.append("{s}\n{t}\n".format(s=sep0, t=fmt_tle.format(t="Repository '{r}'".format(r=repository)))
+                           + "\n".join([p_codename(k, v) for k, v in codenames]) + "\n")
         return "\n".join(results)
 
 

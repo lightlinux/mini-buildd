@@ -173,9 +173,9 @@ class BaseGnuPG():
                 os.remove(signed_file)
 
         # Retrying sign call; workaround for mystery https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=849551
-        mini_buildd.call.call_with_retry(self.gpg_cmd +
-                                         ["--armor", "--textmode", "--clearsign", "--output", signed_file] +
-                                         (["--local-user", identity] if identity else []) + [unsigned_file],
+        mini_buildd.call.call_with_retry(self.gpg_cmd
+                                         + ["--armor", "--textmode", "--clearsign", "--output", signed_file]
+                                         + (["--local-user", identity] if identity else []) + [unsigned_file],
                                          retry_max_tries=5,
                                          retry_sleep=1,
                                          retry_failed_cleanup=failed_cleanup)

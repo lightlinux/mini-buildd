@@ -66,6 +66,6 @@ setuptools.setup(
     scripts=["src/mini-buildd", "src/mini-buildd-tool"],
     packages=["mini_buildd", "mini_buildd/api", "mini_buildd/models"],
     package_data={"mini_buildd":
-                  package_data_files("templates", ["html", "txt"]) +
-                  package_data_files("templatetags", ["py"]) +
-                  package_data_files("static", ["css", "js", "png", "gif", "ico"])})
+                  package_data_files("templates", ["html", "txt"])
+                  + package_data_files("templatetags", ["py"])
+                  + package_data_files("static", ["css", "js", "png", "gif", "ico"])})

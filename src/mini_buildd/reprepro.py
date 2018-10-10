@@ -61,11 +61,11 @@ class Reprepro():
     def list(self, pattern, distribution, typ=None, list_max=50):
         result = []
         for item in self._call_locked(["--list-format", "${package}|${$type}|${architecture}|${version}|${$source}|${$sourceversion}|${$codename}|${$component};",
-                                       "--list-max", "{m}".format(m=list_max)] +
-                                      (["--type", "{t}".format(t=typ)] if typ else []) +
-                                      ["listmatched",
-                                       distribution,
-                                       pattern]).split(";"):
+                                       "--list-max", "{m}".format(m=list_max)]
+                                      + (["--type", "{t}".format(t=typ)] if typ else [])
+                                      + ["listmatched",
+                                         distribution,
+                                         pattern]).split(";"):
             if item:
                 item_split = item.split("|")
                 result.append({"package": item_split[0],
