@@ -78,7 +78,7 @@ class Call():
         """stdin or stdout value as str."""
         if value:
             return self._bos2str(value)
-        elif key in self._given_stream:
+        if key in self._given_stream:
             self._given_stream[key].seek(0)
             return self._bos2str(self._given_stream[key].read())
         return ""

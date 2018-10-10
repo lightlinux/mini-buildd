@@ -251,11 +251,11 @@ auto-ports=buster-test-unstable
 
         if user is None:
             return "API: '{c}': Internal Error: No user information available".format(c=cls.COMMAND)
-        elif (cls.AUTH == cls.LOGIN) and not chk_login():
+        if (cls.AUTH == cls.LOGIN) and not chk_login():
             return "API: '{c}': Please login to run this command".format(c=cls.COMMAND)
-        elif (cls.AUTH == cls.STAFF) and not (chk_login() and user.is_staff):
+        if (cls.AUTH == cls.STAFF) and not (chk_login() and user.is_staff):
             return "API: '{c}': Please login as 'staff' user to run this command".format(c=cls.COMMAND)
-        elif (cls.AUTH == cls.ADMIN) and not (chk_login() and user.is_superuser):
+        if (cls.AUTH == cls.ADMIN) and not (chk_login() and user.is_superuser):
             return "API: '{c}': Please login as superuser to run this command".format(c=cls.COMMAND)
         return ""  # Auth OK
 

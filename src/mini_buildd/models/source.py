@@ -397,8 +397,7 @@ codeversion is only used for base sources.""")
         oa_list = self.archives.all().filter(ping__gte=0.0).order_by("ping")
         if oa_list:
             return oa_list[0]
-        else:
-            raise Exception("{s}: No archive found. Please add appropriate archive and/or check network setup.".format(s=self))
+        raise Exception("{s}: No archive found. Please add appropriate archive and/or check network setup.".format(s=self))
 
     def mbd_get_apt_line_raw(self, components, prefix="deb "):
         return "{p}{u} {d} {c}".format(

@@ -135,10 +135,10 @@ lintian) as non-lethal, and will install anyway.
 
         if rollback is None:
             return dist_string
-        else:
-            if rollback not in list(range(self.rollback)):
-                raise Exception("Rollback number out of range: {r} ({m})".format(r=rollback, m=self.rollback))
-            return "{d}-rollback{r}".format(d=dist_string, r=rollback)
+
+        if rollback not in list(range(self.rollback)):
+            raise Exception("Rollback number out of range: {r} ({m})".format(r=rollback, m=self.rollback))
+        return "{d}-rollback{r}".format(d=dist_string, r=rollback)
 
     def mbd_get_apt_pin(self, repository, distribution):
         return "release n={c}, o={o}".format(
