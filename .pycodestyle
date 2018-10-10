@@ -4,5 +4,6 @@
 # E127 continuation line over-indented for visual indent: See changes.py, multi-line with statement.
 # E402 module level import not at top of file
 # E741 do not use variables named 'l', 'O', or 'I'
-ignore = E122,E124,E127,E402,E741
+# W503 line break after binary operator (Note: W503 is in the default ignore list, see 'man pycodestyle', https://github.com/PyCQA/pycodestyle/issues/498).
+ignore = E122,E124,E127,E402,E741,W503
 max-line-length = 200
