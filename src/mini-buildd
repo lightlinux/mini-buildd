@@ -324,7 +324,7 @@ Comma-separated list of special debugging options:
 
     def on_signal(self, signum=-1, frame=-1):
         LOG.info("Got signal: {s} ({f})".format(s=signum, f=frame))
-        if signum == signal.SIGTERM or signum == signal.SIGINT:
+        if signum in (signal.SIGTERM, signal.SIGINT):
             self._status = "SHUTDOWN"
         elif signum == signal.SIGHUP:
             self._status = "RESTART"

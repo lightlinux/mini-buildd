@@ -188,7 +188,7 @@ def api(request):
 
         # Check confirmable calls
         if api_cls.CONFIRM and request.GET.get("confirm", None) != command:
-            if output == "html" or output == "referer":
+            if output in ("html", "referer"):
                 return django.shortcuts.render(request,
                                                "mini_buildd/api_confirm.html",
                                                {"api_cmd": api_cmd,

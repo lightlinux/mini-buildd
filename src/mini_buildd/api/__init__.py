@@ -881,7 +881,7 @@ class Subscription(Command):
 
         def _filter():
             for s in self.daemon.get_subscription_objects().filter(subscriber=self.request.user):
-                if (package == "" or s.package == package) and (distribution == "" or s.distribution == distribution):
+                if package in ("", s.package) and distribution in ("", s.distribution):
                     yield s
 
         def _delete(subscription):
