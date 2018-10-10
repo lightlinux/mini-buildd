@@ -114,7 +114,7 @@ def html_index(directory, path_info, backend_info):
            backend_info=backend_info), encoding=mini_buildd.setup.CHAR_ENCODING)
 
 
-class WSGIWithRoutes(object):
+class WSGIWithRoutes():
     """
     Simple WSGI helper app that also will also handle very basic static delivery.
     """

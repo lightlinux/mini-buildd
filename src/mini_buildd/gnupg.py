@@ -14,7 +14,7 @@ import mini_buildd.setup
 LOG = logging.getLogger(__name__)
 
 
-class Colons(object):
+class Colons():
     """
     Provide a colon->name mapping for the gpg script-parsable '--with-colons' output.
 
@@ -51,7 +51,7 @@ class Colons(object):
         return self._get(9)
 
 
-class BaseGnuPG(object):
+class BaseGnuPG():
     @classmethod
     def get_flavor(cls):
         """

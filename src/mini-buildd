@@ -36,7 +36,7 @@ LOGW.addHandler(LOG_PRELIMINARY_HANDLER)
 logging.captureWarnings(True)
 
 
-class PIDFile(object):
+class PIDFile():
     """
     Pidfile with automatic stale fixup.
 
@@ -79,7 +79,7 @@ class PIDFile(object):
         self.pidfile.release()
 
 
-class Main(object):
+class Main():
     class ArgumentDefaultsRawTextHelpFormatter(argparse.RawTextHelpFormatter, argparse.ArgumentDefaultsHelpFormatter):
         """Custom argparse help formatter (mixin): We like to use raw text, but also have default values shown."""
         pass

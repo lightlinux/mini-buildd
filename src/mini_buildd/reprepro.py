@@ -16,7 +16,7 @@ LOG = logging.getLogger(__name__)
 _LOCKS = {}
 
 
-class Reprepro(object):
+class Reprepro():
     """
     Abstraction to reprepro repository commands.
 

@@ -20,7 +20,7 @@ def taint_env(taint):
     return env
 
 
-class Call(object):
+class Call():
     """Wrapper around python subprocess.
 
     When supplying ``stdout`` or ``stderr``, provide raw and

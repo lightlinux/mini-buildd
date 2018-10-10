@@ -12,7 +12,7 @@ import urllib.error
 import bs4
 
 
-class DebianPackageTracker(object):
+class DebianPackageTracker():
     """Get (some) source package information from the Debian Package
     Tracker. As long as there is no proper API, we do this the
     hacky way parsing the HTML via bs4 - so this will most

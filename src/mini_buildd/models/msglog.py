@@ -33,7 +33,7 @@ import django.contrib.messages
 LOG = logging.getLogger(__name__)
 
 
-class MsgLog(object):
+class MsgLog():
     def __init__(self, pylog, request):
         self.pylog = pylog
         self.request = request

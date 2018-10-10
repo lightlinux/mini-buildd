@@ -23,7 +23,7 @@ def django_pseudo_configure():
     call_command("migrate", interactive=False, run_syncdb=True, verbosity=0)
 
 
-class Argument(object):
+class Argument():
     def __init__(self, id_list, doc="Undocumented", default=None):
         """
         :param id_list: List like '['--with-rollbacks', '-R']' for option or '['distributions']' for positionals; 1st entry always denotes the id.
@@ -137,7 +137,7 @@ class MultiSelectArgument(SelectArgument):
         return self.separator.join(value)
 
 
-class Command(object):
+class Command():
     COMMAND = None
 
     # Auth

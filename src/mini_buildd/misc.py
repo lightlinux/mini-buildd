@@ -40,7 +40,7 @@ def check_multiprocessing():
         raise Exception("multiprocessing not functional (shm misconfigured?): {e}".format(e=e))
 
 
-class API(object):
+class API():
     """
     Helper class to implement an API check.
 
@@ -57,7 +57,7 @@ class API(object):
         return self.__api__ == self.__API__
 
 
-class Status(object):
+class Status():
     """
     Helper class to implement an internal status.
 
@@ -98,7 +98,7 @@ def skip_if_keep_in_debug(func, *args, **kwargs):
     return _skip_if_in_debug("keep", func, *args, **kwargs)
 
 
-class TmpDir(object):
+class TmpDir():
     """
     Use with contextlib.closing() to guarantee tmpdir is purged afterwards.
     """
@@ -126,7 +126,7 @@ class TmpDir(object):
             return norm_d
 
 
-class ConfFile(object):
+class ConfFile():
     """ ConfFile generation helper.
 
     >>> ConfFile("/tmp/mini_buildd_test_conf_file", "my_option=7").add("my_2nd_option=42").save()
@@ -186,7 +186,7 @@ class BlockQueue(queue.Queue):
         return queue.Queue.task_done(self)
 
 
-class HoPo(object):
+class HoPo():
     """ Convenience class to parse bind string "hostname:port" """
     def __init__(self, bind):
         try:
@@ -207,7 +207,7 @@ class HoPo(object):
         s.close()
 
 
-class Endpoint(object):
+class Endpoint():
     r"""Network server endpoint description parser (twisted-like).
 
     Syntax and semantic of the description string should be like in
@@ -279,7 +279,7 @@ def codename_has_lintian_suppress(codename):
     return codename not in ["buzz", "rex", "bo", "hamm", "slink", "potato", "woody", "sarge", "etch", "lenny"]
 
 
-class Distribution(object):
+class Distribution():
     """
     A mini-buildd distribution string.
 
@@ -453,7 +453,7 @@ def pkg_fmt(status, distribution, package, version, extra=None, message=None):
     return fmt
 
 
-class PkgLog(object):
+class PkgLog():
     @classmethod
     def get_path(cls, repository, installed, package, version=None, architecture=None, relative=False):
         return os.path.join("" if relative else mini_buildd.setup.LOG_DIR,
@@ -585,7 +585,7 @@ def rmdirs(path):
         LOG.info("Directory removed recursively: {p}".format(p=path))
 
 
-class UserURL(object):
+class UserURL():
     """
     URL with a username attached.
 
@@ -648,7 +648,7 @@ def qualname(obj):
     return "{m}.{c}".format(m=obj.__module__, c=obj.__class__.__name__)
 
 
-class Keyring(object):
+class Keyring():
     _SAVE_POLICY_KEY = "save_policy"
 
     @classmethod

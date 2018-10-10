@@ -25,7 +25,7 @@ LOG = logging.getLogger(__name__)
 
 
 class Changes(debian.deb822.Changes):
-    class Options(object):
+    class Options():
         """
         Uploader options in changes.
 
@@ -35,7 +35,7 @@ class Changes(debian.deb822.Changes):
         >>> "{}".format(Changes("test-data/changes.magic").options)
         "auto-ports=['jessie-test-unstable', 'squeeze-test-snasphot'], ignore-lintian=True"
         """
-        class Bool(object):
+        class Bool():
             _TRUE = ["true", "1"]
             _FALSE = ["false", "0"]
             _VALID = _TRUE + _FALSE
@@ -45,11 +45,11 @@ class Changes(debian.deb822.Changes):
                     raise Exception("Bool value must be one of {}".format(",".join(self._VALID)))
                 self.value = raw_value.lower() in self._TRUE
 
-        class Int(object):
+        class Int():
             def __init__(self, raw_value):
                 self.value = int(raw_value)
 
-        class CSV(object):
+        class CSV():
             def __init__(self, raw_value):
                 self.value = raw_value.split(",")
 

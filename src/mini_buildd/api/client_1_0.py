@@ -14,7 +14,7 @@ import mini_buildd.misc
 import mini_buildd.api
 
 
-class Daemon(object):
+class Daemon():
     def _log(self, message):
         print("{host}: {m}".format(host=self.host, m=message), file=sys.stderr)
 

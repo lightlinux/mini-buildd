@@ -270,7 +270,7 @@ class DSTPackage(mini_buildd.misc.TmpDir):
         self.dsc = glob.glob(os.path.join(self.tmpdir, "*.dsc"))[0]
 
 
-class Keyrings(object):
+class Keyrings():
     """
     Hold/manage all gnupg keyrings (for remotes and all repository uploaders).
     """
@@ -401,7 +401,7 @@ def run():
         pass
 
 
-class Daemon(object):
+class Daemon():
     def __init__(self):
         # Set global to ourself
         global _INSTANCE  # pylint: disable=global-statement

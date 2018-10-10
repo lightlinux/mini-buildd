@@ -49,7 +49,7 @@ def context_processor(_request):
     return MBD_STATIC_CONTEXT
 
 
-class SMTPCreds(object):
+class SMTPCreds():
     """
     SMTP creds string parser. Format "USER:PASSWORD@smtp|ssmtp://HOST:PORT".
 

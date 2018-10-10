@@ -20,7 +20,7 @@ import mini_buildd.misc
 LOG = logging.getLogger(__name__)
 
 
-class Incoming(object):
+class Incoming():
     "Tool collection for some extra incoming directory handling."
 
     @classmethod
