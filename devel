@@ -184,6 +184,20 @@ mbd_sphinxrepro()
 	printf "OK: sphinx HTML identical"
 }
 
+# Create "big files" for HTTPD tests and benchamrking.
+# POST: MBD_HTTPD_TESTFILES (fileItem: sha1sum) will be available globally.
+mbd_gen_httpd_testfiles()
+{
+	declare -g -A MBD_HTTPD_TESTFILES=()
+	local fileSize relPath="repositories/test/pool/main/m/mbd-test-cpp"
+	for fileSize in 5 50 100; do
+		local id="file${fileSize}M"
+		local of="/var/lib/mini-buildd/${relPath}/${id}.bin"
+		[ -e "${of}" ] || sudo dd if="/dev/urandom" of="${of}" count="${fileSize}" bs="1M" >/dev/null 2>&1
+		MBD_HTTPD_TESTFILES["${id}:http://${MBD_HTTPD}/${relPath}/${id}.bin"]="$(sha1sum < "${of}")"
+	done
+}
+
 #
 # Runner functions: mbd_run:<sequence>:<level>:<name>
 #
@@ -386,19 +400,13 @@ mbd_run:16:22:extra-packages()
 
 mbd_run:19:22:httpd-benchmark()
 {
+	mbd_gen_httpd_testfiles
+
 	_ab_val() { cut -d: -f2- | cut -d[ -f1 | tr -d '[:space:]'; }
 
 	local abRequests=50
 
-	# Create "big files" for testing
-	local fileSize fileItems="" filePath="repositories/test/pool/main/m/mbd-test-cpp"
-	for fileSize in 5 50 100; do
-		local id="file${fileSize}M"
-		sudo dd if=/dev/zero of=/var/lib/mini-buildd/${filePath}/${id}.bin count=${fileSize} bs=1M >/dev/null 2>&1
-		fileItems+="${id}:http://${MBD_HTTPD}/${filePath}/file${fileSize}.bin "
-	done
-
-	for item in django:http://${MBD_HTTPD}/mini_buildd/repositories/test/ index:http://${MBD_HTTPD}/repositories/test/pool/main/m/mbd-test-cpp/ ${fileItems}; do
+	for item in django:http://${MBD_HTTPD}/mini_buildd/repositories/test/ index:http://${MBD_HTTPD}/repositories/test/pool/main/m/mbd-test-cpp/ ${!MBD_HTTPD_TESTFILES[@]}; do
 		local id=$(cut -d: -f1 <<<${item})
 		local url=$(cut -d: -f2- <<<${item})
 		local c
