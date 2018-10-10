@@ -9,8 +9,8 @@
 #  $ ./devel update
 
 MBD_HOME=~mini-buildd
-# m-b-tool shortcut for testing calls
-MBD_TOOL="/usr/bin/mini-buildd-tool admin@localhost:8066"
+MBD_HTTPD="${MBD_HTTPD:-localhost:8066}"  # Use 'MBD_HTTPD=some.where.com:123 ./devel' to use something else than default localhost
+MBD_TOOL="/usr/bin/mini-buildd-tool admin@${MBD_HTTPD}"  # m-b-tool shortcut for testing calls
 
 _check_prog()
 {
@@ -354,10 +354,10 @@ mbd_run:13:20:tidy()
 {
 	local url
 	for url in \
-		http://localhost:8066/mini_buildd \
-		http://localhost:8066/mini_buildd/api \
-		http://localhost:8066/mini_buildd/api?command=getdputconf \
-		http://localhost:8066/accounts/login/ \
+		http://${MBD_HTTPD}/mini_buildd \
+		http://${MBD_HTTPD}/mini_buildd/api \
+		http://${MBD_HTTPD}/mini_buildd/api?command=getdputconf \
+		http://${MBD_HTTPD}/accounts/login/ \
 		; do
 		printf "\n=> Testing HTML: ${url}\n"
 		wget --output-document=- "${url}" | tidy -output /dev/null
@@ -395,10 +395,10 @@ mbd_run:19:22:httpd-benchmark()
 	for fileSize in 5 50 100; do
 		local id="file${fileSize}M"
 		sudo dd if=/dev/zero of=/var/lib/mini-buildd/${filePath}/${id}.bin count=${fileSize} bs=1M >/dev/null 2>&1
-		fileItems+="${id}:http://localhost:8066/${filePath}/file${fileSize}.bin "
+		fileItems+="${id}:http://${MBD_HTTPD}/${filePath}/file${fileSize}.bin "
 	done
 
-	for item in django:http://localhost:8066/mini_buildd/repositories/test/ index:http://localhost:8066/repositories/test/pool/main/m/mbd-test-cpp/ ${fileItems}; do
+	for item in django:http://${MBD_HTTPD}/mini_buildd/repositories/test/ index:http://${MBD_HTTPD}/repositories/test/pool/main/m/mbd-test-cpp/ ${fileItems}; do
 		local id=$(cut -d: -f1 <<<${item})
 		local url=$(cut -d: -f2- <<<${item})
 		local c
