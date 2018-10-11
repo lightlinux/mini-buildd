@@ -398,6 +398,24 @@ mbd_run:16:22:extra-packages()
 	[ ! -d ../test-packages/ ] || dput --force --unchecked --no-upload-log mini-buildd-$(hostname) ../test-packages/*.changes
 }
 
+mbd_run:19:22:httpd-testfiles()
+{
+	mbd_gen_httpd_testfiles
+	local item
+	for item in ${!MBD_HTTPD_TESTFILES[@]}; do
+		local id=$(cut -d: -f1 <<<${item}) url=$(cut -d: -f2- <<<${item})
+		local of="$(mktemp)"
+		wget --output-document="${of}" "${url}"
+		local sha1sum="$(sha1sum < "${of}")"
+		if [ "${sha1sum}" = "${MBD_HTTPD_TESTFILES[${item}]}" ]; then
+			printf "HTTP download OK: %s=%s %s" "${id}" "${of}" "${sha1sum}"
+		else
+			printf "HTTP download FAILED: %s=%s %s != %s" "${id}" "${of}" "${sha1sum}" "${MBD_HTTPD_TESTFILES[${item}]}"
+			return 1
+		fi
+	done
+}
+
 mbd_run:19:22:httpd-benchmark()
 {
 	mbd_gen_httpd_testfiles
