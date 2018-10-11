@@ -22,7 +22,7 @@ class HttpD(mini_buildd.httpd.HttpD):
             r".*",  # match any host
             [
                 (
-                    r"/{route}/({match})".format(route=route, match=match),
+                    r"/{route}/({match})".format(route=route, match=".*"),
                     tornado.web.StaticFileHandler,
                     dict(path=directory)
                 ),
