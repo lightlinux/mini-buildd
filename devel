@@ -422,7 +422,7 @@ mbd_run:19:22:httpd-benchmark()
 
 	_ab_val() { cut -d: -f2- | cut -d[ -f1 | tr -d '[:space:]'; }
 
-	local abRequests=50
+	local abRequests=50 item
 
 	for item in django:http://${MBD_HTTPD}/mini_buildd/repositories/test/ index:http://${MBD_HTTPD}/repositories/test/pool/main/m/mbd-test-cpp/ ${!MBD_HTTPD_TESTFILES[@]}; do
 		local id=$(cut -d: -f1 <<<${item})
