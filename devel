@@ -486,7 +486,7 @@ mbd_run()  # [<levelRegex>=00] [<name>]
 declare -A MBD_RUN_SHORTCUTS=(
 	["check"]="10"
 	["update"]="00"
-	["updatecheck"]="[01]0"
+	["updatecheck"]="[01][01]"
 	["updatetest"]="[0-9][01]"
 	["updatetestall"]="[0-9][0-9]"
 )
