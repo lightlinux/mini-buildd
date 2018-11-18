@@ -443,7 +443,8 @@ mbd_run:19:22:httpd-benchmark()
 					tpr="-1.0"
 				fi
 			} >&2
-			printf "[%20s] %-12s: % 8.3f\n" "${server}" "${id} c=${c}" "${tpr}"
+			# Note: decimal separator in "ab" is ".", so e need to set LANG for printf
+			LANG="C.UTF-8" printf "[%20s] %-12s: % 8.3f\n" "${server}" "${id} c=${c}" "${tpr}"
 		done
 	done
 }
