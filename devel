@@ -319,7 +319,7 @@ mbd_run:03:00:buildfast()
 mbd_run:03:11:buildcheck()
 {
 	debuild --no-lintian -us -uc
-	lintian --fail-on-warnings --suppress-tags=changelog-should-mention-nmu,source-nmu-has-incorrect-version-number,newer-standards-version --info ../mini-buildd_$(dpkg-parsechangelog --show-field=Version)_$(dpkg --print-architecture).changes
+	lintian --pedantic --fail-on-warnings --suppress-tags=changelog-should-mention-nmu,source-nmu-has-incorrect-version-number,newer-standards-version --info ../mini-buildd_$(dpkg-parsechangelog --show-field=Version)_$(dpkg --print-architecture).changes
 }
 
 # This also checks "full" package building (with doc and check)
