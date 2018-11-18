@@ -30,6 +30,7 @@ _check_prog()
 PJPATH="$(readlink -f $(dirname $0))"
 PYPATH="${PJPATH}/src"
 PYLINTRC="${PJPATH}/.pylintrc"
+LINTIAN_CFG="${PJPATH}/.lintian.cfg"
 
 mbd_installdeps()
 {
@@ -319,7 +320,7 @@ mbd_run:03:00:buildfast()
 mbd_run:03:11:buildcheck()
 {
 	debuild --no-lintian -us -uc
-	lintian --pedantic --fail-on-warnings --suppress-tags=changelog-should-mention-nmu,source-nmu-has-incorrect-version-number,newer-standards-version --info ../mini-buildd_$(dpkg-parsechangelog --show-field=Version)_$(dpkg --print-architecture).changes
+	lintian --cfg="${LINTIAN_CFG}" ../mini-buildd_$(dpkg-parsechangelog --show-field=Version)_$(dpkg --print-architecture).changes
 }
 
 # This also checks "full" package building (with doc and check)
