@@ -301,13 +301,17 @@ mbd_run:01:11:pydoctests()
 }
 
 # Build package as fast as possible
-mbd_run:02:00:build()
+mbd_run:02:00:changelog()
 {
 	# Checking changelog (must be unchanged)...
 	git diff-index --exit-code HEAD debian/changelog
 	trap "git checkout debian/changelog" EXIT
-
 	gbp dch --snapshot --auto
+}
+
+# Build package as fast as possible
+mbd_run:03:00:buildfast()
+{
 	DEB_BUILD_OPTIONS+="nodoc nocheck" debuild --no-lintian -us -uc
 }
 
@@ -315,10 +319,6 @@ mbd_run:02:00:build()
 mbd_run:03:11:buildcheck()
 {
 	debuild --no-lintian -us -uc
-}
-
-mbd_run:03:11:lintian()
-{
 	lintian --fail-on-warnings --suppress-tags=changelog-should-mention-nmu,source-nmu-has-incorrect-version-number,newer-standards-version --info ../mini-buildd_$(dpkg-parsechangelog --show-field=Version)_$(dpkg --print-architecture).changes
 }
 
