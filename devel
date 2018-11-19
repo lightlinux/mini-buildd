@@ -319,8 +319,7 @@ mbd_run:03:00:buildfast()
 # Build package again (build must have been run) w/ checks && doc
 mbd_run:03:11:buildcheck()
 {
-	debuild --no-lintian -us -uc
-	lintian --cfg="${LINTIAN_CFG}" ../mini-buildd_$(dpkg-parsechangelog --show-field=Version)_$(dpkg --print-architecture).changes
+	debuild -us -uc --lintian-opts --cfg="${LINTIAN_CFG}"
 }
 
 # This also checks "full" package building (with doc and check)
