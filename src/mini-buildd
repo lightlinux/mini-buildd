@@ -82,7 +82,6 @@ class PIDFile():
 class Main():
     class ArgumentDefaultsRawTextHelpFormatter(argparse.RawTextHelpFormatter, argparse.ArgumentDefaultsHelpFormatter):
         """Custom argparse help formatter (mixin): We like to use raw text, but also have default values shown."""
-        pass
 
     @classmethod
     def _parse_args(cls):

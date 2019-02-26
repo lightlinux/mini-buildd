@@ -16,7 +16,6 @@ class HttpD(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def _add_route(self, route, directory, with_index=False, match="", with_doc_missing_error=False):
         "Serve static files from a directory."
-        pass
 
     def __init__(self, supported_types):
         self._doc_missing_html_template = """\
@@ -48,7 +47,6 @@ Maybe package <b><tt>mini-buildd-doc</tt></b> needs to be installed to make the 
     @abc.abstractmethod
     def run(self):
         "Run the HTTP server. Must be implemented by backend."
-        pass
 
 
 # Helpers

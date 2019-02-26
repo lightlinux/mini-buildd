@@ -108,12 +108,10 @@ are actually supported by the current model.
         @classmethod
         def _mbd_on_activation(cls, request, obj):
             "Global actions to take when an object becomes active."
-            pass
 
         @classmethod
         def _mbd_on_deactivation(cls, request, obj):
             "Global actions to take when an object becomes inactive."
-            pass
 
         def save_model(self, request, obj, form, change):
             if change:
