@@ -1,8 +1,112 @@
-mini-buildd (1.1.12) UNRELEASED; urgency=medium
+mini-buildd (1.1.12) experimental; urgency=medium
 
+  ** 1.1.x are _development_ releases, use for testing only. **
+
+  This release mainly switches the httpd backend from cherrypy to twisted.
+
+  [ Ondřej Nový ]
   * d/changelog: Remove trailing whitespaces
 
- -- Ondřej Nový <onovy@debian.org>  Mon, 01 Oct 2018 09:57:40 +0200
+  [ Stephan Sürken ]
+  * [4501fe7] mini_buildd/httpd*.py: Initial structural change to later
+    support/test different backends.
+  * [0835418] httpd*.py: Generalize add_static() function and call in
+    generic HttpD.
+  * [82661d1] httpd.py: Backends: Rather use inheritance model.
+  * [59f4e62] setup.py: Use a little helper for the package data file
+    lists.
+  * [883334c] python3-mini-buildd.links: Add symlink to django admin
+    site's static data.
+  * [ea1d261] /mini_buildd/setup.py: Get rid of STATIC_URL common setup
+    variable.
+  * [018eda8] httpd.py: add_static_handler(): Give path w/o slashes
+    ("static", not "/static/").
+  * [ba48b4a] httpd, setup: Move special html template back to httpd.py.
+  * [4720d82] httpd.py: Improve notation for static adder method.
+  * [f021ac7] httpd_twisted.py: Add alternative http backend.
+  * [9662ac1] httpd.py: Move manual index generator code from cherrypy
+    backend to base class.
+  * [322a164] httpd_wsgiref.py: Initial wsgiref httpd (test) backend.
+  * [37fcab6] httpd.py: Strip down html_index() to one simple function.
+  * [e573026] httpd.py: Move html_index() to httpd_wsgiref.
+  * [f2f2ff9] source.py: wizards: Update signing keys for unstable +
+    testing.
+  * [5326b0f] httpd.py: Fix used backend back to cherrypy.
+  * [3f3c296] codespell update: Three more spelling fixes.
+  * [fd40a89] httpd: Select backend from script, not module.
+  * [2325059] httpd_tornado.py: Add tornado backend.
+  * [5d54ef3] html: Fix tidy warning (labels must only link to one
+    element).
+  * [d5c698e] httpd.py: Code cosmetics.
+  * [06678e0] httpd.py: Bulk API cleanups.
+  * [f61a4a6] httpd.py: Mark private methods.
+  * [57baaa6] src/mini-buildd: Do HttpD backend import in-method:
+    daemonize() might close things created by backend (f.e. twisted)
+    module's initialization.
+  * [eea6df2] misc.py: Add network 'Endpoint' class (based on twisted
+    syntax; eventually will replace class 'HoPo').
+  * [a94ab56] Update httpd code to use network endpoints (adds option
+    --httpd-endpoints, keeps compat for --httpd-bind).
+  * [63a312b] src/run-doctest: Don't run in verbose mode.
+  * [c43eab3] httpd_cherrypy.py: Add SSL support.
+  * [dd350c6] httpd.py: Use generic "supported types" check.
+  * [5141f91] httpd_tornado.py: Add support for ssl.
+  * [fe59778] httpd[_wsgiref].py: Move 'WSGIWithRoutes' helper to
+    httpd.py.
+  * [dd8afe4] httpd_waitress.py: Add test support for waitress backend.
+  * [10f6e35] mini-buildd: Endpoints: Add real life defaults (tcp, ssl,
+    unix) as code comment (for convenience, later tests).
+  * [657f97e] httpd.py: Some simplification (triggered by pyflake error).
+  * [d34954d] httpd.py: Move mime type add-on dict to base class; update
+    in cherrypy- and implement in twisted-backend.
+  * [5e5091e] api/__init__.py: Don't warn on missing (but optional) api
+    updater function.
+  * [b059691] builder.py: sbuild call: set '--no-arch-all' explicitly
+    (Fixes "false" reprepro errors after successful builds w/ sbuild >=
+    0.77)
+  * [2ef39cd] wizards: Remove squeeze autosetup support (repo sigs
+    expired).
+  * [e2595b3] api/_contrib.py, DebianPackageTracker helper: Fix parsing
+    for backport versions (after changes to tracker web sites).
+  * [61b9eb9] httpd.py: Fix error message on unsupported type.
+  * [0c47b10] mini-buildd: --httpd-endpoint option: Change to append
+    option (instead of ,-separated string).
+  * [4da4df5] Fix two URL assemblies via urllib.parse.urljoin() to produce
+    clean URLs.
+  * [2c14879] devel: Add httpd-benchmark.
+  * [f10132b] pylint 2.1: Bulk-fix R0205(useless-object-inheritance).
+  * [9d493da] pylint 2.1: Bulk-fix syntax for various now failing
+    "disable=xxx" (workaround for regression
+    https://github.com/PyCQA/pylint/issues/2297).
+  * [900f624] pylint 2.1: Bulk-fix R1705(no-else-return).
+  * [3e2f822] pylint 2.1: Bulk-fix R1714(consider-using-in).
+  * [f963814] pycodestyle 2.4: Add W503 to ignore list.
+  * [6825fcc] pycodestyle 2.4: Bulk-fix 'W504 line break after binary
+    operator'.
+  * [c9de476] devel: Add MBD_HTTPD global "config" variable.
+  * [2497680] devel: Move test file creation into extra func.
+  * [6e06b57] httpd_tornado.py: Use '.*' hardcoded as match for now
+    (makeas log/ and pool/ work).
+  * [9e8becf] devel: Add test httpd-testfiles.
+  * [a750fa5] devel: httpd-becnhmarK Fix: Make item var local.
+  * [b9296b6] devel: add 'devel deps' for httpd tests.
+  * [4539f95] devel: httpd-benchmark: Harden printf for "." dec-sep.
+  * [daa7a78] devel: Change targets build,buildcheck,lintian ->
+    changelog,buildfast,buildcheck.
+  * [dcaf1d6] devel: Fix check level 00->01 for updatecheck.
+  * [64decdc] devel: Add --pedantic for lintian check.
+  * [0373e98] devel: Use a config file for lintian.
+  * [24f770e] devel: builcheck: Run lintian via debuild.
+  * [6a86c32] Update to dh compat level 11.
+  * [c092c9f] lintian: Fix pedantic warnings 'maintainer-script-without-
+    set-e'.
+  * [b33e5d6] pylint3 2.2.2: Fix new warnings "Unnecessary pass
+    statement".
+  * [0d4a898] .pylintrc: Pimp up ancestors again (due to new python-
+    debian).
+  * [5ab5693] Switch from cherrypy to twisted.
+
+ -- Stephan Sürken <absurd@debian.org>  Tue, 26 Feb 2019 16:50:49 +0100
 
 mini-buildd (1.1.11) experimental; urgency=medium
 
