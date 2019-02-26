@@ -17,7 +17,7 @@ Build-Depends:
 	python3-keyring (>= 1.6),
 	python3-daemon (>= 2.0.5),
 	python3-debian (>= 0.1.18~),
-	python3-cherrypy3,
+	python3-twisted,
 	python3-pyftpdlib (>= 1.2.0),
 # Supporting django 1.10, 1.11 (being careful here, newer main versions really tend to break things):
 	python3-django (>= 1.10), python3-django (<< 1:1.12),

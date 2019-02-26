@@ -138,7 +138,7 @@ If none given, the default used is:
 Comma-separated list of special debugging options:
 'warnings' (show all warnings from python's warnings module in log),
 'exception' (log tracebacks in exception handlers),
-'http' (put http server [cherrypy] in debug mode),
+'http' (put http server in debug mode),
 'webapp' (put web application [django] in debug mode),
 'sbuild' (run sbuild in debug mode),
 'keep' (keep spool and temporary directories),
@@ -298,7 +298,7 @@ Comma-separated list of special debugging options:
             raise Exception("Run as dedicated user only (use '--dedicated-user={u}' if you really want this, will write to that user's $HOME!)".format(u=self._user))
 
         if not self.is_extra_run():
-            # Pre-daemonize check if HTTP port is ready to bind (else cherrypy fails strangely later)
+            # Pre-daemonize check if HTTP port is ready to bind (else http backend may fail strangely later)
             mini_buildd.misc.HoPo(self._args.httpd_bind).test_bind()
             # Pre-daemonize check if shm is usable on the system (else pyftpdlib fails strangely later)
             mini_buildd.misc.check_multiprocessing()
@@ -330,7 +330,7 @@ Comma-separated list of special debugging options:
 
     def run_daemon(self, webapp):
         # Start httpd w/ webapp
-        from mini_buildd.httpd_cherrypy import HttpD  # Note: Backend import must be here: daemonize() might close things created by backend module's initialization.
+        from mini_buildd.httpd_twisted import HttpD  # Note: Backend import must be here: daemonize() might close things created by backend module's initialization.
         mini_buildd.misc.run_as_thread(HttpD(wsgi_app=webapp).run, name="httpd", daemon=True)
 
         # Get the daemon manager instance

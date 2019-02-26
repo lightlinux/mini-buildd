@@ -33,7 +33,7 @@ def context_processor(_request):
         MBD_STATIC_CONTEXT = {"mbd_version": mini_buildd.__version__}
         try:
             from platform import python_version
-            from cherrypy import __version__ as cherrypy_version
+            from twisted import __version__ as twisted_version
             from pyftpdlib import __ver__ as pyftpdlib_version
             from registration import get_version as registration_version
 
@@ -41,7 +41,7 @@ def context_processor(_request):
                 "python": python_version(),
                 "django": django.get_version(),
                 "django-registration": registration_version(),
-                "cherrypy": cherrypy_version,
+                "twisted": twisted_version,
                 "pyftpdlib": pyftpdlib_version}
         except BaseException:
             pass
