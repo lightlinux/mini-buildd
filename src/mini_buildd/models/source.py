@@ -322,7 +322,7 @@ codeversion is only used for base sources.""")
 
         @classmethod
         def mbd_meta_add_ubuntu(cls, msglog):
-            "Add well-known Ubuntu sources."
+            "Add well-known Ubuntu sources. Update hint: Keep latest two releases plus a couple of LTS releases."
 
             keys = {
                 "archive_current": "40976EAF437D05B5",    # Ubuntu Archive Automatic Signing Key <ftpmaster@ubuntu.com>
@@ -336,26 +336,26 @@ codeversion is only used for base sources.""")
                                    [keys["archive_current"], keys["archive_2012"]],
                                    "Codename: trusty\nSuite: trusty-backports")
 
-            # xenial: 16.04 (LTS until 2018)
+            # xenial: 16.04 (LTS until 2021)
             cls._mbd_get_or_create(msglog, "Ubuntu", "xenial",
                                    [keys["archive_current"], keys["archive_2012"]])
             cls._mbd_get_or_create(msglog, "Ubuntu", "xenial-backports",
                                    [keys["archive_current"], keys["archive_2012"]],
                                    "Codename: xenial\nSuite: xenial-backports")
 
-            # zesty: 17.04
-            cls._mbd_get_or_create(msglog, "Ubuntu", "zesty",
+            # bionic: 18.04 (LTS until 2023)
+            cls._mbd_get_or_create(msglog, "Ubuntu", "bionic",
                                    [keys["archive_current"], keys["archive_2012"]])
-            cls._mbd_get_or_create(msglog, "Ubuntu", "zesty-backports",
+            cls._mbd_get_or_create(msglog, "Ubuntu", "bionic-backports",
                                    [keys["archive_current"], keys["archive_2012"]],
-                                   "Codename: zesty\nSuite: zesty-backports")
+                                   "Codename: bionic\nSuite: bionic-backports")
 
-            # artful: 17.10
-            cls._mbd_get_or_create(msglog, "Ubuntu", "artful",
+            # cosmic: 18.10
+            cls._mbd_get_or_create(msglog, "Ubuntu", "cosmic",
                                    [keys["archive_current"], keys["archive_2012"]])
-            cls._mbd_get_or_create(msglog, "Ubuntu", "artful-backports",
+            cls._mbd_get_or_create(msglog, "Ubuntu", "cosmic-backports",
                                    [keys["archive_current"], keys["archive_2012"]],
-                                   "Codename: artful\nSuite: artful-backports")
+                                   "Codename: cosmic\nSuite: cosmic-backports")
 
         @classmethod
         def mbd_filter_active_base_sources(cls):
