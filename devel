@@ -3,7 +3,7 @@
 # Helper script to develop/debug mini-buildd.
 #
 # Quickstart:
-#  Enter your dev chroot (preferably sid). sudo should configured.
+#  Enter your dev chroot (preferably sid). sudo should be configured.
 #  $ cd mini-buildd
 #  $ ./devel installdeps
 #  $ ./devel update
