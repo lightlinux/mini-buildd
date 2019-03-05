@@ -382,14 +382,14 @@ mbd_run:14:22:auto-setup()
 {
 	mbd_pythonkeyringtestconfig
 	/usr/share/mini-buildd/bin/mbd-auto-setup
-	MBD__PACKAGE="mbd-test-cpp" MBD__DIST="jessie-test-unstable" mbd_wait4package
+	MBD__PACKAGE="mbd-test-cpp" MBD__DIST="stretch-test-unstable" mbd_wait4package
  }
 
 mbd_run:15:22:migrate()
 {
 	# Migration of test packages
-	${MBD_TOOL} migrate mbd-test-cpp jessie-test-unstable --confirm=migrate
-	${MBD_TOOL} migrate mbd-test-cpp jessie-test-testing --confirm=migrate
+	${MBD_TOOL} migrate mbd-test-cpp stretch-test-unstable --confirm=migrate
+	${MBD_TOOL} migrate mbd-test-cpp stretch-test-testing --confirm=migrate
 }
 
 mbd_run:16:22:extra-packages()
