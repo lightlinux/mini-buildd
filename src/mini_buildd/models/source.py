@@ -7,6 +7,9 @@ import urllib.error
 import logging
 import contextlib
 import copy
+import datetime
+
+import dateutil.parser
 
 import django.db.models
 import django.contrib.admin
@@ -117,6 +120,26 @@ Use the 'directory' notation with exactly one trailing slash (like 'http://examp
             # Check release file fields
             if not source.mbd_is_matching_release(request, release):
                 return None
+
+            # Pre-Check 'Valid-Until'
+            #
+            # Some Release files contain an expire date via the
+            # 'Valid-Until' tag. If such an expired archive is used,
+            # builds will fail. Furthermore, it could be only the
+            # selected archive not updating, while the source may be
+            # perfectly fine from another archive.
+            #
+            # This pre-check avoids such a situation, or at least it
+            # can be fixed by re-checking the source.
+            try:
+                valid_until = release["Valid-Until"]
+                if dateutil.parser.parse(valid_until) < datetime.datetime.now(datetime.timezone.utc):
+                    MsgLog(LOG, request).warning("{u} expired, maybe the archive has problems? (Valid-Until='{v}').".format(u=url, v=valid_until))
+                    return None
+            except KeyError:
+                pass  # We can assume Release file has no "Valid-Until", and be quiet
+            except BaseException as e:
+                MsgLog(LOG, request).error("Ignoring error checking 'Valid-Until' on {u}: {e}".format(u=url, e=e))
 
             # Check signature
             with tempfile.NamedTemporaryFile() as signature:
