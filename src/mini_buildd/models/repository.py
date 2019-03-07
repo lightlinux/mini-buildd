@@ -514,12 +514,11 @@ $build_environment = { 'CCACHE_DIR' => '%LIBDIR%/.ccache' };
             ("Chroot setup options", {"classes": ("collapse",), "fields": ("chroot_setup_script", "sbuildrc_snippet")}),
             ("Extra Options", {"classes": ("collapse",),
                                "description": """
-<b>Supported extra options</b>
-<p><em>Internal-APT-Priority: N</em>: Set APT priority for internal apt sources in builds.</p>
+<b>Internal-APT-Priority: N</b>: Set APT priority for internal apt sources in builds.
 <p>
 The default is 1, which means you will only build against newer
-packages in our own repositories in case it's really needed by
-the build dependencies. This is the recommended behaviour,
+packages in our own repositories in case it's really needed by the
+package's build dependencies. This is the recommended behaviour,
 producing sparse dependencies.
 </p>
 <p>
@@ -528,12 +527,33 @@ break anyway, while they would work fine when just build against
 the newest version available.
 </p>
 <p>
-So, in case you don't care about sparse dependencies, you can
+You may still solve this on a per-package basis, using the
+resp. upload option via changelog. However, in case you don't care
+about sparse dependencies in this distribution in general, you can
 pimp the internal priority up here.
 </p>
 <p>
-<em>Example</em>:
-<kbd>Internal-APT-Priority: 500</kbd>: Always build against newer internal packages.
+<em>Example</em>: Always build against newer internal packages:
+<pre>Internal-APT-Priority: 500</pre>
+</p>
+<b>Deb-Build-Options: ...</b>: Set extra build options.
+<p>
+Values to add to environment variable <tt>DEB_BUILD_OPTIONS</tt> used when building packages.
+See <a href='https://www.debian.org/doc/debian-policy/ch-source.html#debian-rules-and-deb-build-options'>Debian policy</a> and
+<a href='https://lists.debian.org/debian-devel/2015/12/msg00262.html'>Debian dbgsym announcement</a> for valid options.
+</p>
+<p>
+Avoid using option <tt>parallel=N</tt> here - this is handled by daemon's <tt>sbuild_jobs</tt> setting, overwriting this here
+does not make much sense imho.
+</p>
+<p>
+Option <tt>noddebs</tt> is useful for Ubuntu distributions that for
+some reason create their automated debug packages with file appendix
+'ddeb', as <a href='https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=730572'>reprepo fails on them</a>.
+</p>
+<p>
+<em>Example</em>: Never build automatic debug packages (Ubuntu bionic, cosmic):
+<pre>Deb-Build-Options: noddebs</pre>
 </p>
 """,
                                "fields": ("extra_options",)}),)
@@ -553,6 +573,9 @@ pimp the internal priority up here.
                 if created:
                     if not mini_buildd.misc.codename_has_lintian_suppress(s.codename):
                         new_dist.lintian_mode = Distribution.LINTIAN_RUN_ONLY
+
+                    if mini_buildd.misc.codename_produces_ddeb_appendix(s.codename):
+                        new_dist.extra_options += "Deb-Build-Options: noddebs\n"
 
                     # Auto-add known default components or Origin
                     for c in default_components(s.origin):

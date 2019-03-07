@@ -227,7 +227,7 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
                                                 cwd=self._build_dir,
                                                 env=mini_buildd.call.taint_env({"HOME": self._build_dir,
                                                                                 "GNUPGHOME": os.path.join(mini_buildd.setup.HOME_DIR, ".gnupg"),
-                                                                                "DEB_BUILD_OPTIONS": "parallel={j}".format(j=self._sbuild_jobs)}),
+                                                                                "DEB_BUILD_OPTIONS": "{d} parallel={j}".format(d=self._breq.get("Deb-Build-Options", ""), j=self._sbuild_jobs)}),
                                                 stdout=l, stderr=subprocess.STDOUT)
             retval = sbuild_call.result.returncode
 

@@ -546,6 +546,7 @@ class Changes(debian.deb822.Changes):
                         dist.LINTIAN_FAIL_ON_ERROR: "",
                         dist.LINTIAN_FAIL_ON_WARNING: "--fail-on-warning"}
                     breq["Run-Lintian"] = modeargs[dist.lintian_mode] + " " + dist.lintian_extra_options
+                breq["Deb-Build-Options"] = dist.mbd_get_extra_option("Deb-Build-Options", "")
 
                 breq.save(daemon.mbd_gnupg)
             else:

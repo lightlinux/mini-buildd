@@ -280,6 +280,14 @@ def codename_has_lintian_suppress(codename):
     return codename not in ["buzz", "rex", "bo", "hamm", "slink", "potato", "woody", "sarge", "etch", "lenny"]
 
 
+def codename_produces_ddeb_appendix(codename):
+    """
+    Some Ubuntu codenames produce 'ddeb' file appendix for automated debug packages.
+    reprepro can't handle these yet -- so this is needed for a workaround for the wizard setup.
+    """
+    return codename in ["bionic", "cosmic"]
+
+
 class Distribution():
     """
     A mini-buildd distribution string.
