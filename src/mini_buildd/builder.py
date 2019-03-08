@@ -198,6 +198,8 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
         else:
             sbuild_cmd += ["--no-arch-all"]  # Be sure to set explicitly: sbuild >= 0.77 does not seem to use this as default any more?
 
+        sbuild_cmd += ["--jobs={j}".format(j=self._sbuild_jobs)]
+
         if "Run-Lintian" in self._breq:
             sbuild_cmd += ["--run-lintian"]
             # Be sure not to use --suppress-tags when its not available (only >=squeeze).
@@ -227,7 +229,7 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
                                                 cwd=self._build_dir,
                                                 env=mini_buildd.call.taint_env({"HOME": self._build_dir,
                                                                                 "GNUPGHOME": os.path.join(mini_buildd.setup.HOME_DIR, ".gnupg"),
-                                                                                "DEB_BUILD_OPTIONS": "{d} parallel={j}".format(d=self._breq.get("Deb-Build-Options", ""), j=self._sbuild_jobs)}),
+                                                                                "DEB_BUILD_OPTIONS": self._breq.get("Deb-Build-Options", "")}),
                                                 stdout=l, stderr=subprocess.STDOUT)
             retval = sbuild_call.result.returncode
 
