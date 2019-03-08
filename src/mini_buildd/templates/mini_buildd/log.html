@@ -24,12 +24,12 @@
 					<h3>Build logs</h3>
 					<p>
 						{% for arch, uri in values.buildlogs.items %}
-							<a title="Build log for {{ arch }}" href="/log/{{ uri }}">{{ arch }}</a>
+							<a title="Build log for {{ arch }}" href="/log{{ uri }}">{{ arch }}</a>
 						{% endfor %}
 					</p>
 					<hr/>
 
-					<h3><a title="Download changes for {{ repository }}/{{ package }}/{{ version }}" href="/log/{{ values.changes_path }}">Changes</a></h3>
+					<h3><a title="Download changes for {{ repository }}/{{ package }}/{{ version }}" href="/log{{ values.changes_path }}">Changes</a></h3>
 					<pre>{{ values.changes }}</pre>
 				{% endif %}
 			{% endfor %}
