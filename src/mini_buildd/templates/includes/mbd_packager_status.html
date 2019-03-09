@@ -20,7 +20,7 @@
 					<a href="{{ p.log }}/" title="Go to log page">{{ p.changes.version }}</a>
 				{% else %}
 					{{ p.changes.version }}
-				{%endif %}
+				{% endif %}
 			</td>
 			<td class="status nowrap">
 				{% for arch, breq in p.requests.items %}
