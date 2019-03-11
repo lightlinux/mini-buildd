@@ -583,7 +583,7 @@ some reason create their automated debug packages with file appendix
                         new_dist.components.add(component)
 
                     # Auto-add extra sources that start with our base_source's codename
-                    for prio_source in mini_buildd.models.source.PrioritySource.objects.filter(source__codename__regex=r"^{c}-".format(c=s.codename)):
+                    for prio_source in mini_buildd.models.source.PrioritySource.objects.filter(source__codename__regex=r"^{c}[-/]".format(c=s.codename)):
                         new_dist.extra_sources.add(prio_source)
 
                     # Auto-add all locally supported archs

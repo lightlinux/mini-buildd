@@ -72,6 +72,9 @@ Use the 'directory' notation with exactly one trailing slash (like 'http://examp
                         "http://deb.debian.org/debian/",                                 # alt: CDN
                         "http://ftp.de.debian.org/debian/",                              # alt: full mirror
 
+                        "http://security.debian.org/debian-security/",                   # Debian Security
+                        "http://deb.debian.org/debian-security/",                        # alt: new CDN
+
                         "http://archive.debian.org/debian/",                             # Archived Debian Releases
                         "http://deb.debian.org/debian-archive/debian/",                  # alt: new CDN
                         "http://ftp.de.debian.org/debian-archive/debian/",               # alt: full mirror
@@ -87,6 +90,7 @@ Use the 'directory' notation with exactly one trailing slash (like 'http://examp
         def mbd_meta_add_ubuntu(cls, msglog):
             "Add internet Ubuntu archive sources."
             for url in ["http://archive.ubuntu.com/ubuntu/",              # Ubuntu releases
+                        "http://security.ubuntu.com/ubuntu/",             # Ubuntu Security
                         "http://old-releases.ubuntu.com/ubuntu/",         # Older Ubuntu release
                        ]:
                 cls._mbd_get_or_create(msglog, url)
@@ -226,14 +230,52 @@ class Source(mini_buildd.models.base.StatusModel):
                                         help_text="The exact string of the 'Origin' field of the resp. Release file.")
     codename = django.db.models.CharField(max_length=60, default="sid",
                                           help_text="""\
-The name of the directory below 'dists/' in archives this source refers to; this is also used
-as-is to check the 'Codename' field in the Release file (unless you overwrite it in
-extra options, see below).
-<br />
-The <b>extra options</b> below may be used to
-<em>overwrite the Codename</em> to check in the Release file in case it differs or
-<em>put more fields to check</em> with the Release file to anonymously identify the source and/or to get
-the source's pinning right.
+The <b>name of the directory below <tt>dists/</tt></b> in archives
+this source refers to. This is also the 3rd part in an apt line.
+
+<p></p>
+With no extra options given, this source will be identified comparing
+<tt>Origin</tt> and <tt>Codename</tt> with the values of the
+<tt>Release</tt> file found.
+<p></p>
+<b>Extra options:</b>
+
+<p>For some sources, <tt>Codename</tt> (as we use it here) does not
+match <tt>Codename</tt> as given in the Release file.</p>
+
+<p>To remedy that, you may specify what is actually to be expected in
+the Release file via the <b>extra options</b> field below. Practically
+useful fields are <tt>Origin, Codename, Suite, Archive, Version,
+Label</tt>. These are also later used to pin the source via apt
+preferences.</p>
+
+<p>When <tt>Codename</tt> needs to be overridden in this manner, be
+sure to also add one further flag to identify the source -- else apt
+pinning later would likely not be unambiguous.</p>
+
+<p>Examples for well-known sources that need this extra handling are
+<em>Debian Security</em>, and <em>Ubuntu Backports and
+Security</em>.</p>
+
+<p>Furthermore, <em>Debian Security's Release file</em> states
+<tt>Components</tt> differently than other sources. It unfortunately
+needs an especially invented flag <b>X-Remove-From-Component</b> to
+make it work for us.</p>
+
+<p>Example: Needed extra options for Debian Security:</p>
+
+<pre>
+Codename: stretch
+Label: Debian-Security
+X-Remove-From-Component: updates/
+</pre>
+
+<p>Example: Needed extra options for Ubuntu Backports:</p>
+
+<pre>
+Codename: bionic
+Suite: bionic-backports
+</pre>
 """)
 
     # Apt Secure
@@ -310,16 +352,20 @@ codeversion is only used for base sources.""")
             """
 
             keys = {
-                "archive_stretch": "E0B11894F66AEC98",    # Debian Archive Automatic Signing Key (9/stretch) <ftpmaster@debian.org>  (subkey 04EE7237B7D453EC)
-                "release_stretch": "EF0F382A1A7B6500",    # Debian Stable Release Key (9/stretch) <debian-release@lists.debian.org>
-                "archive_jessie": "7638D0442B90D010",     # Debian Archive Automatic Signing Key (8/jessie) <ftpmaster@debian.org>
-                "release_jessie": "CBF8D6FD518E17E1",     # Jessie Stable Release Key <debian-release@lists.debian.org>
-                "archive_wheezy": "8B48AD6246925553",     # Debian Archive Automatic Signing Key (7.0/wheezy) <ftpmaster@debian.org>
-                "release_wheezy": "6FB2A1C265FFB764",     # Wheezy Stable Release Key <debian-release@lists.debian.org>
+                "archive_stretch": "E0B11894F66AEC98",           # Debian Archive Automatic Signing Key (9/stretch) <ftpmaster@debian.org>  (subkey 04EE7237B7D453EC)
+                "release_stretch": "EF0F382A1A7B6500",           # Debian Stable Release Key (9/stretch) <debian-release@lists.debian.org>
+                "archive_jessie": "7638D0442B90D010",            # Debian Archive Automatic Signing Key (8/jessie) <ftpmaster@debian.org>
+                "release_jessie": "CBF8D6FD518E17E1",            # Jessie Stable Release Key <debian-release@lists.debian.org>
+                "security_archive_jessie": "9D6D8F6BC857C906",   # Debian Security Archive Automatic Signing Key (8/jessie) <ftpmaster@debian.org>
+                "archive_wheezy": "8B48AD6246925553",            # Debian Archive Automatic Signing Key (7.0/wheezy) <ftpmaster@debian.org>
+                "release_wheezy": "6FB2A1C265FFB764",            # Wheezy Stable Release Key <debian-release@lists.debian.org>
             }
 
             cls._mbd_get_or_create(msglog, "Debian", "wheezy",
                                    [keys["archive_wheezy"], keys["release_wheezy"], keys["archive_jessie"]])
+            cls._mbd_get_or_create(msglog, "Debian", "wheezy/updates",
+                                   [keys["archive_wheezy"], keys["security_archive_jessie"]],
+                                   extra_options="Codename: wheezy\nLabel: Debian-Security\nX-Remove-From-Component: updates/")
             cls._mbd_get_or_create(msglog, "Debian Backports", "wheezy-backports",
                                    [keys["archive_wheezy"], keys["release_wheezy"], keys["archive_jessie"]])
             cls._mbd_get_or_create(msglog, "Debian Backports", "wheezy-backports-sloppy",
@@ -327,6 +373,9 @@ codeversion is only used for base sources.""")
 
             cls._mbd_get_or_create(msglog, "Debian", "jessie",
                                    [keys["archive_wheezy"], keys["release_jessie"], keys["archive_jessie"]])
+            cls._mbd_get_or_create(msglog, "Debian", "jessie/updates",
+                                   [keys["archive_wheezy"], keys["security_archive_jessie"]],
+                                   extra_options="Codename: jessie\nLabel: Debian-Security\nX-Remove-From-Component: updates/")
             cls._mbd_get_or_create(msglog, "Debian Backports", "jessie-backports",
                                    [keys["archive_wheezy"], keys["archive_jessie"]])
             cls._mbd_get_or_create(msglog, "Debian Backports", "jessie-backports-sloppy",
@@ -334,11 +383,17 @@ codeversion is only used for base sources.""")
 
             cls._mbd_get_or_create(msglog, "Debian", "stretch",
                                    [keys["archive_wheezy"], keys["archive_jessie"], keys["release_jessie"], keys["release_stretch"]])
+            cls._mbd_get_or_create(msglog, "Debian", "stretch/updates",
+                                   [keys["archive_wheezy"], keys["security_archive_jessie"]],
+                                   extra_options="Codename: stretch\nLabel: Debian-Security\nX-Remove-From-Component: updates/")
             cls._mbd_get_or_create(msglog, "Debian Backports", "stretch-backports",
                                    [keys["archive_wheezy"], keys["archive_jessie"]])
 
             cls._mbd_get_or_create(msglog, "Debian", "buster",
                                    [keys["archive_wheezy"], keys["archive_jessie"], keys["archive_stretch"]])
+            cls._mbd_get_or_create(msglog, "Debian", "buster/updates",
+                                   [keys["archive_wheezy"], keys["security_archive_jessie"]],
+                                   extra_options="Codename: buster\nLabel: Debian-Security\nX-Remove-From-Component: updates/")
 
             cls._mbd_get_or_create(msglog, "Debian", "sid",
                                    [keys["archive_wheezy"], keys["archive_jessie"], keys["archive_stretch"]])
@@ -355,6 +410,9 @@ codeversion is only used for base sources.""")
             # trusty: 14.04 (LTS until 2019)
             cls._mbd_get_or_create(msglog, "Ubuntu", "trusty",
                                    [keys["archive_current"], keys["archive_2012"]])
+            cls._mbd_get_or_create(msglog, "Ubuntu", "trusty-security",
+                                   [keys["archive_current"], keys["archive_2012"]],
+                                   "Codename: trusty\nSuite: trusty-security")
             cls._mbd_get_or_create(msglog, "Ubuntu", "trusty-backports",
                                    [keys["archive_current"], keys["archive_2012"]],
                                    "Codename: trusty\nSuite: trusty-backports")
@@ -362,6 +420,9 @@ codeversion is only used for base sources.""")
             # xenial: 16.04 (LTS until 2021)
             cls._mbd_get_or_create(msglog, "Ubuntu", "xenial",
                                    [keys["archive_current"], keys["archive_2012"]])
+            cls._mbd_get_or_create(msglog, "Ubuntu", "xenial-security",
+                                   [keys["archive_current"], keys["archive_2012"]],
+                                   "Codename: xenial\nSuite: xenial-security")
             cls._mbd_get_or_create(msglog, "Ubuntu", "xenial-backports",
                                    [keys["archive_current"], keys["archive_2012"]],
                                    "Codename: xenial\nSuite: xenial-backports")
@@ -369,6 +430,9 @@ codeversion is only used for base sources.""")
             # bionic: 18.04 (LTS until 2023)
             cls._mbd_get_or_create(msglog, "Ubuntu", "bionic",
                                    [keys["archive_current"], keys["archive_2012"]])
+            cls._mbd_get_or_create(msglog, "Ubuntu", "bionic-security",
+                                   [keys["archive_current"], keys["archive_2012"]],
+                                   "Codename: bionic\nSuite: bionic-security")
             cls._mbd_get_or_create(msglog, "Ubuntu", "bionic-backports",
                                    [keys["archive_current"], keys["archive_2012"]],
                                    "Codename: bionic\nSuite: bionic-backports")
@@ -376,6 +440,9 @@ codeversion is only used for base sources.""")
             # cosmic: 18.10
             cls._mbd_get_or_create(msglog, "Ubuntu", "cosmic",
                                    [keys["archive_current"], keys["archive_2012"]])
+            cls._mbd_get_or_create(msglog, "Ubuntu", "cosmic-security",
+                                   [keys["archive_current"], keys["archive_2012"]],
+                                   "Codename: cosmic\nSuite: cosmic-security")
             cls._mbd_get_or_create(msglog, "Ubuntu", "cosmic-backports",
                                    [keys["archive_current"], keys["archive_2012"]],
                                    "Codename: cosmic\nSuite: cosmic-backports")
@@ -396,7 +463,7 @@ codeversion is only used for base sources.""")
 
     def mbd_release_file_values(self):
         "Compute a dict of values a matching release file must have."
-        values = self.mbd_get_extra_options()
+        values = {k: v for k, v in self.mbd_get_extra_options().items() if not k.startswith("X-")}  # Keep "X-<header>" for special purposes. All other keys are like in a Release file.
 
         # Set Origin and Codename (may be overwritten) from fields
         values["Origin"] = self.origin
@@ -499,7 +566,7 @@ codeversion is only used for base sources.""")
                                 self.architectures.add(new_arch)
                         if release.get("Components"):
                             for c in release["Components"].split(" "):
-                                new_component, _created = Component.mbd_get_or_create(msglog, name=c)
+                                new_component, _created = Component.mbd_get_or_create(msglog, name=c.replace(self.mbd_get_extra_option("X-Remove-From-Component", ""), ""))
                                 self.components.add(new_component)
                         msglog.info("{o}: Added archive: {a}".format(o=self, a=archive))
                     else:
