@@ -2,7 +2,11 @@ Source: mbd-test-cpp
 Section: misc
 Priority: extra
 Maintainer: Stephan Sürken <absurd@debian.org>
-Build-Depends: debhelper (>= 9), dh-autoreconf
+Build-Depends:
+	debhelper (>= 9),
+	dh-autoreconf,
+# For Security Sources tests
+	libssl-dev
 Standards-Version: 4.1.0
 
 Package: mbd-test-cpp
