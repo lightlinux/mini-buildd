@@ -2,10 +2,7 @@
 
 import subprocess
 import time
-import tempfile
-import threading
 import os
-import shutil
 import logging
 
 import mini_buildd.setup
@@ -165,19 +162,3 @@ def call_with_retry(call, retry_max_tries=5, retry_sleep=1, retry_failed_cleanup
             if retry_failed_cleanup:
                 retry_failed_cleanup()
             time.sleep(retry_sleep)
-
-
-SBUILD_KEYS_WORKAROUND_LOCK = threading.Lock()
-
-
-def sbuild_keys_workaround():
-    "Create sbuild's internal key if needed (sbuild needs this one-time call, but does not handle it itself)."
-    with SBUILD_KEYS_WORKAROUND_LOCK:
-        if os.path.exists("/var/lib/sbuild/apt-keys/sbuild-key.pub"):
-            LOG.debug("/var/lib/sbuild/apt-keys/sbuild-key.pub: Already exists, skipping")
-        else:
-            t = tempfile.mkdtemp()
-            LOG.warning("One-time generation of sbuild keys (may take some time)...")
-            Call(["sbuild-update", "--keygen"], env=taint_env({"HOME": t})).log().check()
-            shutil.rmtree(t)
-            LOG.info("One-time generation of sbuild keys done")

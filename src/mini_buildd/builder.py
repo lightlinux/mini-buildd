@@ -215,7 +215,6 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
         sbuild_cmd += [self._breq.dsc_name]
 
         # Actually run sbuild
-        mini_buildd.call.sbuild_keys_workaround()
         buildlog = os.path.join(self._build_dir, self._breq.buildlog_name)
         live_buildlog = os.path.join(mini_buildd.setup.SPOOL_DIR, self._breq.live_buildlog_name)
         with open(buildlog, "w+") as l:
