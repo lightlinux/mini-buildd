@@ -39,6 +39,7 @@ Architecture: all
 Depends:
 	${misc:Depends},
 	${python3:Depends},
+	python3-dateutil,
 	python3-argcomplete (>= 0.5.4),
 	python3-keyring (>= 1.6),
 	python3-debian (>= 0.1.25~),
