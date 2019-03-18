@@ -1,3 +1,33 @@
+mini-buildd (1.1.13) experimental; urgency=medium
+
+  ** 1.1.x are _development_ releases, use for testing only. **
+
+  "Release often" release. Syncs fixes w/ 1.0.37.
+
+  * [102a374] devel: Comment typo fix.
+  * [edd2143] devel: Rather check for packages in stretch, not jessie.
+  * [a346212] api: autosetup: By default, setup up for both (Debian and
+    Ubuntu).
+  * [a24af91] source wizard: Update Ubuntu sources (up to 18.10).
+  * [a9fac91] models/source.py: Add expire check for Release files
+    ("Valid-Until").
+  * [9335f40] Add support for generic per-distribution DEB_BUILD_OPTIONS.
+  * [0cc2bef] builder.py: Actually use 'sbuild --jobs=' as documented (not
+    DEB_BUILD_OPTIONS) to set per-build parallelism.
+  * [ba61841] debian/rules: Allow parallel builds for testing (dh 9
+    default is off).
+  * [aa36509] templates/mini_buildd/log.html: Fix URI for buildlog &&
+    changes.
+  * [5d44fe8] mbd_packager_status.html: Cosmetic: Add missing space.
+  * [b900176] source,repository.py: Add support for Debian Security
+    sources.
+  * [96f8596] builder.py: Remove old/obsolete 'sbuild-update --keygen'
+    support (now actually fails on newer sbuild). (Closes: 924077)
+  * [d04d44f] package-templates/mbd-test-cpp: Add dep to test security
+    sources.
+
+ -- Stephan Sürken <absurd@debian.org>  Mon, 18 Mar 2019 13:46:20 +0100
+
 mini-buildd (1.1.12) experimental; urgency=medium
 
   ** 1.1.x are _development_ releases, use for testing only. **
