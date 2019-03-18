@@ -15,6 +15,14 @@ import mini_buildd.httpd
 LOG = logging.getLogger(__name__)
 
 
+class StaticFileNoIndex(twisted.web.static.File):
+    """
+    Static twisted resource w/o directory listing.
+    """
+    def directoryListing(self):
+        return self.forbidden
+
+
 class HttpD(mini_buildd.httpd.HttpD):
     class RootResource(twisted.web.resource.Resource):
         """
@@ -30,8 +38,8 @@ class HttpD(mini_buildd.httpd.HttpD):
             return self._wsgi_resource
 
     def _add_route(self, route, directory, with_index=False, match="", with_doc_missing_error=False):  # pylint: disable=unused-argument
-        # NOT IMPL: with_index, match, with_doc_missing_error
-        static = twisted.web.static.File(directory)
+        # NOT IMPL: match, with_doc_missing_error
+        static = twisted.web.static.File(directory) if with_index else StaticFileNoIndex(directory)
         for k, v in self._mime_types.items():
             static.contentTypes[".{}".format(k)] = v
         self.resource.putChild(bytes(route, encoding=self._char_encoding), static)
