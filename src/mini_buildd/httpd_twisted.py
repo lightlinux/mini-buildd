@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import re
 import logging
 
 import twisted.internet.reactor
@@ -15,12 +16,29 @@ import mini_buildd.httpd
 LOG = logging.getLogger(__name__)
 
 
-class StaticFileNoIndex(twisted.web.static.File):
+class FileResource(twisted.web.static.File):
     """
-    Static twisted resource w/o directory listing.
+    Twisted static resource enhanced with switchable index and regex matching support.
     """
+    def __init__(self, *args, with_index=False, uri_regex=".*", **kwargs):
+        super().__init__(*args, **kwargs)
+        self.mbd_with_index = with_index
+        self.mbd_uri_regex = re.compile(uri_regex)
+
     def directoryListing(self):
-        return self.forbidden
+        if not self.mbd_with_index:
+            LOG.debug("FORBIDDEN(NO_INDEX): {}={}".format(self.mbd_with_index, vars(self)))
+            return self.forbidden
+        return super().directoryListing()
+
+    def getChild(self, path, request):
+        if not self.mbd_uri_regex.match(request.uri.decode("utf-8")):
+            LOG.debug("FORBIDDEN(REGEX): {}={}".format(self.mbd_uri_regex, request.uri.decode("utf-8")))
+            return self.forbidden
+        child = super().getChild(path, request)
+        child.mbd_with_index = self.mbd_with_index
+        child.mbd_uri_regex = self.mbd_uri_regex
+        return child
 
 
 class HttpD(mini_buildd.httpd.HttpD):
@@ -37,9 +55,9 @@ class HttpD(mini_buildd.httpd.HttpD):
             request.postpath.insert(0, path)
             return self._wsgi_resource
 
-    def _add_route(self, route, directory, with_index=False, match="", with_doc_missing_error=False):  # pylint: disable=unused-argument
-        # NOT IMPL: match, with_doc_missing_error
-        static = twisted.web.static.File(directory) if with_index else StaticFileNoIndex(directory)
+    def _add_route(self, route, directory, with_index=False, uri_regex=".*", with_doc_missing_error=False):  # pylint: disable=unused-argument
+        # NOT IMPL: with_doc_missing_error
+        static = FileResource(with_index=with_index, uri_regex=uri_regex, path=directory)
         for k, v in self._mime_types.items():
             static.contentTypes[".{}".format(k)] = v
         self.resource.putChild(bytes(route, encoding=self._char_encoding), static)

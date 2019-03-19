@@ -11,7 +11,7 @@ LOG = logging.getLogger(__name__)
 
 class HttpD(metaclass=abc.ABCMeta):
     @abc.abstractmethod
-    def _add_route(self, route, directory, with_index=False, match="", with_doc_missing_error=False):
+    def _add_route(self, route, directory, with_index=False, uri_regex=r".*", with_doc_missing_error=False):
         "Serve static files from a directory."
 
     def __init__(self, supported_types):
@@ -36,10 +36,10 @@ Maybe package <b><tt>mini-buildd-doc</tt></b> needs to be installed to make the 
                 raise Exception("HTTPd backend does not support network endpoint type: {}".format(ep.type))
 
     def _add_routes(self):
-        self._add_route("static", "{p}/mini_buildd/static".format(p=mini_buildd.setup.PY_PACKAGE_PATH))                      # WebApp static directory
-        self._add_route("doc", mini_buildd.setup.MANUAL_DIR, with_doc_missing_error=True)                                    # HTML manual
-        self._add_route("repositories", mini_buildd.setup.REPOSITORIES_DIR, with_index=True, match=r"^/.+/(pool|dists)/.*")  # Repositories
-        self._add_route("log", mini_buildd.setup.LOG_DIR, with_index=True, match=r"^/.+/.*")                                 # Logs
+        self._add_route("static", "{p}/mini_buildd/static".format(p=mini_buildd.setup.PY_PACKAGE_PATH))                                       # WebApp static directory
+        self._add_route("doc", mini_buildd.setup.MANUAL_DIR, with_doc_missing_error=True)                                                     # HTML manual
+        self._add_route("repositories", mini_buildd.setup.REPOSITORIES_DIR, with_index=True, uri_regex=r"^/repositories/.+/(pool|dists)/.*")  # Repositories
+        self._add_route("log", mini_buildd.setup.LOG_DIR, with_index=True, uri_regex=r"^/log/.+/.*")                                          # Logs
 
     @abc.abstractmethod
     def run(self):
