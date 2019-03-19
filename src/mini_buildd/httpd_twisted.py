@@ -41,13 +41,11 @@ class FileResource(twisted.web.static.File):
 
     def directoryListing(self):
         if not self.mbd_with_index:
-            LOG.debug("FORBIDDEN(NO_INDEX): {}={}".format(self.mbd_with_index, vars(self)))
             return self.forbidden
         return super().directoryListing()
 
     def getChild(self, path, request):
         if not self.mbd_uri_regex.match(request.uri.decode("utf-8")):
-            LOG.debug("FORBIDDEN(REGEX): {}={}".format(self.mbd_uri_regex, request.uri.decode("utf-8")))
             return self.forbidden
         child = super().getChild(path, request)
         child.mbd_with_index = self.mbd_with_index
