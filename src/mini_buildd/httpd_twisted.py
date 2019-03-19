@@ -16,6 +16,20 @@ import mini_buildd.httpd
 LOG = logging.getLogger(__name__)
 
 
+class RootResource(twisted.web.resource.Resource):
+    """
+    Twisted root resource needed to mix static and wsgi resources.
+    """
+    def __init__(self, wsgi_resource):
+        super().__init__()
+        self._wsgi_resource = wsgi_resource
+
+    def getChild(self, path, request):
+        request.prepath.pop()
+        request.postpath.insert(0, path)
+        return self._wsgi_resource
+
+
 class FileResource(twisted.web.static.File):
     """
     Twisted static resource enhanced with switchable index and regex matching support.
@@ -42,19 +56,6 @@ class FileResource(twisted.web.static.File):
 
 
 class HttpD(mini_buildd.httpd.HttpD):
-    class RootResource(twisted.web.resource.Resource):
-        """
-        For some reason, twisted 'WSGIResource' cannot act as a root resource, so this workaround is needed
-        """
-        def __init__(self, wsgi_resource):
-            super().__init__()
-            self._wsgi_resource = wsgi_resource
-
-        def getChild(self, path, request):
-            request.prepath.pop()
-            request.postpath.insert(0, path)
-            return self._wsgi_resource
-
     def _add_route(self, route, directory, with_index=False, uri_regex=".*", with_doc_missing_error=False):  # pylint: disable=unused-argument
         # NOT IMPL: with_doc_missing_error
         static = FileResource(with_index=with_index, uri_regex=uri_regex, path=directory)
@@ -69,7 +70,7 @@ class HttpD(mini_buildd.httpd.HttpD):
         twisted.python.log.PythonLoggingObserver(loggerName=__name__).start()
 
         # HTTP setup
-        self.resource = self.RootResource(twisted.web.wsgi.WSGIResource(twisted.internet.reactor, twisted.internet.reactor.getThreadPool(), wsgi_app))  # pylint: disable=no-member
+        self.resource = RootResource(twisted.web.wsgi.WSGIResource(twisted.internet.reactor, twisted.internet.reactor.getThreadPool(), wsgi_app))  # pylint: disable=no-member
         self.site = twisted.web.server.Site(self.resource)
 
         for ep in self._endpoints:
