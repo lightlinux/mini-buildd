@@ -55,8 +55,11 @@ class FileResource(twisted.web.static.File):
 
 class HttpD(mini_buildd.httpd.HttpD):
     def _add_route(self, route, directory, with_index=False, uri_regex=".*", with_doc_missing_error=False):  # pylint: disable=unused-argument
-        # NOT IMPL: with_doc_missing_error
         static = FileResource(with_index=with_index, uri_regex=uri_regex, path=directory)
+
+        if with_doc_missing_error:
+            static.childNotFound = twisted.web.resource.NoResource(self.DOC_MISSING_HTML)
+
         for k, v in self._mime_types.items():
             static.contentTypes[".{}".format(k)] = v
         self.resource.putChild(bytes(route, encoding=self._char_encoding), static)

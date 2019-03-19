@@ -10,17 +10,19 @@ LOG = logging.getLogger(__name__)
 
 
 class HttpD(metaclass=abc.ABCMeta):
+    DOC_MISSING_HTML = """\
+<html><body>
+<h1>Online Manual Not Available (<tt>mini-buildd-doc</tt> not installed?)</h1>
+Package <b><tt>mini-buildd-doc</tt></b> is not installed on this site (might be intentional to save space).
+<p><a href="/">[Back]</a></p>
+</body></html>
+"""
+
     @abc.abstractmethod
     def _add_route(self, route, directory, with_index=False, uri_regex=r".*", with_doc_missing_error=False):
         "Serve static files from a directory."
 
     def __init__(self, supported_types):
-        self._doc_missing_html_template = """\
-<html><body>
-<h1>{status} (<tt>mini-buildd-doc</tt> not installed?)</h1>
-Maybe package <b><tt>mini-buildd-doc</tt></b> needs to be installed to make the manual available.
-</body></html>
-"""
         self._debug = "http" in mini_buildd.setup.DEBUG
         self._foreground = mini_buildd.setup.FOREGROUND
         self._access_log_file = mini_buildd.setup.ACCESS_LOG_FILE
