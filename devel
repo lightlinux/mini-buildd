@@ -217,7 +217,7 @@ mbd_run:00:10:pycodestyle()
 	)
 }
 
-mbd_run:00:11:pymisc()
+mbd_run:00:12:pymisc()
 {
 	local f regex
 	for f in $(mbd_pysources); do
@@ -230,7 +230,7 @@ mbd_run:00:11:pymisc()
 	done
 }
 
-mbd_run:00:11:codespell()
+mbd_run:00:12:codespell()
 {
 	local ups=$(codespell --quiet-level=2 $(mbd_pysources))
 	if [ -n "${ups}" ]; then
@@ -239,7 +239,7 @@ mbd_run:00:11:codespell()
 	fi
 }
 
-mbd_run:00:11:htmlmisc()
+mbd_run:00:12:htmlmisc()
 {
 	local class errors=0 ignoreRegex="mbd-action-.*"
 
@@ -288,7 +288,7 @@ mbd_run:01:10:pylint()
 	)
 }
 
-mbd_run:01:11:pydoctests()
+mbd_run:01:12:pydoctests()
 {
 	(
 		pyenv
@@ -317,7 +317,7 @@ mbd_run:03:00:buildfast()
 }
 
 # Build package again (build must have been run) w/ checks && doc
-mbd_run:03:11:buildcheck()
+mbd_run:03:12:buildcheck()
 {
 	debuild -us -uc --lintian-opts --cfg="${LINTIAN_CFG}"
 }
@@ -328,15 +328,15 @@ mbd_run:04:21:debrepro()
 	debrepro
 }
 
-mbd_run:10:22:remove()
+mbd_run:10:23:remove()
 {
 	mbd_service stop || true
 	sudo dpkg --${1:-remove} mini-buildd mini-buildd-utils mini-buildd-doc python3-mini-buildd python-mini-buildd mini-buildd-common
 }
 
-mbd_run:10:22:purge()
+mbd_run:10:23:purge()
 {
-	mbd_run:10:22:remove purge
+	mbd_run:10:23:remove purge
 
 	# Also test mini-buildd's internal sbuild key workaround
 	sudo rm -v -f /var/lib/sbuild/apt-keys/*
@@ -378,27 +378,27 @@ mbd_run:13:20:tidy()
 	done
 }
 
-mbd_run:14:22:auto-setup()
+mbd_run:14:23:auto-setup()
 {
 	mbd_pythonkeyringtestconfig
 	/usr/share/mini-buildd/bin/mbd-auto-setup
 	MBD__PACKAGE="mbd-test-cpp" MBD__DIST="stretch-test-unstable" mbd_wait4package
  }
 
-mbd_run:15:22:migrate()
+mbd_run:15:23:migrate()
 {
 	# Migration of test packages
 	${MBD_TOOL} migrate mbd-test-cpp stretch-test-unstable --confirm=migrate
 	${MBD_TOOL} migrate mbd-test-cpp stretch-test-testing --confirm=migrate
 }
 
-mbd_run:16:22:extra-packages()
+mbd_run:16:23:extra-packages()
 {
 	# Extra test packages when available
 	[ ! -d ../test-packages/ ] || dput --force --unchecked --no-upload-log mini-buildd-$(hostname) ../test-packages/*.changes
 }
 
-mbd_run:19:22:httpd-testfiles()
+mbd_run:19:23:httpd-testfiles()
 {
 	mbd_gen_httpd_testfiles
 	local item
@@ -416,7 +416,7 @@ mbd_run:19:22:httpd-testfiles()
 	done
 }
 
-mbd_run:19:22:httpd-benchmark()
+mbd_run:19:23:httpd-benchmark()
 {
 	mbd_gen_httpd_testfiles
 
@@ -486,8 +486,8 @@ mbd_run()  # [<levelRegex>=00] [<name>]
 declare -A MBD_RUN_SHORTCUTS=(
 	["check"]="10"
 	["update"]="00"
-	["updatecheck"]="[01][01]"
-	["updatetest"]="[0-9][01]"
+	["updatecheck"]="[0-1][0-1]"
+	["updatetest"]="[0-9][0-2]"
 	["updatetestall"]="[0-9][0-9]"
 )
 # We can't iterate through the associative array in the given order later, so we at least want a sorted key list as helper
