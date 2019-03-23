@@ -25,7 +25,15 @@ Package <b><tt>mini-buildd-doc</tt></b> is not installed on this site (might be 
     def __init__(self, supported_types):
         self._debug = "http" in mini_buildd.setup.DEBUG
         self._foreground = mini_buildd.setup.FOREGROUND
-        self._access_log_file = mini_buildd.setup.ACCESS_LOG_FILE
+
+        # access.log
+        self._access_log = logging.Logger(name="mini_buildd_httpd_access")   # Use a new root logger outside our hierarchy
+        self._access_log.addHandler(logging.handlers.RotatingFileHandler(
+            mini_buildd.setup.ACCESS_LOG_FILE,
+            maxBytes=5000000,
+            backupCount=9,
+            encoding="UTF-8"))
+
         self._char_encoding = mini_buildd.setup.CHAR_ENCODING
         self._mime_text_plain = "text/plain; charset={charset}".format(charset=self._char_encoding)
         self._mime_types = {"log": self._mime_text_plain,
