@@ -8,7 +8,7 @@ import twisted.internet.endpoints
 import twisted.web.wsgi
 import twisted.web.static
 import twisted.web.resource
-import twisted.python.log
+import twisted.logger
 
 import mini_buildd.misc
 import mini_buildd.httpd
@@ -85,8 +85,8 @@ class HttpD(mini_buildd.httpd.HttpD):
     def __init__(self, wsgi_app):
         super().__init__(["ssl", "tcp6", "tcp", "unix"])
 
-        # Logging
-        twisted.python.log.PythonLoggingObserver(loggerName=__name__).start()
+        # Bend twisted (not access.log) logging to ours
+        twisted.logger.globalLogPublisher.addObserver(twisted.logger.STDLibLogObserver(name=__name__))
 
         # HTTP setup
         self.resource = RootResource(twisted.web.wsgi.WSGIResource(twisted.internet.reactor, twisted.internet.reactor.getThreadPool(), wsgi_app))  # pylint: disable=no-member
