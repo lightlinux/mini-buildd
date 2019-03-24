@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import re
+import os.path
 import logging
 
 import twisted.internet.reactor
@@ -9,6 +10,7 @@ import twisted.web.wsgi
 import twisted.web.static
 import twisted.web.resource
 import twisted.logger
+import twisted.python.logfile
 
 import mini_buildd.misc
 import mini_buildd.httpd
@@ -17,21 +19,8 @@ LOG = logging.getLogger(__name__)
 
 
 class Site(twisted.web.server.Site):
-    """Twisted Suite allowing access log via python logger.
-
-    twisted Site class already allows to give a path for the access
-    log, but no means to rotate. Essentially, this class merely exists
-    to be able to make use of python's RotatingFileHandler (see
-    httpd.py).
-    """
-    def __init__(self, access_log, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._access_log = access_log
-        self._access_log.setLevel(logging.INFO)
-
-    def log(self, request):
-        line = self._logFormatter(self._logDateTime, request)  # This is the original line used in twisted Site class.
-        self._access_log.info(line)
+    def _openLogFile(self, path):
+        return twisted.python.logfile.LogFile(os.path.basename(path), directory=os.path.dirname(path), rotateLength=5000000, maxRotatedFiles=9)
 
 
 class RootResource(twisted.web.resource.Resource):
@@ -90,7 +79,7 @@ class HttpD(mini_buildd.httpd.HttpD):
 
         # HTTP setup
         self.resource = RootResource(twisted.web.wsgi.WSGIResource(twisted.internet.reactor, twisted.internet.reactor.getThreadPool(), wsgi_app))  # pylint: disable=no-member
-        self.site = Site(self._access_log, self.resource)
+        self.site = Site(self.resource, logPath=mini_buildd.setup.ACCESS_LOG_FILE)
 
         for ep in self._endpoints:
             twisted.internet.endpoints.serverFromString(twisted.internet.reactor, ep.desc).listen(self.site)
