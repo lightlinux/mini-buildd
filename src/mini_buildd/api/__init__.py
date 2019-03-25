@@ -781,6 +781,7 @@ class PortExt(Command):
 
     def _update(self):
         if self.daemon:
+            self.args["distributions"].choices = []
             for r in self.daemon.get_active_repositories():
                 self.args["distributions"].choices += r.mbd_distribution_strings(uploadable=True)
 
