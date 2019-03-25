@@ -38,15 +38,14 @@ just stick to the defaults::
 Configure
 =========
 
-.. note:: In case you are both, **extraordinary hasty and
-          adventurous**, you may just run this::
-
-          	? /usr/share/mini-buildd/bin/mbd-auto-setup
+.. note:: You may opt to run the **auto-setup** (at the
+          top of the configuration page).
 
           This will basically try to run this whole section
-          non-interactively, with all defaults. If you really
-          just want a quick test-drive, this might be for
-          you. **All others should just read on**.
+          non-interactively, with all defaults.
+
+          This section however explains how to do this manually and/or
+          how adjust such an 'auto-setupped' system.
 
 .. note:: Read ``Setup`` below: Run the full ``prepare``,
           ``check`` and ``activate`` treat (ugh!) from model's
