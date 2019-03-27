@@ -47,7 +47,7 @@ mini_buildd_workarounds_shm()
 mini_buildd_workarounds_archived()
 {
 	case ${CHROOT_NAME} in
-		*-etch-*|*-lenny-*|*-squeeze-*)
+		*-etch-*|*-lenny-*|*-squeeze-*|*-wheezy-*|*-jessie-*)
 			printf "=> Disabling 'Check-Valid-Until' for archived distribution ${CHROOT_NAME}.\n"
 			printf "Acquire::Check-Valid-Until \"false\";\n" >"${CHROOT_PATH}/etc/apt/apt.conf.d/10disable-check-valid-until"
 			;;
