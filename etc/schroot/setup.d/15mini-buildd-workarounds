@@ -44,11 +44,17 @@ mini_buildd_workarounds_shm()
 #
 # We still want these to work, however.
 #
+# This can (and should) be configured per source, however dists older
+# stretch won't honor the per-source '[check-valid-until=no]' apt
+# option, and we *must* do it per global apt config.
+#
+# Dists >= stretch will never need this, thus there should be no need
+# to update this workaround ever again.
 mini_buildd_workarounds_archived()
 {
 	case ${CHROOT_NAME} in
 		*-etch-*|*-lenny-*|*-squeeze-*|*-wheezy-*|*-jessie-*)
-			printf "=> Disabling 'Check-Valid-Until' for archived distribution ${CHROOT_NAME}.\n"
+			printf "=> Disabling 'Check-Valid-Until' globally in ${CHROOT_NAME}: Archived, and so old it does not support [check-valid-until=no] in the apt line.\n"
 			printf "Acquire::Check-Valid-Until \"false\";\n" >"${CHROOT_PATH}/etc/apt/apt.conf.d/10disable-check-valid-until"
 			;;
 	esac
