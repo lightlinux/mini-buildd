@@ -138,8 +138,11 @@ Use the 'directory' notation with exactly one trailing slash (like 'http://examp
             try:
                 valid_until = release["Valid-Until"]
                 if dateutil.parser.parse(valid_until) < datetime.datetime.now(datetime.timezone.utc):
-                    MsgLog(LOG, request).warning("{u} expired, maybe the archive has problems? (Valid-Until='{v}').".format(u=url, v=valid_until))
-                    return None
+                    if source.mbd_get_extra_option("X-Check-Valid-Until", "yes").lower() in ("no", "false", "0"):
+                        MsgLog(LOG, request).info("{u} expired, but source marked to ignore valid-until (Valid-Until='{v}').".format(u=url, v=valid_until))
+                    else:
+                        MsgLog(LOG, request).warning("{u} expired, maybe the archive has problems? (Valid-Until='{v}').".format(u=url, v=valid_until))
+                        return None
             except KeyError:
                 pass  # We can assume Release file has no "Valid-Until", and be quiet
             except BaseException as e:
@@ -230,51 +233,60 @@ class Source(mini_buildd.models.base.StatusModel):
                                         help_text="The exact string of the 'Origin' field of the resp. Release file.")
     codename = django.db.models.CharField(max_length=60, default="sid",
                                           help_text="""\
-The <b>name of the directory below <tt>dists/</tt></b> in archives
-this source refers to. This is also the 3rd part in an apt line.
+<p>The <b>name of the directory below <code>dists/</code></b> in archives
+this source refers to. This is also the 3rd part of an apt line.</p>
 
-<p></p>
-With no extra options given, this source will be identified comparing
-<tt>Origin</tt> and <tt>Codename</tt> with the values of the
-<tt>Release</tt> file found.
-<p></p>
-<b>Extra options:</b>
+<p>With no extra options given, this source will be identified
+comparing <code>Origin</code> and <code>Codename</code> with the values of the
+<code>Release</code> file found.</p>
 
-<p>For some sources, <tt>Codename</tt> (as we use it here) does not
-match <tt>Codename</tt> as given in the Release file.</p>
+<p>Some sources need some more care via <em>Extra options</em> below:</p>
 
-<p>To remedy that, you may specify what is actually to be expected in
-the Release file via the <b>extra options</b> field below. Practically
-useful fields are <tt>Origin, Codename, Suite, Archive, Version,
-Label</tt>. These are also later used to pin the source via apt
-preferences.</p>
+<b>Origin, Codename, Suite, Archive, Version, Label</b>:
 
-<p>When <tt>Codename</tt> needs to be overridden in this manner, be
-sure to also add one further flag to identify the source -- else apt
-pinning later would likely not be unambiguous.</p>
+<p>If needed, you may use these fields (same as in a Release file) to
+further specify this source. These are also later used to pin the
+source via apt.</p>
 
-<p>Examples for well-known sources that need this extra handling are
-<em>Debian Security</em>, and <em>Ubuntu Backports and
-Security</em>.</p>
+<p>For some sources, <code>Codename</code> (as we use it above) does not
+match resp. value as given in the Release file. When <code>Codename</code>
+is overridden in this manner, be sure to also add one further flag to
+identify the source -- else apt pinning later would likely not be
+unambiguous. Real world examples that need this extra handling are
+<em>Debian Security</em>, and <em>Ubuntu Security and
+Backports</em>:</p>
 
-<p>Furthermore, <em>Debian Security's Release file</em> states
-<tt>Components</tt> differently than other sources. It unfortunately
-needs an especially invented flag <b>X-Remove-From-Component</b> to
-make it work for us.</p>
+<pre>
+Codename: bionic
+Suite: bionic-backports
+</pre>
 
-<p>Example: Needed extra options for Debian Security:</p>
+<b>X-Check-Valid-Until</b>:
+
+<p>Some sources have a <code>Valid-Until</code> field that is no longer
+updated. If you really still want to use it anyway, use:</p>
+
+<pre>
+X-Check-Valid-Until: no
+</pre>
+
+<p>This will, 1st, ignore mini-buildd's own 'Valid-Until check' and
+2nd, create apt lines for this source with the
+<code>[check-valid-until=no]</code> option. I.e., at least from stretch
+onwards, the check is disabled <em>per source</em>. For jessie or
+worse (where this apt option does not work), a global workaround via
+schroot is still in place.</p>
+
+<b>X-Remove-From-Component</b>:
+
+<p>Some (actually, we only know of <em>Debian Security</em>) sources
+have weird <code>Components</code> that need to be fixed to work with
+mini-buildd. For example, <em>Debian Security</em> needs:</p>
 
 <pre>
 Codename: stretch
 Label: Debian-Security
 X-Remove-From-Component: updates/
-</pre>
-
-<p>Example: Needed extra options for Ubuntu Backports:</p>
-
-<pre>
-Codename: bionic
-Suite: bionic-backports
 </pre>
 """)
 
@@ -490,8 +502,9 @@ codeversion is only used for base sources.""")
         raise Exception("{s}: No archive found. Please add appropriate archive and/or check network setup.".format(s=self))
 
     def mbd_get_apt_line_raw(self, components, prefix="deb "):
-        return "{p}{u} {d} {c}".format(
+        return "{p}[{o}] {u} {d} {c}".format(
             p=prefix,
+            o="check-valid-until={vu}".format(vu=self.mbd_get_extra_option("X-Check-Valid-Until", "yes")),
             u=self.mbd_get_archive().url,
             d=self.codename + ("" if components else "/"),
             c=" ".join(components))
