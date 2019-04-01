@@ -403,10 +403,10 @@ EOF
 	${MBD_TOOL} autosetup
 
 	# Build keyring packages
-	${MBD_TOOL} meta repository.Repository build_keyring_packages
+	${MBD_TOOL} keyringpackages
 
 	# Build test packages
-	${MBD_TOOL} meta repository.Repository build_test_packages
+	${MBD_TOOL} testpackages
 
 	MBD__PACKAGE="mbd-test-cpp" MBD__DIST="stretch-test-unstable" mbd_wait4package
 }

@@ -458,6 +458,28 @@ class AutoSetup(DaemonCommand):
         self.daemon.start()
 
 
+class KeyringPackages(DaemonCommand):
+    """Build keyring packages for all active repositories."""
+    COMMAND = "keyringpackages"
+    AUTH = Command.ADMIN
+    CONFIRM = True
+    ARGUMENTS = []
+
+    def _run(self):
+        self.daemon.meta("repository.Repository", "build_keyring_packages", msglog=self.msglog)
+
+
+class TestPackages(DaemonCommand):
+    """Build internal test packages for all active repositories."""
+    COMMAND = "testpackages"
+    AUTH = Command.ADMIN
+    CONFIRM = True
+    ARGUMENTS = []
+
+    def _run(self):
+        self.daemon.meta("repository.Repository", "build_test_packages", msglog=self.msglog)
+
+
 class ConfigCommand(Command):
     """Configuration convenience commands"""
 
