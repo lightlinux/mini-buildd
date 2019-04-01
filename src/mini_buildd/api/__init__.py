@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import os
+import sys
 import copy
+import inspect
 import logging
 import http.client
 
@@ -260,7 +262,11 @@ auto-ports=buster-test-unstable
         return ""  # Auth OK
 
 
-class Status(Command):
+class DaemonCommand(Command):
+    """Daemon commands"""
+
+
+class Status(DaemonCommand):
     """Show the status of the mini-buildd instance."""
 
     COMMAND = "status"
@@ -353,7 +359,7 @@ Builder: {b_len} building
         self.msglog.critical("CRITICAL USER MESSAGE")
 
 
-class Start(Command):
+class Start(DaemonCommand):
     """Start the Daemon (engine)."""
     COMMAND = "start"
     AUTH = Command.ADMIN
@@ -365,7 +371,7 @@ class Start(Command):
         self._plain_result = "{d}\n".format(d=self.daemon)
 
 
-class Stop(Command):
+class Stop(DaemonCommand):
     """Stop the Daemon (engine)."""
     COMMAND = "stop"
     AUTH = Command.ADMIN
@@ -377,7 +383,7 @@ class Stop(Command):
         self._plain_result = "{d}\n".format(d=self.daemon)
 
 
-class PrintUploaders(Command):
+class PrintUploaders(DaemonCommand):
     """Print all GPG ids allowed to upload to repositories."""
     COMMAND = "printuploaders"
     AUTH = Command.ADMIN
@@ -400,7 +406,7 @@ class PrintUploaders(Command):
         self._plain_result = "\n".join(self._uploader_lines()) + "\n"
 
 
-class Meta(Command):
+class Meta(DaemonCommand):
     """Call arbitrary meta functions for models; usually for internal use only."""
     COMMAND = "meta"
     AUTH = Command.ADMIN
@@ -411,7 +417,7 @@ class Meta(Command):
         self.daemon.meta(self.args["model"].value, self.args["function"].value, msglog=self.msglog)
 
 
-class AutoSetup(Command):
+class AutoSetup(DaemonCommand):
     """Auto setup / bootstrap."""
     COMMAND = "autosetup"
     AUTH = Command.ADMIN
@@ -452,7 +458,11 @@ class AutoSetup(Command):
         self.daemon.start()
 
 
-class GetKey(Command):
+class ConfigCommand(Command):
+    """Configuration convenience commands"""
+
+
+class GetKey(ConfigCommand):
     """Get GnuPG public key."""
     COMMAND = "getkey"
 
@@ -460,7 +470,7 @@ class GetKey(Command):
         self._plain_result = self.daemon.model.mbd_get_pub_key()
 
 
-class GetDputConf(Command):
+class GetDputConf(ConfigCommand):
     """Get recommended dput config snippet.
 
     Usually, this is for integration in your personal ~/.dput.cf.
@@ -471,7 +481,7 @@ class GetDputConf(Command):
         self._plain_result = self.daemon.model.mbd_get_dput_conf()
 
 
-class GetSourcesList(Command):
+class GetSourcesList(ConfigCommand):
     """Get sources.list (apt lines).
 
     Usually, this output is put to a file like '/etc/sources.list.d/mini-buildd-xyz.list'.
@@ -499,7 +509,7 @@ class GetSourcesList(Command):
                                                               self.args["with_extra_sources"].value)
 
 
-class LogCat(Command):
+class LogCat(ConfigCommand):
     """Cat last n lines of the mini-buildd's log."""
 
     COMMAND = "logcat"
@@ -531,7 +541,11 @@ def _get_table_format(dct, cols):
     return (fmt, hdr, fmt_tle, sep0, sep1)
 
 
-class List(Command):
+class PackageCommand(Command):
+    """Package management commands"""
+
+
+class List(PackageCommand):
     """List packages matching a shell-like glob pattern; matches both source and binary package names."""
 
     COMMAND = "list"
@@ -594,7 +608,7 @@ class List(Command):
         return "\n".join([p_table(k, v) for k, v in list(self.repositories.items())])
 
 
-class Show(Command):
+class Show(PackageCommand):
     """Show a source package."""
 
     COMMAND = "show"
@@ -660,7 +674,7 @@ class Show(Command):
         return "\n".join(results)
 
 
-class Migrate(Command):
+class Migrate(PackageCommand):
     """Migrate a source package (along with all binary packages)."""
 
     COMMAND = "migrate"
@@ -689,7 +703,7 @@ class Migrate(Command):
                                                             msglog=self.msglog)
 
 
-class Remove(Command):
+class Remove(PackageCommand):
     """Remove a source package (along with all binary packages)."""
 
     COMMAND = "remove"
@@ -718,7 +732,7 @@ class Remove(Command):
                                                            msglog=self.msglog)
 
 
-class Port(Command):
+class Port(PackageCommand):
     """Port an internal package.
 
     An internal 'port' is a no-changes (i.e., only the changelog
@@ -763,7 +777,7 @@ class Port(Command):
             self._plain_result += to_distribution + " "
 
 
-class PortExt(Command):
+class PortExt(PackageCommand):
     """Port an external package.
 
     An external 'port' is a no-changes (i.e., only the changelog
@@ -795,7 +809,7 @@ class PortExt(Command):
             self._plain_result += d + " "
 
 
-class Retry(Command):
+class Retry(PackageCommand):
     """Retry a previously failed package."""
 
     COMMAND = "retry"
@@ -825,7 +839,11 @@ class Retry(Command):
         self._plain_result = os.path.basename(os.path.basename(pkg_log.changes))
 
 
-class SetUserKey(Command):
+class UserCommand(Command):
+    """User management commands"""
+
+
+class SetUserKey(UserCommand):
     """Set a user's GnuPG public key."""
 
     COMMAND = "setuserkey"
@@ -855,7 +873,7 @@ class SetUserKey(Command):
         self.msglog.warning("Your uploader profile must be (re-)activated by the mini-buildd staff before you can actually use it.")
 
 
-class Subscription(Command):
+class Subscription(UserCommand):
     """Manage subscriptions to package notifications.
 
     A package subscription is a tuple 'PACKAGE:DISTRIBUTION',
@@ -909,31 +927,16 @@ class Subscription(Command):
             self._plain_result = "No matching subscriptions ({s}).".format(s=self.args["subscription"].value)
 
 
+# COMMANDS: (Ordered) list of tuples: [(<name>, <class>)] (<name>=COMMAND_GROUP denotes the start of a group)
 COMMAND_GROUP = "__GROUP__"
-COMMANDS = [(COMMAND_GROUP, "Daemon commands"),
-            (Status.COMMAND, Status),
-            (Start.COMMAND, Start),
-            (Stop.COMMAND, Stop),
-            (PrintUploaders.COMMAND, PrintUploaders),
-            (Meta.COMMAND, Meta),
-            (AutoSetup.COMMAND, AutoSetup),
-            (COMMAND_GROUP, "Configuration convenience commands"),
-            (GetKey.COMMAND, GetKey),
-            (GetDputConf.COMMAND, GetDputConf),
-            (GetSourcesList.COMMAND, GetSourcesList),
-            (LogCat.COMMAND, LogCat),
-            (COMMAND_GROUP, "Package management commands"),
-            (List.COMMAND, List),
-            (Show.COMMAND, Show),
-            (Migrate.COMMAND, Migrate),
-            (Remove.COMMAND, Remove),
-            (Port.COMMAND, Port),
-            (PortExt.COMMAND, PortExt),
-            (Retry.COMMAND, Retry),
-            (COMMAND_GROUP, "User management commands"),
-            (SetUserKey.COMMAND, SetUserKey),
-            (Subscription.COMMAND, Subscription),
-           ]
+_PREVIOUS_GROUP = None
+COMMANDS = []
+for _C in [c for c in sys.modules[__name__].__dict__.values() if inspect.isclass(c) and issubclass(c, Command) and c.COMMAND is not None]:
+    _GROUP = inspect.getmro(_C)[1]
+    if _GROUP is not _PREVIOUS_GROUP:
+        COMMANDS.append((COMMAND_GROUP, inspect.getdoc(_GROUP)))
+        _PREVIOUS_GROUP = _GROUP
+    COMMANDS.append((_C.COMMAND, _C))
 COMMANDS_DICT = dict(COMMANDS)
 COMMANDS_DEFAULTS = [(cmd, cls({}) if cmd != COMMAND_GROUP else cls) for cmd, cls in COMMANDS]
 COMMANDS_DEFAULTS_DICT = dict(COMMANDS_DEFAULTS)
