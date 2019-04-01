@@ -1,3 +1,48 @@
+mini-buildd (1.1.14) experimental; urgency=medium
+
+  ** 1.1.x are _development_ releases, use for testing only. **
+
+  This release (mainly) completes
+    - the twisted HTTP backend implementation (should now have all the
+      features of former cherrypy impl.), and
+    - the 'valid-until support' for outdated/archived sources:
+  * [faebd02] httpd.py: Remove code needed for non-twisted backends only.
+  * [5fcc1cb] httpd_twisted.py: Implement "with_index" arg.
+  * [7cf927e] control: Add missing package dependency on py-dateutil.
+  * [e6fe4ae] httpd_twisted.py: Implement regex matching (using one
+    customized twisted file resource).
+  * [5342c6d] httpd_twisted.py: Separate customized (but otherwise
+    generic) twisted classes.
+  * [2f7596b] httpd_twisted.py: Remove temporary logs.
+  * [c00666d] mini-buildd: Adapt hardcoded path for manual again
+    (debhelper 11 per default installs it to the detected "main" package
+    mini-buildd).
+  * [f11957b] httpd_twisted.py: Implement 'with_doc_missing'.
+  * [cb17041] devel: Improve levels for tests.
+  * [74189c3] httpd_twisted.py: Implement (rotating) 'access.log logging'.
+  * [9971965] httpd_twisted.py: Use t.logging (no deprecated t.python.log)
+    to redirect twisted logging to ours.
+  * [58de9f4] httpd_twisted.py: Switch to better 'rotated access.log'
+    implementation (using t.p.logfile).
+  * [7d6c256] Get rid of script 'mbd-auto-setup' (we now "officially"
+    offer the auto-setup per API call).
+  * [f977001] api/__init__.py: portext: _update(): Clear choices before
+    adding (fixes ever-increasing choices list).
+  * [de5c788] mini-buildd-tool: subparsers still can't be grouped ;).
+    Updating note and issues.
+  * [78b0482] schroot/setup.d/15mini-buildd-workarounds: wheezy and jessie
+    are now archived (need Check-Valid-Until disabled).
+  * [4b46ef1] sources: Add 'X-Check-Valid-Until' per-source support.
+  * [f62f3be] wizards: Mark jessie-backports[-sloppy] source with
+    'X-Check-Valid-Until: no'.
+  * [14a6dcc] 15mini-buildd-workarounds: Update comment on 'valid-until'
+    global workaround.
+  * [e1e72bd] api: New way to group commands; automate creation of global
+    command helpers.
+  * [3ba8d3a] api: Add calls "testpackages" and "keyringpackages".
+
+ -- Stephan Sürken <absurd@debian.org>  Mon, 01 Apr 2019 14:39:04 +0200
+
 mini-buildd (1.1.13) experimental; urgency=medium
 
   ** 1.1.x are _development_ releases, use for testing only. **
