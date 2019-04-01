@@ -38,7 +38,7 @@
 	{% endif %}
 	<details class="mbd-api">
 		<summary title="Manual value">&#8203;</summary>
-		<input type="text" value="{% if arg.raw_value is None or arg.raw_value in arg.choices %}{% else %}{{ arg.raw_value }}{% endif %}" size="15" name="{{ arg.identity }}" />
+		<input type="text" value="" size="15" name="{{ arg.identity }}" />
 	</details>
 {% else %}
 	{{ arg.identity }}: Internal error: Unkown argument type {{ arg.TYPE }}.
