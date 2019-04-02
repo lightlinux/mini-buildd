@@ -467,7 +467,13 @@ class KeyringPackages(DaemonCommand):
     ARGUMENTS = []
 
     def _run(self):
-        self.daemon.meta("repository.Repository", "build_keyring_packages", msglog=self.msglog)
+        if not self.daemon.is_running():
+            raise Exception("Daemon needs to be running to build keyring packages")
+        for s in mini_buildd.models.repository.Repository.mbd_get_active():
+            with contextlib.closing(self.daemon.get_keyring_package()) as package:
+                # https://github.com/PyCQA/pylint/issues/1437
+                # pylint: disable=no-member,protected-access
+                s._mbd_portext2keyring_suites(self.request, "file://" + package.dsc)
 
 
 class TestPackages(DaemonCommand):

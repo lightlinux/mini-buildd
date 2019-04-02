@@ -726,13 +726,6 @@ Example:
             return fields
 
         @classmethod
-        def mbd_meta_build_keyring_packages(cls, msglog):
-            if not Repository.mbd_get_daemon().is_running():
-                raise Exception("Daemon needs to be running to build keyring packages")
-            for s in Repository.mbd_get_active():
-                s.mbd_build_keyring_packages(msglog.request)
-
-        @classmethod
         def mbd_meta_add_test(cls, msglog):
             "Add sandbox repository 'test'."
             test_repo, created = Repository.mbd_get_or_create(
@@ -780,12 +773,6 @@ Example:
                     MsgLog(LOG, request).info("Requested: {i}".format(i=info))
                 except BaseException as e:
                     mini_buildd.setup.log_exception(MsgLog(LOG, request), "FAILED: {i}".format(i=info), e)
-
-    def mbd_build_keyring_packages(self, request):
-        with contextlib.closing(self.mbd_get_daemon().get_keyring_package()) as package:
-            # https://github.com/PyCQA/pylint/issues/1437
-            # pylint: disable=no-member
-            self._mbd_portext2keyring_suites(request, "file://" + package.dsc)
 
     def mbd_get_uploader_keyring(self):
         gpg = mini_buildd.gnupg.TmpGnuPG()
