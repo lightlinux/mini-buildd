@@ -266,6 +266,17 @@ auto-ports=buster-test-unstable
 class DaemonCommand(Command):
     """Daemon commands"""
 
+    def _upload_template_package(self, template_package, dist):
+        """Used for keyringpackages and testpackages."""
+        with contextlib.closing(template_package) as package:
+            dsc_url = "file://" + package.dsc  # pylint: disable=no-member; see https://github.com/PyCQA/pylint/issues/1437
+            info = "Port for {d}: {p}".format(d=dist, p=os.path.basename(dsc_url))
+            try:
+                self.daemon.portext(dsc_url, dist)
+                self.msglog.info("Requested: {i}".format(i=info))
+            except BaseException as e:
+                mini_buildd.setup.log_exception(self.msglog, "FAILED: {i}".format(i=info), e)
+
 
 class Status(DaemonCommand):
     """Show the status of the mini-buildd instance."""
@@ -489,14 +500,7 @@ class KeyringPackages(DaemonCommand):
             if not _suite.build_keyring_package:
                 raise Exception("Port failed: Keyring package to non-keyring suite requested (see 'build_keyring_package' flag): '{d}'".format(d=d))
 
-            with contextlib.closing(self.daemon.get_keyring_package()) as package:
-                dsc_url = "file://" + package.dsc  # pylint: disable=no-member; see https://github.com/PyCQA/pylint/issues/1437)
-                info = "Port for {d}: {p}".format(d=d, p=os.path.basename(dsc_url))
-                try:
-                    self.daemon.portext(dsc_url, d)
-                    self.msglog.info("Requested: {i}".format(i=info))
-                except BaseException as e:
-                    mini_buildd.setup.log_exception(self.msglog, "FAILED: {i}".format(i=info), e)
+            self._upload_template_package(self.daemon.get_keyring_package(), d)
 
 
 class TestPackages(DaemonCommand):
@@ -536,14 +540,7 @@ class TestPackages(DaemonCommand):
 
         for d in self.args["distributions"].value:
             for p in self.args["packages"].value:
-                with contextlib.closing(self.daemon.get_test_package(p)) as package:
-                    dsc_url = "file://" + package.dsc  # pylint: disable=no-member; see https://github.com/PyCQA/pylint/issues/1437)
-                    info = "Port for {d}: {p}".format(d=d, p=os.path.basename(dsc_url))
-                    try:
-                        self.daemon.portext(dsc_url, d)
-                        self.msglog.info("Requested: {i}".format(i=info))
-                    except BaseException as e:
-                        mini_buildd.setup.log_exception(self.msglog, "FAILED: {i}".format(i=info), e)
+                self._upload_template_package(self.daemon.get_test_package(p), d)
 
 
 class ConfigCommand(Command):
