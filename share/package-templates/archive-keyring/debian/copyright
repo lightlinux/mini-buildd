@@ -5,7 +5,7 @@ Comment:
  Inspired by the debian-edu keyring package. This sources from a general
  template to generate keyring packages under
  .
- /usr/share/mini-buildd/package-templates/archive-keyring-template/
+ /usr/share/mini-buildd/package-templates/archive-keyring/
  .
  when mini-buildd is installed.
 

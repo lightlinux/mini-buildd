@@ -187,7 +187,7 @@ class DebianVersion(debian.debian_support.Version):
 
 
 class KeyringPackage(mini_buildd.misc.TmpDir):
-    def __init__(self, identity, gpg, debfullname, debemail, tpl_dir="/usr/share/mini-buildd/package-templates/archive-keyring-template"):
+    def __init__(self, identity, gpg, debfullname, debemail, tpl_dir="/usr/share/mini-buildd/package-templates/archive-keyring"):
         super().__init__()
 
         self.key_id = gpg.get_first_sec_key()
