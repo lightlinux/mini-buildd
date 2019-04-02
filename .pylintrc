@@ -57,8 +57,3 @@ max-statements=60
 max-parents=15
 
 max-bool-expr=8
-
-[SIMILARITIES]
-
-# Need to pimp it a little for 'from __future__' lines
-min-similarity-lines=5
