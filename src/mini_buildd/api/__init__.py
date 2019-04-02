@@ -4,6 +4,7 @@ import os
 import sys
 import copy
 import inspect
+import contextlib
 import logging
 import http.client
 
@@ -477,7 +478,16 @@ class TestPackages(DaemonCommand):
     ARGUMENTS = []
 
     def _run(self):
-        self.daemon.meta("repository.Repository", "build_test_packages", msglog=self.msglog)
+        if not self.daemon.is_running():
+            raise Exception("Daemon needs to be running to build test packages")
+
+        for s in mini_buildd.models.repository.Repository.mbd_get_active():
+            for t in ["archall", "cpp", "ftbfs"]:
+                with contextlib.closing(self.daemon.get_test_package(t)) as package:
+                    # https://github.com/PyCQA/pylint/issues/1437
+                    # pylint: disable=no-member
+                    # pylint: disable=protected-access
+                    s._mbd_portext2keyring_suites(self.request, "file://" + package.dsc)
 
 
 class ConfigCommand(Command):

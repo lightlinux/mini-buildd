@@ -733,13 +733,6 @@ Example:
                 s.mbd_build_keyring_packages(msglog.request)
 
         @classmethod
-        def mbd_meta_build_test_packages(cls, msglog):
-            if not Repository.mbd_get_daemon().is_running():
-                raise Exception("Daemon needs to be running to build test packages")
-            for s in Repository.mbd_get_active():
-                s.mbd_build_test_packages(msglog.request)
-
-        @classmethod
         def mbd_meta_add_test(cls, msglog):
             "Add sandbox repository 'test'."
             test_repo, created = Repository.mbd_get_or_create(
@@ -793,13 +786,6 @@ Example:
             # https://github.com/PyCQA/pylint/issues/1437
             # pylint: disable=no-member
             self._mbd_portext2keyring_suites(request, "file://" + package.dsc)
-
-    def mbd_build_test_packages(self, request):
-        for t in ["archall", "cpp", "ftbfs"]:
-            with contextlib.closing(self.mbd_get_daemon().get_test_package(t)) as package:
-                # https://github.com/PyCQA/pylint/issues/1437
-                # pylint: disable=no-member
-                self._mbd_portext2keyring_suites(request, "file://" + package.dsc)
 
     def mbd_get_uploader_keyring(self):
         gpg = mini_buildd.gnupg.TmpGnuPG()
