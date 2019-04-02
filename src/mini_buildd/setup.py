@@ -24,6 +24,8 @@ CHROOTS_LIBDIR = None
 
 MANUAL_DIR = None
 
+PACKAGE_TEMPLATES_DIR = "/usr/share/mini-buildd/package-templates"
+
 #: This should never ever be changed
 CHAR_ENCODING = "UTF-8"
 
