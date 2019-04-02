@@ -198,9 +198,9 @@ class TemplatePackage(mini_buildd.misc.TmpDir):
         return glob.glob(os.path.join(self.tmpdir, "*.dsc"))[0]
 
 
-class KeyringPackage(mini_buildd.misc.TmpDir):
-    def __init__(self, identity, gpg, debfullname, debemail, tpl_dir=os.path.join(mini_buildd.setup.PACKAGE_TEMPLATES_DIR, "archive-keyring")):
-        super().__init__()
+class KeyringPackage(TemplatePackage):
+    def __init__(self, identity, gpg, debfullname, debemail):
+        super().__init__("archive-keyring")
 
         self.key_id = gpg.get_first_sec_key()
         LOG.debug("KeyringPackage using key: '{i}'".format(i=self.key_id))
@@ -212,10 +212,8 @@ class KeyringPackage(mini_buildd.misc.TmpDir):
              "GNUPGHOME": gpg.home})
         self.version = DebianVersion.stamp()
 
-        # Copy template, and replace %ID%, %MAINT% and %KEY_ID% in all files
-        p = os.path.join(self.tmpdir, "package")
-        shutil.copytree(tpl_dir, p)
-        for root, _dirs, files in os.walk(p):
+        # Replace %ID%, %MAINT% and %KEY_ID% in all files in package dir.
+        for root, _dirs, files in os.walk(self.package_dir):
             for f in files:
                 old_file = os.path.join(root, f)
                 new_file = old_file + ".new"
@@ -227,7 +225,7 @@ class KeyringPackage(mini_buildd.misc.TmpDir):
                 os.rename(new_file, old_file)
 
         # Export public GnuPG key into the package
-        gpg.export(os.path.join(p, self.package_name + ".gpg"), identity=self.key_id)
+        gpg.export(os.path.join(self.package_dir, self.package_name + ".gpg"), identity=self.key_id)
 
         # Generate sources.lists
         daemon = get()
@@ -243,7 +241,7 @@ class KeyringPackage(mini_buildd.misc.TmpDir):
                         for prefix, appendix in [("deb ", ""), ("deb-src ", "_src")]:
                             apt_line = d.mbd_get_apt_line(r, s, rollback=rb, prefix=prefix)
                             file_name = "{base}{appendix}.list".format(base=file_base, appendix=appendix)
-                            with mini_buildd.misc.open_utf8(os.path.join(p, file_name), "w") as f:
+                            with mini_buildd.misc.open_utf8(os.path.join(self.package_dir, file_name), "w") as f:
                                 f.write(apt_line + "\n")
 
         # Generate changelog entry
@@ -252,7 +250,7 @@ class KeyringPackage(mini_buildd.misc.TmpDir):
                                "--package", self.package_name,
                                "--newversion", self.version,
                                "Automatic keyring package for archive '{i}'.".format(i=identity)],
-                              cwd=p,
+                              cwd=self.package_dir,
                               env=self.environment).log().check()
 
         mini_buildd.call.Call(["dpkg-source",
@@ -260,11 +258,6 @@ class KeyringPackage(mini_buildd.misc.TmpDir):
                                "package"],
                               cwd=self.tmpdir,
                               env=self.environment).log().check()
-
-        # Compute DSC file name
-        self.dsc = os.path.join(self.tmpdir,
-                                mini_buildd.changes.Changes.gen_dsc_file_name(self.package_name,
-                                                                              self.version))
 
 
 class DSTPackage(TemplatePackage):
