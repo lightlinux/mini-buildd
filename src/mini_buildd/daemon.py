@@ -260,7 +260,7 @@ class KeyringPackage(TemplatePackage):
                               env=self.environment).log().check()
 
 
-class DSTPackage(TemplatePackage):
+class TestPackage(TemplatePackage):
     def __init__(self, template, version):
         super().__init__(template)
 
@@ -734,8 +734,8 @@ class Daemon():
                               self.model.email_address)
 
     @classmethod
-    def get_test_package(cls, id_):
-        return DSTPackage("mbd-test-{}".format(id_), version=DebianVersion.stamp())
+    def get_test_package(cls, typ):
+        return TestPackage(typ, version=DebianVersion.stamp())
 
     def mbd_get_sources_list(self, codename, repo_regex, suite_regex, prefixes, with_extra_sources):
         apt_lines = []

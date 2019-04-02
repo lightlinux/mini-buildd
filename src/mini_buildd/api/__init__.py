@@ -487,7 +487,10 @@ class TestPackages(DaemonCommand):
     AUTH = Command.ADMIN
     CONFIRM = True
     ARGUMENTS = [
-        MultiSelectArgument(["types"], default="archall,cpp,ftbfs", choices=["archall", "cpp", "ftbfs"], doc="what type of test packages to use."),
+        MultiSelectArgument(["packages"],
+                            default="mbd-test-archall,mbd-test-cpp,mbd-test-ftbfs",
+                            choices=["mbd-test-archall", "mbd-test-cpp", "mbd-test-ftbfs"],
+                            doc="what test packages to use."),
         MultiSelectArgument(["distributions"], doc="comma-separated list of distributions to upload to."),
     ]
 
@@ -509,8 +512,8 @@ class TestPackages(DaemonCommand):
             raise Exception("Daemon needs to be running to build test packages")
 
         for d in self.args["distributions"].value:
-            for t in self.args["types"].value:
-                with contextlib.closing(self.daemon.get_test_package(t)) as package:
+            for p in self.args["packages"].value:
+                with contextlib.closing(self.daemon.get_test_package(p)) as package:
                     dsc_url = "file://" + package.dsc  # pylint: disable=no-member; see https://github.com/PyCQA/pylint/issues/1437)
                     info = "Port for {d}: {p}".format(d=d, p=os.path.basename(dsc_url))
                     try:
