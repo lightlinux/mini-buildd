@@ -186,6 +186,18 @@ class DebianVersion(debian.debian_support.Version):
         return self._sub_rightmost(from_mandatory_version_regex, actual_to_default_version, self.full_version)
 
 
+class TemplatePackage(mini_buildd.misc.TmpDir):
+    def __init__(self, template):
+        super().__init__()
+        self.template = template
+        self.package_dir = os.path.join(self.tmpdir, "package")
+        shutil.copytree(os.path.join(mini_buildd.setup.PACKAGE_TEMPLATES_DIR, template), self.package_dir)
+
+    @property
+    def dsc(self):
+        return glob.glob(os.path.join(self.tmpdir, "*.dsc"))[0]
+
+
 class KeyringPackage(mini_buildd.misc.TmpDir):
     def __init__(self, identity, gpg, debfullname, debemail, tpl_dir=os.path.join(mini_buildd.setup.PACKAGE_TEMPLATES_DIR, "archive-keyring")):
         super().__init__()
@@ -255,19 +267,15 @@ class KeyringPackage(mini_buildd.misc.TmpDir):
                                                                               self.version))
 
 
-class DSTPackage(mini_buildd.misc.TmpDir):
-    def __init__(self, tpl_dir, version=None):
-        super().__init__()
+class DSTPackage(TemplatePackage):
+    def __init__(self, template, version):
+        super().__init__(template)
 
-        dst_dir = os.path.join(self.tmpdir, "package")
-        shutil.copytree(tpl_dir, dst_dir)
-        if version:
-            mini_buildd.call.Call(["debchange",
-                                   "--newversion", version,
-                                   "Version update '{v}'.".format(v=version)],
-                                  cwd=dst_dir).log().check()
+        mini_buildd.call.Call(["debchange",
+                               "--newversion", version,
+                               "Version update '{v}'.".format(v=version)],
+                              cwd=self.package_dir).log().check()
         mini_buildd.call.Call(["dpkg-source", "-b", "package"], cwd=self.tmpdir).log().check()
-        self.dsc = glob.glob(os.path.join(self.tmpdir, "*.dsc"))[0]
 
 
 class Keyrings():
@@ -734,8 +742,7 @@ class Daemon():
 
     @classmethod
     def get_test_package(cls, id_):
-        return DSTPackage("{d}/mbd-test-{i}".format(d=mini_buildd.setup.PACKAGE_TEMPLATES_DIR, i=id_),
-                          version=DebianVersion.stamp())
+        return DSTPackage("mbd-test-{}".format(id_), version=DebianVersion.stamp())
 
     def mbd_get_sources_list(self, codename, repo_regex, suite_regex, prefixes, with_extra_sources):
         apt_lines = []
