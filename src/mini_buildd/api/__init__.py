@@ -464,16 +464,39 @@ class KeyringPackages(DaemonCommand):
     COMMAND = "keyringpackages"
     AUTH = Command.ADMIN
     CONFIRM = True
-    ARGUMENTS = []
+    ARGUMENTS = [
+        MultiSelectArgument(["distributions"], doc="comma-separated list of distributions to upload to."),
+    ]
+
+    def _update(self):
+        if self.daemon:
+            # Possible choices
+            self.args["distributions"].choices = []
+            for r in self.daemon.get_active_repositories():
+                self.args["distributions"].choices += r.mbd_distribution_strings(build_keyring_package=True)
+
+            # Reasonable default
+            if not self.args["distributions"].given:
+                self.args["distributions"].set(self.args["distributions"].choices)
 
     def _run(self):
         if not self.daemon.is_running():
             raise Exception("Daemon needs to be running to build keyring packages")
-        for s in mini_buildd.models.repository.Repository.mbd_get_active():
+
+        for d in self.args["distributions"].value:
+            # check to_dist
+            _repository, _distribution, _suite, _rollback = self.daemon.parse_distribution(d)
+            if not _suite.build_keyring_package:
+                raise Exception("Port failed: Keyring package to non-keyring suite requested (see 'build_keyring_package' flag): '{d}'".format(d=d))
+
             with contextlib.closing(self.daemon.get_keyring_package()) as package:
-                # https://github.com/PyCQA/pylint/issues/1437
-                # pylint: disable=no-member,protected-access
-                s._mbd_portext2keyring_suites(self.request, "file://" + package.dsc)
+                dsc_url = "file://" + package.dsc  # pylint: disable=no-member; see https://github.com/PyCQA/pylint/issues/1437)
+                info = "Port for {d}: {p}".format(d=d, p=os.path.basename(dsc_url))
+                try:
+                    self.daemon.portext(dsc_url, d)
+                    self.msglog.info("Requested: {i}".format(i=info))
+                except BaseException as e:
+                    mini_buildd.setup.log_exception(self.msglog, "FAILED: {i}".format(i=info), e)
 
 
 class TestPackages(DaemonCommand):
