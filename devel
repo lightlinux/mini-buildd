@@ -400,22 +400,19 @@ EOF
 		read -p"Ctr-C to abort, RETURN to continue" dummy
 	fi
 
-	${MBD_TOOL} autosetup
-
-	# Build keyring packages
-	${MBD_TOOL} keyringpackages
-
-	# Build test packages
-	${MBD_TOOL} testpackages
-
-	MBD__PACKAGE="mbd-test-cpp" MBD__DIST="stretch-test-unstable" mbd_wait4package
+	${MBD_TOOL} autosetup --confirm="autosetup"
+	${MBD_TOOL} keyringpackages --confirm="keyringpackages"
+	${MBD_TOOL} testpackages --confirm="testpackages"
 }
 
-mbd_run:15:23:migrate()
+mbd_run:15:23:build-and-migrate()
 {
-	# Migration of test packages
-	${MBD_TOOL} migrate mbd-test-cpp stretch-test-unstable --confirm=migrate
-	${MBD_TOOL} migrate mbd-test-cpp stretch-test-testing --confirm=migrate
+	${MBD_TOOL} testpackages --packages="mbd-test-cpp" --distributions="stretch-test-unstable" --confirm="testpackages"
+	MBD__PACKAGE="mbd-test-cpp" MBD__DIST="stretch-test-unstable" mbd_wait4package
+	${MBD_TOOL} migrate mbd-test-cpp stretch-test-unstable --confirm="migrate"
+	MBD__PACKAGE="mbd-test-cpp" MBD__DIST="stretch-test-testing" mbd_wait4package
+	${MBD_TOOL} migrate mbd-test-cpp stretch-test-testing --confirm="migrate"
+	MBD__PACKAGE="mbd-test-cpp" MBD__DIST="stretch-test-stable" mbd_wait4package
 }
 
 mbd_run:16:23:extra-packages()
