@@ -477,7 +477,7 @@ class KeyringPackages(DaemonCommand):
     NEEDS_RUNNING_DAEMON = True
     CONFIRM = True
     ARGUMENTS = [
-        MultiSelectArgument(["distributions"], doc="comma-separated list of distributions to upload to."),
+        MultiSelectArgument(["--distributions", "-D"], doc="comma-separated list of distributions to act on (defaults to all 'build_keyring_package distributions')."),
     ]
 
     def _update(self):
@@ -513,11 +513,11 @@ class TestPackages(DaemonCommand):
     NEEDS_RUNNING_DAEMON = True
     CONFIRM = True
     ARGUMENTS = [
-        MultiSelectArgument(["packages"],
+        MultiSelectArgument(["--packages", "-P"],
                             default="mbd-test-archall,mbd-test-cpp,mbd-test-ftbfs",
                             choices=["mbd-test-archall", "mbd-test-cpp", "mbd-test-ftbfs"],
                             doc="what test packages to use."),
-        MultiSelectArgument(["distributions"], doc="comma-separated list of distributions to upload to."),
+        MultiSelectArgument(["--distributions", "-D"], doc="comma-separated list of distributions to upload to (defaults to all distributions ending in 'experimental')."),
     ]
 
     def _update(self):
