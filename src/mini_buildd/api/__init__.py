@@ -474,6 +474,7 @@ class KeyringPackages(DaemonCommand):
     """Build keyring packages for all active repositories."""
     COMMAND = "keyringpackages"
     AUTH = Command.ADMIN
+    NEEDS_RUNNING_DAEMON = True
     CONFIRM = True
     ARGUMENTS = [
         MultiSelectArgument(["distributions"], doc="comma-separated list of distributions to upload to."),
@@ -491,9 +492,6 @@ class KeyringPackages(DaemonCommand):
                 self.args["distributions"].set(self.args["distributions"].choices)
 
     def _run(self):
-        if not self.daemon.is_running():
-            raise Exception("Daemon needs to be running to build keyring packages")
-
         for d in self.args["distributions"].value:
             # check to_dist
             _repository, _distribution, _suite, _rollback = self.daemon.parse_distribution(d)
@@ -512,6 +510,7 @@ class TestPackages(DaemonCommand):
     """
     COMMAND = "testpackages"
     AUTH = Command.ADMIN
+    NEEDS_RUNNING_DAEMON = True
     CONFIRM = True
     ARGUMENTS = [
         MultiSelectArgument(["packages"],
@@ -535,9 +534,6 @@ class TestPackages(DaemonCommand):
                 self.args["distributions"].set([d for d in self.args["distributions"].choices if d.endswith("experimental")])
 
     def _run(self):
-        if not self.daemon.is_running():
-            raise Exception("Daemon needs to be running to build test packages")
-
         for d in self.args["distributions"].value:
             for p in self.args["packages"].value:
                 self._upload_template_package(self.daemon.get_test_package(p), d)
