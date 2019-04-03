@@ -763,17 +763,6 @@ Example:
         self.mbd_validate_regex(r"^[a-z0-9]+$", self.identity, "Identity")
         super().clean(*args, **kwargs)
 
-    def _mbd_portext2keyring_suites(self, request, dsc_url):
-        for d in self.distributions.all():
-            for s in self.layout.suiteoption_set.all().filter(build_keyring_package=True):
-                dist = s.mbd_get_distribution_string(self, d)
-                info = "Port for {d}: {p}".format(d=dist, p=os.path.basename(dsc_url))
-                try:
-                    self.mbd_get_daemon().portext(dsc_url, dist)
-                    MsgLog(LOG, request).info("Requested: {i}".format(i=info))
-                except BaseException as e:
-                    mini_buildd.setup.log_exception(MsgLog(LOG, request), "FAILED: {i}".format(i=info), e)
-
     def mbd_get_uploader_keyring(self):
         gpg = mini_buildd.gnupg.TmpGnuPG()
         # Add keys from django users
