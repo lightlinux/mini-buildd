@@ -143,7 +143,7 @@ mbd_wait4package()
 	while true; do
 		# ${MBD_TOOL} show ${MBD__PACKAGE}
 		if ${MBD_TOOL} show ${MBD__PACKAGE} 2>/dev/null | grep "^${MBD__DIST}\b.*${MBD__VERSION}"; then
-			printf "\nOK, build\n"
+			printf "\nOK, '${MBD__PACKAGE}' found in '${MBD__DIST}'.\n"
 			break
 		else
 			printf "*"
