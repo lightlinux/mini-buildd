@@ -498,7 +498,7 @@ class KeyringPackages(DaemonCommand):
             if not _suite.build_keyring_package:
                 raise Exception("Port failed: Keyring package to non-keyring suite requested (see 'build_keyring_package' flag): '{d}'".format(d=d))
 
-            self._upload_template_package(self.daemon.get_keyring_package(), d)
+            self._upload_template_package(mini_buildd.daemon.KeyringPackage(self.daemon.model), d)
 
 
 class TestPackages(DaemonCommand):
@@ -536,7 +536,7 @@ class TestPackages(DaemonCommand):
     def _run(self):
         for d in self.args["distributions"].value:
             for p in self.args["packages"].value:
-                self._upload_template_package(self.daemon.get_test_package(p), d)
+                self._upload_template_package(mini_buildd.daemon.TestPackage(p), d)
 
 
 class ConfigCommand(Command):

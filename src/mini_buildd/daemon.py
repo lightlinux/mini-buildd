@@ -202,17 +202,17 @@ class TemplatePackage(mini_buildd.misc.TmpDir):
 
 
 class KeyringPackage(TemplatePackage):
-    def __init__(self, identity, gpg, debfullname, debemail):
+    def __init__(self, model):
         super().__init__("archive-keyring")
 
-        self.key_id = gpg.get_first_sec_key()
+        self.key_id = model.mbd_gnupg.get_first_sec_key()
         LOG.debug("KeyringPackage using key: '{i}'".format(i=self.key_id))
 
-        self.package_name = "{i}-archive-keyring".format(i=identity)
+        self.package_name = "{i}-archive-keyring".format(i=model.identity)
         self.environment = mini_buildd.call.taint_env(
-            {"DEBEMAIL": debemail,
-             "DEBFULLNAME": debfullname,
-             "GNUPGHOME": gpg.home})
+            {"DEBEMAIL": model.email_address,
+             "DEBFULLNAME": model.mbd_fullname,
+             "GNUPGHOME": model.mbd_gnupg.home})
 
         # Replace %ID%, %MAINT% and %KEY_ID% in all files in package dir.
         for root, _dirs, files in os.walk(self.package_dir):
@@ -221,13 +221,13 @@ class KeyringPackage(TemplatePackage):
                 new_file = old_file + ".new"
                 with mini_buildd.misc.open_utf8(old_file, "r") as of, mini_buildd.misc.open_utf8(new_file, "w") as nf:
                     nf.write(mini_buildd.misc.subst_placeholders(of.read(),
-                                                                 {"ID": identity,
+                                                                 {"ID": model.identity,
                                                                   "KEY_ID": self.key_id,
-                                                                  "MAINT": "{n} <{e}>".format(n=debfullname, e=debemail)}))
+                                                                  "MAINT": "{n} <{e}>".format(n=model.mbd_fullname, e=model.email_address)}))
                 os.rename(new_file, old_file)
 
         # Export public GnuPG key into the package
-        gpg.export(os.path.join(self.package_dir, self.package_name + ".gpg"), identity=self.key_id)
+        model.mbd_gnupg.export(os.path.join(self.package_dir, self.package_name + ".gpg"), identity=self.key_id)
 
         # Generate sources.lists
         daemon = get()
@@ -251,7 +251,7 @@ class KeyringPackage(TemplatePackage):
                                "--create",
                                "--package", self.package_name,
                                "--newversion", self.package_version,
-                               "Automatic keyring package for archive '{i}'.".format(i=identity)],
+                               "Automatic keyring package for archive '{i}'.".format(i=model.identity)],
                               cwd=self.package_dir,
                               env=self.environment).log().check()
 
@@ -729,16 +729,6 @@ class Daemon():
                    v.gen_external_port(to_repository.layout.mbd_get_default_version(to_repository, to_distribution, to_suite)),
                    comments=["External port from: {u}".format(u=dsc_url)],
                    options=options)
-
-    def get_keyring_package(self):
-        return KeyringPackage(self.model.identity,
-                              self.model.mbd_gnupg,
-                              self.model.mbd_fullname,
-                              self.model.email_address)
-
-    @classmethod
-    def get_test_package(cls, template):
-        return TestPackage(template)
 
     def mbd_get_sources_list(self, codename, repo_regex, suite_regex, prefixes, with_extra_sources):
         apt_lines = []
