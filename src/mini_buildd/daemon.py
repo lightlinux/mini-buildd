@@ -187,11 +187,14 @@ class DebianVersion(debian.debian_support.Version):
 
 
 class TemplatePackage(mini_buildd.misc.TmpDir):
+    """Copies a package template into a temporary directory (under 'package/')."""
     def __init__(self, template):
         super().__init__()
         self.template = template
         self.package_dir = os.path.join(self.tmpdir, "package")
         shutil.copytree(os.path.join(mini_buildd.setup.PACKAGE_TEMPLATES_DIR, template), self.package_dir)
+        self.package_version = DebianVersion.stamp()
+        self.package_name = None
 
     @property
     def dsc(self):
@@ -210,7 +213,6 @@ class KeyringPackage(TemplatePackage):
             {"DEBEMAIL": debemail,
              "DEBFULLNAME": debfullname,
              "GNUPGHOME": gpg.home})
-        self.version = DebianVersion.stamp()
 
         # Replace %ID%, %MAINT% and %KEY_ID% in all files in package dir.
         for root, _dirs, files in os.walk(self.package_dir):
@@ -248,7 +250,7 @@ class KeyringPackage(TemplatePackage):
         mini_buildd.call.Call(["debchange",
                                "--create",
                                "--package", self.package_name,
-                               "--newversion", self.version,
+                               "--newversion", self.package_version,
                                "Automatic keyring package for archive '{i}'.".format(i=identity)],
                               cwd=self.package_dir,
                               env=self.environment).log().check()
@@ -261,12 +263,13 @@ class KeyringPackage(TemplatePackage):
 
 
 class TestPackage(TemplatePackage):
-    def __init__(self, template, version):
+    def __init__(self, template):
         super().__init__(template)
+        self.package_name = template
 
         mini_buildd.call.Call(["debchange",
-                               "--newversion", version,
-                               "Version update '{v}'.".format(v=version)],
+                               "--newversion", self.package_version,
+                               "Version update '{v}'.".format(v=self.package_version)],
                               cwd=self.package_dir).log().check()
         mini_buildd.call.Call(["dpkg-source", "-b", "package"], cwd=self.tmpdir).log().check()
 
@@ -734,8 +737,8 @@ class Daemon():
                               self.model.email_address)
 
     @classmethod
-    def get_test_package(cls, typ):
-        return TestPackage(typ, version=DebianVersion.stamp())
+    def get_test_package(cls, template):
+        return TestPackage(template)
 
     def mbd_get_sources_list(self, codename, repo_regex, suite_regex, prefixes, with_extra_sources):
         apt_lines = []
