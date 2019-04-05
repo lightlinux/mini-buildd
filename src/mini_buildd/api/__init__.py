@@ -2,6 +2,7 @@
 
 import os
 import sys
+import time
 import copy
 import inspect
 import contextlib
@@ -272,8 +273,8 @@ class DaemonCommand(Command):
             dsc_url = "file://" + package.dsc  # pylint: disable=no-member; see https://github.com/PyCQA/pylint/issues/1437
             info = "Port for {d}: {p}".format(d=dist, p=os.path.basename(dsc_url))
             try:
-                self.daemon.portext(dsc_url, dist)
-                self.msglog.info("Requested: {i}".format(i=info))
+                self.msglog.info("Requesting: {i}".format(i=info))
+                return self.daemon.portext(dsc_url, dist)
             except BaseException as e:
                 mini_buildd.setup.log_exception(self.msglog, "FAILED: {i}".format(i=info), e)
 
@@ -478,6 +479,7 @@ class KeyringPackages(DaemonCommand):
     CONFIRM = True
     ARGUMENTS = [
         MultiSelectArgument(["--distributions", "-D"], doc="comma-separated list of distributions to act on (defaults to all 'build_keyring_package distributions')."),
+        BoolArgument(["--no-migration", "-N"], default=False, doc="don't migrate packages."),
     ]
 
     def _update(self):
@@ -492,13 +494,35 @@ class KeyringPackages(DaemonCommand):
                 self.args["distributions"].set(self.args["distributions"].choices)
 
     def _run(self):
+        uploaded = set()
         for d in self.args["distributions"].value:
-            # check to_dist
-            _repository, _distribution, _suite, _rollback = self.daemon.parse_distribution(d)
-            if not _suite.build_keyring_package:
+            repository, distribution, suite, _rollback = self.daemon.parse_distribution(d)
+            if not suite.build_keyring_package:
                 raise Exception("Port failed: Keyring package to non-keyring suite requested (see 'build_keyring_package' flag): '{d}'".format(d=d))
 
-            self._upload_template_package(mini_buildd.daemon.KeyringPackage(self.daemon.model), d)
+            uploaded.add(self._upload_template_package(mini_buildd.daemon.KeyringPackage(self.daemon.model), d))
+
+        built = set()
+        for dist, package, version in uploaded:
+            pkg_info = "{}-{} in {}...".format(package, version, dist)
+
+            tries, max_tries, sleep = 0, 50, 15
+            while tries <= max_tries:
+                if repository.mbd_package_find(package, dist, version):
+                    built.add((dist, package, version))
+                    break
+                self.msglog.info("Waiting for {} ({}/{})".format(pkg_info, tries, max_tries))
+                tries += 1
+                time.sleep(sleep)
+
+        if uploaded != built:
+            self.msglog.warning("Timed out waiting for these packages (skipping migrate): {}".format(uploaded - built))
+
+        if not self.args["no_migration"].value:
+            for dist, package, version in built:
+                repository, distribution, suite, _rollback = self.daemon.parse_distribution(dist)
+                self.msglog.info("Migrating {}...".format(pkg_info))
+                repository.mbd_package_migrate(package, distribution, suite, full=True, version=version, msglog=self.msglog)
 
 
 class TestPackages(DaemonCommand):
