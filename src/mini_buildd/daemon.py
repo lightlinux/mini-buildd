@@ -679,6 +679,7 @@ class Daemon():
             # Sign and add to incoming queue
             self.model.mbd_gnupg.sign(changes)
             self.incoming_queue.put(changes)
+            return dist, package, version
         except BaseException:
             t.close()
             raise
@@ -709,7 +710,7 @@ class Daemon():
         if not path:
             raise Exception("Port failed: Can't find DSC for {p}-{v} in pool".format(p=package, v=p["sourceversion"]))
 
-        self._port(urllib.parse.urljoin(self.model.mbd_get_http_url(), path), package, to_dist, port_version, options=options)
+        return self._port(urllib.parse.urljoin(self.model.mbd_get_http_url(), path), package, to_dist, port_version, options=options)
 
     def portext(self, dsc_url, to_dist, options=None):
         # check to_dist
@@ -723,12 +724,12 @@ class Daemon():
 
         dsc = debian.deb822.Dsc(urllib.request.urlopen(dsc_url))
         v = DebianVersion(dsc["Version"])
-        self._port(dsc_url,
-                   dsc["Source"],
-                   to_dist,
-                   v.gen_external_port(to_repository.layout.mbd_get_default_version(to_repository, to_distribution, to_suite)),
-                   comments=["External port from: {u}".format(u=dsc_url)],
-                   options=options)
+        return self._port(dsc_url,
+                          dsc["Source"],
+                          to_dist,
+                          v.gen_external_port(to_repository.layout.mbd_get_default_version(to_repository, to_distribution, to_suite)),
+                          comments=["External port from: {u}".format(u=dsc_url)],
+                          options=options)
 
     def mbd_get_sources_list(self, codename, repo_regex, suite_regex, prefixes, with_extra_sources):
         apt_lines = []
