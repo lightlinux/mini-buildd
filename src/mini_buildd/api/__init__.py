@@ -764,6 +764,7 @@ class Migrate(PackageCommand):
     ARGUMENTS = [
         SelectArgument(["package"], doc="source package name"),
         SelectArgument(["distribution"], doc="distribution to migrate from (if this is a '-rollbackN' distribution, this will perform a rollback restore)"),
+        BoolArgument(["--full", "-F"], default=False, doc="migrate all 'migrates_to' suites up (f.e. unstable->testing->stable)."),
         Command.COMMON_ARG_VERSION
     ]
 
@@ -779,6 +780,7 @@ class Migrate(PackageCommand):
         self._plain_result = repository.mbd_package_migrate(self.args["package"].value,
                                                             distribution,
                                                             suite,
+                                                            full=self.args["full"].value,
                                                             rollback=rollback,
                                                             version=self.args["version"].false2none(),
                                                             msglog=self.msglog)

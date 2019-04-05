@@ -1056,7 +1056,7 @@ DscIndices: Sources Release . .gz .bz2
                 mini_buildd.setup.log_exception(LOG, "Rollback failed (ignoring)", e)
         return reprepro_output
 
-    def mbd_package_migrate(self, package, distribution, suite, rollback=None, version=None, msglog=LOG):
+    def _mbd_package_migrate(self, package, distribution, suite, rollback=None, version=None, msglog=LOG):
         reprepro_output = ""
 
         src_dist = suite.mbd_get_distribution_string(self, distribution)
@@ -1104,6 +1104,17 @@ DscIndices: Sources Release . .gz .bz2
 
         # Notify
         self.mbd_package_notify("MIGRATED", dst_dist, src_pkg, reprepro_output, msglog=msglog)
+
+        return reprepro_output
+
+    def mbd_package_migrate(self, package, distribution, suite, full=False, rollback=None, version=None, msglog=LOG):
+        reprepro_output = ""
+        if full:
+            while suite.migrates_to is not None:
+                reprepro_output += self._mbd_package_migrate(package, distribution, suite, rollback=rollback, version=version, msglog=msglog)
+                suite = suite.migrates_to
+        else:
+            reprepro_output = self._mbd_package_migrate(package, distribution, suite, rollback=rollback, version=version, msglog=msglog)
 
         return reprepro_output
 
