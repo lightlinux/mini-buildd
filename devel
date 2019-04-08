@@ -12,6 +12,20 @@ MBD_HOME=~mini-buildd
 MBD_HTTPD="${MBD_HTTPD:-localhost:8066}"  # Use 'MBD_HTTPD=some.where.com:123 ./devel' to use something else than default localhost
 MBD_TOOL="/usr/bin/mini-buildd-tool admin@${MBD_HTTPD}"  # m-b-tool shortcut for testing calls
 
+declare -g -a _ON_EXIT=()
+on_exit_run()
+{
+	local line
+	for line in "${_ON_EXIT[@]}"; do
+		${line}
+	done
+}
+on_exit()
+{
+	_ON_EXIT+=("${*}")
+}
+trap "on_exit_run" EXIT
+
 _check_prog()
 {
 	local path
@@ -306,7 +320,7 @@ mbd_run:02:00:changelog()
 {
 	# Checking changelog (must be unchanged)...
 	git diff-index --exit-code HEAD debian/changelog
-	trap "git checkout debian/changelog" EXIT
+	on_exit git checkout debian/changelog
 	gbp dch --snapshot --auto
 }
 
