@@ -382,24 +382,6 @@ mbd_run:14:23:auto-setup()
 {
 	mbd_pythonkeyringtestconfig
 
-	if [ "${MINI_BUILDD_DEVEL_BATCH_MODE}" != "batch-mode" ]; then
-		cat <<EOF
-Automatically run the whole 'Admin Quickstart', all defaults,
-Debian wizards, completely non-interactive.
-
-Just give the admin password once when asked.
-
-This is for quick bootstrapping to test-drive it, debugging and
-very hasty lads.
-
-Don't use if for, or on an existing production setup!
-This will run for quite some time!
-This will automatically download (most likely from internet) tons of data!
-
-EOF
-		read -p"Ctr-C to abort, RETURN to continue" dummy
-	fi
-
 	${MBD_TOOL} autosetup --confirm="autosetup"
 	${MBD_TOOL} keyringpackages --confirm="keyringpackages"
 	${MBD_TOOL} testpackages --confirm="testpackages"
