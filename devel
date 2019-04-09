@@ -413,16 +413,21 @@ mbd_run:15:23:build-and-migrate()
 
 mbd_run:16:23:apt-install()
 {
+	test_install()
+	{
+		on_exit sudo dpkg --purge "${1}"
+		sudo apt "${@:2}" install "${1}"
+	}
+
 	# Bootstrap keyring package (tofu style), then install authorized test package
 	local sources_list="/etc/apt/sources.list.d/mbd-testsuite.list"
+	on_exit sudo rm -v -f "${sources_list}"
+	on_exit sudo apt update
 	${MBD_TOOL} getsourceslist stretch --suite=stable | sudo tee "${sources_list}"
 	sudo apt --allow-insecure-repositories update
-	sudo apt --allow-unauthenticated install $(hostname)-archive-keyring
+	test_install $(hostname)-archive-keyring --allow-unauthenticated
 	sudo apt update
-	sudo apt install mbd-test-cpp
-
-	on_exit sudo dpkg --purge $(hostname)-archive-keyring mbd-test-cpp
-	on_exit sudo rm -v -f "${sources_list}"
+	test_install mbd-test-cpp
 }
 
 mbd_run:17:23:extra-packages()
