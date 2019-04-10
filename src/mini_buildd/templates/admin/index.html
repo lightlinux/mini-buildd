@@ -42,7 +42,7 @@
 
 							<!-- SOURCES -->
 							{% include "includes/mbd_admin_index_table_header.html" with title="Sources" %}
-							{% include "includes/mbd_admin_index_table_row.html" with model_name="Archives" model_path="source.Archive" hide_add=False wiz0_function="add_from_sources_list" wiz0_name="Local" wiz0_title="Scan your local system's apt setup and add all new archives found" wiz1_function="add_debian" wiz1_name="Debian" wiz1_title="Add generic internet Debian archives" wiz2_function="add_ubuntu" wiz2_name="Ubuntu" wiz2_title="Add generic internet Ubuntu archives" %}
+							{% include "includes/mbd_admin_index_table_row.html" with model_name="Archives" model_path="source.Archive" hide_add=False wiz0_function="add_local" wiz0_name="Local" wiz0_title="Scan your local system's apt setup and add all new archives found" wiz1_function="add_debian" wiz1_name="Debian" wiz1_title="Add generic internet Debian archives" wiz2_function="add_ubuntu" wiz2_name="Ubuntu" wiz2_title="Add generic internet Ubuntu archives" %}
 
 							{% include "includes/mbd_admin_index_table_row.html" with model_name="Sources" model_path="source.Source" hide_add=False wiz0_function="add_debian" wiz0_name="Debian" wiz0_title="Add well-known Debian sources" wiz1_function="add_ubuntu" wiz1_name="Ubuntu" wiz1_title="Add well-known Ubuntu sources" %}
 

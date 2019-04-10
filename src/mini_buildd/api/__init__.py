@@ -424,7 +424,7 @@ class Meta(DaemonCommand):
     COMMAND = "meta"
     AUTH = Command.ADMIN
     ARGUMENTS = [StringArgument(["model"], doc="Model path, for example 'source.Archive'"),
-                 StringArgument(["function"], doc="Meta function to call, for example 'add_from_sources_list'")]
+                 StringArgument(["function"], doc="Meta function to call, for example 'add_local'")]
 
     def _run(self):
         self.daemon.meta(self.args["model"].value, self.args["function"].value, msglog=self.msglog)
@@ -448,7 +448,7 @@ class AutoSetup(DaemonCommand):
         self.daemon.meta("daemon.Daemon", "pca_all", msglog=self.msglog)
 
         # Sources
-        self.daemon.meta("source.Archive", "add_from_sources_list", msglog=self.msglog)
+        self.daemon.meta("source.Archive", "add_local", msglog=self.msglog)
         for v in self.args["vendors"].value:
             self.daemon.meta("source.Archive", "add_{}".format(v), msglog=self.msglog)
             self.daemon.meta("source.Source", "add_{}".format(v), msglog=self.msglog)

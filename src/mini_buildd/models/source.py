@@ -8,6 +8,7 @@ import logging
 import contextlib
 import copy
 import datetime
+import socket
 
 import dateutil.parser
 
@@ -52,18 +53,29 @@ Use the 'directory' notation with exactly one trailing slash (like 'http://examp
                 Archive.mbd_get_or_create(msglog, url=url)
 
         @classmethod
-        def mbd_meta_add_from_sources_list(cls, msglog):
-            "Scan local sources list and add all archives found there."
+        def mbd_meta_add_local(cls, msglog):
+            """Local scan for archives.
+
+            This currently scans the local sources list and tries to detect a local apt-cacher-ng.
+            """
             try:
                 import aptsources.sourceslist
                 for src in aptsources.sourceslist.SourcesList():
                     # These URLs come from the user. 'normalize' the uri first to have exactly one trailing slash.
                     cls._mbd_get_or_create(msglog, src.uri.rstrip("/") + "/")
+                    msglog.info("Archive added from local source: {}".format(src))
+
             except BaseException as e:
                 mini_buildd.setup.log_exception(LOG,
                                                 "Failed to scan local sources.lists for default mirrors ('python-apt' not installed?)",
                                                 e,
                                                 level=logging.WARN)
+
+            url = mini_buildd.misc.detect_apt_cacher_ng(url="http://{}:3142".format(socket.getfqdn()))
+            if url:
+                msglog.info("Local apt-cacher-ng detected: {}".format(url))
+                for path in ["debian", "ubuntu", "debian-security", "debian-archive/debian", "debian-archive/debian-security", "debian-archive/debian-backports"]:
+                    cls._mbd_get_or_create(msglog, "{}/{}/".format(url, path))
 
         @classmethod
         def mbd_meta_add_debian(cls, msglog):
