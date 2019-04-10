@@ -747,6 +747,20 @@ def urlopen_ca_certificates(url):
     return urllib.request.urlopen(url, cafile=cafile) if os.path.exists(cafile) else urllib.request.urlopen(url)
 
 
+def detect_apt_cacher_ng(url="http://localhost:3142"):
+    """
+    Little heuristic helper for the "local archives" wizard.
+    """
+    try:
+        urlopen_ca_certificates(url)
+    except urllib.error.HTTPError as e:
+        if e.code == 406 and re.findall(r"apt.cacher.ng", e.file.read().decode("UTF-8"), re.IGNORECASE):
+            return url
+    except Exception:  # pylint: disable=broad-except
+        pass
+    return None
+
+
 def canonize_url(url):
     "Poor man's URL canonizer: Always include the port (currently only works for 'http' and 'https' default ports)."
     default_scheme2port = {"http": ":80", "https": ":443"}
