@@ -592,6 +592,9 @@ In Debian kernel packages since ``4.8.4-1~exp1``::
 I.e.: When running the Debian standard kernel and your mini-buildd instance needs
 to support ``wheezy`` or earlier, you need to re-enable this (in ``/etc/default/grub``).
 
+You may use ``local-vsyscall-emulate.cfg`` in ``examples`` (a symlink
+should do) for this purpose.
+
 On any running kernel, this is a poor man's check to see if
 vsyscall is still enabled on your system::
 
