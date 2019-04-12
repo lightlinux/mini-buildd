@@ -1,3 +1,60 @@
+mini-buildd (1.1.15) experimental; urgency=medium
+
+  ** 1.1.x are _development_ releases, use for testing only. **
+
+  This release mainly completes the new API calls 'keyringpackages' and
+  'testpackages'. 'keyringpackages' will now auto-migrate
+  up by default (also 'migrate' now has the option to fully migrate
+  up in one go):
+
+  * [849f297] templates/includes/mbd_api_arg.html: Bugfix: Never pre-set
+    manual value (breaks at leats MultiSelect).
+  * [4b5cd82] api 'testpackages': Move code from repository to api.
+  * [0a67a0a] api: 'testpackages': Add options (types and distributions).
+  * [ff1960e] api: 'keyringpackages': Move code from repository to api.
+  * [4dcf9ce] api: 'autosetup': Default should be vendor=Debian only.
+  * [3317c5e] Rename 'archive-keyring-template/' -> 'archive-keyring/'
+    (it's now already in the 'package-templates/').
+  * [be26492] setup.py: Put (hardcoded) package-templates dir to setup.
+  * [cab9945] daemon.py: Add TemplatePackage class; use for DSTPackage.
+  * [6c59142] daemon.py: Impl. KeyringPackage via TemplatePackage.
+  * [048ed50] api 'testpackages': Back to use full package names again.
+  * [1400452] api 'keyringpackages': Add option "distributions".
+  * [a29d4b1] .pylintrc: Remove 'similarities' pimp (only there for py2
+    "from future").
+  * [e19a532] api: Add common method to upload template packages.
+  * [9e2d426] repository.py: Rm _mbd_portext2keyring_suites() (obsoleted
+    by new api calls).
+  * [1da61d6] api: keyring|testpackages: Use NEEDS_RUNNING_DAEMON flag.
+  * [316173e] devel: wait3package: Improve note when package is found.
+  * [6e42337] api: keyring|testpackages: Make args optional.
+  * [e855c6a] mini-buildd-tool: Don't use ungiven args in api call.
+  * [dc2529e] devel: Fixup autosetup && migrate tests after api changes.
+  * [bcca432] daemon.py: Improve template packages.
+  * [8eafcb6] daemon.py: Avoid extra getters for test and keyring
+    packages.
+  * [6ba3ab4] daemon.py: typo fix in comment.
+  * [64c956f] api 'migrate': Add --full option (migrate up to top suite in
+    one call).
+  * [e6037fe] daemon.py: port() now returns triple 'dist,package,version'.
+  * [66c4564] api 'keyringpackages': Add support to auto-migrate (usually
+    unstable->testing->stable).
+  * [774ebec] devel: autosetup test: Remove extra interactive warning.
+  * [ce5550c] devel: Add support to run multiple code on exit (cleanup).
+  * [5c3fdf0] devel: test suite: Add repo boostrapping and install tests.
+  * [5d2caaf] devel: Improve apt-install test.
+  * [7e18f54] wizard: Fix (can now find archived wheezy security again)
+    and cleanup hardcoded archive list.
+  * [526e63e] misc.py: Add extra heuristic function to detect apt-cacher-
+    ng.
+  * [185ff09] archive wizard: Rename "from_sources_list" to "local" and
+    add support for apt-cacher-ng detection.
+  * [a299ef4] Add example for vsyscall workaround.
+  * [db944fe] source wizard: Flagging wheezy Security 'X-Check-Valid-
+    Until: no' (it's Valid-Until is no longer updated).
+
+ -- Stephan Sürken <absurd@debian.org>  Fri, 12 Apr 2019 17:18:14 +0200
+
 mini-buildd (1.1.14) experimental; urgency=medium
 
   ** 1.1.x are _development_ releases, use for testing only. **
