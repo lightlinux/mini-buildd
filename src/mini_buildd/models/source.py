@@ -384,7 +384,7 @@ codeversion is only used for base sources.""")
                                    [keys["archive_wheezy"], keys["release_wheezy"], keys["archive_jessie"]])
             cls._mbd_get_or_create(msglog, "Debian", "wheezy/updates",
                                    [keys["archive_wheezy"], keys["security_archive_jessie"]],
-                                   extra_options="Codename: wheezy\nLabel: Debian-Security\nX-Remove-From-Component: updates/")
+                                   extra_options="Codename: wheezy\nLabel: Debian-Security\nX-Remove-From-Component: updates/\nX-Check-Valid-Until: no")
             cls._mbd_get_or_create(msglog, "Debian Backports", "wheezy-backports",
                                    [keys["archive_wheezy"], keys["release_wheezy"], keys["archive_jessie"]])
             cls._mbd_get_or_create(msglog, "Debian Backports", "wheezy-backports-sloppy",
