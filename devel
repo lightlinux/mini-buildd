@@ -411,26 +411,31 @@ mbd_run:15:23:build-and-migrate()
 	MBD__PACKAGE="mbd-test-cpp" MBD__DIST="stretch-test-stable" mbd_wait4package
 }
 
-mbd_run:16:23:apt-install()
+_test_install()
 {
-	test_install()
-	{
-		on_exit sudo dpkg --purge "${1}"
-		sudo apt "${@:2}" install "${1}"
-	}
+	on_exit sudo dpkg --purge "${1}"
+	sudo apt "${@:2}" install "${1}"
+}
 
-	# Bootstrap keyring package (tofu style), then install authorized test package
+mbd_run:16:23:apt-tofu-bootstrap()
+{
+	# Bootstrap keyring package (tofu style)
 	local sources_list="/etc/apt/sources.list.d/mbd-testsuite.list"
 	on_exit sudo rm -v -f "${sources_list}"
 	on_exit sudo apt update
 	${MBD_TOOL} getsourceslist stretch --suite=stable | sudo tee "${sources_list}"
 	sudo apt --allow-insecure-repositories update
-	test_install $(hostname)-archive-keyring --allow-unauthenticated
+	_test_install $(hostname)-archive-keyring --allow-unauthenticated
 	sudo apt update
-	test_install mbd-test-cpp
 }
 
-mbd_run:17:23:extra-packages()
+mbd_run:17:23:apt-install()
+{
+	# install previously built test package
+	_test_install mbd-test-cpp
+}
+
+mbd_run:18:23:extra-packages()
 {
 	# Extra test packages when available
 	[ ! -d ../test-packages/ ] || dput --force --unchecked --no-upload-log mini-buildd-$(hostname) ../test-packages/*.changes
