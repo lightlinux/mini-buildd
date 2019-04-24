@@ -8,10 +8,6 @@
 #  $ ./devel installdeps
 #  $ ./devel update
 
-MBD_HOME=~mini-buildd
-MBD_HTTPD="${MBD_HTTPD:-$(hostname -f):8066}"  # Use 'MBD_HTTPD=some.where.com:123 ./devel' to use something else than this host
-MBD_TOOL="/usr/bin/mini-buildd-tool admin@${MBD_HTTPD}"  # m-b-tool shortcut for testing calls
-
 declare -g -a _ON_EXIT=()
 on_exit_run()
 {
@@ -45,6 +41,10 @@ PJPATH="$(readlink -f $(dirname $0))"
 PYPATH="${PJPATH}/src"
 PYLINTRC="${PJPATH}/.pylintrc"
 LINTIAN_CFG="${PJPATH}/.lintian.cfg"
+
+MBD_HOME=~mini-buildd
+MBD_HTTPD="${MBD_HTTPD:-$(hostname -f):8066}"  # Use 'MBD_HTTPD=some.where.com:123 ./devel' to use something else than this host
+MBD_TOOL="${PYPATH}/mini-buildd-tool admin@${MBD_HTTPD}"  # m-b-tool shortcut for testing calls
 
 mbd_installdeps()
 {
