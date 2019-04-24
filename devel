@@ -37,14 +37,12 @@ _check_prog()
 	exit 1
 }
 
-PJPATH="$(readlink -f $(dirname $0))"
-PYPATH="${PJPATH}/src"
-PYLINTRC="${PJPATH}/.pylintrc"
-LINTIAN_CFG="${PJPATH}/.lintian.cfg"
-
-MBD_HOME=~mini-buildd
 MBD_HTTPD="${MBD_HTTPD:-$(hostname -f):8066}"  # Use 'MBD_HTTPD=some.where.com:123 ./devel' to use something else than this host
-MBD_TOOL="${PYPATH}/mini-buildd-tool admin@${MBD_HTTPD}"  # m-b-tool shortcut for testing calls
+MBD_PJPATH="$(readlink -f $(dirname $0))"
+MBD_PYPATH="${MBD_PJPATH}/src"
+MBD_PYLINTRC="${MBD_PJPATH}/.pylintrc"
+MBD_LINTIAN_CFG="${MBD_PJPATH}/.lintian.cfg"
+MBD_TOOL="${MBD_PYPATH}/mini-buildd-tool admin@${MBD_HTTPD}"  # m-b-tool shortcut for testing calls
 
 mbd_installdeps()
 {
@@ -117,8 +115,8 @@ mbd_pysources()
 
 mbd_pyenv()
 {
-	printf "export PYTHONPATH=\"${PYPATH}\"\n"
-	printf "export PYLINTRC=\"${PYLINTRC}\""
+	printf "export PYTHONPATH=\"${MBD_PYPATH}\"\n"
+	printf "export PYLINTRC=\"${MBD_PYLINTRC}\""
 }
 
 pyenv()
@@ -132,13 +130,13 @@ mbd_pylintgeneratedmembers()
 	# Generate all identifiers with "has no xxx member" error. If
 	# needed, manually add those that are _actually_
 	# false-positive due to django to -> .pylintrc.
-	sed -i "s/^generated-members=.*/generated-members=/" "${PYLINTRC}"  # Reset, so we actually see all these errors
+	sed -i "s/^generated-members=.*/generated-members=/" "${MBD_PYLINTRC}"  # Reset, so we actually see all these errors
 	local gm=""
 	for o in $(${0} pylint | grep "has no.*member" | cut -d"'" -f4 | sort | uniq); do
 		gm+="${o},"
 	done
-	sed -i "s/^generated-members=.*/generated-members=${gm}/" "${PYLINTRC}"
-	printf "${PYLINTRC} tainted.\n"
+	sed -i "s/^generated-members=.*/generated-members=${gm}/" "${MBD_PYLINTRC}"
+	printf "${MBD_PYLINTRC} tainted.\n"
 }
 
 mbd_installdjango()
@@ -227,7 +225,7 @@ mbd_run:00:10:pycodestyle()
 	_check_prog pycodestyle
 	(
 		pyenv
-		pycodestyle --show-source --show-pep8 --config=${PJPATH}/.pycodestyle $(mbd_pysources)
+		pycodestyle --show-source --show-pep8 --config=${MBD_PJPATH}/.pycodestyle $(mbd_pysources)
 	)
 }
 
@@ -333,7 +331,7 @@ mbd_run:03:00:buildfast()
 # Build package again (build must have been run) w/ checks && doc
 mbd_run:03:12:buildcheck()
 {
-	debuild -us -uc --lintian-opts --cfg="${LINTIAN_CFG}"
+	debuild -us -uc --lintian-opts --cfg="${MBD_LINTIAN_CFG}"
 }
 
 # This also checks "full" package building (with doc and check)
