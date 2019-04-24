@@ -349,9 +349,6 @@ mbd_run:10:23:remove()
 mbd_run:10:23:purge()
 {
 	mbd_run:10:23:remove purge
-
-	# Also test mini-buildd's internal sbuild key workaround
-	sudo rm -v -f /var/lib/sbuild/apt-keys/*
 }
 
 mbd_run:11:00:install()
