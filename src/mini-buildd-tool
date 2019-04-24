@@ -101,7 +101,7 @@ def cmd_call(args):
 
     # Log in if user given explicitly, or required by the command
     if user or args.command_class.AUTH != mini_buildd.api.Command.NONE:
-        mini_buildd.misc.web_login(host, user, KEYRING)
+        mini_buildd.misc.web_login(host, user, KEYRING, proto=args.protocol)
 
     # Compute api call parameters
     http_args = {}
