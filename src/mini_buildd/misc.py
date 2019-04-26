@@ -788,6 +788,7 @@ def web_login(host, user, credentials,
 
         # Retrieve login page
         opener.open(login_url)
+        opener.addheaders = [("Referer", plain_url)]
 
         # Find "csrftoken" in cookiejar
         csrf_cookies = [c for c in cookie_handler.cookiejar if c.name == "csrftoken"]
