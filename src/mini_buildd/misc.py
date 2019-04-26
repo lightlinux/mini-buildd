@@ -230,6 +230,8 @@ class Endpoint():
     tcp6:port=8066:interface=\:\:
 
     """
+    SUPPORTED_TYPES = ["ssl", "tcp6", "tcp", "unix"]
+
     @classmethod
     def _escape(cls, string):
         return string.replace(":", r"\:")
@@ -241,6 +243,9 @@ class Endpoint():
     def __init__(self, desc):
         self.desc = desc
         self._params = [self._unescape(p) for p in re.split(r"(?<!\\):", desc)]
+        if self.type not in self.SUPPORTED_TYPES:
+            raise Exception("Unsupported endpoint type: {} (twisted subset available: {})".format(self.type, self.SUPPORTED_TYPES))
+
         self._options = {}
         for p in self._params:
             key = p.partition("=")

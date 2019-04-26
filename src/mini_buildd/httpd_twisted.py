@@ -72,7 +72,7 @@ class HttpD(mini_buildd.httpd.HttpD):
         self.resource.putChild(bytes(route, encoding=self._char_encoding), static)
 
     def __init__(self, wsgi_app):
-        super().__init__(["ssl", "tcp6", "tcp", "unix"])
+        super().__init__()
 
         # Bend twisted (not access.log) logging to ours
         twisted.logger.globalLogPublisher.addObserver(twisted.logger.STDLibLogObserver(name=__name__))

@@ -22,7 +22,7 @@ Package <b><tt>mini-buildd-doc</tt></b> is not installed on this site (might be 
     def _add_route(self, route, directory, with_index=False, uri_regex=r".*", with_doc_missing_error=False):
         "Serve static files from a directory."
 
-    def __init__(self, supported_types):
+    def __init__(self):
         self._debug = "http" in mini_buildd.setup.DEBUG
         self._foreground = mini_buildd.setup.FOREGROUND
 
@@ -33,9 +33,6 @@ Package <b><tt>mini-buildd-doc</tt></b> is not installed on this site (might be 
                             "changes": self._mime_text_plain,
                             "dsc": self._mime_text_plain}
         self._endpoints = mini_buildd.setup.HTTPD_ENDPOINTS
-        for ep in self._endpoints:
-            if ep.type not in supported_types:
-                raise Exception("HTTPd backend does not support network endpoint type: {}".format(ep.type))
 
     def _add_routes(self):
         self._add_route("static", "{p}/mini_buildd/static".format(p=mini_buildd.setup.PY_PACKAGE_PATH))                                       # WebApp static directory
