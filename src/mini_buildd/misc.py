@@ -17,6 +17,7 @@ import re
 import urllib.request
 import urllib.parse
 import urllib.error
+import ssl
 import getpass
 import logging
 import logging.handlers
@@ -740,11 +741,12 @@ Save password for '{k}': (Y)es, (N)o, (A)lways, Ne(v)er? """.format(c=self, k=ke
 
 def urlopen_ca_certificates(url):
     """
-    Wrapper for urlib2.urlopen, optionally using certificates from ca-certificates package, when installed.
-    (See https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=832350).
+    urlopen() with system's default ssl context.
+
+    .. todo: Is this obsolete? Seems py3 urlopen() works w/o giving any context, but not sure if it uses the default context, or rather no auth.
     """
-    cafile = "/etc/ssl/certs/ca-certificates.crt"
-    return urllib.request.urlopen(url, cafile=cafile) if os.path.exists(cafile) else urllib.request.urlopen(url)
+    context = ssl.create_default_context()
+    return urllib.request.urlopen(url, context=context)
 
 
 def detect_apt_cacher_ng(url="http://localhost:3142"):
