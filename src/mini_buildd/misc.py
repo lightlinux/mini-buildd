@@ -739,14 +739,14 @@ Save password for '{k}': (Y)es, (N)o, (A)lways, Ne(v)er? """.format(c=self, k=ke
         return key, user, password, new
 
 
-def urlopen_ca_certificates(url):
+def urlopen_ca_certificates(url, **kwargs):
     """
     urlopen() with system's default ssl context.
 
     .. todo: Is this obsolete? Seems py3 urlopen() works w/o giving any context, but not sure if it uses the default context, or rather no auth.
     """
     context = ssl.create_default_context()
-    return urllib.request.urlopen(url, context=context)
+    return urllib.request.urlopen(url, context=context, **kwargs)
 
 
 def detect_apt_cacher_ng(url="http://localhost:3142"):

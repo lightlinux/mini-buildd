@@ -722,7 +722,7 @@ class Daemon():
         if to_rollback:
             raise Exception("Port failed: Rollback distribution requested: '{d}'".format(d=to_dist))
 
-        dsc = debian.deb822.Dsc(urllib.request.urlopen(dsc_url))
+        dsc = debian.deb822.Dsc(mini_buildd.misc.urlopen_ca_certificates(dsc_url))
         v = DebianVersion(dsc["Version"])
         return self._port(dsc_url,
                           dsc["Source"],

@@ -119,7 +119,7 @@ def cmd_call(args):
     # Do the api call
     call_url = "{p}://{b}/mini_buildd/api?{a}".format(p=args.protocol, b=host, a=urllib.parse.urlencode(http_args))
     LOG.info("API call URL: {u}".format(u=call_url))
-    response = urllib.request.urlopen(call_url)
+    response = mini_buildd.misc.urlopen_ca_certificates(call_url)
 
     # Output daemon messages to stderr
     if LOG.getEffectiveLevel() <= logging.WARNING:

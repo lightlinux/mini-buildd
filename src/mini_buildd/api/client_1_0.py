@@ -70,7 +70,7 @@ class Daemon():
 
         self._log("Calling API: {}".format(url))
         try:
-            response = urllib.request.urlopen(url)
+            response = mini_buildd.misc.urlopen_ca_certificates(url)
             return pickle.loads(response.read()) if output == "python" else response.read()
         except urllib.error.HTTPError as e:
             self._log("API call failed with HTTP Status {status}:".format(status=e.getcode()))
