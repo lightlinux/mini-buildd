@@ -382,7 +382,7 @@ class Changes(debian.deb822.Changes):
                 mini_buildd.setup.log_exception(LOG, "Builder check failed", e, logging.WARNING)
 
         # Always add our own instance as pseudo remote first
-        add_remote(mini_buildd.models.gnupg.Remote(http=local_hopo.string), True)
+        add_remote(mini_buildd.models.gnupg.Remote(http="{proto}:{hopo}".format(proto=mini_buildd.setup.HTTPD_ENDPOINTS[0].proto, hopo=local_hopo.string)), True)
 
         # Check all active or auto-deactivated remotes
         for r in mini_buildd.models.gnupg.Remote.mbd_get_active_or_auto_reactivate():
