@@ -370,6 +370,7 @@ class Changes(debian.deb822.Changes):
 
         def add_remote(remote, update):
             status = remote.mbd_get_status(update)
+            status.url = remote.mbd_http2url()  # Not cool: Monkey patching status for url
             if status.running and status.has_chroot(codename, arch):
                 remotes[status.load] = status
                 LOG.debug("Remote[{l}]={r}".format(l=status.load, r=remote))
@@ -394,9 +395,8 @@ class Changes(debian.deb822.Changes):
         for _load, remote in sorted(remotes.items()):
             try:
                 self.upload(mini_buildd.misc.HoPo(remote.ftp))
-                remote_url = "http://" + remote.http
-                self.remote_http_url = remote_url
-                self.live_buildlog_url = self.get_live_buildlog_url(base_url=remote_url)
+                self.remote_http_url = remote.url
+                self.live_buildlog_url = self.get_live_buildlog_url(base_url=remote.url)
                 return
             except BaseException as e:
                 mini_buildd.setup.log_exception(LOG, "Uploading to '{h}' failed".format(h=remote.ftp), e, logging.WARNING)
