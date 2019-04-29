@@ -164,7 +164,7 @@ django.db.models.signals.post_save.connect(cb_create_user_profile, sender=django
 class Remote(KeyringKey):
     http = django.db.models.CharField(primary_key=True, max_length=255, default=":8066",
                                       help_text="""\
-'hostname:port' of the remote instance's http server.
+'[proto:]hostname:port' of the remote instance's http server.
 """)
 
     wake_command = django.db.models.CharField(max_length=255, default="", blank=True, help_text="For future use.")
@@ -178,17 +178,32 @@ class Remote(KeyringKey):
         return "{h}: {c}".format(h=self.http,
                                  c=status.chroots_str())
 
+    def mbd_http2url(self):
+        """Convert user field 'http' into an actually usable URL.
+        """
+        # http = '[proto:]hostname:port'
+        #               ^part1    ^part0
+        try:
+            http = "{}".format(self.http)
+            part0 = http.rpartition(":")
+            part1 = part0[0].rpartition(":")
+
+            proto, hostname, port = part1[0], part1[2], part0[2]
+            return "{proto}://{hostname}:{port}".format(proto=proto if proto else "http", hostname=hostname, port=port)
+        except BaseException as e:
+            raise Exception("Error parsing {}: {} (syntax is '[proto:]hostname:port')".format(self.http, e))
+
     def mbd_get_status(self, update=False):
         if update:
             try:
-                url = "http://{h}/mini_buildd/api?command=status&output=python".format(h=self.http)
+                url = self.mbd_http2url() + "/mini_buildd/api?command=status&output=python"
                 self.mbd_set_pickled_data_pickled(mini_buildd.misc.urlopen_ca_certificates(url, timeout=10).read())
             except Exception as e:
                 raise Exception("Failed to update status for remote via URL '{u}': {e}".format(u=url, e=e))
         return self.mbd_get_pickled_data(default=mini_buildd.api.Status({}))
 
     def mbd_prepare(self, request):
-        url = "http://{h}/mini_buildd/api?command=getkey&output=plain".format(h=self.http)
+        url = self.mbd_http2url() + "/mini_buildd/api?command=getkey&output=plain"
         MsgLog(LOG, request).info("Downloading '{u}'...".format(u=url))
 
         # We prepare the GPG data from downloaded key data, so key_id _must_ be empty (see super(mbd_prepare))
