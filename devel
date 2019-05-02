@@ -42,7 +42,8 @@ MBD_PJPATH="$(readlink -f $(dirname $0))"
 MBD_PYPATH="${MBD_PJPATH}/src"
 MBD_PYLINTRC="${MBD_PJPATH}/.pylintrc"
 MBD_LINTIAN_CFG="${MBD_PJPATH}/.lintian.cfg"
-MBD_TOOL="${MBD_PYPATH}/mini-buildd-tool admin@${MBD_HTTPD}"  # m-b-tool shortcut for testing calls
+MBD_HTTPD_PROTO="http"
+MBD_TOOL="${MBD_PYPATH}/mini-buildd-tool --protocol=${MBD_HTTPD_PROTO} admin@${MBD_HTTPD}"  # m-b-tool shortcut for testing calls
 
 mbd_installdeps()
 {
@@ -207,7 +208,7 @@ mbd_gen_httpd_testfiles()
 		local id="file${fileSize}M"
 		local of="/var/lib/mini-buildd/${relPath}/${id}.bin"
 		[ -e "${of}" ] || sudo dd if="/dev/urandom" of="${of}" count="${fileSize}" bs="1M" >/dev/null 2>&1
-		MBD_HTTPD_TESTFILES["${id}:http://${MBD_HTTPD}/${relPath}/${id}.bin"]="$(sha1sum < "${of}")"
+		MBD_HTTPD_TESTFILES["${id}:${MBD_HTTPD_PROTO}://${MBD_HTTPD}/${relPath}/${id}.bin"]="$(sha1sum < "${of}")"
 	done
 }
 
@@ -377,10 +378,10 @@ mbd_run:13:20:tidy()
 {
 	local url
 	for url in \
-		http://${MBD_HTTPD}/mini_buildd \
-		http://${MBD_HTTPD}/mini_buildd/api \
-		http://${MBD_HTTPD}/mini_buildd/api?command=getdputconf \
-		http://${MBD_HTTPD}/accounts/login/ \
+		${MBD_HTTPD_PROTO}://${MBD_HTTPD}/mini_buildd \
+		${MBD_HTTPD_PROTO}://${MBD_HTTPD}/mini_buildd/api \
+		${MBD_HTTPD_PROTO}://${MBD_HTTPD}/mini_buildd/api?command=getdputconf \
+		${MBD_HTTPD_PROTO}://${MBD_HTTPD}/accounts/login/ \
 		; do
 		printf "\n=> Testing HTML: ${url}\n"
 		wget --output-document=- "${url}" | tidy -output /dev/null
@@ -462,7 +463,7 @@ mbd_run:19:23:httpd-benchmark()
 
 	local abRequests=50 item
 
-	for item in django:http://${MBD_HTTPD}/mini_buildd/repositories/test/ index:http://${MBD_HTTPD}/repositories/test/pool/main/m/mbd-test-cpp/ ${!MBD_HTTPD_TESTFILES[@]}; do
+	for item in django:${MBD_HTTPD_PROTO}://${MBD_HTTPD}/mini_buildd/repositories/test/ index:${MBD_HTTPD_PROTO}://${MBD_HTTPD}/repositories/test/pool/main/m/mbd-test-cpp/ ${!MBD_HTTPD_TESTFILES[@]}; do
 		local id=$(cut -d: -f1 <<<${item})
 		local url=$(cut -d: -f2- <<<${item})
 		local c
