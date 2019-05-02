@@ -141,6 +141,7 @@ def cmd_call(args):
 
 # Unfortunaetely, we cannot group the commands (yet), see http://bugs.python.org/issue14037, https://bugs.python.org/issue9341
 SUBPARSERS = PARSER.add_subparsers(title="API commands (run 'mini-buildd-tool '' <cmd> --help' for full command help)",
+                                   required=True,
                                    metavar="<cmd> [options]")
 for cmd, cmd_cls in mini_buildd.api.COMMANDS:
     if cmd != mini_buildd.api.COMMAND_GROUP:
