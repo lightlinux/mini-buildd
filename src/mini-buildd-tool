@@ -100,8 +100,7 @@ def cmd_call(args):
         pass
 
     # Log in if user given explicitly, or required by the command
-    if user or args.command_class.AUTH != mini_buildd.api.Command.NONE:
-        mini_buildd.misc.web_login(host, user, KEYRING, proto=args.protocol)
+    opener = mini_buildd.misc.web_login(host, user, KEYRING, proto=args.protocol) if user or args.command_class.AUTH != mini_buildd.api.Command.NONE else urllib.request.build_opener()
 
     # Compute api call parameters
     http_args = {}
@@ -119,7 +118,7 @@ def cmd_call(args):
     # Do the api call
     call_url = "{p}://{b}/mini_buildd/api?{a}".format(p=args.protocol, b=host, a=urllib.parse.urlencode(http_args))
     LOG.info("API call URL: {u}".format(u=call_url))
-    response = mini_buildd.misc.urlopen_ca_certificates(call_url)
+    response = opener.open(call_url)
 
     # Output daemon messages to stderr
     if LOG.getEffectiveLevel() <= logging.WARNING:

@@ -791,7 +791,7 @@ def web_login(host, user, credentials,
 
         # Create cookie-enabled opener
         cookie_handler = urllib.request.HTTPCookieProcessor()
-        opener = urllib.request.build_opener(urllib.request.HTTPHandler(debuglevel=0), cookie_handler)
+        opener = urllib.request.build_opener(cookie_handler)
 
         # Retrieve login page
         opener.open(login_url)
@@ -822,6 +822,9 @@ def web_login(host, user, credentials,
         urllib.request.install_opener(opener)
         if new:
             credentials.set(key, password)
+
+        # We need to use this very opener object to stay logged in (for some reason, standard urlopen() just worked fine for http).
+        return opener
     except Exception as e:
         raise Exception("Login failed: {u}@{h}: {e}".format(u=user, h=host, e=e))
 
