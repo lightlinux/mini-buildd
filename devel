@@ -63,32 +63,6 @@ mbd_installdeps()
 	sudo apt-get install --no-install-recommends --target-release='*' sbuild schroot reprepro debootstrap lintian
 }
 
-# grml: The only thing I want here is that my manual test rig can do non-interactive API calls
-mbd_pythonkeyringtestconfig()
-{
-	sudo apt-get install python3-keyrings.alt || true   # for the PlainTextKeyring (newer versions only)
-	local configDir="$(python3 -c "import keyring.util.platform_; print(keyring.util.platform_.config_root())")" || true
-	[ -n "${configDir}" ] || configDir="${HOME}/.local/share/python_keyring"
-	mkdir -p "${configDir}"
-
-	local configFile="${configDir}/keyringrc.cfg"
-	local pkVersion=$(dpkg-query --show --showformat='${Version}' python3-keyring)
-	if dpkg --compare-versions ${pkVersion} gt 7; then
-		cat <<EOF >"${configFile}"
-[backend]
-# stretch (p-k > 8)
-default-keyring=keyrings.alt.file.PlaintextKeyring
-EOF
-	else
-		cat <<EOF >"${configFile}"
-[backend]
-# jessie (p-k 4.0)
-default-keyring=keyring.backends.file.PlaintextKeyring
-EOF
-	fi
-	cat "${configFile}"
-}
-
 # Find files with python code
 declare -a MBD_PYFINDPARAMS=(-not -wholename './debian/*' -not -wholename './.git/*' -not -wholename './build/*' -not -wholename './.pybuild/*' -type f)
 mbd_pyscripts()
@@ -223,6 +197,46 @@ mbd_gen_httpd_testfiles()
 #  00-09: deploy: Actions needed to test-deploy only.
 #  10-19: check : Static tests, fully automatic.
 #  20-29: test  : Live tests, system tests.
+
+mbd_run:00:00:prepare-system()
+{
+	# Hack to be able to do authorized non-interactive API calls
+	mbd_pythonkeyringtestconfig()
+	{
+		sudo apt-get install python3-keyrings.alt || true   # for the PlainTextKeyring (newer versions only)
+		local configDir="$(python3 -c "import keyring.util.platform_; print(keyring.util.platform_.config_root())")" || true
+		[ -n "${configDir}" ] || configDir="${HOME}/.local/share/python_keyring"
+		mkdir -p "${configDir}"
+
+		local configFile="${configDir}/keyringrc.cfg"
+		local pkVersion=$(dpkg-query --show --showformat='${Version}' python3-keyring)
+		if dpkg --compare-versions ${pkVersion} gt 7; then
+			cat <<EOF >"${configFile}"
+[backend]
+# stretch (p-k > 8)
+default-keyring=keyrings.alt.file.PlaintextKeyring
+EOF
+		else
+			cat <<EOF >"${configFile}"
+[backend]
+# jessie (p-k 4.0)
+default-keyring=keyring.backends.file.PlaintextKeyring
+EOF
+		fi
+		cat "${configFile}"
+	}
+
+	# Add Debian's default self-signed cert (from ssl-cert) to ca-certificates (make API calls work via https).
+	mbd_snakeoil2cacerts()
+	{
+		local crtfile="/usr/local/share/ca-certificates/ssl-cert-snakeoil.crt"
+		[ -e "${crtfile}" ] || sudo cp -a /etc/ssl/certs/ssl-cert-snakeoil.pem "${crtfile}"
+		sudo update-ca-certificates --fresh
+	}
+
+	mbd_pythonkeyringtestconfig
+	mbd_snakeoil2cacerts
+}
 
 mbd_run:00:10:pycodestyle()
 {
@@ -391,8 +405,6 @@ mbd_run:13:20:tidy()
 
 mbd_run:14:23:auto-setup()
 {
-	mbd_pythonkeyringtestconfig
-
 	${MBD_TOOL} autosetup --confirm="autosetup"
 	${MBD_TOOL} keyringpackages --confirm="keyringpackages"
 	${MBD_TOOL} testpackages --confirm="testpackages"
