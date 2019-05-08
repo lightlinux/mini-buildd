@@ -42,7 +42,7 @@ MBD_PJPATH="$(readlink -f $(dirname $0))"
 MBD_PYPATH="${MBD_PJPATH}/src"
 MBD_PYLINTRC="${MBD_PJPATH}/.pylintrc"
 MBD_LINTIAN_CFG="${MBD_PJPATH}/.lintian.cfg"
-MBD_HTTPD_PROTO="http"
+MBD_HTTPD_PROTO="https"
 MBD_TOOL="${MBD_PYPATH}/mini-buildd-tool --protocol=${MBD_HTTPD_PROTO} admin@${MBD_HTTPD}"  # m-b-tool shortcut for testing calls
 
 mbd_installdeps()
