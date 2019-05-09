@@ -3,6 +3,7 @@
 import os
 import copy
 import datetime
+import enum
 import shutil
 import glob
 import threading
@@ -229,8 +230,35 @@ class Endpoint():
     >>> print(Endpoint.hopo2desc(":::8066"))
     tcp6:port=8066:interface=\:\:
 
+    >>> Endpoint("tcp:host=example.com,port=1234", mini_buildd.misc.Endpoint.Protocol.HTTP).url()  # HTTP client
+    'http://example.com:1234/'
+
+    >>> Endpoint("tls:host=example.com,port=1234", mini_buildd.misc.Endpoint.Protocol.HTTP).url()  # HTTPS client
+    'https://example.com:1234/'
+
+    >>> Endpoint("tcp6:port=1234", mini_buildd.misc.Endpoint.Protocol.HTTP).url(host="example.com")  # HTTP server
+    'http://example.com:1234/'
+
+    >>> Endpoint("ssl:port=1234", mini_buildd.misc.Endpoint.Protocol.HTTP).url(host="example.com")  # HTTPS server
+    'https://example.com:1234/'
+
     """
-    _TYPE2PROTO = {"ssl": "https", "tcp6": "http", "tcp": "http", "unix": "http+unix"}
+    class Protocol(enum.Enum):
+        HTTP = enum.auto()
+        FTP = enum.auto()
+
+    _PROTOCOL2URL_SCHEME = {Protocol.HTTP: "http", Protocol.FTP: "ftp"}
+    _SUPPORTED_TWISTED_TYPES = ["ssl", "tls", "tcp6", "tcp", "unix"]
+
+    @classmethod
+    def hopo2desc(cls, bind, server=True):
+        """Needed for HoPo compat."""
+        triple = bind.rpartition(":")
+        if server:  # pylint: disable=no-else-return
+            typ = "tcp" if isinstance(ipaddress.ip_address(triple[0]), ipaddress.IPv4Address) else "tcp6"
+            return "{typ}:interface={host}:port={port}".format(typ=typ, port=triple[2], host=cls._escape(triple[0]))
+        else:
+            return "tcp:host={host},port={port}".format(host=cls._escape(triple[0]), port=triple[2])
 
     @classmethod
     def _escape(cls, string):
@@ -240,17 +268,26 @@ class Endpoint():
     def _unescape(cls, string):
         return string.replace(r"\:", ":")
 
-    def __init__(self, desc):
+    def __init__(self, desc, protocol):
         self.desc = desc
+        self.protocol = protocol
+
         self._params = [self._unescape(p) for p in re.split(r"(?<!\\):", desc)]
-        if self.type not in self._TYPE2PROTO.keys():
-            raise Exception("Unsupported endpoint type: {} (twisted types supported: {})".format(self.type, ",".join(self._TYPE2PROTO.keys())))
-        self.proto = self._TYPE2PROTO[self.type]
+        if self.type not in self._SUPPORTED_TWISTED_TYPES:
+            raise Exception("Unsupported endpoint type: {} (twisted types supported: {})".format(self.type, ",".join(self._SUPPORTED_TWISTED_TYPES)))
+
+        self.url_scheme = self._PROTOCOL2URL_SCHEME[protocol]
+        if self.type in ["ssl", "tls"]:
+            self.url_scheme += "s"
+
         self._options = {}
         for p in self._params:
             key = p.partition("=")
             if key[1]:
                 self._options[key[0]] = key[2]
+
+    def __repr__(self):
+        return "Net server/client: {scheme} on {desc}".format(scheme=self.url_scheme, desc=self.desc)
 
     def param(self, index):
         return self._params[index]
@@ -262,12 +299,10 @@ class Endpoint():
     def option(self, key, default=None):
         return self._options.get(key, default)
 
-    @classmethod
-    def hopo2desc(cls, bind):
-        """Needed for HoPo compat."""
-        hopo = HoPo(bind)
-        typ = "tcp" if isinstance(ipaddress.ip_address(hopo.host), ipaddress.IPv4Address) else "tcp6"
-        return "{typ}:port={port}:interface={host}".format(typ=typ, port=hopo.port, host=cls._escape(hopo.host))
+    def url(self, host=None):
+        return "{scheme}://{host}:{port}/".format(scheme=self.url_scheme,
+                                                  host=host if host else self.option("host") if self.option("host") else socket.getfqdn(),
+                                                  port=self.option("port"))
 
 
 def nop(*_args, **_kwargs):

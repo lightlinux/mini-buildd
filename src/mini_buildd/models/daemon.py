@@ -229,7 +229,7 @@ prepare/remove actions will generate/remove the GnuPG key.
         return mini_buildd.misc.HoPo("{h}:{p}".format(h=self.hostname, p=mini_buildd.setup.HTTPD_ENDPOINTS[0].option("port", 0)))
 
     def mbd_get_http_url(self):
-        return "{p}://{h}/".format(p=mini_buildd.setup.HTTPD_ENDPOINTS[0].proto, h=self.mbd_get_http_hopo().string)
+        return mini_buildd.setup.HTTPD_ENDPOINTS[0].url(self.hostname)
 
     def mbd_get_archive_origin(self):
         return "Mini-Buildd archive {i} on {h}".format(i=self.identity, h=self.hostname)
