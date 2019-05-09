@@ -234,8 +234,20 @@ EOF
 		sudo update-ca-certificates --fresh
 	}
 
+	# Add Debian's default self-signed cert (from ssl-cert) to local chromium certstore
+	mbd_snakeoil2browser()
+	{
+		local pkiDir="${HOME}/.pki" trust="P,," f="/etc/ssl/certs/ssl-cert-snakeoil.pem"
+		local certDB=$(find  ${HOME}/.mozilla/ -name "cert*.db")
+		# chromium
+		[ ! -e "${pkiDir}/nssdb" ] || certutil -d sql:${pkiDir}/nssdb -A -t "${trust}" -n"$(basename ${f} .pem)" -i "${f}"
+		 # firefox
+		[ ! -e "${certDB}" ] || certutil -d $(dirname ${certDB}) -A -t "${trust}" -n"$(basename ${f} .pem)" -i "${f}"
+	}
+
 	mbd_pythonkeyringtestconfig
 	mbd_snakeoil2cacerts
+	mbd_snakeoil2browser
 }
 
 mbd_run:00:10:pycodestyle()
