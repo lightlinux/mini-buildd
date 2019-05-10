@@ -111,7 +111,7 @@ class FtpDHandler(pyftpdlib.handlers.FTPHandler):
 def run(bind, queue):
     mini_buildd.misc.clone_log("pyftpdlib")
 
-    ba = mini_buildd.misc.HoPo(bind)
+    endpoint = mini_buildd.misc.Endpoint(mini_buildd.misc.Endpoint.hopo2desc(bind), mini_buildd.misc.Endpoint.Protocol.FTP)
 
     handler = FtpDHandler
     handler.authorizer = pyftpdlib.authorizers.DummyAuthorizer()
@@ -124,8 +124,8 @@ def run(bind, queue):
     Incoming.remove_cruft()
     Incoming.requeue_changes(queue)
 
-    ftpd = pyftpdlib.servers.FTPServer(ba.tuple, handler)
-    LOG.info("Starting ftpd on '{b}'.".format(b=ba.string))
+    ftpd = pyftpdlib.servers.FTPServer((endpoint.option("interface"), endpoint.option("port")), handler)
+    LOG.info("Starting: {ep}.".format(ep=endpoint))
 
     global _RUN  # pylint: disable=global-statement
     _RUN = True
