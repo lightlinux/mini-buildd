@@ -115,7 +115,7 @@ class Endpoint():
                 self._options[key[0]] = key[2]
 
     def __repr__(self):
-        return "Net server/client: {scheme} on {desc}".format(scheme=self.url_scheme, desc=self.desc)
+        return "{scheme} on {desc}".format(scheme=self.url_scheme, desc=self.desc)
 
     def param(self, index):
         return self._params[index]
@@ -131,6 +131,16 @@ class Endpoint():
         return "{scheme}://{host}:{port}/".format(scheme=self.url_scheme,
                                                   host=host if host else self.option("host") if self.option("host") else socket.getfqdn(),
                                                   port=self.option("port"))
+
+
+class ServerEndpoint(Endpoint):
+    def __repr__(self):
+        return "Net server: {}".format(super().__repr__())
+
+
+class ClientEndpoint(Endpoint):
+    def __repr__(self):
+        return "Net client: {}".format(super().__repr__())
 
 
 class UserURL():
