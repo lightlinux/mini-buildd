@@ -12,6 +12,8 @@ import ssl
 import logging
 import logging.handlers
 
+import twisted.internet.endpoints
+
 import mini_buildd.setup
 
 LOG = logging.getLogger(__name__)
@@ -134,11 +136,19 @@ class Endpoint():
 
 
 class ServerEndpoint(Endpoint):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        twisted.internet.endpoints.serverFromString(None, self.desc)  # Syntax check only for now
+
     def __repr__(self):
         return "Net server: {}".format(super().__repr__())
 
 
 class ClientEndpoint(Endpoint):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        twisted.internet.endpoints.clientFromString(None, self.desc)  # Syntax check only for now
+
     def __repr__(self):
         return "Net client: {}".format(super().__repr__())
 
