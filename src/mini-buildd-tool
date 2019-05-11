@@ -15,6 +15,7 @@ import logging
 import argcomplete
 
 import mini_buildd.misc
+import mini_buildd.net
 import mini_buildd.setup
 import mini_buildd.api
 
@@ -100,7 +101,7 @@ def cmd_call(args):
         pass
 
     # Log in if user given explicitly, or required by the command
-    opener = mini_buildd.misc.web_login(host, user, KEYRING, proto=args.protocol) if user or args.command_class.AUTH != mini_buildd.api.Command.NONE else urllib.request.build_opener()
+    opener = mini_buildd.net.web_login(host, user, KEYRING, proto=args.protocol) if user or args.command_class.AUTH != mini_buildd.api.Command.NONE else urllib.request.build_opener()
 
     # Compute api call parameters
     http_args = {}

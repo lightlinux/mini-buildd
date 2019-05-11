@@ -16,6 +16,7 @@ import debian.deb822
 
 import mini_buildd.setup
 import mini_buildd.misc
+import mini_buildd.net
 import mini_buildd.gnupg
 
 import mini_buildd.models.repository
@@ -394,7 +395,7 @@ class Changes(debian.deb822.Changes):
 
         for _load, remote in sorted(remotes.items()):
             try:
-                self.upload(mini_buildd.misc.HoPo(remote.ftp))
+                self.upload(mini_buildd.net.HoPo(remote.ftp))
                 self.remote_http_url = remote.url
                 self.live_buildlog_url = self.get_live_buildlog_url(base_url=remote.url)
                 return

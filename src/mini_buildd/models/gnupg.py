@@ -8,6 +8,7 @@ import django.contrib.admin
 import django.contrib.messages
 
 import mini_buildd.misc
+import mini_buildd.net
 import mini_buildd.gnupg
 
 import mini_buildd.models.base
@@ -197,7 +198,7 @@ class Remote(KeyringKey):
         if update:
             try:
                 url = self.mbd_http2url() + "/mini_buildd/api?command=status&output=python"
-                self.mbd_set_pickled_data_pickled(mini_buildd.misc.urlopen_ca_certificates(url, timeout=10).read())
+                self.mbd_set_pickled_data_pickled(mini_buildd.net.urlopen_ca_certificates(url, timeout=10).read())
             except Exception as e:
                 raise Exception("Failed to update status for remote via URL '{u}': {e}".format(u=url, e=e))
         return self.mbd_get_pickled_data(default=mini_buildd.api.Status({}))
@@ -208,7 +209,7 @@ class Remote(KeyringKey):
 
         # We prepare the GPG data from downloaded key data, so key_id _must_ be empty (see super(mbd_prepare))
         self.key_id = ""
-        self.key = mini_buildd.misc.urlopen_ca_certificates(url).read()
+        self.key = mini_buildd.net.urlopen_ca_certificates(url).read()
 
         if self.key:
             MsgLog(LOG, request).warning("Downloaded remote key integrated: Please check key manually before activation!")

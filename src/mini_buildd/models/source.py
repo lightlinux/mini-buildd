@@ -20,6 +20,7 @@ import django.utils.timezone
 import debian.deb822
 
 import mini_buildd.misc
+import mini_buildd.net
 import mini_buildd.call
 import mini_buildd.gnupg
 
@@ -71,7 +72,7 @@ Use the 'directory' notation with exactly one trailing slash (like 'http://examp
                                                 e,
                                                 level=logging.WARN)
 
-            url = mini_buildd.misc.detect_apt_cacher_ng(url="http://{}:3142".format(socket.getfqdn()))
+            url = mini_buildd.net.detect_apt_cacher_ng(url="http://{}:3142".format(socket.getfqdn()))
             if url:
                 msglog.info("Local apt-cacher-ng detected: {}".format(url))
                 for path in ["debian", "ubuntu", "debian-security", "debian-archive/debian", "debian-archive/debian-security", "debian-archive/debian-backports"]:
@@ -117,7 +118,7 @@ Use the 'directory' notation with exactly one trailing slash (like 'http://examp
         with tempfile.NamedTemporaryFile() as release_file:
             MsgLog(LOG, request).debug("Downloading '{u}' to '{t}'".format(u=url, t=release_file.name))
             try:
-                release_file.write(mini_buildd.misc.urlopen_ca_certificates(url).read())
+                release_file.write(mini_buildd.net.urlopen_ca_certificates(url).read())
             except urllib.error.HTTPError as e:
                 if e.code == 404:
                     MsgLog(LOG, request).debug("{a}: '404 Not Found' on '{u}'".format(a=self, u=url))
@@ -158,7 +159,7 @@ Use the 'directory' notation with exactly one trailing slash (like 'http://examp
             # Check signature
             with tempfile.NamedTemporaryFile() as signature:
                 MsgLog(LOG, request).debug("Downloading '{u}.gpg' to '{t}'".format(u=url, t=signature.name))
-                signature.write(mini_buildd.misc.urlopen_ca_certificates(url + ".gpg").read())
+                signature.write(mini_buildd.net.urlopen_ca_certificates(url + ".gpg").read())
                 signature.flush()
                 gnupg.verify(signature.name, release_file.name)
 
@@ -173,7 +174,7 @@ Use the 'directory' notation with exactly one trailing slash (like 'http://examp
             # just fine, but not allow to access to base URL
             # (like ourselves ;). Any archive _must_ have dists/ anyway.
             try:
-                mini_buildd.misc.urlopen_ca_certificates("{u}/dists/".format(u=self.url))
+                mini_buildd.net.urlopen_ca_certificates("{u}/dists/".format(u=self.url))
             except urllib.error.HTTPError as e:
                 # Allow HTTP 4xx client errors through; these might be valid use cases like:
                 # 404 Usage Information: apt-cacher-ng

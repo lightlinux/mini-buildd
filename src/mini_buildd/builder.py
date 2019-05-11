@@ -12,6 +12,7 @@ import django.utils.timezone
 
 import mini_buildd.setup
 import mini_buildd.misc
+import mini_buildd.net
 import mini_buildd.call
 import mini_buildd.changes
 
@@ -251,7 +252,7 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
         self.built = self._get_built_stamp()
 
     def upload(self):
-        hopo = mini_buildd.misc.HoPo(self.upload_result_to)
+        hopo = mini_buildd.net.HoPo(self.upload_result_to)
         self._bres.upload(hopo)
         self.uploaded = django.utils.timezone.now()
 
@@ -341,7 +342,7 @@ def run_build(daemon_, breq):
         # Try to upload failure build result to remote
         if build:
             build.set_status(build.FAILED)
-        breq.upload_failed_buildresult(daemon_.model.mbd_gnupg, mini_buildd.misc.HoPo(breq["Upload-Result-To"]), 101, "builder-failed", e)
+        breq.upload_failed_buildresult(daemon_.model.mbd_gnupg, mini_buildd.net.HoPo(breq["Upload-Result-To"]), 101, "builder-failed", e)
         mini_buildd.setup.log_exception(LOG, "Internal error building", e)
 
     finally:

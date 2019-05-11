@@ -20,6 +20,7 @@ import debian.changelog
 import debian.debian_support
 
 import mini_buildd.misc
+import mini_buildd.net
 import mini_buildd.call
 import mini_buildd.changes
 import mini_buildd.gnupg
@@ -722,7 +723,7 @@ class Daemon():
         if to_rollback:
             raise Exception("Port failed: Rollback distribution requested: '{d}'".format(d=to_dist))
 
-        dsc = debian.deb822.Dsc(mini_buildd.misc.urlopen_ca_certificates(dsc_url))
+        dsc = debian.deb822.Dsc(mini_buildd.net.urlopen_ca_certificates(dsc_url))
         v = DebianVersion(dsc["Version"])
         return self._port(dsc_url,
                           dsc["Source"],

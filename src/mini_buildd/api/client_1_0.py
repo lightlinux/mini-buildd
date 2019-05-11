@@ -11,6 +11,7 @@ import re
 import debian.debian_support
 
 import mini_buildd.misc
+import mini_buildd.net
 import mini_buildd.api
 
 
@@ -52,7 +53,7 @@ class Daemon():
         Login. Use the user's mini-buildd keyring for auth, like mini-buildd-tool.
         """
         keyring = mini_buildd.misc.Keyring("mini-buildd")
-        mini_buildd.misc.web_login("{host}:{port}".format(host=self.host, port=self.port), user if (user or self.batch_mode) else input("Username: "), keyring, proto=self.proto)
+        mini_buildd.net.web_login("{host}:{port}".format(host=self.host, port=self.port), user if (user or self.batch_mode) else input("Username: "), keyring, proto=self.proto)
         return self
 
     def call(self, command, args=None, output="python", raise_on_error=True):
@@ -70,7 +71,7 @@ class Daemon():
 
         self._log("Calling API: {}".format(url))
         try:
-            response = mini_buildd.misc.urlopen_ca_certificates(url)
+            response = mini_buildd.net.urlopen_ca_certificates(url)
             return pickle.loads(response.read()) if output == "python" else response.read()
         except urllib.error.HTTPError as e:
             self._log("API call failed with HTTP Status {status}:".format(status=e.getcode()))

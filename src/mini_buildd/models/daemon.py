@@ -11,6 +11,7 @@ import django.core.mail
 import django.contrib.auth.models
 
 import mini_buildd.misc
+import mini_buildd.net
 import mini_buildd.changes
 import mini_buildd.gnupg
 import mini_buildd.builder
@@ -220,13 +221,13 @@ prepare/remove actions will generate/remove the GnuPG key.
             MsgLog(LOG, request).warning("No active chroot or repository.")
 
     def mbd_get_ftp_hopo(self):
-        return mini_buildd.misc.HoPo("{h}:{p}".format(h=self.hostname, p=mini_buildd.misc.HoPo(self.ftpd_bind).port))
+        return mini_buildd.net.HoPo("{h}:{p}".format(h=self.hostname, p=mini_buildd.net.HoPo(self.ftpd_bind).port))
 
     def mbd_get_ftp_url(self):
         return "ftp://{h}".format(h=self.mbd_get_ftp_hopo().string)
 
     def mbd_get_http_hopo(self):
-        return mini_buildd.misc.HoPo("{h}:{p}".format(h=self.hostname, p=mini_buildd.setup.HTTPD_ENDPOINTS[0].option("port", 0)))
+        return mini_buildd.net.HoPo("{h}:{p}".format(h=self.hostname, p=mini_buildd.setup.HTTPD_ENDPOINTS[0].option("port", 0)))
 
     def mbd_get_http_url(self):
         return mini_buildd.setup.HTTPD_ENDPOINTS[0].url(self.hostname)

@@ -16,6 +16,7 @@ import debian.deb822
 import mini_buildd
 import mini_buildd.setup
 import mini_buildd.misc
+import mini_buildd.net
 
 LOG = logging.getLogger(__name__)
 
@@ -111,7 +112,7 @@ class FtpDHandler(pyftpdlib.handlers.FTPHandler):
 def run(bind, queue):
     mini_buildd.misc.clone_log("pyftpdlib")
 
-    endpoint = mini_buildd.misc.Endpoint(mini_buildd.misc.Endpoint.hopo2desc(bind), mini_buildd.misc.Endpoint.Protocol.FTP)
+    endpoint = mini_buildd.net.Endpoint(mini_buildd.net.Endpoint.hopo2desc(bind), mini_buildd.net.Endpoint.Protocol.FTP)
 
     handler = FtpDHandler
     handler.authorizer = pyftpdlib.authorizers.DummyAuthorizer()

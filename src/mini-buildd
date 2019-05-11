@@ -18,6 +18,7 @@ import daemon.runner
 import argcomplete
 
 import mini_buildd.misc
+import mini_buildd.net
 import mini_buildd.setup
 import mini_buildd.httpd
 import mini_buildd.django_settings
@@ -168,7 +169,7 @@ Comma-separated list of special debugging options:
 
         # Warn when deprecated --httpd-bind is still used (unless you use the default)
         if parser.get_default("httpd_bind") != args.httpd_bind:
-            args.httpd_endpoint = [mini_buildd.misc.Endpoint.hopo2desc(args.httpd_bind)]
+            args.httpd_endpoint = [mini_buildd.net.Endpoint.hopo2desc(args.httpd_bind)]
             LOG.warning("Option '--httpd-bind' has been deprecated, please use '--httpd-endpoint' instead (see 'mini-buildd --help').")
             LOG.warning("Compat --httpd-bind': Computed '--httpd-endpoints': {}".format(args.httpd_endpoint[0]))
 
@@ -186,7 +187,7 @@ Comma-separated list of special debugging options:
         mini_buildd.setup.DEBUG = self._args.debug.split(",")
         mini_buildd.setup.FOREGROUND = self._args.foreground
 
-        mini_buildd.setup.HTTPD_ENDPOINTS = [mini_buildd.misc.Endpoint(ep_desc, mini_buildd.misc.Endpoint.Protocol.HTTP) for ep_desc in self._args.httpd_endpoint]
+        mini_buildd.setup.HTTPD_ENDPOINTS = [mini_buildd.net.Endpoint(ep_desc, mini_buildd.net.Endpoint.Protocol.HTTP) for ep_desc in self._args.httpd_endpoint]
 
         mini_buildd.setup.HOME_DIR = self._args.home
 
@@ -300,7 +301,7 @@ Comma-separated list of special debugging options:
 
         if not self.is_extra_run():
             # Pre-daemonize check if HTTP port is ready to bind (else http backend may fail strangely later)
-            mini_buildd.misc.HoPo(self._args.httpd_bind).test_bind()
+            mini_buildd.net.HoPo(self._args.httpd_bind).test_bind()
             # Pre-daemonize check if shm is usable on the system (else pyftpdlib fails strangely later)
             mini_buildd.misc.check_multiprocessing()
 
