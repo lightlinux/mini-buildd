@@ -300,8 +300,6 @@ Comma-separated list of special debugging options:
             raise Exception("Run as dedicated user only (use '--dedicated-user={u}' if you really want this, will write to that user's $HOME!)".format(u=self._user))
 
         if not self.is_extra_run():
-            # Pre-daemonize check if HTTP port is ready to bind (else http backend may fail strangely later)
-            mini_buildd.net.HoPo(self._args.httpd_bind).test_bind()
             # Pre-daemonize check if shm is usable on the system (else pyftpdlib fails strangely later)
             mini_buildd.misc.check_multiprocessing()
 
