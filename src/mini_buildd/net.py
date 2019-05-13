@@ -40,6 +40,11 @@ class HoPo():
         s.close()
 
 
+class Protocol(enum.Enum):
+    HTTP = enum.auto()
+    FTP = enum.auto()
+
+
 class Endpoint():
     r"""Network server endpoint description parser (twisted-like).
 
@@ -73,22 +78,8 @@ class Endpoint():
     'https://example.com:1234/'
 
     """
-    class Protocol(enum.Enum):
-        HTTP = enum.auto()
-        FTP = enum.auto()
-
     _PROTOCOL2URL_SCHEME = {Protocol.HTTP: "http", Protocol.FTP: "ftp"}
     _SUPPORTED_TWISTED_TYPES = ["ssl", "tls", "tcp6", "tcp", "unix"]
-
-    @classmethod
-    def hopo2desc(cls, bind, server=True):
-        """Needed for HoPo compat."""
-        triple = bind.rpartition(":")
-        if server:  # pylint: disable=no-else-return
-            typ = "tcp" if isinstance(ipaddress.ip_address(triple[0]), ipaddress.IPv4Address) else "tcp6"
-            return "{typ}:interface={host}:port={port}".format(typ=typ, port=triple[2], host=cls._escape(triple[0]))
-        else:
-            return "tcp:host={host},port={port}".format(host=cls._escape(triple[0]), port=triple[2])
 
     @classmethod
     def _escape(cls, string):
@@ -133,6 +124,16 @@ class Endpoint():
         return "{scheme}://{host}:{port}/".format(scheme=self.url_scheme,
                                                   host=host if host else self.option("host") if self.option("host") else socket.getfqdn(),
                                                   port=self.option("port"))
+
+    @classmethod
+    def hopo2desc(cls, bind, server=True):
+        """Needed for HoPo compat."""
+        triple = bind.rpartition(":")
+        if server:  # pylint: disable=no-else-return
+            typ = "tcp" if isinstance(ipaddress.ip_address(triple[0]), ipaddress.IPv4Address) else "tcp6"
+            return "{typ}:interface={host}:port={port}".format(typ=typ, port=triple[2], host=cls._escape(triple[0]))
+        else:
+            return "tcp:host={host},port={port}".format(host=cls._escape(triple[0]), port=triple[2])
 
 
 class ServerEndpoint(Endpoint):

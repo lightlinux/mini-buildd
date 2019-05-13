@@ -187,7 +187,7 @@ Comma-separated list of special debugging options:
         mini_buildd.setup.DEBUG = self._args.debug.split(",")
         mini_buildd.setup.FOREGROUND = self._args.foreground
 
-        mini_buildd.setup.HTTPD_ENDPOINTS = [mini_buildd.net.ServerEndpoint(ep_desc, mini_buildd.net.Endpoint.Protocol.HTTP) for ep_desc in self._args.httpd_endpoint]
+        mini_buildd.setup.HTTPD_ENDPOINTS = [mini_buildd.net.ServerEndpoint(ep_desc, mini_buildd.net.Protocol.HTTP) for ep_desc in self._args.httpd_endpoint]
 
         mini_buildd.setup.HOME_DIR = self._args.home
 

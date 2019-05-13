@@ -112,7 +112,7 @@ class FtpDHandler(pyftpdlib.handlers.FTPHandler):
 def run(bind, queue):
     mini_buildd.misc.clone_log("pyftpdlib")
 
-    endpoint = mini_buildd.net.ServerEndpoint(mini_buildd.net.Endpoint.hopo2desc(bind), mini_buildd.net.Endpoint.Protocol.FTP)
+    endpoint = mini_buildd.net.ServerEndpoint(mini_buildd.net.Endpoint.hopo2desc(bind), mini_buildd.net.Protocol.FTP)
 
     handler = FtpDHandler
     handler.authorizer = pyftpdlib.authorizers.DummyAuthorizer()
