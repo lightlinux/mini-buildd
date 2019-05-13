@@ -171,7 +171,7 @@ Comma-separated list of special debugging options:
         if parser.get_default("httpd_bind") != args.httpd_bind:
             args.httpd_endpoint = [mini_buildd.net.ServerEndpoint.hopo2desc(args.httpd_bind)]
             LOG.warning("Option '--httpd-bind' has been deprecated, please use '--httpd-endpoint' instead (see 'mini-buildd --help').")
-            LOG.warning("Compat --httpd-bind': Computed '--httpd-endpoints': {}".format(args.httpd_endpoint[0]))
+            LOG.warning("Compat --httpd-bind': Computed '--httpd-endpoint': {}".format(args.httpd_endpoint[0]))
 
         # Manually set default for --httpd-endpoint ('default' option in add_argument() above can't be used, see https://bugs.python.org/issue16399).
         if args.httpd_endpoint is None:
