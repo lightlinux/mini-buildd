@@ -252,8 +252,8 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
         self.built = self._get_built_stamp()
 
     def upload(self):
-        hopo = mini_buildd.net.HoPo(self.upload_result_to)
-        self._bres.upload(hopo)
+        ep = mini_buildd.net.ClientEndpoint(mini_buildd.net.Endpoint.hopo2desc(self.upload_result_to, server=False), mini_buildd.net.Protocol.FTP)
+        self._bres.upload(ep)
         self.uploaded = django.utils.timezone.now()
 
     def clean(self):
@@ -342,7 +342,7 @@ def run_build(daemon_, breq):
         # Try to upload failure build result to remote
         if build:
             build.set_status(build.FAILED)
-        breq.upload_failed_buildresult(daemon_.model.mbd_gnupg, mini_buildd.net.HoPo(breq["Upload-Result-To"]), 101, "builder-failed", e)
+        breq.upload_failed_buildresult(daemon_.model.mbd_gnupg, mini_buildd.net.ClientEndpoint(mini_buildd.net.Endpoint.hopo2desc(breq["Upload-Result-To"]), server=False), 101, "builder-failed", e)
         mini_buildd.setup.log_exception(LOG, "Internal error building", e)
 
     finally:
