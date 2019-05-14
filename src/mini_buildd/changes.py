@@ -344,14 +344,15 @@ class Changes(debian.deb822.Changes):
                 os.remove(self._file_path)
             raise
 
-    def upload(self, hopo):
+    def upload(self, endpoint):
         upload = os.path.splitext(self._file_path)[0] + ".upload"
         if os.path.exists(upload):
             with mini_buildd.misc.open_utf8(upload) as uf:
                 LOG.info("FTP: '{f}' already uploaded to '{h}'...".format(f=self._file_name, h=uf.read()))
         else:
             ftp = ftplib.FTP()
-            ftp.connect(hopo.host, hopo.port)
+            host, port = endpoint.option("host"), endpoint.option("port")
+            ftp.connect(host, int(port))
             ftp.login()
             ftp.cwd("/incoming")
             for fd in self.get_files() + [{"name": self._file_name}]:
@@ -360,10 +361,10 @@ class Changes(debian.deb822.Changes):
                 with open(os.path.join(os.path.dirname(self._file_path), f), "rb") as fi:
                     ftp.storbinary("STOR {f}".format(f=f), fi)
             with mini_buildd.misc.open_utf8(upload, "w") as fi:
-                fi.write("{h}:{p}".format(h=hopo.host, p=hopo.port))
-            LOG.info("FTP: '{f}' uploaded to '{h}'...".format(f=self._file_name, h=hopo.host))
+                fi.write("{h}:{p}".format(h=host, p=port))
+            LOG.info("FTP: '{f}' uploaded to '{h}'...".format(f=self._file_name, h=host))
 
-    def upload_buildrequest(self, local_hopo):
+    def upload_buildrequest(self, local_endpoint):
         arch = self["Architecture"]
         codename = self["Base-Distribution"]
 
@@ -384,7 +385,7 @@ class Changes(debian.deb822.Changes):
                 mini_buildd.setup.log_exception(LOG, "Builder check failed", e, logging.WARNING)
 
         # Always add our own instance as pseudo remote first
-        add_remote(mini_buildd.models.gnupg.Remote(http="{proto}:{hopo}".format(proto=mini_buildd.setup.HTTPD_ENDPOINTS[0].url_scheme, hopo=local_hopo.string)), True)
+        add_remote(mini_buildd.models.gnupg.Remote(http="{proto}:{hopo}".format(proto=mini_buildd.setup.HTTPD_ENDPOINTS[0].url_scheme, hopo=local_endpoint.hopo())), True)
 
         # Check all active or auto-deactivated remotes
         for r in mini_buildd.models.gnupg.Remote.mbd_get_active_or_auto_reactivate():
@@ -395,7 +396,7 @@ class Changes(debian.deb822.Changes):
 
         for _load, remote in sorted(remotes.items()):
             try:
-                self.upload(mini_buildd.net.HoPo(remote.ftp))
+                self.upload(mini_buildd.net.ClientEndpoint(mini_buildd.net.Endpoint.hopo2desc(remote.ftp, server=False), mini_buildd.net.Protocol.FTP))
                 self.remote_http_url = remote.url
                 self.live_buildlog_url = self.get_live_buildlog_url(base_url=remote.url)
                 return
@@ -532,7 +533,7 @@ class Changes(debian.deb822.Changes):
                          exclude_globs=["*.deb", "*.changes", "*.buildinfo"])
                 breq.add_file(breq.file_path + ".tar")
 
-                breq["Upload-Result-To"] = daemon.mbd_get_ftp_hopo().string
+                breq["Upload-Result-To"] = daemon.mbd_get_ftp_endpoint().hopo()
                 breq["Base-Distribution"] = dist.base_source.codename
                 breq["Architecture"] = ao.architecture.name
                 if ao.build_architecture_all:
@@ -569,7 +570,7 @@ class Changes(debian.deb822.Changes):
 
         return bres
 
-    def upload_failed_buildresult(self, gnupg, hopo, retval, status, exception):
+    def upload_failed_buildresult(self, gnupg, endpoint, retval, status, exception):
         with contextlib.closing(mini_buildd.misc.TmpDir()) as t:
             # https://github.com/PyCQA/pylint/issues/1437
             # pylint: disable=no-member
@@ -585,4 +586,4 @@ Build request failed: {r} ({s}): {e}
 """.format(h=socket.getfqdn(), r=retval, s=status, e=exception))
             bres.add_file(buildlog)
             bres.save(gnupg)
-            bres.upload(hopo)
+            bres.upload(endpoint)
