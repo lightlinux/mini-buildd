@@ -93,13 +93,13 @@ class Package(mini_buildd.misc.Status):
         # Upload buildrequests
         for _key, breq in list(self.requests.items()):
             try:
-                breq.upload_buildrequest(self.daemon.model.mbd_get_http_hopo())
+                breq.upload_buildrequest(self.daemon.model.mbd_get_http_endpoint())
             except BaseException as e:
                 mini_buildd.setup.log_exception(LOG,
                                                 "{i}: Buildrequest upload failed".format(i=breq.get_pkg_id()),
                                                 e)
                 # Upload failure build result to ourselves
-                breq.upload_failed_buildresult(self.daemon.model.mbd_gnupg, self.daemon.model.mbd_get_ftp_hopo(), 100, "upload-failed", e)
+                breq.upload_failed_buildresult(self.daemon.model.mbd_gnupg, self.daemon.model.mbd_get_ftp_endpoint(), 100, "upload-failed", e)
 
     def add_buildresult(self, bres):
         self.daemon.keyrings.get_remotes().verify(bres.file_path)
