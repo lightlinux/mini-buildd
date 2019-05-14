@@ -19,30 +19,40 @@ import mini_buildd.setup
 LOG = logging.getLogger(__name__)
 
 
+def parse_hopo(hopo):
+    triple = hopo.rpartition(":")
+    return triple[0], int(triple[2])
+
+
 class HoPo():
     """ Convenience class to parse bind string "hostname:port" """
-    def __init__(self, bind):
+    def __init__(self, hopo):
         try:
-            self.string = bind
-            triple = bind.rpartition(":")
-            self.tuple = (triple[0], int(triple[2]))
-            self.host = self.tuple[0]
-            self.port = self.tuple[1]
+            self.string = hopo
+            self.host, self.port = parse_hopo(hopo)
         except BaseException as e:
-            raise Exception("Invalid bind argument (HOST:PORT): '{b}': {e}".format(b=bind, e=e))
+            raise Exception("Invalid bind argument (HOST:PORT): '{b}': {e}".format(b=hopo, e=e))
 
     def test_bind(self):
         "Check that we can bind to the first found addrinfo (not already bound, permissions)."
         ai = socket.getaddrinfo(self.host, self.port)[0]
         s = socket.socket(family=ai[0])
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        s.bind(self.tuple)
+        s.bind((self.host, self.port))
         s.close()
 
 
 class Protocol(enum.Enum):
     HTTP = enum.auto()
     FTP = enum.auto()
+
+
+def escape(string):
+    return string.replace(":", r"\:")
+
+
+def unescape(string):
+    return string.replace(r"\:", ":")
 
 
 class Endpoint():
@@ -81,19 +91,12 @@ class Endpoint():
     _PROTOCOL2URL_SCHEME = {Protocol.HTTP: "http", Protocol.FTP: "ftp"}
     _SUPPORTED_TWISTED_TYPES = ["ssl", "tls", "tcp6", "tcp", "unix"]
 
-    @classmethod
-    def _escape(cls, string):
-        return string.replace(":", r"\:")
-
-    @classmethod
-    def _unescape(cls, string):
-        return string.replace(r"\:", ":")
-
     def __init__(self, desc, protocol):
+        LOG.debug("Initializing endpoint: {} ({})".format(desc, protocol))
         self.desc = desc
         self.protocol = protocol
 
-        self._params = [self._unescape(p) for p in re.split(r"(?<!\\):", desc)]
+        self._params = [unescape(p) for p in re.split(r"(?<!\\):", desc)]
         if self.type not in self._SUPPORTED_TWISTED_TYPES:
             raise Exception("Unsupported endpoint type: {} (twisted types supported: {})".format(self.type, ",".join(self._SUPPORTED_TWISTED_TYPES)))
 
@@ -120,20 +123,27 @@ class Endpoint():
     def option(self, key, default=None):
         return self._options.get(key, default)
 
-    def url(self, host=None):
-        return "{scheme}://{host}:{port}/".format(scheme=self.url_scheme,
-                                                  host=host if host else self.option("host") if self.option("host") else socket.getfqdn(),
-                                                  port=self.option("port"))
+    def hopo(self, host=None):
+        return "{host}:{port}".format(host=host if host else self.option("host") if self.option("host") else socket.getfqdn(), port=self.option("port"))
 
+    def url(self, host=None):
+        return "{scheme}://{hopo}/".format(scheme=self.url_scheme, hopo=self.hopo(host=host))
+
+    # Compat...
     @classmethod
-    def hopo2desc(cls, bind, server=True):
+    def hopo2desc(cls, hopo, server=True):
         """Needed for HoPo compat."""
-        triple = bind.rpartition(":")
+        host, port = parse_hopo(hopo)
+        LOG.warning("XXX: {}, host={}".format(hopo, host))
         if server:  # pylint: disable=no-else-return
-            typ = "tcp" if isinstance(ipaddress.ip_address(triple[0]), ipaddress.IPv4Address) else "tcp6"
-            return "{typ}:interface={host}:port={port}".format(typ=typ, port=triple[2], host=cls._escape(triple[0]))
+            typ = "tcp" if isinstance(ipaddress.ip_address(host), ipaddress.IPv4Address) else "tcp6"
+            return "{typ}:interface={host}:port={port}".format(typ=typ, port=port, host=escape(host))
         else:
-            return "tcp:host={host},port={port}".format(host=cls._escape(triple[0]), port=triple[2])
+            return "tcp:host={host}:port={port}".format(host=escape(host), port=port)
+
+    @property
+    def port(self):
+        return self.option("port", "")
 
 
 class ServerEndpoint(Endpoint):
