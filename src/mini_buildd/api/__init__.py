@@ -303,10 +303,10 @@ class Status(DaemonCommand):
         self.version = mini_buildd.__version__
 
         # hopo string
-        self.http = self.daemon.model.mbd_get_http_hopo().string
+        self.http = self.daemon.model.mbd_get_http_endpoint().hopo()
 
         # hopo string
-        self.ftp = self.daemon.model.mbd_get_ftp_hopo().string
+        self.ftp = self.daemon.model.mbd_get_ftp_endpoint().hopo()
 
         # bool
         self.running = self.daemon.is_running()
