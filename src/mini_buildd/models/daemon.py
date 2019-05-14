@@ -167,6 +167,9 @@ prepare/remove actions will generate/remove the GnuPG key.
         self._mbd_gnupg = mini_buildd.gnupg.GnuPG(self.gnupg_template, self._mbd_fullname, self.email_address)
         self._mbd_gnupg_long_id = self._mbd_gnupg.get_first_sec_key()
         self._mbd_gnupg_fingerprint = self._mbd_gnupg.get_first_sec_key_fingerprint()
+        interface, port = mini_buildd.net.parse_hopo(self.ftpd_bind)
+        self._mbd_ftp_server_endpoint = mini_buildd.net.ServerEndpoint("tcp6:interface={interface}:port={port}".format(interface=mini_buildd.net.escape(interface), port=port),
+                                                                       mini_buildd.net.Protocol.FTP)
 
     @property
     def mbd_fullname(self):
@@ -220,14 +223,15 @@ prepare/remove actions will generate/remove the GnuPG key.
         if not self.mbd_get_daemon().get_active_repositories() and not self.mbd_get_daemon().get_active_chroots():
             MsgLog(LOG, request).warning("No active chroot or repository.")
 
-    def mbd_get_ftp_hopo(self):
-        return mini_buildd.net.HoPo("{h}:{p}".format(h=self.hostname, p=mini_buildd.net.HoPo(self.ftpd_bind).port))
+    def mbd_get_ftp_endpoint(self):
+        return self._mbd_ftp_server_endpoint
 
     def mbd_get_ftp_url(self):
-        return "ftp://{h}".format(h=self.mbd_get_ftp_hopo().string)
+        return self._mbd_ftp_server_endpoint.url(self.hostname)
 
-    def mbd_get_http_hopo(self):
-        return mini_buildd.net.HoPo("{h}:{p}".format(h=self.hostname, p=mini_buildd.setup.HTTPD_ENDPOINTS[0].option("port", 0)))
+    @classmethod
+    def mbd_get_http_endpoint(cls):
+        return mini_buildd.setup.HTTPD_ENDPOINTS[0]
 
     def mbd_get_http_url(self):
         return mini_buildd.setup.HTTPD_ENDPOINTS[0].url(self.hostname)
@@ -248,7 +252,7 @@ incoming = /incoming
 # These currently only help for mini-buildd-tool bash autocompletion
 x_mini_buildd_host = {H}
 x_mini_buildd_users =
-""".format(i=self.identity, h=self.mbd_get_ftp_hopo().string, H=self.mbd_get_http_hopo().string)
+""".format(i=self.identity, h=self.mbd_get_ftp_endpoint().hopo(self.hostname), H=self.mbd_get_http_endpoint().hopo(self.hostname))
 
     def _mbd_notify_signature(self, typ):
         reason = {"daemon": "Your address is configured to get any notifications (contact administrators if you don't want this).",
