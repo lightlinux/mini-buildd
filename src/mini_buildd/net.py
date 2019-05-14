@@ -57,16 +57,16 @@ class Endpoint():
     >>> print(Endpoint.hopo2desc(":::8066"))
     tcp6:interface=\:\::port=8066
 
-    >>> Endpoint("tcp:host=example.com:port=1234", mini_buildd.net.Endpoint.Protocol.HTTP).url()  # HTTP client
+    >>> Endpoint("tcp:host=example.com:port=1234", Protocol.HTTP).url()  # HTTP client
     'http://example.com:1234/'
 
-    >>> Endpoint("tls:host=example.com:port=1234", mini_buildd.net.Endpoint.Protocol.HTTP).url()  # HTTPS client
+    >>> Endpoint("tls:host=example.com:port=1234", Protocol.HTTP).url()  # HTTPS client
     'https://example.com:1234/'
 
-    >>> Endpoint("tcp6:port=1234", mini_buildd.net.Endpoint.Protocol.HTTP).url(host="example.com")  # HTTP server
+    >>> Endpoint("tcp6:port=1234", Protocol.HTTP).url(host="example.com")  # HTTP server
     'http://example.com:1234/'
 
-    >>> Endpoint("ssl:port=1234", mini_buildd.net.Endpoint.Protocol.HTTP).url(host="example.com")  # HTTPS server
+    >>> Endpoint("ssl:port=1234", Protocol.HTTP).url(host="example.com")  # HTTPS server
     'https://example.com:1234/'
 
     """
