@@ -229,7 +229,7 @@ class Remote(KeyringKey):
         super().mbd_check(request)
         status = self.mbd_get_status(update=True)
 
-        if self.mbd_get_daemon().model.mbd_get_http_hopo().string not in status.remotes:
+        if self.mbd_get_daemon().model.mbd_get_http_endpoint().hopo() not in status.remotes:
             raise Exception("Remote '{r}': does not know us.".format(r=self.http))
 
         if not status.running:
