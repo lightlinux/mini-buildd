@@ -24,24 +24,6 @@ def parse_hopo(hopo):
     return triple[0], int(triple[2])
 
 
-class HoPo():
-    """ Convenience class to parse bind string "hostname:port" """
-    def __init__(self, hopo):
-        try:
-            self.string = hopo
-            self.host, self.port = parse_hopo(hopo)
-        except BaseException as e:
-            raise Exception("Invalid bind argument (HOST:PORT): '{b}': {e}".format(b=hopo, e=e))
-
-    def test_bind(self):
-        "Check that we can bind to the first found addrinfo (not already bound, permissions)."
-        ai = socket.getaddrinfo(self.host, self.port)[0]
-        s = socket.socket(family=ai[0])
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        s.bind((self.host, self.port))
-        s.close()
-
-
 class Protocol(enum.Enum):
     HTTP = enum.auto()
     FTP = enum.auto()
