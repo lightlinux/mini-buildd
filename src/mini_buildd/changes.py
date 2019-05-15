@@ -514,11 +514,13 @@ class Changes(debian.deb822.Changes):
                 with mini_buildd.misc.open_utf8(os.path.join(path, "apt_sources.list"), "w") as asl, \
                      mini_buildd.misc.open_utf8(os.path.join(path, "apt_preferences"), "w") as ap, \
                      mini_buildd.misc.open_utf8(os.path.join(path, "apt_keys"), "w") as ak, \
+                     mini_buildd.misc.open_utf8(os.path.join(path, "ssl_cert"), "w") as ssl_cert, \
                      mini_buildd.misc.open_utf8(chroot_setup_script, "w") as css, \
                      mini_buildd.misc.open_utf8(os.path.join(path, "sbuildrc_snippet"), "w") as src:
                     asl.write(dist.mbd_get_apt_sources_list(repository, suite_option))
                     ap.write(dist.mbd_get_apt_preferences(repository, suite_option, self.options.get("internal-apt-priority")))
                     ak.write(repository.mbd_get_apt_keys(dist))
+                    ssl_cert.write(mini_buildd.setup.HTTPD_ENDPOINTS[0].get_certificate())
                     css.write(mini_buildd.misc.fromdos(dist.chroot_setup_script))  # Note: For some reason (python, django sqlite, browser?) the text field may be in DOS mode.
                     os.chmod(chroot_setup_script, stat.S_IRWXU)
                     src.write(dist.mbd_get_sbuildrc_snippet(ao.architecture.name))
@@ -528,6 +530,7 @@ class Changes(debian.deb822.Changes):
                          add_files=[os.path.join(path, "apt_sources.list"),
                                     os.path.join(path, "apt_preferences"),
                                     os.path.join(path, "apt_keys"),
+                                    os.path.join(path, "ssl_cert"),
                                     chroot_setup_script,
                                     os.path.join(path, "sbuildrc_snippet")] + files_from_pool,
                          exclude_globs=["*.deb", "*.changes", "*.buildinfo"])
