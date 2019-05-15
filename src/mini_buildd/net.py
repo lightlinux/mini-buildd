@@ -136,6 +136,9 @@ class ServerEndpoint(Endpoint):
     def __repr__(self):
         return "Net server: {}".format(super().__repr__())
 
+    def get_certificate(self):
+        return open(self.option("certKey")).read()
+
 
 class ClientEndpoint(Endpoint):
     def __init__(self, *args, **kwargs):
@@ -144,6 +147,9 @@ class ClientEndpoint(Endpoint):
 
     def __repr__(self):
         return "Net client: {}".format(super().__repr__())
+
+    def get_certificate(self):
+        return ssl.get_server_certificate((self.option("host"), self.option("port")))
 
 
 class UserURL():
