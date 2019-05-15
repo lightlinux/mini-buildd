@@ -227,10 +227,13 @@ EOF
 	}
 
 	# Add Debian's default self-signed cert (from ssl-cert) to ca-certificates (make API calls work via https).
+	# Note: Don't use the same base filename (ssl-cert-snakeoil.pem -> ssl-cert-snakeoil.crt), else update-ca-certificates will remove/symlink snakeoil the two
 	mbd_snakeoil2cacerts()
 	{
-		local crtfile="/usr/local/share/ca-certificates/ssl-cert-snakeoil.crt"
-		[ -e "${crtfile}" ] || sudo cp -a /etc/ssl/certs/ssl-cert-snakeoil.pem "${crtfile}"
+		sudo make-ssl-cert generate-default-snakeoil
+		local snakeoilfile="/etc/ssl/certs/ssl-cert-snakeoil.pem"
+		local cacertfile="/usr/local/share/ca-certificates/ssl-cert-mini-buildd.crt"
+		[ -e "${cacertfile}" ] || sudo cp -v -a /etc/ssl/certs/ssl-cert-snakeoil.pem "${cacertfile}"
 		sudo update-ca-certificates --fresh
 	}
 
