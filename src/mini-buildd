@@ -94,10 +94,10 @@ class Main():
         group_conf = parser.add_argument_group("daemon arguments")
 
         # https://twistedmatrix.com/documents/current/core/howto/endpoints.html#servers
-        default_httpd_endpoint_ssl = "ssl:port=8066:privateKey=/etc/ssl/private/ssl-cert-snakeoil.key:certKey=/etc/ssl/certs/ssl-cert-snakeoil.pem"
+        default_httpd_endpoint_ssl = "ssl:port=8066:privateKey=/etc/ssl/private/ssl-cert-snakeoil.key:certKey=/etc/ssl/certs/ssl-cert-snakeoil.pem"  # pylint: disable=unused-variable  # noqa: F841
         default_httpd_endpoint_tcp6 = "tcp6:port=8066"  # pylint: disable=unused-variable  # noqa: F841
         default_httpd_endpoint_unix = "unix:address=/var/lib/mini-buildd/var/httpd.sock"  # pylint: disable=unused-variable  # noqa: F841
-        default_httpd_endpoints = [default_httpd_endpoint_ssl]
+        default_httpd_endpoints = [default_httpd_endpoint_tcp6]
 
         group_conf.add_argument("-E", "--httpd-endpoint", action="append",
                                 help="""Network endpoint for the http daemon (twisted-style). May be given multiple times. Examples:
