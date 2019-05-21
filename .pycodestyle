@@ -6,4 +6,4 @@
 # E741 do not use variables named 'l', 'O', or 'I'
 # W503 line break after binary operator (Note: W503 is in the default ignore list, see 'man pycodestyle', https://github.com/PyCQA/pycodestyle/issues/498).
 ignore = E122,E124,E127,E402,E741,W503
-max-line-length = 200
+max-line-length = 250

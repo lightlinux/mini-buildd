@@ -18,7 +18,7 @@ msg-template={path}:{line}: [{msg_id}({symbol}), {obj}] {msg}
 
 [FORMAT]
 
-max-line-length=200
+max-line-length=250
 max-module-lines=1500
 
 [VARIABLES]
