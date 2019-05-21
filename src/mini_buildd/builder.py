@@ -160,12 +160,10 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
         # Check if we need to support a https apt transport
         sources_list_file = "{p}/apt_sources.list".format(p=self._build_dir)
         apt_transports = []
-        with mini_buildd.misc.open_utf8(sources_list_file) as sources_list:
-            for apt_line in sources_list:
-                if re.match("deb https", apt_line):
-                    apt_transports = ["--chroot-setup-command", "apt-get --yes --option=APT::Install-Recommends=false install ca-certificates apt-transport-https"]
-                    LOG.info("{p}: Found https source: {l}".format(p=self.key, l=apt_line))
-                    break
+
+        sources_list_has_https = mini_buildd.misc.sources_list_has_https(sources_list_file)
+        if sources_list_has_https:
+            apt_transports = ["--chroot-setup-command", "apt-get --yes --option=APT::Install-Recommends=false install ca-certificates apt-transport-https"]
 
         sbuild_cmd = ["sbuild",
                       "--dist", self.distribution,
@@ -184,8 +182,8 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
                        "--chroot-setup-command", "cp {p}/apt_preferences /etc/apt/preferences".format(p=self._build_dir),
                        "--chroot-setup-command", "cat /etc/apt/preferences",
                        "--chroot-setup-command", "apt-key add {p}/apt_keys".format(p=self._build_dir),
-                       "--chroot-setup-command", "cp -v {p}/ssl_cert /usr/local/share/ca-certificates/mini-buildd-repo.crt".format(p=self._build_dir),
-                       "--chroot-setup-command", "/usr/sbin/update-ca-certificates",
+                       "--chroot-setup-command", "cp -v {p}/ssl_cert /usr/local/share/ca-certificates/mini-buildd-repo.crt".format(p=self._build_dir) if sources_list_has_https else "echo 'No https: Skipping certificate installation.'",
+                       "--chroot-setup-command", "/usr/sbin/update-ca-certificates" if sources_list_has_https else "echo 'No https: Not updating certificates.'",
                        "--chroot-setup-command", "apt-get --option=Acquire::Languages=none update",
                        "--chroot-setup-command", "{p}/chroot_setup_script".format(p=self._build_dir),
                        "--chroot-setup-command", "cat {p}/chroot_setup_script".format(p=self._build_dir),
