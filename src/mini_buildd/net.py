@@ -137,7 +137,8 @@ class ServerEndpoint(Endpoint):
         return "Net server: {}".format(super().__repr__())
 
     def get_certificate(self):
-        return open(self.option("certKey")).read()
+        cert_key_file = self.option("certKey")
+        return open(cert_key_file).read() if cert_key_file else ""
 
 
 class ClientEndpoint(Endpoint):
