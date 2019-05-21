@@ -205,6 +205,17 @@ def codename_produces_ddeb_appendix(codename):
     return codename in ["bionic", "cosmic"]
 
 
+def sources_list_has_https(sources_list_file):
+    """
+    Check sources.list file if there are any https sources in it.
+    """
+    with mini_buildd.misc.open_utf8(sources_list_file) as sources_list:
+        for apt_line in sources_list:
+            if re.match("deb.*https", apt_line):
+                return True
+    return False
+
+
 class Distribution():
     """
     A mini-buildd distribution string.
