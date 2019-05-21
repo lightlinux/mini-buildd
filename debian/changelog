@@ -1,3 +1,95 @@
+mini-buildd (1.1.16) experimental; urgency=medium
+
+  ** 1.1.x are _development_ releases, use for testing only. **
+
+  'https part 2' release. This makes the testsuite run fine
+  with https enabled (for the self-signed case). Still doesn't work
+  with remotes, and some bells and whistles to make it 'just work'
+  still missing. Check the man page for the new new '--httpd-endpoint'
+  option if you care to ponder with it:
+
+  * [0b018f7] devel: Make tofu bootstrap test of its own.
+  * [88cdab1] source wizards: Adapt for new signing keys for
+    buster/updates (security).
+  * [686378e] control: Ups: switch left-over cherrypy dep to twisted.
+  * [846e84a] devel: Use fq hostname (instead of localhost) for testing
+    (will be more convenient for SSL later).
+  * [6b5af16] devel: Use local (rather that installed) mini-buildd-tool.
+  * [39a579d] devel: Global env name clean up. MBD_HOME removed (not
+    used).
+  * [f4055d8] devel: Remove 'sbuild key workaround testing' (the
+    workaround is gone).
+  * [68eb5cd] mini-buildd-tool: Handle down proto (http/https) argument to
+    web_login().
+  * [12b6ee9] misc.py: web_login(): Add Referer header (required by django
+    for https).
+  * [57c2560] misc.py: urlopen_ca_certificates: Use system's default
+    context.
+  * [bdc7053] src/mini_buildd/*: Always use urlopen_ca_certificates()
+    wrapper.
+  * [803beee] mini-buildd: Cleanup --httpd-endpoint option code.
+  * [e32be65] httpd: Move endpoint type check to Endpoint class.
+  * [2d5bc74] misc.py: Endpoint: Add type2proto conversion.
+  * [7713289] models/gnupg.py: Remote(): Support optional '[proto:]'
+    prefix (to support https URLs).
+  * [f28b334] changes.py: Use 1st endpoint's proto (http, https) for
+    internal remote.
+  * [d568c7b] daemon.py: Use 1st endpoint's proto (http, https) for
+    daemon's http url.
+  * [c8c7730] changes.py: upload scheduler: Monkey patch remote url for
+    now (fixes live build log URLs if hhtps is used).
+  * [31151f9] devel: Make proto (http, https) configurable via one
+    variable.
+  * [22285d2] devel: testfiles: Use an extra directory, and be sure it
+    exists.
+  * [9009280] mini-buildd-tool: Fix: subparsers (commands) should be
+    required.
+  * [b37537d] devel: Replace 'pyflakes3' test with 'flake8'.
+  * [89ea692] src/mini-buildd: Ignore unneeded checks from flake8
+    (pyflake).
+  * [e9b12c4] misc.py: web_login(): Return opener object, and use that in
+    m-b-t (fixes auth w/ https).
+  * [6c32733] devel: Use https for testsuite by default (as mini-buildd
+    does now).
+  * [eac9dcd] devel: Auto-prepare system to accept Debian snakeoil self-
+    signed.
+  * [82f4e28] devel: prepare-system: Also add snakeoil to browser
+    (chromium, firefox) certstores for testing.
+  * [cfa3f5a] misc.py: Endpoint(): Support protocol (http/ftp) && "ssl
+    aware" url() composition.
+  * [ac9e9c0] ftpd.py: Use Endpoint, not HoPo.
+  * [8286941] net.py: Split new module "net" (network code from misc).
+  * [fe97b52] net.py: Fix Endpoint doctests.
+  * [ecf3a32] net.py: Add server & client endpoint variants.
+  * [b450cc4] net.py: Endpoints: Add syntax check via twisted.
+  * [fbacbc9] mini-buildd: Fix typo in arg description.
+  * [ff3dc87] mini-buildd: Remove pre-daemon bind check via HoPo.
+  * [827df38] net.py: Minor improvemts (less long code).
+  * [3459df4] net.py: Various code improvements && some more compat.
+  * [a993614] models/daemon.py: Update to 'Endpoint only'.
+  * [d6f0f93] packager.py: Update to 'Endpoint only'.
+  * [1140e0b] models/gnupg.py: Update to 'Endpoint only'.
+  * [975aebd] changes.py: Update to 'Endpoint only'.
+  * [bcfab20] builder.py: Update to 'Endpoint only'.
+  * [1c13265] api/__init__.py: Update to 'Endpoint only'.
+  * [54208df] net.py: Remove class 'HoPo' for good.
+  * [049601a] net.py: Fix endpoint doctests.
+  * [af0aa47] net.py: Add support to receive ssl cert (server->local file,
+    client->remote host).
+  * [667538e] builder|changes.py: Bundle ssl cert with buildrequests.
+  * [fdfb331] devel: ssl-cert prepare: (Re-)Create snakeoil if not
+    present, and use different name for cacert.
+  * [98c9c21] .pycodestyle|.pylintrc: Update max line length to 250 for
+    now (really -- have 21x9 display ;).
+  * [a928577] src/mini-buildd: Put default back to non-https.
+  * [d5fefd0] net.py: get_certificate(): Don't fail in the non-https case.
+  * [9d44d84] misc.py: Add sources_list_has_https() tool function (code
+    from builder).
+  * [eda1a52] builder.py: Make work (again) for the non-https case.
+  * [00479e2] net.py: Remove left-over 'devel only' log.
+
+ -- Stephan Sürken <absurd@debian.org>  Tue, 21 May 2019 13:19:21 +0200
+
 mini-buildd (1.1.15) experimental; urgency=medium
 
   ** 1.1.x are _development_ releases, use for testing only. **
