@@ -241,6 +241,8 @@ mbd_run:00:10:linters()
 	(
 		pyenv
 		pylama --linters=pycodestyle,pylint,pyflakes,mccabe $(mbd_pysources)
+		# WTF pydocstyle: Config in setup.cfg does not seem to trigger: workaround w/ extra call:
+		pylama --verbose --linters=pydocstyle $(mbd_pysources) --ignore=D100,D101,D102,D103,D104,D105,D106,D107,D200,D202,D203,D204,D205,D207,D210,D212,D213,D300,D301,D400,D401,D403,D404,D412,D413
 
 		# Try to list all in-code excludes
 		printf "\nI: pylint/noqa in-file linter exceptions present in:\n"
