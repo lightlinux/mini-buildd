@@ -260,6 +260,10 @@ mbd_run:00:10:linters()
 	(
 		pyenv
 		pylama --linters=pycodestyle,pylint $(mbd_pysources)
+
+		# Try to list all in-code excludes
+		printf "\nI: pylint/noqa in-file linter exceptions present in:\n"
+		grep --files-with-match --regexp="\#.*pylint:.*disable" --regexp="\#.*noqa" $(mbd_pysources)
 	)
 }
 
