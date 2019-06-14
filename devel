@@ -253,6 +253,16 @@ EOF
 	mbd_snakeoil2browser
 }
 
+# Run several well-known "linters" (static code checkers) on python code
+mbd_run:00:10:linters()
+{
+	_check_prog pylama
+	(
+		pyenv
+		pylama --linters=pycodestyle,pylint $(mbd_pysources)
+	)
+}
+
 mbd_run:00:10:pycodestyle()
 {
 	_check_prog pycodestyle
