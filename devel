@@ -240,7 +240,7 @@ mbd_run:00:10:linters()
 	_check_prog pylama
 	(
 		pyenv
-		pylama --linters=pycodestyle,pylint,pyflakes $(mbd_pysources)
+		pylama --linters=pycodestyle,pylint,pyflakes,mccabe $(mbd_pysources)
 
 		# Try to list all in-code excludes
 		printf "\nI: pylint/noqa in-file linter exceptions present in:\n"
