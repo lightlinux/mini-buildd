@@ -250,19 +250,6 @@ mbd_run:00:10:linters()
 	)
 }
 
-mbd_run:00:12:pymisc()
-{
-	local f regex
-	for f in $(mbd_pysources); do
-		for regex in \
-			^\#\ -\\*-\ coding:\ utf-8\ -\\*-; do
-			printf "Checking '${f}' for '${regex}'..."
-			grep --quiet "${regex}" "${f}"
-			printf "OK.\n"
-		done
-	done
-}
-
 mbd_run:00:12:codespell()
 {
 	local ups=$(codespell --quiet-level=2 $(mbd_pysources))

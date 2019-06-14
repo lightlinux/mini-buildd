@@ -3,8 +3,6 @@ here. This is not part of mini-buildd.
 
 """
 
-# -*- coding: utf-8 -*-
-
 import urllib.request
 import urllib.parse
 import urllib.error

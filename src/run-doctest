@@ -1,5 +1,4 @@
 #!/usr/bin/python3 -W default
-# -*- coding: utf-8 -*-
 
 import sys
 import importlib

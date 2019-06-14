@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import django.views.generic.detail
 from django.conf.urls import url
 

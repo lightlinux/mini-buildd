@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 
 """keyring-packages should be available in all
 (non-experimental) suites, and most importantly in the 'upmost'

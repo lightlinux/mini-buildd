@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import tempfile
 import urllib.request
 import urllib.parse

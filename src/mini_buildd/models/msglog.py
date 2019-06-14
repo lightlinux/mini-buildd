@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Message log: Logs that should also go to the end user.
 

@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 
 """Script to use as a 'command' in an authorized_key file to allow mini-buildd-tool runs only via SSH.
 

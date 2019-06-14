@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import django.views.generic.base
 import django.contrib.admin
 import django.contrib.auth.views
