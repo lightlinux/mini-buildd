@@ -153,24 +153,6 @@ mbd_service()
 	fi
 }
 
-# temporary debug helper only
-# This shows bug https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=877637 (debian/rules now has a workaround).
-mbd_sphinxrepro()
-{
-	# export PYTHONHASHSEED=random  # default, buggy
-	# export PYTHONHASHSEED=0       # workaround
-
-	local b
-	for b in 1 2; do
-		./debian/rules clean
-		rm -rf "sphinx-${b}"
-		/usr/share/sphinx/scripts/python3/sphinx-build ./doc/ ./build/sphinx/html/
-		cp -a build/sphinx/ sphinx-${b}
-	done
-	diff -r -u -x *.pickle sphinx-1/ sphinx-2/
-	printf "OK: sphinx HTML identical"
-}
-
 # Create "big files" for HTTPD tests and benchamrking.
 # POST: MBD_HTTPD_TESTFILES (fileItem: sha1sum) will be available globally.
 mbd_gen_httpd_testfiles()
