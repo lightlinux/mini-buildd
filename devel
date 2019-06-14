@@ -267,15 +267,6 @@ mbd_run:00:10:linters()
 	)
 }
 
-mbd_run:00:10:pycodestyle()
-{
-	_check_prog pycodestyle
-	(
-		pyenv
-		pycodestyle --show-source --show-pep8 --config=${MBD_PJPATH}/.pycodestyle $(mbd_pysources)
-	)
-}
-
 mbd_run:00:12:pymisc()
 {
 	local f regex
@@ -329,19 +320,6 @@ mbd_run:00:12:flake8()
 	(
 		pyenv
 		flake8 $(mbd_pysources)
-	)
-}
-
-mbd_run:01:10:pylint()
-{
-	_check_prog pylint3
-	(
-		pyenv
-		printf "N: pylint checking modules...\n"
-		pylint3 --jobs=2 $(mbd_pymodules)
-		printf "N: pylint checking scripts...\n"
-		pylint3 --jobs=2 --disable=C0103 $(mbd_pyscripts)
-		printf "W: Overall locally disabled checks: %s\n" "$(cat $(mbd_pysources) | grep --count "pylint:.*disable")"  # No good way to keep track with pylint itself
 	)
 }
 
