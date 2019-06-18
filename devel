@@ -229,6 +229,11 @@ EOF
 		[ ! -e "${certDB}" ] || certutil -d $(dirname ${certDB}) -A -t "${trust}" -n"$(basename ${f} .pem)" -i "${f}"
 	}
 
+	mbd_pipclear()
+	{
+		pip3 uninstall --yes --requirement=<(pip3 freeze)
+	}
+
 	mbd_pipupdatepylama()
 	{
 		# WTF: After stupid try and error w/ pylama, it seems that only 7.6.5 somehow seems to work:
@@ -241,6 +246,7 @@ EOF
 	mbd_pythonkeyringtestconfig
 	mbd_snakeoil2cacerts
 	mbd_snakeoil2browser
+	mbd_pipclear
 	mbd_pipupdatepylama
 }
 
