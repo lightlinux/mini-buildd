@@ -247,8 +247,8 @@ EOF
 	mbd_pipupdateprospector
 }
 
-# Run several well-known "linters" (static code checkers) on python code
-mbd_run:00:10:linters()
+# See .prospector.yaml for config
+mbd_run:00:10:prospector()
 {
 	_check_prog prospector
 	(
