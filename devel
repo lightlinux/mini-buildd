@@ -234,29 +234,26 @@ EOF
 		pip3 uninstall --yes --requirement=<(pip3 freeze)
 	}
 
-	mbd_pipupdatepylama()
+	mbd_pipupdateprospector()
 	{
-		# WTF: After stupid try and error w/ pylama, it seems that only 7.6.5 somehow seems to work:
-		# 7.4.3 (Debian): Does not properly read ignores from config; lacks pylint support.
-		# 7.7.1 (current): Since 7.6.6, ignore parsing is broken again.
-		pip3 install --upgrade --ignore-installed pylama==7.6.5
-		printf "Hint: Uninstall all pip3 packages via: pip3 uninstall --yes --requirement=<(pip3 freeze)\n"
+		pip3 install --upgrade --ignore-installed prospector
+		pip3 install --upgrade --ignore-installed pylint==2.2.2  # https://github.com/PyCQA/prospector/issues/321
 	}
 
 	mbd_pythonkeyringtestconfig
 	mbd_snakeoil2cacerts
 	mbd_snakeoil2browser
 	mbd_pipclear
-	mbd_pipupdatepylama
+	mbd_pipupdateprospector
 }
 
 # Run several well-known "linters" (static code checkers) on python code
 mbd_run:00:10:linters()
 {
-	_check_prog pylama
+	_check_prog prospector
 	(
 		pyenv
-		pylama --linters=pycodestyle,pylint,pyflakes,mccabe,pydocstyle $(mbd_pysources)
+		prospector $(mbd_pysources)
 
 		# Try to list all in-code excludes
 		printf "\nI: pylint/noqa in-file linter exceptions present in:\n"
