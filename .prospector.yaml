@@ -1,0 +1,95 @@
+output-format: emacs
+
+strictness: low
+doc-warnings: false
+max-line-length: 240
+
+pep8:
+  disable:
+    - E122
+    - E124
+    - E127
+    - E402
+    - E741
+    - W503
+
+pylint:
+  disable:
+    # We don't want the in-code exceptions pop up on pylint runs.
+    - locally-disabled
+    # It seems hard and unfair to force us to write documentation!
+    - missing-docstring,
+    # py3 logging: You still need "%s"-style formatting for "late formatting".
+    # https://docs.python.org/3/howto/logging.html#logging-variable-data
+    # We don't want to use different formatting formats though.
+    - logging-format-interpolation
+    # For now, ignore doc errors
+    - cyclic-import
+    - import-error
+  options:
+    max-module-lines: 1500
+
+    # [VARIABLES]
+    dummy-variables-rgx: _|dummy
+
+    # [TYPECHECK]
+    # see ./devel pylintgeneratedmembers
+    generated-members: add,all,apt_keys,architectureoption_set,chroot_set,codename,distribution_set,DoesNotExist,get_status_display,get_union_type_display,id,layout,looplvmchroot,mbd_get_apt_line,mbd_get_apt_line_raw,mbd_get_apt_pin,mbd_get_archive,mbd_get_extra_option,mbd_get_mandatory_version_regex,mbd_model,mbd_remove,objects,origin,repository_set,set,source_set,splitlines,suite,suiteoption_set,uploadable,
+
+    # [BASIC]
+    good-names: mini-buildd,mini-buildd-tool,mbd-import-08x,urlpatterns,register
+    variable-rgx: '[a-z_][a-z0-9_]{0,30}$'
+    method-rgx: '[a-z_][a-z0-9_]{1,40}$'
+    function-rgx: '[a-z_][a-z0-9_]{1,40}$'
+    class-attribute-rgx: '([A-Za-z_][A-Za-z0-9_]{2,40}|(__.*__))$'
+
+    # [DESIGN]
+    # Django adds many public methods to classes, FTPDHandler is the winner though
+    max-public-methods: 110
+    min-public-methods: 0
+
+    # We need to pimp some default values a little
+    max-args: 10
+    max-locals: 30
+    max-returns: 12
+    max-branches: 25
+    max-attributes: 15
+    max-statements: 60
+
+    # Since 'python-debian (0.1.21+nmu2)': Changes: Too many ancestors (12/7)
+    # Since 'python-debian (0.1.34)': Changes: Too many ancestors (15/12)
+    max-parents: 15
+
+    max-bool-expr: 8
+
+mccabe:
+  options:
+    max-complexity: 17
+
+pep257:
+  disable:
+    - D100
+    - D101
+    - D102
+    - D103
+    - D104
+    - D105
+    - D106
+    - D107
+    - D200
+    - D202
+    - D203
+    - D204
+    - D205
+    - D207
+    - D210
+    - D212
+    - D213
+    - D300
+    - D301
+    - D400
+    - D401
+    - D403
+    - D404
+    - D412
+    - D413
