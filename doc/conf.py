@@ -1,6 +1,6 @@
 # http://www.sphinx-doc.org/en/stable/config.html
 #
-# pylint: disable=C0413,C0103,W0622  # Disable for file: These checks just can't be satisfied here.
+# pylint: disable=wrong-import-position,invalid-name,redefined-builtin  # Disable for file: These checks just can't be satisfied here.
 #
 import sys
 import os
