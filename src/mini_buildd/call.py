@@ -98,7 +98,7 @@ class Call():
         olog = LOG.debug if self.result.returncode == 0 else LOG.warning
         for prefix, output in [("stdout", self.stdout), ("stderr", self.stderr)]:
             for line in output.splitlines():
-                olog("{label} ({p}): {l}".format(label=self.label, p=prefix, l=line.rstrip('\n')))
+                olog("{label} ({prefix}): {line}".format(label=self.label, prefix=prefix, line=line.rstrip('\n')))
         return self
 
     def check(self):
