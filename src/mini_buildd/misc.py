@@ -156,8 +156,8 @@ class BlockQueue(queue.Queue):
         queue.Queue.__init__(self, maxsize=maxsize)
 
     def __str__(self):
-        return "{l}: {n}/{m} ({p} pending)".format(
-            l=self.load,
+        return "{load}: {n}/{m} ({p} pending)".format(
+            load=self.load,
             n=self._active.qsize(),
             m=self._maxsize,
             p=self._pending)
@@ -626,6 +626,6 @@ def setup_console_logging(level=logging.DEBUG):
     ch.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
 
     for ln in ["__main__", "mini_buildd"]:
-        l = logging.getLogger(ln)
-        l.addHandler(ch)
-        l.setLevel(level)
+        log = logging.getLogger(ln)
+        log.addHandler(ch)
+        log.setLevel(level)
