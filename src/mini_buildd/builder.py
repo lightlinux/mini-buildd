@@ -112,10 +112,7 @@ class Build(mini_buildd.misc.Status):
         """
         Generate .sbuildrc for a build request (not all is configurable via switches, unfortunately).
         """
-        with mini_buildd.misc.open_utf8(os.path.join(self._build_dir, "sbuildrc_snippet")) as cs:
-            mini_buildd.misc.ConfFile(
-                self.sbuildrc_path,
-                """\
+        tpl = """\
 # We update sources.list on the fly via chroot-setup commands;
 # this update occurs before, so we don't need it.
 $apt_update = 0;
@@ -127,8 +124,12 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
 
 # don't remove this, Perl needs it:
 1;
-""".format(apt_allow_unauthenticated=self._breq["Apt-Allow-Unauthenticated"],
-           custom_snippet=cs.read())).save()
+"""
+        with mini_buildd.misc.open_utf8(os.path.join(self._build_dir, "sbuildrc_snippet")) as cs:
+            mini_buildd.misc.ConfFile(
+                self.sbuildrc_path,
+                tpl.format(apt_allow_unauthenticated=self._breq["Apt-Allow-Unauthenticated"],
+                           custom_snippet=cs.read())).save()
 
     def _buildlog_to_buildresult(self, buildlog):
         """
