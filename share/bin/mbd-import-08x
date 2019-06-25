@@ -82,8 +82,8 @@ WARN: If you did not create a new repo with the same id, and/or want to force th
 WARN: Continue (Ctr-C to cancel)?""".format(old=OLD_REPOID, new=REPOID))
 
 print("""
-{p}: {l} source packages. Trying to import to '{d}' in reprepo/cwd
-""".format(p=OLD_DIST, l=len(PACKAGES), d=ARGS.distribution))
+{p}: {n} source packages. Trying to import to '{d}' in reprepo/cwd
+""".format(p=OLD_DIST, n=len(PACKAGES), d=ARGS.distribution))
 input("Start import (dry_run={d}) (Ctrl-C to cancel)?".format(d=ARGS.dry_run))
 print()
 
