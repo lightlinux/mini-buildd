@@ -110,7 +110,7 @@ class Package(mini_buildd.misc.Status):
         status = bres.get("Sbuild-Status")
         lintian = bres.get("Sbuild-Lintian")
 
-        LOG.info("{p}: Got build result for '{a}': {r}={s}, lintian={l}".format(p=self.pid, a=arch, r=retval, s=status, l=lintian))
+        LOG.info("{p}: Got build result for '{a}': {r}={s}, lintian={lintian}".format(p=self.pid, a=arch, r=retval, s=status, lintian=lintian))
 
         def check_lintian(arch):
             return lintian == "pass" or \
