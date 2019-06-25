@@ -5,6 +5,7 @@ doc-warnings: false
 max-line-length: 240
 
 pep8:
+  run: true
   disable:
     - E122
     - E124
@@ -14,6 +15,7 @@ pep8:
     - W503
 
 pylint:
+  run: false
   disable:
     # We don't want the in-code exceptions pop up on pylint runs.
     - locally-disabled
@@ -63,10 +65,12 @@ pylint:
     max-bool-expr: 8
 
 mccabe:
+  run: false
   options:
     max-complexity: 17
 
 pep257:
+  run: false
   disable:
     - D100
     - D101
