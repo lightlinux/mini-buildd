@@ -88,7 +88,7 @@ Use the 'directory' notation with exactly one trailing slash (like 'http://examp
                         "http://archive.debian.org/debian/",             # Archived Debian Releases
                         "http://archive.debian.org/debian-security/",    # Archived Debian Security
                         "http://archive.debian.org/debian-backports/",   # Archived Debian Backports
-                       ]:
+                        ]:
                 cls._mbd_get_or_create(msglog, url)
             msglog.info("Consider adding archives with your local or closest mirrors; check 'netselect-apt'.")
 
@@ -98,7 +98,7 @@ Use the 'directory' notation with exactly one trailing slash (like 'http://examp
             for url in ["http://archive.ubuntu.com/ubuntu/",              # Ubuntu releases
                         "http://security.ubuntu.com/ubuntu/",             # Ubuntu Security
                         "http://old-releases.ubuntu.com/ubuntu/",         # Older Ubuntu release
-                       ]:
+                        ]:
                 cls._mbd_get_or_create(msglog, url)
             msglog.info("Consider replacing these archives with you closest mirror(s); check netselect-apt.")
 
