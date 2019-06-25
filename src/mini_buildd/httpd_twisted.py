@@ -17,7 +17,7 @@ LOG = logging.getLogger(__name__)
 
 
 class Site(twisted.web.server.Site):
-    def _openLogFile(self, path):
+    def _openLogFile(self, path):  # noqa (pep8 N802)
         return twisted.python.logfile.LogFile(os.path.basename(path), directory=os.path.dirname(path), rotateLength=5000000, maxRotatedFiles=9)
 
 
@@ -29,7 +29,7 @@ class RootResource(twisted.web.resource.Resource):
         super().__init__()
         self._wsgi_resource = wsgi_resource
 
-    def getChild(self, path, request):
+    def getChild(self, path, request):  # noqa (pep8 N802)
         request.prepath.pop()
         request.postpath.insert(0, path)
         return self._wsgi_resource
@@ -44,12 +44,12 @@ class FileResource(twisted.web.static.File):
         self.mbd_with_index = with_index
         self.mbd_uri_regex = re.compile(uri_regex)
 
-    def directoryListing(self):
+    def directoryListing(self):  # noqa (pep8 N802)
         if not self.mbd_with_index:
             return self.forbidden
         return super().directoryListing()
 
-    def getChild(self, path, request):
+    def getChild(self, path, request):  # noqa (pep8 N802)
         if not self.mbd_uri_regex.match(request.uri.decode("utf-8")):
             return self.forbidden
         child = super().getChild(path, request)
