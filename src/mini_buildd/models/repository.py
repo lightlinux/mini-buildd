@@ -98,8 +98,8 @@ lintian) as non-lethal, and will install anyway.
         unique_together = ("suite", "layout")
 
     def __str__(self):
-        return "{l}: {e}{n}{e} [{u}]{m}".format(
-            l=self.layout.name,
+        return "{layout}: {e}{n}{e} [{u}]{m}".format(
+            layout=self.layout.name,
             n=self.suite.name,
             e="*" if self.experimental else "",
             u="uploadable" if self.uploadable else "managed",
@@ -778,11 +778,11 @@ Example:
                 gpg.add_pub_key(uploader.key)
 
         # Add configured extra keyrings
-        for l in self.extra_uploader_keyrings.splitlines():
-            l = l.strip()
-            if l and l[0] != "#":
-                LOG.info("Adding keyring: {k}".format(k=l))
-                gpg.add_keyring(l)
+        for line in self.extra_uploader_keyrings.splitlines():
+            line = line.strip()
+            if line and line[0] != "#":
+                LOG.info("Adding keyring: {k}".format(k=line))
+                gpg.add_keyring(line)
         return gpg
 
     def mbd_get_path(self):
@@ -802,7 +802,7 @@ Example:
             return result
         except Exception as e:
             # Raise Exception with human-readable text
-            raise Exception("Please fix syntax error in extra option 'Meta-Distributions' in layout '{l}': {e}".format(l=self.layout, e=e))
+            raise Exception("Please fix syntax error in extra option 'Meta-Distributions' in layout '{layout}': {e}".format(layout=self.layout, e=e))
 
     def mbd_distribution_strings(self, **suiteoption_filter):
         "Return a list with all full distributions strings, optionally matching a suite options filter (unstable, experimental,...)."
