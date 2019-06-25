@@ -13,12 +13,12 @@ sys.path.insert(0, os.path.abspath('../src'))
 subprocess.check_call(["sphinx-apidoc", "--force", "--separate", "--output-dir", "./code/mini_buildd/", "../src/mini_buildd/"])
 
 # Pseudo-configure django
-import mini_buildd.django_settings
+import mini_buildd.django_settings  # noqa (pep8 E402)
 mini_buildd.django_settings.pseudo_configure()
 
 # do not import mini-buildd's version before path insertion -- otherwise
 # sphinx-build terminates with following message: "error: no such option: -b"
-from mini_buildd import __version__
+from mini_buildd import __version__  # noqa (pep8 E402)
 
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.todo', 'sphinx.ext.graphviz']
 templates_path = ['_templates']
