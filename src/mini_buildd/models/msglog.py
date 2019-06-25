@@ -72,7 +72,7 @@ class MsgLog():
         except BaseException:
             pass
 
-        self.pylog.log(level, "{m} [{mod}:{l}]".format(m=msg, mod=actual_mod, l=actual_line))
+        self.pylog.log(level, "{m} [{mod}:{line}]".format(m=msg, mod=actual_mod, line=actual_line))
         self.plain += "{p}: {m}\n".format(p=self._level2prefix(level), m=msg)
 
     def log_text(self, text, level=logging.INFO):
