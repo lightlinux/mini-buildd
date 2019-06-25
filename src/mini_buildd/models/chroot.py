@@ -465,8 +465,8 @@ class LoopLVMChroot(LVMChroot):
             cls._mbd_meta_add_base_sources(LoopLVMChroot, msglog)
 
     def mbd_backend_flavor(self):
-        return "{size}G loop: {l}".format(size=self.loop_size,
-                                          l=super().mbd_backend_flavor())
+        return "{size}G loop: {flavor}".format(size=self.loop_size,
+                                               flavor=super().mbd_backend_flavor())
 
     def mbd_get_volume_group(self):
         return "mini-buildd-loop-{d}-{a}".format(d=self.source.codename, a=self.architecture.name)
