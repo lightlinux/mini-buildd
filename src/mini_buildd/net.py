@@ -204,7 +204,7 @@ class UserURL():
         "URL string with username."
         if self._username:
             full = copy.copy(self._plain)
-            full[1] = "{u}@{l}".format(u=self._username, l=self._plain[1])
+            full[1] = "{user}@{url}".format(user=self._username, url=self._plain[1])
             return urllib.parse.urlunparse(full)
         return self.plain
 
