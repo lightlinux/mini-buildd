@@ -121,9 +121,9 @@ def mbd_build_status(success, failed):
         lintian_colors = {"pass": "green", "fail": "red", "None": "blue"}
 
         # return "[BL]" html-style colorized
-        result = "[<span style=\"color:{b}\">B</span><span style=\"color:{l}\">L</span>]".format(
-            b=build_colors.get(sbuild_status, "black"),
-            l=lintian_colors.get(lintian_status, "black"))
+        result = "[<span style=\"color:{bc}\">B</span><span style=\"color:{lc}\">L</span>]".format(
+            bc=build_colors.get(sbuild_status, "black"),
+            lc=lintian_colors.get(lintian_status, "black"))
     except BaseException as e:
         LOG.warning("Some error generating build status (ignoring): {e}".format(e=e))
 
