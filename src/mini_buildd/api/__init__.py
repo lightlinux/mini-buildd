@@ -695,18 +695,19 @@ class List(PackageCommand):
                                                            ("source", "Source")])
 
         def p_table(repository, values):
-            return """\
+            tpl = """\
 {s0}
 {t}
 {s0}
 {h}
 {s1}
 {p}
-""".format(t=fmt_tle.format(t=" Repository '{r}' ".format(r=repository)),
-           h=hdr,
-           s0=sep0,
-           s1=sep1,
-           p="\n".join([fmt.format(**p) for p in values]))
+"""
+            tpl.format(t=fmt_tle.format(t=" Repository '{r}' ".format(r=repository)),
+                       h=hdr,
+                       s0=sep0,
+                       s1=sep1,
+                       p="\n".join([fmt.format(**p) for p in values]))
 
         return "\n".join([p_table(k, v) for k, v in list(self.repositories.items())])
 
