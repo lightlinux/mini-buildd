@@ -258,7 +258,7 @@ x_mini_buildd_users =
                   "changed-by": "Your address is the uploader of the package ('Changed-By' in changes).",
                   "maintainer": "Your address is the maintainer of the package ('Maintainer' in changes).",
                   "subscriber": "Your user account has a matching subscription.",
-                 }.get(typ, "Unknown")
+                  }.get(typ, "Unknown")
 
         return """
 --\N{SPACE}
