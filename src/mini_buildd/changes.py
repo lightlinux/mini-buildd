@@ -247,7 +247,7 @@ class Changes(debian.deb822.Changes):
 
     @property
     def bres_stat(self):
-        return "Build={b}, Lintian={l}".format(b=self.get("Sbuild-Status"), l=self.get("Sbuild-Lintian"))
+        return "Build={build}, Lintian={lintian}".format(build=self.get("Sbuild-Status"), lintian=self.get("Sbuild-Lintian"))
 
     @property
     def file_name(self):
@@ -373,7 +373,7 @@ class Changes(debian.deb822.Changes):
             status.url = remote.mbd_http2url()  # Not cool: Monkey patching status for url
             if status.running and status.has_chroot(codename, arch):
                 remotes[status.load] = status
-                LOG.debug("Remote[{l}]={r}".format(l=status.load, r=remote))
+                LOG.debug("Remote[{load}]={remote}".format(load=status.load, remote=remote))
 
         def check_remote(remote):
             try:
@@ -442,7 +442,7 @@ class Changes(debian.deb822.Changes):
         if logdir and not os.path.exists(logdir):
             os.makedirs(logdir)
 
-        LOG.info("Moving changes to package log: '{f}'->'{l}'".format(f=self._file_path, l=logdir))
+        LOG.info("Moving changes to package log: '{f}'->'{d}'".format(f=self._file_path, d=logdir))
         for fd in [{"name": self._file_name}] + self.get_files():
             f = fd["name"]
             f_abs = os.path.join(os.path.dirname(self._file_path), f)
@@ -580,8 +580,8 @@ class Changes(debian.deb822.Changes):
             bres["Sbuildretval"] = str(retval)
             bres["Sbuild-Status"] = status
             buildlog = os.path.join(t.tmpdir, self.buildlog_name)
-            with mini_buildd.misc.open_utf8(buildlog, "w+") as l:
-                l.write("""
+            with mini_buildd.misc.open_utf8(buildlog, "w+") as log_file:
+                log_file.write("""
 Host: {h}
 Build request failed: {r} ({s}): {e}
 """.format(h=socket.getfqdn(), r=retval, s=status, e=exception))
