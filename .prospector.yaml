@@ -9,7 +9,6 @@ pep8:
   full: true
   disable:
     - E127
-    - N802
 
 pylint:
   run: false
