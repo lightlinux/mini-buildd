@@ -331,7 +331,7 @@ class Status(DaemonCommand):
         self._plain_result = """\
 http://{h} ({v}):
 
-Daemon: {ds}: ftp://{f} (load {l})
+Daemon: {ds}: ftp://{f} (load {load})
 
 Repositories: {r}
 Chroots     : {c}
@@ -344,7 +344,7 @@ Builder: {b_len} building
               v=self.version,
               ds="UP" if self.running else "DOWN",
               f=self.ftp,
-              l=self.load,
+              load=self.load,
               r=self.repositories_str(),
               c=self.chroots_str(),
               rm=", ".join(self.remotes),
@@ -635,11 +635,11 @@ def _get_table_format(dct, cols):
                 else:
                     tlen[k] = max(len(v), len(value[k]))
 
-    fmt = " | ".join(["{{{k}:{l}}}".format(k=k, l=tlen[k]) for k, v in cols])
+    fmt = " | ".join(["{{{k}:{length}}}".format(k=k, length=tlen[k]) for k, v in cols])
     hdr = fmt.format(**dict(cols))
-    fmt_tle = "{{t:^{l}}}".format(l=len(hdr))
-    sep0 = "{{r:=^{l}}}".format(l=len(hdr)).format(r="")
-    sep1 = "{{r:-^{l}}}".format(l=len(hdr)).format(r="")
+    fmt_tle = "{{t:^{length}}}".format(length=len(hdr))
+    sep0 = "{{r:=^{length}}}".format(length=len(hdr)).format(r="")
+    sep1 = "{{r:-^{length}}}".format(length=len(hdr)).format(r="")
 
     return (fmt, hdr, fmt_tle, sep0, sep1)
 
