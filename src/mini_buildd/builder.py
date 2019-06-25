@@ -145,10 +145,10 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
         """
         regex = re.compile("^(Status|Lintian): [^ ]+$")
         with open(buildlog, encoding=mini_buildd.setup.CHAR_ENCODING, errors="replace") as f:
-            for l in f:
-                if regex.match(l):
-                    LOG.debug("Build log line detected as build status: {l}".format(l=l.strip()))
-                    s = l.split(":")
+            for line in f:
+                if regex.match(line):
+                    LOG.debug("Build log line detected as build status: {line}".format(line=line.strip()))
+                    s = line.split(":")
                     self._bres["Sbuild-" + s[0]] = s[1].strip()
 
     def build(self):
@@ -217,7 +217,7 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
         # Actually run sbuild
         buildlog = os.path.join(self._build_dir, self._breq.buildlog_name)
         live_buildlog = os.path.join(mini_buildd.setup.SPOOL_DIR, self._breq.live_buildlog_name)
-        with open(buildlog, "w+") as l:
+        with open(buildlog, "w+") as buildlog_file:
             LOG.info("Adding live buildlog: {b}".format(b=live_buildlog))
             # The spool id/hash might the very same (retry a failed build, for example) as a previous one. So we need to be sure to remove before linking.
             # Note that this currently should never really happen as python's tarball abstraction cannot produce reproducible tarballs (https://bugs.python.org/issue24465).
@@ -229,7 +229,7 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
                                                 env=mini_buildd.call.taint_env({"HOME": self._build_dir,
                                                                                 "GNUPGHOME": os.path.join(mini_buildd.setup.HOME_DIR, ".gnupg"),
                                                                                 "DEB_BUILD_OPTIONS": self._breq.get("Deb-Build-Options", "")}),
-                                                stdout=l, stderr=subprocess.STDOUT)
+                                                stdout=buildlog_file, stderr=subprocess.STDOUT)
             retval = sbuild_call.result.returncode
 
         # Add build results to build request object
