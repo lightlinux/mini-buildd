@@ -14,7 +14,7 @@ import argcomplete
 
 # PEP 3143
 import daemon
-import daemon.runner
+import daemon.runner  # pylint: disable=import-error
 
 import mini_buildd.misc
 import mini_buildd.net
