@@ -17,9 +17,8 @@ pylint:
     - locally-disabled
     # It seems hard and unfair to force us to write documentation!
     - missing-docstring,
-    # py3 logging: You still need "%s"-style formatting for "late formatting".
-    # https://docs.python.org/3/howto/logging.html#logging-variable-data
-    # We don't want to use different formatting formats though.
+    # We use .format()-style for string formatting. Aiming for fstring-style formatting later (but requires >=3.6, so not yet).
+    # We don't want to use "old-style" formatting only for the sake of some optimization.
     - logging-format-interpolation
   options:
     max-module-lines: 1400
