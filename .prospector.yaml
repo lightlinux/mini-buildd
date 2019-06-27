@@ -21,8 +21,6 @@ pylint:
     # https://docs.python.org/3/howto/logging.html#logging-variable-data
     # We don't want to use different formatting formats though.
     - logging-format-interpolation
-    # For now, ignore doc errors
-    - cyclic-import
   options:
     max-module-lines: 1400
 
