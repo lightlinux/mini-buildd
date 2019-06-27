@@ -23,7 +23,6 @@ pylint:
     - logging-format-interpolation
     # For now, ignore doc errors
     - cyclic-import
-    - import-error
   options:
     max-module-lines: 1400
 
