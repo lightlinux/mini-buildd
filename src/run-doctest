@@ -10,5 +10,5 @@ import mini_buildd.api
 mini_buildd.api.django_pseudo_configure()
 mini_buildd.misc.setup_console_logging()
 
-result = doctest.testmod(importlib.import_module(sys.argv[1]), verbose=False)
-sys.exit(result.failed)
+RESULT = doctest.testmod(importlib.import_module(sys.argv[1]), verbose=False)
+sys.exit(RESULT.failed)
