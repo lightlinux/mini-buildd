@@ -10,11 +10,11 @@ import warnings
 import logging
 import logging.handlers
 
+import argcomplete
+
 # PEP 3143
 import daemon
 import daemon.runner
-
-import argcomplete
 
 import mini_buildd.misc
 import mini_buildd.net
