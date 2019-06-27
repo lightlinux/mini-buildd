@@ -25,7 +25,7 @@ pylint:
     - cyclic-import
     - import-error
   options:
-    max-module-lines: 1500
+    max-module-lines: 1400
 
     # [VARIABLES]
     dummy-variables-rgx: _|dummy
