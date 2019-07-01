@@ -120,7 +120,7 @@ class KeyringKey(GnuPGPublicKey):
     class Admin(GnuPGPublicKey.Admin):
         @classmethod
         def _mbd_on_change(cls, request, obj):
-            "Notify the daemon keyring to update itself."
+            """Notify the daemon keyring to update itself."""
             if obj.mbd_get_daemon().keyrings:
                 MsgLog(LOG, request).info("Scheduling keyrings update...")
                 obj.mbd_get_daemon().keyrings.set_needs_update()
@@ -152,7 +152,7 @@ class Uploader(KeyringKey):
 
 
 def cb_create_user_profile(sender, instance, created, **kwargs):
-    "Automatically create a user profile with every user that is created."
+    """Automatically create a user profile with every user that is created."""
     if created:
         Uploader.objects.create(user=instance)
 

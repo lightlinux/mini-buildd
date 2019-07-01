@@ -57,7 +57,7 @@ class Changelog(debian.changelog.Changelog):
     ('Mini Buildd <mini-buildd@buildd.intra>', '1.0.1-1~')
     """
     def find_first_not(self, author):
-        "Find (author,version+1) of the first changelog block not by given author."
+        """Find (author,version+1) of the first changelog block not by given author."""
         result = (None, None)
         for index, block in enumerate(self._blocks):
             result = (block.author,
@@ -316,7 +316,7 @@ class Keyrings():
         return remotes
 
     def _gen_uploaders(self):
-        "All uploader keyrings for each repository."
+        """All uploader keyrings for each repository."""
         uploaders = {}
         for r in mini_buildd.models.repository.Repository.mbd_get_active():
             uploaders[r.identity] = r.mbd_get_uploader_keyring()
@@ -358,7 +358,7 @@ def run():
                 # Build request: builder
 
                 def queue_buildrequest(event):
-                    "Queue in extra thread so we don't block here in case builder is busy."
+                    """Queue in extra thread so we don't block here in case builder is busy."""
                     get().build_queue.put(event)
                 mini_buildd.misc.run_as_thread(queue_buildrequest, name="build queuer", daemon=True, event=event)
 
@@ -522,7 +522,7 @@ class Daemon():
         return status
 
     def get_title(self):
-        "Human-readable short title for this Daemon instance."
+        """Human-readable short title for this Daemon instance."""
         return "{id}@{hn}".format(id=self.model.identity, hn=self.model.hostname)
 
     @classmethod
@@ -593,7 +593,7 @@ class Daemon():
 
     def _port(self, dsc_url, package, dist, version, comments=None, options=None):
         def changelog_entries():
-            "Merge comments and options into plain changelog_entries."
+            """Merge comments and options into plain changelog_entries."""
             changelog_entries = comments or []
             for o in options or self._DEFAULT_PORT_OPTIONS:
                 changelog_entries.append("{keyword}: {option}".format(keyword=mini_buildd.changes.Changes.Options.KEYWORD, option=o))

@@ -25,7 +25,7 @@ def open_utf8(path, mode="r", **kwargs):
 
 
 def check_multiprocessing():
-    "Multiprocessing needs shared memory. This may be use to check for misconfigured shm early for better error handling."
+    """Multiprocessing needs shared memory. This may be use to check for misconfigured shm early for better error handling."""
     try:
         multiprocessing.Lock()
     except Exception as e:
@@ -191,7 +191,7 @@ def dont_care_run(func, *args, **kwargs):
 
 
 def codename_has_lintian_suppress(codename):
-    "Test if the distribution (identified by the codename) has a recent lintian with the '--suppress-tags' option."
+    """Test if the distribution (identified by the codename) has a recent lintian with the '--suppress-tags' option."""
     return codename not in ["buzz", "rex", "bo", "hamm", "slink", "potato", "woody", "sarge", "etch", "lenny"]
 
 
@@ -305,7 +305,7 @@ class Distribution():
 
     @property
     def rollback_no(self):  # pylint: disable=inconsistent-return-statements
-        "Rollback (int) number: 'rollback0' -> 0."
+        """Rollback (int) number: 'rollback0' -> 0."""
         if self.is_rollback:
             return int(re.sub(r"\D", "", self.rollback))
 
@@ -314,7 +314,7 @@ class Distribution():
 
 
 def strip_epoch(version):
-    "Strip the epoch from a version string."
+    """Strip the epoch from a version string."""
     return version.rpartition(":")[2]
 
 
@@ -379,7 +379,7 @@ def chroot_libdir_path(codename, architecture):
 
 
 def pkg_fmt(status, distribution, package, version, extra=None, message=None):
-    "Generate a package status line."
+    """Generate a package status line."""
     fmt = "{status} ({distribution}): {package} {version}".format(status=status,
                                                                   distribution=distribution,
                                                                   package=package,
@@ -609,7 +609,7 @@ Save password for '{k}': (Y)es, (N)o, (A)lways, Ne(v)er? """.format(c=self, k=ke
 
 
 def clone_log(dst, src="mini_buildd"):
-    "Set up logger named 'dst' with the same handlers and loglevel as the logger named 'src'."
+    """Set up logger named 'dst' with the same handlers and loglevel as the logger named 'src'."""
     src_log = logging.getLogger(src)
     dst_log = logging.getLogger(dst)
     dst_log.handlers = []

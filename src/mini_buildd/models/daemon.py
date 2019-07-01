@@ -148,7 +148,7 @@ prepare/remove actions will generate/remove the GnuPG key.
         readonly_fields = ["smtp_server", "ftpd_options", "custom_hooks_directory"]
 
         def save_model(self, request, obj, form, change):
-            "Save model -- always update from daemon object first."
+            """Save model -- always update from daemon object first."""
             obj.mbd_get_daemon().update_to_model()
             super().save_model(request, obj, form, change)
 
@@ -209,7 +209,7 @@ prepare/remove actions will generate/remove the GnuPG key.
         MsgLog(LOG, request).info("Daemon GnuPG key removed.")
 
     def mbd_get_dependencies(self):
-        "All active or to-be active repositories, remotes and chroots."
+        """All active or to-be active repositories, remotes and chroots."""
         result = []
         for model in [mini_buildd.models.repository.Repository, mini_buildd.models.chroot.Chroot, mini_buildd.models.gnupg.Remote]:
             for o in model.mbd_get_active_or_auto_reactivate():
@@ -217,7 +217,7 @@ prepare/remove actions will generate/remove the GnuPG key.
         return result
 
     def mbd_check(self, request):
-        "Just warn in case there are no repos and no chroots."
+        """Just warn in case there are no repos and no chroots."""
         if not self.mbd_get_daemon().get_active_repositories() and not self.mbd_get_daemon().get_active_chroots():
             MsgLog(LOG, request).warning("No active chroot or repository.")
 

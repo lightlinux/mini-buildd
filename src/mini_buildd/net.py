@@ -196,12 +196,12 @@ class UserURL():
 
     @property
     def plain(self):
-        "URL string without username."
+        """URL string without username."""
         return urllib.parse.urlunparse(self._plain)
 
     @property
     def full(self):
-        "URL string with username."
+        """URL string with username."""
         if self._username:
             full = copy.copy(self._plain)
             full[1] = "{user}@{url}".format(user=self._username, url=self._plain[1])
@@ -234,7 +234,7 @@ def detect_apt_cacher_ng(url="http://localhost:3142"):
 
 
 def canonize_url(url):
-    "Poor man's URL canonizer: Always include the port (currently only works for 'http' and 'https' default ports)."
+    """Poor man's URL canonizer: Always include the port (currently only works for 'http' and 'https' default ports)."""
     default_scheme2port = {"http": ":80", "https": ":443"}
 
     parsed = urllib.parse.urlparse(url)

@@ -40,7 +40,7 @@ class MsgLog():
 
     @classmethod
     def level2django(cls, level):
-        "Map standard python log levels to django's."
+        """Map standard python log levels to django's."""
         return {logging.DEBUG: django.contrib.messages.DEBUG,
                 logging.INFO: django.contrib.messages.INFO,
                 logging.WARNING: django.contrib.messages.WARNING,
@@ -49,7 +49,7 @@ class MsgLog():
 
     @classmethod
     def _level2prefix(cls, level):
-        "Map log levels to prefixes (for text-only output)."
+        """Map log levels to prefixes (for text-only output)."""
         return {logging.DEBUG: "D",
                 logging.INFO: "I",
                 logging.WARNING: "W",

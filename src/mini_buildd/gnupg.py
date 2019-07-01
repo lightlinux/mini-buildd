@@ -45,7 +45,7 @@ class Colons():
 
     @property
     def user_id(self):
-        "Fingerprint for 'fpr' type."
+        """Fingerprint for 'fpr' type."""
         return self._get(9)
 
 

@@ -19,7 +19,7 @@ LOG = logging.getLogger(__name__)
 
 
 class AccountProfileView(django.views.generic.base.TemplateView):
-    "Add repositories to context."
+    """Add repositories to context."""
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({"repositories": mini_buildd.models.repository.Repository.mbd_get_prepared()})
@@ -37,14 +37,14 @@ def _add_messages(response, msgs):
 
 
 def _add_api_messages(response, api_cmd, msgs=None):
-    "Add all user messages from api_cmd, plus optional extra messages."
+    """Add all user messages from api_cmd, plus optional extra messages."""
     _add_messages(response,
                   (api_cmd.msglog.plain.splitlines()[::-1] if api_cmd else [])
                   + (msgs if msgs else []))
 
 
 def _referer(request, output):
-    "output=referer[REFERER_URL]."
+    """output=referer[REFERER_URL]."""
     return output[7:] if (output[:7] == "referer" and output[7:]) else request.META.get("HTTP_REFERER", "/")
 
 

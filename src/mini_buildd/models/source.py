@@ -78,7 +78,7 @@ Use the 'directory' notation with exactly one trailing slash (like 'http://examp
 
         @classmethod
         def mbd_meta_add_debian(cls, msglog):
-            "Add internet Debian archive sources."
+            """Add internet Debian archive sources."""
             for url in ["http://ftp.debian.org/debian/",                 # Debian (release, updates, proposed-updates and backports)
                         "http://deb.debian.org/debian/",                 # alternate: CDN
 
@@ -94,7 +94,7 @@ Use the 'directory' notation with exactly one trailing slash (like 'http://examp
 
         @classmethod
         def mbd_meta_add_ubuntu(cls, msglog):
-            "Add internet Ubuntu archive sources."
+            """Add internet Ubuntu archive sources."""
             for url in ["http://archive.ubuntu.com/ubuntu/",              # Ubuntu releases
                         "http://security.ubuntu.com/ubuntu/",             # Ubuntu Security
                         "http://old-releases.ubuntu.com/ubuntu/",         # Older Ubuntu release
@@ -165,7 +165,7 @@ Use the 'directory' notation with exactly one trailing slash (like 'http://examp
             return release
 
     def mbd_ping(self, request):
-        "Ping and update the ping value."
+        """Ping and update the ping value."""
         try:
             t0 = django.utils.timezone.now()
             # Append dists to URL for ping check: Archive may be
@@ -189,7 +189,7 @@ Use the 'directory' notation with exactly one trailing slash (like 'http://examp
             raise Exception("{s}: Does not ping: {e}".format(s=self, e=e))
 
     def mbd_get_reverse_dependencies(self):
-        "Return all sources (and their deps) that use us."
+        """Return all sources (and their deps) that use us."""
         result = [s for s in self.source_set.all()]
         for s in self.source_set.all():
             result += s.mbd_get_reverse_dependencies()
@@ -208,7 +208,7 @@ class Architecture(mini_buildd.models.base.Model):
 
     @classmethod
     def mbd_supported_architectures(cls, arch=None):
-        "Get all supported architectures (some archs also natively support other archs)."
+        """Get all supported architectures (some archs also natively support other archs)."""
         arch = arch or cls.mbd_host_architecture()
         arch_map = {"amd64": ["i386"]}
         return [arch] + arch_map.get(arch, [])
@@ -335,7 +335,7 @@ codeversion is only used for base sources.""")
         filter_horizontal = ("apt_keys",)
 
         def get_readonly_fields(self, _request, obj=None):
-            "Forbid to change identity on existing source (usually a bad idea; repos/chroots that refer to us may break)."
+            """Forbid to change identity on existing source (usually a bad idea; repos/chroots that refer to us may break)."""
             fields = copy.copy(self.readonly_fields)
             if obj:
                 fields.append("origin")
@@ -422,7 +422,7 @@ codeversion is only used for base sources.""")
 
         @classmethod
         def mbd_meta_add_ubuntu(cls, msglog):
-            "Add well-known Ubuntu sources. Update hint: Keep latest two releases plus a couple of LTS releases."
+            """Add well-known Ubuntu sources. Update hint: Keep latest two releases plus a couple of LTS releases."""
 
             keys = {
                 "archive_current": "40976EAF437D05B5",    # Ubuntu Archive Automatic Signing Key <ftpmaster@ubuntu.com>
@@ -471,7 +471,7 @@ codeversion is only used for base sources.""")
 
         @classmethod
         def mbd_filter_active_base_sources(cls):
-            "Filter active base sources; needed in chroot and distribution wizards."
+            """Filter active base sources; needed in chroot and distribution wizards."""
             return Source.objects.filter(status__gte=Source.STATUS_ACTIVE,
                                          origin__in=["Debian", "Ubuntu"],
                                          codename__regex=r"^[a-z]+$")
@@ -484,7 +484,7 @@ codeversion is only used for base sources.""")
         return "{o} '{c}' from '{a}'".format(o=self.origin, c=self.codename, a=archive)
 
     def mbd_release_file_values(self):
-        "Compute a dict of values a matching release file must have."
+        """Compute a dict of values a matching release file must have."""
         values = {k: v for k, v in self.mbd_get_extra_options().items() if not k.startswith("X-")}  # Keep "X-<header>" for special purposes. All other keys are like in a Release file.
 
         # Set Origin and Codename (may be overwritten) from fields
@@ -495,7 +495,7 @@ codeversion is only used for base sources.""")
         return values
 
     def mbd_is_matching_release(self, request, release):
-        "Check that this release file matches us."
+        """Check that this release file matches us."""
         for key, value in list(self.mbd_release_file_values().items()):
             # Check identity: origin, codename
             MsgLog(LOG, request).debug("Checking '{k}: {v}'".format(k=key, v=value))
@@ -505,7 +505,7 @@ codeversion is only used for base sources.""")
         return True
 
     def mbd_get_archive(self):
-        "Get fastest archive."
+        """Get fastest archive."""
         oa_list = self.archives.all().filter(ping__gte=0.0).order_by("ping")
         if oa_list:
             return oa_list[0]
@@ -525,7 +525,7 @@ codeversion is only used for base sources.""")
         return self.mbd_get_apt_line_raw([c.name for c in components], prefix=prefix)
 
     def mbd_get_apt_pin(self):
-        "Apt 'pin line' (for use in a apt 'preference' file)."
+        """Apt 'pin line' (for use in a apt 'preference' file)."""
         # See man apt_preferences for the field/pin mapping
         supported_fields = {"Origin": "o", "Codename": "n", "Suite": "a", "Archive": "a", "Version": "v", "Label": "l"}
         pins = []
@@ -552,7 +552,7 @@ codeversion is only used for base sources.""")
         self.description = ""
 
     def mbd_check(self, request):
-        "Rescan all archives, and check that there is at least one working."
+        """Rescan all archives, and check that there is at least one working."""
         msglog = MsgLog(LOG, request)
 
         self.archives.set([])
@@ -604,7 +604,7 @@ codeversion is only used for base sources.""")
         return self.apt_keys.all()
 
     def mbd_get_reverse_dependencies(self):
-        "Return all chroots and repositories that use us."
+        """Return all chroots and repositories that use us."""
         result = [c for c in self.chroot_set.all()]
         for d in self.distribution_set.all():
             result += d.mbd_get_reverse_dependencies()
@@ -626,7 +626,7 @@ class PrioritySource(mini_buildd.models.base.Model):
 
         @classmethod
         def mbd_meta_add_extras(cls, msglog):
-            "Add all backports as prio=1 prio sources."
+            """Add all backports as prio=1 prio sources."""
             for source in Source.objects.exclude(codename__regex=r"^[a-z]+$"):
                 PrioritySource.mbd_get_or_create(msglog, source=source, priority=1)
 

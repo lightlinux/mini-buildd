@@ -20,7 +20,7 @@ LOG = logging.getLogger(__name__)
 
 
 class Incoming():
-    "Tool collection for some extra incoming directory handling."
+    """Tool collection for some extra incoming directory handling."""
 
     @classmethod
     def is_changes(cls, file_name):

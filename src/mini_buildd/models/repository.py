@@ -122,7 +122,7 @@ lintian) as non-lethal, and will install anyway.
 
     @property
     def rollback(self):
-        " Rollback field temporarily implemented as extra_option. "
+        """Rollback field temporarily implemented as extra_option."""
         return int(self.mbd_get_extra_option("Rollback", "0"))
 
     def mbd_get_distribution_string(self, repository, distribution, rollback=None):
@@ -220,7 +220,7 @@ packages (to unstable,experimental,..) aimed for Debian.
 
         @classmethod
         def mbd_meta_create_defaults(cls, msglog):
-            "Create default layouts and suites."
+            """Create default layouts and suites."""
             stable, created = Suite.mbd_get_or_create(msglog, name="stable")
             hotfix, created = Suite.mbd_get_or_create(msglog, name="hotfix")
             testing, created = Suite.mbd_get_or_create(msglog, name="testing")
@@ -326,7 +326,7 @@ packages (to unstable,experimental,..) aimed for Debian.
             repository, distribution)
 
     def mbd_get_reverse_dependencies(self):
-        "When the layout changes, all repos that use that layout also change."
+        """When the layout changes, all repos that use that layout also change."""
         return [r for r in self.repository_set.all()]
 
 
@@ -561,7 +561,7 @@ some reason create their automated debug packages with file appendix
 
         @classmethod
         def mbd_meta_add_base_sources(cls, msglog):
-            "Add default distribution objects for all base sources found."
+            """Add default distribution objects for all base sources found."""
             def default_components(origin):
                 return {"Ubuntu": ["main", "universe", "restricted", "multiverse"]}.get(origin, ["main", "contrib", "non-free"])
 
@@ -659,7 +659,7 @@ some reason create their automated debug packages with file appendix
         return mini_buildd.misc.fromdos(mini_buildd.misc.subst_placeholders(self.sbuildrc_snippet, {"LIBDIR": mini_buildd.misc.chroot_libdir_path(self.base_source.codename, arch)}))
 
     def mbd_get_reverse_dependencies(self):
-        "When the distribution changes, all repos that use that distribution also change."
+        """When the distribution changes, all repos that use that distribution also change."""
         return [r for r in self.repository_set.all()]
 
 
@@ -717,7 +717,7 @@ Example:
         filter_horizontal = ("distributions", "notify",)
 
         def get_readonly_fields(self, _request, obj=None):
-            "Forbid change identity on existing repository."
+            """Forbid change identity on existing repository."""
             fields = copy.copy(self.readonly_fields)
             if obj:
                 fields.append("identity")
@@ -725,7 +725,7 @@ Example:
 
         @classmethod
         def mbd_meta_add_test(cls, msglog):
-            "Add sandbox repository 'test'."
+            """Add sandbox repository 'test'."""
             test_repo, created = Repository.mbd_get_or_create(
                 msglog,
                 identity="test",
@@ -737,7 +737,7 @@ Example:
 
         @classmethod
         def mbd_meta_add_debdev(cls, msglog):
-            "Add developer repository 'debdev', only for sid."
+            """Add developer repository 'debdev', only for sid."""
             try:
                 sid = Distribution.objects.get(base_source__codename="sid")
             except BaseException as e:
@@ -805,7 +805,7 @@ Example:
             raise Exception("Please fix syntax error in extra option 'Meta-Distributions' in layout '{layout}': {e}".format(layout=self.layout, e=e))
 
     def mbd_distribution_strings(self, **suiteoption_filter):
-        "Return a list with all full distributions strings, optionally matching a suite options filter (unstable, experimental,...)."
+        """Return a list with all full distributions strings, optionally matching a suite options filter (unstable, experimental,...)."""
         result = []
         for d in self.distributions.all():
             result += [s.mbd_get_distribution_string(self, d) for s in self.layout.suiteoption_set.filter(**suiteoption_filter)]
@@ -1291,7 +1291,7 @@ gnupghome {h}
 
 
 def get_meta_distribution_map():
-    " Get a dict of the meta distributions: meta -> actual. "
+    """Get a dict of the meta distributions: meta -> actual."""
     result = {}
     for r in Repository.objects.all():
         for d in r.distributions.all():
@@ -1310,5 +1310,5 @@ def get_meta_distribution_map():
 
 
 def map_incoming_distribution(incoming_dist):
-    " Map incoming distribution to internal. "
+    """Map incoming distribution to internal."""
     return get_meta_distribution_map().get(incoming_dist, incoming_dist)

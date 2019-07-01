@@ -18,7 +18,7 @@ Package <b><tt>mini-buildd-doc</tt></b> is not installed on this site (might be 
 
     @abc.abstractmethod
     def _add_route(self, route, directory, with_index=False, uri_regex=r".*", with_doc_missing_error=False):
-        "Serve static files from a directory."
+        """Serve static files from a directory."""
 
     def __init__(self):
         self._debug = "http" in mini_buildd.setup.DEBUG
@@ -40,4 +40,4 @@ Package <b><tt>mini-buildd-doc</tt></b> is not installed on this site (might be 
 
     @abc.abstractmethod
     def run(self):
-        "Run the HTTP server. Must be implemented by backend."
+        """Run the HTTP server. Must be implemented by backend."""

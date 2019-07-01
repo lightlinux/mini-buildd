@@ -61,7 +61,7 @@ def auth_log(msg):
     auth.log (i.e., add user to group 'adm' in standard Debian).
     """
     def getpppid():
-        "Get grandparent PID."
+        """Get grandparent PID."""
         return subprocess.check_output("/bin/ps -p {ppid} -oppid=".format(ppid=os.getppid()), shell=True).strip()
 
     def get_last_matching_line(file_name, regex):

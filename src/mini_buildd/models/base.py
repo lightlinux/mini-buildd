@@ -99,18 +99,18 @@ are actually supported by the current model.
     class Admin(django.contrib.admin.ModelAdmin):
         @classmethod
         def _mbd_on_change(cls, request, obj):
-            "Global actions to take when an object changes."
+            """Global actions to take when an object changes."""
             for o in obj.mbd_get_reverse_dependencies():
                 o.mbd_set_changed(request)
                 o.save()
 
         @classmethod
         def _mbd_on_activation(cls, request, obj):
-            "Global actions to take when an object becomes active."
+            """Global actions to take when an object becomes active."""
 
         @classmethod
         def _mbd_on_deactivation(cls, request, obj):
-            "Global actions to take when an object becomes inactive."
+            """Global actions to take when an object becomes inactive."""
 
         def save_model(self, request, obj, form, change):
             if change:
@@ -171,7 +171,7 @@ are actually supported by the current model.
 
     @classmethod
     def mbd_get_or_create(cls, msglog, **kwargs):
-        "Like get_or_create, but adds a info message."
+        """Like get_or_create, but adds a info message."""
         obj, created = cls.objects.get_or_create(**kwargs)
         if created:
             msglog.info("Created: {o}".format(o=obj))
@@ -405,7 +405,7 @@ this would mean losing all packages!
 
         @classmethod
         def mbd_meta_pca_all(cls, msglog):
-            "Run prepare, check, and activate for all objects of this model."
+            """Run prepare, check, and activate for all objects of this model."""
             cls.mbd_action(msglog.request, cls.mbd_model.objects.all(), "prepare")
             cls.mbd_action(msglog.request, cls.mbd_model.objects.all(), "check")
             cls.mbd_action(msglog.request, cls.mbd_model.objects.all(), "activate")
