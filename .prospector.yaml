@@ -90,3 +90,9 @@ pep257:
     - D404
     - D412
     - D413
+
+dodgy:
+  run: false
+
+pyflakes:
+  run: false
