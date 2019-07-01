@@ -273,6 +273,8 @@ class Changes(debian.deb822.Changes):  # pylint: disable=too-many-ancestors
 
     def get_pkglog_dir(self, installed, relative=True):
         """
+        Get package log dir.
+
         Package log path for this changes file: REPOID/[_failed]/PACKAGE/VERSION/ARCH
 
         In case the changes is bogus (i.e, cannot produce a

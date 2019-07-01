@@ -923,6 +923,8 @@ DscIndices: Sources Release . .gz .bz2
 
     def mbd_package_show(self, package):
         """
+        Show package information.
+
         Result is of the form:
 
         [(CODENAME, [{"distribution": DIST,

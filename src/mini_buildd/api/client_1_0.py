@@ -92,7 +92,7 @@ class Daemon():
     @property
     def identity(self):
         """
-        The Archive's Identity.
+        Get Archive's Identity.
         """
         # Bug 1.0.x: "status" does not give the archive id.
         # Workaround: Parse the archive id from dput.cf

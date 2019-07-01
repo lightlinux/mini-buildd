@@ -135,14 +135,14 @@ chroots (with <kbd>qemu-user-static</kbd> installed).
         return os.path.join(self.mbd_get_path(), "schroot.conf")
 
     def mbd_get_keyring_file(self):
-        "Holds all keys from the source to verify the release via debootstrap's --keyring option."
+        "Get keyring file path. Holds all keys from the source to verify the release via debootstrap's --keyring option."
         return os.path.join(self.mbd_get_path(), "keyring.gpg")
 
     def mbd_get_system_schroot_conf_file(self):
         return os.path.join("/etc/schroot/chroot.d", self.mbd_get_name() + ".conf")
 
     def mbd_get_pre_sequence(self):
-        "Subclasses may implement this to do define an extra preliminary sequence."
+        "Get preliminary sequence. Subclasses may implement this to do define an extra preliminary sequence."
         LOG.debug("{c}: No pre-sequence defined.".format(c=self))
         return []
 
@@ -236,7 +236,7 @@ personality={p}
             raise Exception("Chroot has sudo workaround (created with versions <= 1.0.4): Please run 'Remove' + 'PCA' on this chroot to re-create!")
 
     def mbd_backend_check(self, request):
-        "Subclasses may implement this to do extra backend-specific checks."
+        "Run backend check. Subclasses may implement this to do extra backend-specific checks."
         MsgLog(LOG, request).info("{c}: No backend check implemented.".format(c=self))
 
     def mbd_check(self, request):

@@ -266,7 +266,7 @@ class DaemonCommand(Command):
     """Daemon commands"""
 
     def _upload_template_package(self, template_package, dist):
-        """Used for keyringpackages and testpackages."""
+        """Portext macro. Used for keyringpackages and testpackages."""
         with contextlib.closing(template_package) as package:
             dsc_url = "file://" + package.dsc  # pylint: disable=no-member; see https://github.com/PyCQA/pylint/issues/1437
             info = "Port for {d}: {p}".format(d=dist, p=os.path.basename(dsc_url))

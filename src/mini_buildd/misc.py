@@ -197,6 +197,8 @@ def codename_has_lintian_suppress(codename):
 
 def codename_produces_ddeb_appendix(codename):
     """
+    Get list of codenames that (oddly) use ddeb as file appendix.
+
     Some Ubuntu codenames produce 'ddeb' file appendix for automated debug packages.
     reprepro can't handle these yet -- so this is needed for a workaround for the wizard setup.
     """
@@ -451,7 +453,7 @@ def run_as_thread(thread_func, name, daemon=False, **kwargs):
 
 def hash_of_file(file_name, hash_type="md5"):
     """
-    Helper to get any hash from file contents.
+    Get any hash from file contents.
     """
     md5 = hashlib.new(hash_type)
     with open(file_name, "rb") as f:
@@ -606,7 +608,7 @@ Save password for '{k}': (Y)es, (N)o, (A)lways, Ne(v)er? """.format(c=self, k=ke
 
 
 def clone_log(dst, src="mini_buildd"):
-    "Setup logger named 'dst' with the same handlers and loglevel as the logger named 'src'."
+    "Set up logger named 'dst' with the same handlers and loglevel as the logger named 'src'."
     src_log = logging.getLogger(src)
     dst_log = logging.getLogger(dst)
     dst_log.handlers = []

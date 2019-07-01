@@ -208,7 +208,7 @@ class Architecture(mini_buildd.models.base.Model):
 
     @classmethod
     def mbd_supported_architectures(cls, arch=None):
-        "Some archs also natively support other archs."
+        "Get all supported architectures (some archs also natively support other archs)."
         arch = arch or cls.mbd_host_architecture()
         arch_map = {"amd64": ["i386"]}
         return [arch] + arch_map.get(arch, [])
@@ -504,7 +504,7 @@ codeversion is only used for base sources.""")
         return True
 
     def mbd_get_archive(self):
-        "Returns the fastest archive."
+        "Get fastest archive."
         oa_list = self.archives.all().filter(ping__gte=0.0).order_by("ping")
         if oa_list:
             return oa_list[0]

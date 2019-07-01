@@ -89,7 +89,7 @@ class GnuPGPublicKey(mini_buildd.models.base.StatusModel):
 
     def mbd_check(self, _request):
         """
-        Checks that we actually have the key and long_id. This should always be true after "prepare".
+        Check that we actually have the key and long_id. This should always be true after "prepare".
         """
         if not self.key and not self.key_long_id:
             raise Exception("GnuPG key with inconsistent state -- try remove,prepare to fix.")

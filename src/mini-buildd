@@ -288,7 +288,7 @@ Comma-separated list of special debugging options:
             os.environ[name] = self._user
 
     def is_extra_run(self):
-        "Called as non-daemon, non-HTTP server extra runs."
+        "Return True if in a non-daemon, non-HTTP server extra run."
         return self._args.set_admin_password or self._args.remove_system_artifacts or self._args.loaddata or self._args.dumpdata
 
     def __init__(self):

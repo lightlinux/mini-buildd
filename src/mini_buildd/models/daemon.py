@@ -148,7 +148,7 @@ prepare/remove actions will generate/remove the GnuPG key.
         readonly_fields = ["smtp_server", "ftpd_options", "custom_hooks_directory"]
 
         def save_model(self, request, obj, form, change):
-            "Always update date the daemon object to model."
+            "Save model -- always update from daemon object first."
             obj.mbd_get_daemon().update_to_model()
             super().save_model(request, obj, form, change)
 
