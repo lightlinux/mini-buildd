@@ -150,7 +150,7 @@ def live_buildlogs(_request, logfile):
     return django.http.FileResponse(open(buildlog, "rb"), content_type="text/plain")
 
 
-def api(request):
+def api(request):  # pylint: disable=too-many-return-statements,too-many-branches
     api_cmd = None
     try:
         if request.method != 'GET':
