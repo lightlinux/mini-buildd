@@ -76,7 +76,7 @@ class SMTPCreds():
 
 def get_django_secret_key(home):
     """
-    This method creates *once* django's SECRET_KEY and/or returns it.
+    Create django's SECRET_KEY *once* and/or returns it.
 
     :param home: mini-buildd's home directory.
     :type home: string

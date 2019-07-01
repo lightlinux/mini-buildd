@@ -14,7 +14,7 @@ LOG = logging.getLogger(__name__)
 
 class WebApp(django.core.handlers.wsgi.WSGIHandler):
     """
-    This class represents mini-buildd's web application.
+    mini-buildd's web application.
     """
 
     def __init__(self):
@@ -39,7 +39,7 @@ class WebApp(django.core.handlers.wsgi.WSGIHandler):
     @classmethod
     def set_admin_password(cls, password):
         """
-        This method sets the password for the administrator.
+        Set the password for the administrator.
 
         :param password: The password to use.
         :type password: string

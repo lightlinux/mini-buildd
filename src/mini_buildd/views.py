@@ -19,7 +19,7 @@ LOG = logging.getLogger(__name__)
 
 
 class AccountProfileView(django.views.generic.base.TemplateView):
-    "This just adds repositories to context."
+    "Add repositories to context."
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({"repositories": mini_buildd.models.repository.Repository.mbd_get_prepared()})

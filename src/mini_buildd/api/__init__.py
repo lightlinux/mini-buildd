@@ -218,7 +218,7 @@ auto-ports=buster-test-unstable
         raise Exception("No _run() function defined for: {}".format(self.COMMAND))
 
     def __getstate__(self):
-        """This is a workaround so objects of this class can be pickled.
+        """Workaround so objects of this class can be pickled.
 
         .. note:: This must be removed eventually. RoadMap: 1.11: API: Fix up result handling, and use json instead of pickle/python to interchange computable data.
         """
