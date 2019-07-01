@@ -32,7 +32,6 @@ pylint:
     max-attributes: 15
     max-statements: 60
     max-bool-expr: 8
-    max-parents: 15  # Since 'python-debian (0.1.34)': Changes: Too many ancestors (15/12)
 
 mccabe:
   options:

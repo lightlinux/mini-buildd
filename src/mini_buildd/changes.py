@@ -23,7 +23,7 @@ import mini_buildd.models.gnupg
 LOG = logging.getLogger(__name__)
 
 
-class Changes(debian.deb822.Changes):
+class Changes(debian.deb822.Changes):  # pylint: disable=too-many-ancestors
     class Options():
         """
         Uploader options in changes.
