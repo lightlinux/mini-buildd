@@ -85,12 +85,6 @@ chroots (with <kbd>qemu-user-static</kbd> installed).
             return mini_buildd.models.source.Architecture.mbd_host_architecture()
 
         @classmethod
-        def _mbd_get_supported_archs(cls, arch):
-            "Some archs also natively support other archs."
-            arch_map = {"amd64": ["i386"]}
-            return [arch] + arch_map.get(arch, [])
-
-        @classmethod
         def _mbd_meta_add_base_sources(cls, chroot_model, msglog):
             "Add chroot objects for all base sources found."
             archs = mini_buildd.models.source.Architecture.mbd_supported_architectures()
