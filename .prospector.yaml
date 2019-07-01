@@ -4,8 +4,6 @@ uses: django
 max-line-length: 240
 strictness: veryhigh
 
-doc-warnings: false
-
 pep8:
   full: true
   disable:
