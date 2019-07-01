@@ -173,6 +173,7 @@ class Daemon():
             actual_version = pkg_info.get("version", None)
             self._log("Actual version for {item}: {v}".format(item=item, v=actual_version))
 
+            # pylint: disable=too-many-boolean-expressions
             if (version is None and actual_version) or \
                (version is not None and (actual_version == version or or_greater and debian.debian_support.Version(actual_version) >= debian.debian_support.Version(version))):
                 self._log("Match found: {item}.".format(item=item))

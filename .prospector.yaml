@@ -31,7 +31,6 @@ pylint:
     max-branches: 25
     max-attributes: 15
     max-statements: 60
-    max-bool-expr: 8
 
 mccabe:
   options:
