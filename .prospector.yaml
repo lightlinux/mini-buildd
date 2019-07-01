@@ -31,6 +31,10 @@ mccabe:
   options:
     max-complexity: 17
 
+pyflakes:
+  disable:
+    - F841
+
 pep257:
   disable:
     - D100
