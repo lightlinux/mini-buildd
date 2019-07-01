@@ -23,7 +23,7 @@ pylint:
     class-attribute-rgx: '([A-Za-z_][A-Za-z0-9_]{2,40}|(__.*__))$'
 
     max-module-lines: 1400
-    max-public-methods: 110  # Django adds many public methods to classes, FTPDHandler is the winner though
+    max-public-methods: 31  # Changes class has 31. Please adapt after refactoring of Changes.
     min-public-methods: 0
     max-args: 10
     max-locals: 30
