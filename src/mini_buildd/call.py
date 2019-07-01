@@ -66,11 +66,11 @@ class Call():
 
     @classmethod
     def _bos2str(cls, value, errors="replace"):
-        """return str(), regardless if value is of type bytes or str."""
+        """Return str(), regardless if value is of type bytes or str."""
         return value if isinstance(value, str) else value.decode(encoding=mini_buildd.setup.CHAR_ENCODING, errors=errors)
 
     def _stdx(self, value, key):
-        """stdin or stdout value as str."""
+        """Stdin or stdout value as str."""
         if value:
             return self._bos2str(value)
         if key in self._given_stream:
@@ -80,12 +80,12 @@ class Call():
 
     @property
     def stdout(self):
-        """stdout value (empty string if none)"""
+        """Stdout value (empty string if none)"""
         return self._stdx(self.result.stdout, "stdout")
 
     @property
     def stderr(self):
-        """stderr value (empty string if none)"""
+        """Stderr value (empty string if none)"""
         return self._stdx(self.result.stderr, "stderr")
 
     def log(self):
