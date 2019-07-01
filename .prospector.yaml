@@ -1,8 +1,10 @@
 output-format: emacs
 
-strictness: low
-doc-warnings: false
+uses: django
 max-line-length: 240
+strictness: veryhigh
+
+doc-warnings: false
 
 pep8:
   run: true
