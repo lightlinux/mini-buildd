@@ -7,13 +7,11 @@ strictness: veryhigh
 doc-warnings: false
 
 pep8:
-  run: true
   full: true
   disable:
     - E127
 
 pylint:
-  run: true
   disable:
     - locally-disabled              # We don't want the in-code exceptions pop up on pylint runs.
     - missing-docstring             # It seems hard and unfair to force us to write documentation!
@@ -40,12 +38,10 @@ pylint:
     max-parents: 15  # Since 'python-debian (0.1.34)': Changes: Too many ancestors (15/12)
 
 mccabe:
-  run: false
   options:
     max-complexity: 17
 
 pep257:
-  run: false
   disable:
     - D100
     - D101
@@ -72,9 +68,3 @@ pep257:
     - D404
     - D412
     - D413
-
-dodgy:
-  run: false
-
-pyflakes:
-  run: false
