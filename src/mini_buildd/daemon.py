@@ -37,7 +37,7 @@ LOG = logging.getLogger(__name__)
 
 
 class Changelog(debian.changelog.Changelog):
-    """
+    r"""
     Changelog class with some extra functions.
 
     >>> cl = Changelog(mini_buildd.misc.open_utf8("test-data/changelog"), max_blocks=100)

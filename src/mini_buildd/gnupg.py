@@ -210,7 +210,7 @@ Name-Email: {e}
 
 
 class TmpGnuPG(BaseGnuPG, mini_buildd.misc.TmpDir):
-    """
+    r"""
     Temporary GnuPG.
 
     >>> # mini_buildd.setup.DEBUG.append("keep")  # Enable 'keep' for debugging only
