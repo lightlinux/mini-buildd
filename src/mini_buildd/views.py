@@ -44,7 +44,7 @@ def _add_api_messages(response, api_cmd, msgs=None):
 
 
 def _referer(request, output):
-    "output=referer[REFERER_URL]"
+    "output=referer[REFERER_URL]."
     return output[7:] if (output[:7] == "referer" and output[7:]) else request.META.get("HTTP_REFERER", "/")
 
 

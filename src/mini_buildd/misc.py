@@ -305,7 +305,7 @@ class Distribution():
 
     @property
     def rollback_no(self):  # pylint: disable=inconsistent-return-statements
-        " Rollback (int) number: 'rollback0' -> 0 "
+        "Rollback (int) number: 'rollback0' -> 0."
         if self.is_rollback:
             return int(re.sub(r"\D", "", self.rollback))
 
@@ -319,10 +319,10 @@ def strip_epoch(version):
 
 
 def guess_codeversion(release):
-    """
-    Guess the 'codeversion' aka the first two digits of a Debian
-    release version; for releases without version, this falls
-    back to the uppercase codename.
+    """Guess the 'codeversion'.
+
+    Aka the first two digits of a Debian release version; for releases
+    without version, this falls back to the uppercase codename.
 
     In Debian,
       - point release <= sarge had the 'M.PrN' syntax (with 3.1 being a major release).
@@ -348,6 +348,7 @@ def guess_codeversion(release):
     '~SID'
     >>> guess_codeversion({"Origin": "Ubuntu", "Version": "12.10", "Codename": "quantal"})
     '1210'
+
     """
     try:
         ver_split = release["Version"].split(".")

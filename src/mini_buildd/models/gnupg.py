@@ -152,7 +152,7 @@ class Uploader(KeyringKey):
 
 
 def cb_create_user_profile(sender, instance, created, **kwargs):
-    "Automatically create a user profile with every user that is created"
+    "Automatically create a user profile with every user that is created."
     if created:
         Uploader.objects.create(user=instance)
 

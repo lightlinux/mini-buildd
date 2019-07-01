@@ -1,5 +1,6 @@
-"""Extra, independent code, merely arbitrarily stuffed
-here. This is not part of mini-buildd.
+"""Extra, independent code, merely arbitrarily stuffed here.
+
+This is not part of mini-buildd.
 
 """
 
@@ -11,8 +12,9 @@ import bs4
 
 
 class DebianPackageTracker():
-    """Get (some) source package information from the Debian Package
-    Tracker. As long as there is no proper API, we do this the
+    """Get (some) source package information from the Debian Package Tracker.
+
+    As long as there is no proper API, we do this the
     hacky way parsing the HTML via bs4 - so this will most
     definitely break at some point. Use at own discretion.
     """

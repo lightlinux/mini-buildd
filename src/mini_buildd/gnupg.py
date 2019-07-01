@@ -45,19 +45,19 @@ class Colons():
 
     @property
     def user_id(self):
-        "Fingerprint for 'fpr' type"
+        "Fingerprint for 'fpr' type."
         return self._get(9)
 
 
 class BaseGnuPG():
     @classmethod
     def get_flavor(cls):
-        """
-        Ugly-parse GPG binary flavor(=major.minor) "1.4"
-        ("classic"), "2.0" ("stable") or "2.1" ("modern") from
-        "gpg --version" output (like "gpg (GnuPG)
-        2.1.14"). Don't fail but return "unknown" if anything
-        nasty happens.
+        """Ugly-parse GPG binary flavor(=major.minor).
+
+        "1.4" ("classic"), "2.0" ("stable") or "2.1" ("modern") from
+        "gpg --version" output (like "gpg (GnuPG) 2.1.14"). Don't fail
+        but return "unknown" if anything nasty happens.
+
         """
         try:
             version_info = mini_buildd.call.Call(["gpg", "--version"]).check().stdout.splitlines()
@@ -211,6 +211,8 @@ Name-Email: {e}
 
 class TmpGnuPG(BaseGnuPG, mini_buildd.misc.TmpDir):
     """
+    Temporary GnuPG.
+
     >>> # mini_buildd.setup.DEBUG.append("keep")  # Enable 'keep' for debugging only
     >>> gnupg_home = mini_buildd.misc.TmpDir()
     >>> dummy = shutil.copy2("test-data/gpg/secring.gpg", gnupg_home.tmpdir)

@@ -1,11 +1,13 @@
 #!/usr/bin/python3
 # pylint: disable=invalid-name  # https://github.com/PyCQA/pylint/issues/516
 
-"""keyring-packages should be available in all
-(non-experimental) suites, and most importantly in the 'upmost'
-(stable) suite. These packages usually don't really need an
-audit/manual migration, so this automates this tedious task (as
-long as there is no support for this in mini-buildd itself).
+"""Migrate keyring packages up to stable.
+
+keyring-packages should be available in all (non-experimental) suites,
+and most importantly in the 'upmost' (stable) suite. These packages
+usually don't really need an audit/manual migration, so this automates
+this tedious task (as long as there is no support for this in
+mini-buildd itself).
 
 No need to change SUITES if your are using (one of) the default
 layouts.
@@ -16,6 +18,7 @@ layouts.
 Typical example:
 
 mbu-migrate-keyring-packages my-archive admin@my-host.intra.net:8066
+
 """
 
 import sys

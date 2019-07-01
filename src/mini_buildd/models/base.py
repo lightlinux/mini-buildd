@@ -228,10 +228,12 @@ class StatusModel(Model):
 
         @classmethod
         def _mbd_run_dependencies(cls, request, obj, func, **kwargs):
-            """
-            Run action for all dependencies, but don't fail and run all checks for models with
-            LETHAL_DEPENDENCIES set to False. Practical use case is the Daemon model
-            only, where we want to run all checks on all dependencies, but not fail ourselves.
+            """Run action for all dependencies.
+
+            But don't fail and run all checks for models with
+            LETHAL_DEPENDENCIES set to False. Practical use case is
+            the Daemon model only, where we want to run all checks on
+            all dependencies, but not fail ourselves.
             """
             for o in obj.mbd_get_dependencies():
                 try:
@@ -346,8 +348,9 @@ class StatusModel(Model):
         @classmethod
         def mbd_action(cls, request, queryset, action, **kwargs):
             """
-            Try to run action on each object in queryset, emit
-            error message on failure, but don't fail ourself.
+            Try to run action on each object in queryset.
+
+            Emit error message on failure, but don't fail ourself.
             """
             for o in queryset:
                 try:
@@ -402,7 +405,7 @@ this would mean losing all packages!
 
         @classmethod
         def mbd_meta_pca_all(cls, msglog):
-            "Run prepare, check, and activate for all objects of this model"
+            "Run prepare, check, and activate for all objects of this model."
             cls.mbd_action(msglog.request, cls.mbd_model.objects.all(), "prepare")
             cls.mbd_action(msglog.request, cls.mbd_model.objects.all(), "check")
             cls.mbd_action(msglog.request, cls.mbd_model.objects.all(), "activate")

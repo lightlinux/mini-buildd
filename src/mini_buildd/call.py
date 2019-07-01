@@ -36,7 +36,9 @@ class Call():
     @classmethod
     def _call2shell(cls, call):
         """
-        Convenience: Convert an argument sequence ("call") to a
+        Convert call to human-readable shell line.
+
+        Converts an argument sequence ("call") to a
         command line more human-readable and "likely-suitable"
         for cut and paste to a shell.
         """
@@ -80,12 +82,12 @@ class Call():
 
     @property
     def stdout(self):
-        """Stdout value (empty string if none)"""
+        """Stdout value (empty string if none)."""
         return self._stdx(self.result.stdout, "stdout")
 
     @property
     def stderr(self):
-        """Stderr value (empty string if none)"""
+        """Stderr value (empty string if none)."""
         return self._stdx(self.result.stderr, "stderr")
 
     def log(self):
@@ -140,8 +142,9 @@ def call_sequence(calls, run_as_root=False, rollback_only=False, **kwargs):
 
 
 def call_with_retry(call, retry_max_tries=5, retry_sleep=1, retry_failed_cleanup=None, **kwargs):
-    """Run call repeatedly until it succeeds (retval 0). In case
-    retry_max_tries is reached, the error from the last try is raised.
+    """Run call repeatedly until it succeeds (retval 0).
+
+    In case retry_max_tries is reached, the error from the last try is raised.
 
     >>> call_with_retry(["/bin/true"])
     >>> call_with_retry(["/bin/false"])

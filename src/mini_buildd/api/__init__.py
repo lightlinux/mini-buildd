@@ -245,8 +245,9 @@ auto-ports=buster-test-unstable
 
     @classmethod
     def auth_err(cls, user):
-        """Check if django user is authorized to call command. Empty string
-        means user is authorized.
+        """Check if django user is authorized to call command.
+
+        Empty string means user is authorized.
         """
         def chk_login():
             return user.is_authenticated and user.is_active
@@ -263,7 +264,7 @@ auto-ports=buster-test-unstable
 
 
 class DaemonCommand(Command):
-    """Daemon commands"""
+    """Daemon commands."""
 
     def _upload_template_package(self, template_package, dist):
         """Portext macro. Used for keyringpackages and testpackages."""
@@ -562,7 +563,7 @@ class TestPackages(DaemonCommand):
 
 
 class ConfigCommand(Command):
-    """Configuration convenience commands"""
+    """Configuration convenience commands."""
 
 
 class GetKey(ConfigCommand):
@@ -645,7 +646,7 @@ def _get_table_format(dct, cols):
 
 
 class PackageCommand(Command):
-    """Package management commands"""
+    """Package management commands."""
 
 
 class List(PackageCommand):
@@ -946,7 +947,7 @@ class Retry(PackageCommand):
 
 
 class UserCommand(Command):
-    """User management commands"""
+    """User management commands."""
 
 
 class SetUserKey(UserCommand):

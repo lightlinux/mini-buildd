@@ -59,9 +59,9 @@ class WebApp(django.core.handlers.wsgi.WSGIHandler):
     @classmethod
     def remove_system_artifacts(cls):
         """
-        Bulk-remove all model instances that might have
-        produced cruft on the system (i.e., outside
-        mini-buildd's home).
+        Bulk-remove all model instances that might have produced cruft on the system.
+
+        I.e., outside mini-buildd's home.
         """
         # This import needs the django app to be already configured
         from mini_buildd.models.chroot import Chroot

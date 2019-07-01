@@ -220,6 +220,8 @@ personality={p}
 
     def mbd_check_sudo_workaround(self, request):
         """
+        Run odd sudo workaround.
+
         mini-buildd <= 1.0.4 created chroots with a "sudo workaround" for bug
         https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=607228.
 

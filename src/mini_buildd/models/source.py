@@ -223,8 +223,9 @@ class Component(mini_buildd.models.base.Model):
 
 def component_key(component):
     """
-    Get Debian components as string in a suitable order -- i.e.,
-    'main' should be first, the others in alphabetical order.
+    Get Debian components as string in a suitable order.
+
+    I.e., 'main' should be first, the others in alphabetical order.
 
     Basically only needed for reprepro's (broken?) default
     component guessing, which uses the first given component in
@@ -625,7 +626,7 @@ class PrioritySource(mini_buildd.models.base.Model):
 
         @classmethod
         def mbd_meta_add_extras(cls, msglog):
-            "Add all backports as prio=1 prio sources"
+            "Add all backports as prio=1 prio sources."
             for source in Source.objects.exclude(codename__regex=r"^[a-z]+$"):
                 PrioritySource.mbd_get_or_create(msglog, source=source, priority=1)
 

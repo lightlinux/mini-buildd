@@ -19,7 +19,7 @@ class Daemon():
 
     def _log_daemon_messages(self, headers):
         """
-        Stolen from mini-buildd-tool
+        Log daemon messages (stolen from mini-buildd-tool).
         """
         msgs_header = "x-mini-buildd-message"
         for msg in [v for k, v in list(headers.items()) if msgs_header == k[:len(msgs_header)]]:
