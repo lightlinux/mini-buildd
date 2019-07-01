@@ -13,7 +13,7 @@ pep8:
     - E127
 
 pylint:
-  run: false
+  run: true
   disable:
     # We don't want the in-code exceptions pop up on pylint runs.
     - locally-disabled
