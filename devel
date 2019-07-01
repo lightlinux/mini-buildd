@@ -99,20 +99,6 @@ pyenv()
 	python3 ./setup.py build_py
 }
 
-mbd_pylintgeneratedmembers()
-{
-	# Generate all identifiers with "has no xxx member" error. If
-	# needed, manually add those that are _actually_
-	# false-positive due to django to -> .pylintrc.
-	sed -i "s/^generated-members=.*/generated-members=/" "${MBD_SETUP_CFG}"  # Reset, so we actually see all these errors
-	local gm=""
-	for o in $(pylint3 $(mbd_pysources) | grep "has no.*member" | cut -d"'" -f4 | sort | uniq); do
-		gm+="${o},"
-	done
-	sed -i "s/^generated-members=.*/generated-members=${gm}/" "${MBD_SETUP_CFG}"
-	printf "${MBD_SETUP_CFG} tainted.\n"
-}
-
 mbd_installdjango()
 {
 	dpkg -s python3-django | grep "^Version" || true

@@ -28,10 +28,6 @@ pylint:
     # [VARIABLES]
     dummy-variables-rgx: _|dummy
 
-    # [TYPECHECK]
-    # see ./devel pylintgeneratedmembers
-    generated-members: add,all,apt_keys,architectureoption_set,chroot_set,codename,distribution_set,DoesNotExist,get_status_display,get_union_type_display,id,layout,looplvmchroot,mbd_get_apt_line,mbd_get_apt_line_raw,mbd_get_apt_pin,mbd_get_archive,mbd_get_extra_option,mbd_get_mandatory_version_regex,mbd_model,mbd_remove,objects,origin,repository_set,set,source_set,splitlines,suite,suiteoption_set,uploadable,
-
     # [BASIC]
     # Add all python executables here (these always yield 'invalid-name' error (imho a bug in pylint))
     good-names: mini-buildd,mini-buildd-tool,run-doctest,mbd-import-08x,python-client,mbd-ssh-tool-command,mbd-ssh-uploader-command,mbu-migrate-keyring-packages,urlpatterns,register
