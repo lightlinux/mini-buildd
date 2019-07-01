@@ -17,8 +17,6 @@ pylint:
     - missing-docstring             # It seems hard and unfair to force us to write documentation!
     - logging-format-interpolation  # We use .format()-style for string formatting. Aiming for fstring-style formatting later (but requires >=3.6, so not yet).
   options:
-    # Add all python executables here (these always yield 'invalid-name' error (imho a bug in pylint))
-    good-names: mini-buildd,mini-buildd-tool,run-doctest,mbd-import-08x,python-client,mbd-ssh-tool-command,mbd-ssh-uploader-command,mbu-migrate-keyring-packages,urlpatterns,register
     variable-rgx: '[a-z_][a-z0-9_]{0,30}$'
     dummy-variables-rgx: _|dummy
     method-rgx: '[a-z_][a-z0-9_]{1,40}$'

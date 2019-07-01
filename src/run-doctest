@@ -1,4 +1,5 @@
 #!/usr/bin/python3 -W default
+# pylint: disable=invalid-name  # https://github.com/PyCQA/pylint/issues/516
 
 import sys
 import importlib
