@@ -15,45 +15,29 @@ pep8:
 pylint:
   run: true
   disable:
-    # We don't want the in-code exceptions pop up on pylint runs.
-    - locally-disabled
-    # It seems hard and unfair to force us to write documentation!
-    - missing-docstring,
-    # We use .format()-style for string formatting. Aiming for fstring-style formatting later (but requires >=3.6, so not yet).
-    # We don't want to use "old-style" formatting only for the sake of some optimization.
-    - logging-format-interpolation
+    - locally-disabled              # We don't want the in-code exceptions pop up on pylint runs.
+    - missing-docstring             # It seems hard and unfair to force us to write documentation!
+    - logging-format-interpolation  # We use .format()-style for string formatting. Aiming for fstring-style formatting later (but requires >=3.6, so not yet).
   options:
-    max-module-lines: 1400
-
-    # [VARIABLES]
-    dummy-variables-rgx: _|dummy
-
-    # [BASIC]
     # Add all python executables here (these always yield 'invalid-name' error (imho a bug in pylint))
     good-names: mini-buildd,mini-buildd-tool,run-doctest,mbd-import-08x,python-client,mbd-ssh-tool-command,mbd-ssh-uploader-command,mbu-migrate-keyring-packages,urlpatterns,register
     variable-rgx: '[a-z_][a-z0-9_]{0,30}$'
+    dummy-variables-rgx: _|dummy
     method-rgx: '[a-z_][a-z0-9_]{1,40}$'
     function-rgx: '[a-z_][a-z0-9_]{1,40}$'
     class-attribute-rgx: '([A-Za-z_][A-Za-z0-9_]{2,40}|(__.*__))$'
 
-    # [DESIGN]
-    # Django adds many public methods to classes, FTPDHandler is the winner though
-    max-public-methods: 110
+    max-module-lines: 1400
+    max-public-methods: 110  # Django adds many public methods to classes, FTPDHandler is the winner though
     min-public-methods: 0
-
-    # We need to pimp some default values a little
     max-args: 10
     max-locals: 30
     max-returns: 12
     max-branches: 25
     max-attributes: 15
     max-statements: 60
-
-    # Since 'python-debian (0.1.21+nmu2)': Changes: Too many ancestors (12/7)
-    # Since 'python-debian (0.1.34)': Changes: Too many ancestors (15/12)
-    max-parents: 15
-
     max-bool-expr: 8
+    max-parents: 15  # Since 'python-debian (0.1.34)': Changes: Too many ancestors (15/12)
 
 mccabe:
   run: false
