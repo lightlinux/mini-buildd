@@ -13,6 +13,7 @@ pep8:
 
 pylint:
   disable:
+    - cyclic-import                 # False-positives, and also seems to break other checks (?).
     - locally-disabled              # We don't want the in-code exceptions pop up on pylint runs.
     - missing-docstring             # It seems hard and unfair to force us to write documentation!
     - logging-format-interpolation  # We use .format()-style for string formatting. Aiming for fstring-style formatting later (but requires >=3.6, so not yet).
