@@ -28,7 +28,6 @@ To group fields together for the end user, use AdminModel's *fieldset* option.
 
 Methods
 -------
-
 Methods that represent mini-buildd logic should go into the
 models directly, but must be prefixed with "mbd\_". This avoids
 conflicts with method names form the django model's class, but
