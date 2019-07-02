@@ -120,7 +120,6 @@ def call_sequence(calls, run_as_root=False, rollback_only=False, **kwargs):
     >>> call_sequence([(["echo", "-n", "cmd0"], ["echo", "-n", "rollback cmd0"])])
     >>> call_sequence([(["echo", "cmd0"], ["echo", "rollback cmd0"])], rollback_only=True)
     """
-
     def rollback(pos):
         for i in range(pos, -1, -1):
             if calls[i][1]:

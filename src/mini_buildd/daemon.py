@@ -333,7 +333,6 @@ def run():
     """
     mini-buildd 'daemon engine' run.
     """
-
     ftpd_thread = mini_buildd.misc.run_as_thread(
         mini_buildd.ftpd.run,
         name="ftpd",

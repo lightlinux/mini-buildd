@@ -134,7 +134,6 @@ class Package(mini_buildd.misc.Status):
         This may throw on error, and if so, no changes should be
         done to the repo.
         """
-
         # Install to reprepro repository
         self.repository.mbd_package_install(self.distribution, self.suite, self.changes, self.success)
 

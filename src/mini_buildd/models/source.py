@@ -370,7 +370,6 @@ codeversion is only used for base sources.""")
               apt-key adv --list-public-keys --keyid-format=long
 
             """
-
             keys = {
                 "archive_stretch": "E0B11894F66AEC98",           # Debian Archive Automatic Signing Key (9/stretch) <ftpmaster@debian.org>  (subkey 04EE7237B7D453EC)
                 "release_stretch": "EF0F382A1A7B6500",           # Debian Stable Release Key (9/stretch) <debian-release@lists.debian.org>
@@ -424,7 +423,6 @@ codeversion is only used for base sources.""")
         @classmethod
         def mbd_meta_add_ubuntu(cls, msglog):
             """Add well-known Ubuntu sources. Update hint: Keep latest two releases plus a couple of LTS releases."""
-
             keys = {
                 "archive_current": "40976EAF437D05B5",    # Ubuntu Archive Automatic Signing Key <ftpmaster@ubuntu.com>
                 "archive_2012": "3B4FE6ACC0B21F32",       # Ubuntu Archive Automatic Signing Key (2012) <ftpmaster@ubuntu.com>

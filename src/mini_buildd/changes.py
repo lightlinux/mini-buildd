@@ -473,7 +473,6 @@ class Changes(debian.deb822.Changes):  # pylint: disable=too-many-ancestors
         .. todo:: **IDEA**: gen_buildrequests(): Instead of tar'ing ourselves (uploaded changes)
                   with exceptions (.deb, .buildinfo, .changes), add the *.dsc* and its files only!
         """
-
         # Extra check on all DSC/source package files
         # - Check md5 against possible pool files.
         # - Add missing from pool (i.e., orig.tar.gz).
