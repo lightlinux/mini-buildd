@@ -28,9 +28,7 @@ class AccountProfileView(django.views.generic.base.TemplateView):
 
 
 def _add_messages(response, msgs):
-    """
-    Add all texts in messages (must be one line each) as custom HTTP headers (using base64 with UTF-8 char encoding).
-    """
+    """Add all texts in messages (must be one line each) as custom HTTP headers (using base64 with UTF-8 char encoding)."""
     n = 0
     for msg in msgs:
         response["X-Mini-Buildd-Message-{n}".format(n=n)] = mini_buildd.misc.u2b64(msg)

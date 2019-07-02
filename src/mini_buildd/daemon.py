@@ -276,9 +276,7 @@ class TestPackage(TemplatePackage):
 
 
 class Keyrings():
-    """
-    Hold/manage all gnupg keyrings (for remotes and all repository uploaders).
-    """
+    """Hold/manage all gnupg keyrings (for remotes and all repository uploaders)."""
 
     def __init__(self):
         self._our_pub_key = get().model.mbd_get_pub_key()
@@ -330,9 +328,7 @@ class Keyrings():
 
 
 def run():
-    """
-    mini-buildd 'daemon engine' run.
-    """
+    """mini-buildd 'daemon engine' run."""
     ftpd_thread = mini_buildd.misc.run_as_thread(
         mini_buildd.ftpd.run,
         name="ftpd",
@@ -578,9 +574,7 @@ class Daemon():
 
     @classmethod
     def parse_distribution(cls, dist):
-        """
-        Get repository, distribution and suite model objects (plus rollback no) from distribution string.
-        """
+        """Get repository, distribution and suite model objects (plus rollback no) from distribution string."""
         # Check and parse changes distribution string
         dist_parsed = mini_buildd.misc.Distribution(mini_buildd.models.repository.map_incoming_distribution(dist))
 

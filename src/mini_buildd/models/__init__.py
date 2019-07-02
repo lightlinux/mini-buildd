@@ -6,9 +6,7 @@ All models must provide a an admin meta class as 'Model.Admin'.
 
 
 def import_all():
-    """
-    Call this after your django app is configured.
-    """
+    """Call this after your django app is configured."""
     import django.contrib
 
     from mini_buildd.models import gnupg

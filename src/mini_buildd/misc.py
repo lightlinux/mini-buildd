@@ -69,15 +69,11 @@ class Status():
         return self.__status_desc__
 
     def set_status(self, status, desc=""):
-        """
-        Set status with optional description.
-        """
+        """Set status with optional description."""
         self.__status__, self.__status_desc__ = status, desc
 
     def get_status(self):
-        """
-        Get raw (integer) status.
-        """
+        """Get raw (integer) status."""
         return self.__status__
 
 
@@ -93,9 +89,7 @@ def skip_if_keep_in_debug(func, *args, **kwargs):
 
 
 class TmpDir():
-    """
-    Use with contextlib.closing() to guarantee tmpdir is purged afterwards.
-    """
+    """Use with contextlib.closing() to guarantee tmpdir is purged afterwards."""
 
     def __init__(self, tmpdir=None):
         self._tmpdir = tmpdir if tmpdir else tempfile.mkdtemp(dir=mini_buildd.setup.TMP_DIR)
@@ -213,9 +207,7 @@ def codename_produces_ddeb_appendix(codename):
 
 
 def sources_list_has_https(sources_list_file):
-    """
-    Check sources.list file if there are any https sources in it.
-    """
+    """Check sources.list file if there are any https sources in it."""
     with mini_buildd.misc.open_utf8(sources_list_file) as sources_list:
         for apt_line in sources_list:
             if re.match("deb.*https", apt_line):
@@ -462,9 +454,7 @@ def run_as_thread(thread_func, name, daemon=False, **kwargs):
 
 
 def hash_of_file(file_name, hash_type="md5"):
-    """
-    Get any hash from file contents.
-    """
+    """Get any hash from file contents."""
     md5 = hashlib.new(hash_type)
     with open(file_name, "rb") as f:
         while True:
@@ -524,9 +514,7 @@ def list_get(list_, index, default=None):
 
 
 def rmdirs(path):
-    """
-    Remove path recursively. Succeed even if it does not exist in the first place.
-    """
+    """Remove path recursively. Succeed even if it does not exist in the first place."""
     if os.path.exists(path):
         shutil.rmtree(path)
         LOG.info("Directory removed recursively: {p}".format(p=path))

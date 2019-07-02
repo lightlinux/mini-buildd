@@ -13,9 +13,7 @@ LOG = logging.getLogger(__name__)
 
 
 class WebApp(django.core.handlers.wsgi.WSGIHandler):
-    """
-    mini-buildd's web application.
-    """
+    """mini-buildd's web application."""
 
     def __init__(self):
         LOG.info("Generating web application...")

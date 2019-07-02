@@ -149,9 +149,7 @@ lintian) as non-lethal, and will install anyway.
             prio=prio)
 
     def mbd_get_sort_no(self):
-        """
-        Compute number that may be used to sort suites from 'stable' (0) towards 'experimental'.
-        """
+        """Compute number that may be used to sort suites from 'stable' (0) towards 'experimental'."""
         no = 0
         if self.uploadable:
             no += 5
@@ -906,9 +904,7 @@ DscIndices: Sources Release . .gz .bz2
         return result
 
     def mbd_get_dsc_path(self, distribution, package, version):
-        """
-        Get component and (absolute) DSC path of an installed package (http://host:port/<path>).
-        """
+        """Get component and (absolute) DSC path of an installed package (http://host:port/<path>)."""
         subdir = package[:4] if package.startswith("lib") else package[0]
 
         for c in sorted(distribution.components.all(), key=mini_buildd.models.source.component_key):
@@ -1191,9 +1187,7 @@ DscIndices: Sources Release . .gz .bz2
             LOG.info("Installed: {p} ({d})".format(p=bres.get_pkg_id(with_arch=True), d=dist_str))
 
     def mbd_package_install(self, distribution, suite_option, changes, bresults):
-        """
-        Install a dict arch:bres of successful build results.
-        """
+        """Install a dict arch:bres of successful build results."""
         # Get the full distribution str
         dist_str = suite_option.mbd_get_distribution_string(self, distribution)
 
@@ -1225,9 +1219,7 @@ DscIndices: Sources Release . .gz .bz2
         self.mbd_package_purge_orphaned_logs(package)
 
     def mbd_prepare(self, _request):
-        """
-        Idempotent repository preparation. This may be used as-is as mbd_sync.
-        """
+        """Idempotent repository preparation. This may be used as-is as mbd_sync."""
         # Architecture sanity checks
         for d in self.distributions.all():
             if not d.architectureoption_set.all().filter(optional=False):

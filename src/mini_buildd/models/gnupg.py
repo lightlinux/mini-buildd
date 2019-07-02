@@ -88,9 +88,7 @@ class GnuPGPublicKey(mini_buildd.models.base.StatusModel):
         self._mbd_remove_and_prepare(request)
 
     def mbd_check(self, _request):
-        """
-        Check that we actually have the key and long_id. This should always be true after "prepare".
-        """
+        """Check that we actually have the key and long_id. This should always be true after "prepare"."""
         if not self.key and not self.key_long_id:
             raise Exception("GnuPG key with inconsistent state -- try remove,prepare to fix.")
 
@@ -179,9 +177,7 @@ class Remote(KeyringKey):
                                  c=status.chroots_str())
 
     def mbd_http2url(self):
-        """
-        Convert user field 'http' into an actually usable URL.
-        """
+        """Convert user field 'http' into an actually usable URL."""
         # http = '[proto:]hostname:port'
         #               ^part1    ^part0
         try:
@@ -223,9 +219,7 @@ class Remote(KeyringKey):
         MsgLog(LOG, request).info("Remote key and state removed.")
 
     def mbd_check(self, request):
-        """
-        Check whether the remote mini-buildd is up, running and serving for us.
-        """
+        """Check whether the remote mini-buildd is up, running and serving for us."""
         super().mbd_check(request)
         status = self.mbd_get_status(update=True)
 

@@ -215,9 +215,7 @@ class Package(mini_buildd.misc.Status):
 
 
 class LastPackage(mini_buildd.misc.API):
-    """
-    Subset of 'Package' for pickled statistics.
-    """
+    """Subset of 'Package' for pickled statistics."""
 
     __API__ = -99
 
@@ -257,9 +255,7 @@ class LastPackage(mini_buildd.misc.API):
 
 
 def package_close(daemon, package):
-    """
-    Close package. Just continue on errors, but log them; guarantee to remove it from the packages dict.
-    """
+    """Close package. Just continue on errors, but log them; guarantee to remove it from the packages dict."""
     try:
         package.move_to_pkglog()
         package.notify()

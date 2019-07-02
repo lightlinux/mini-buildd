@@ -43,9 +43,7 @@ class Clean(distutils.command.clean.clean):
 
 
 def package_data_files(directory, extensions):
-    """
-    Little helper to collect file lists for package_data.
-    """
+    """Little helper to collect file lists for package_data."""
     package_path = "src/mini_buildd"
     result = []
     for extension in extensions:

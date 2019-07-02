@@ -183,9 +183,7 @@ are actually supported by the current model.
 
 
 class StatusModel(Model):
-    """
-    Abstract model class for all models that carry a status. See Manual: :ref:`admin_configuration`.
-    """
+    """Abstract model class for all models that carry a status. See Manual: :ref:`admin_configuration`."""
 
     # The main statuses: removed, prepared, active
     STATUS_REMOVED = 0

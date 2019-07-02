@@ -32,9 +32,7 @@ class Incoming():
 
     @classmethod
     def remove_cruft_files(cls, files):
-        """
-        Remove all files from list of files not mentioned in a changes file.
-        """
+        """Remove all files from list of files not mentioned in a changes file."""
         valid_files = []
         for changes_file in files:
             if cls.is_changes(changes_file):
@@ -63,9 +61,7 @@ class Incoming():
 
     @classmethod
     def remove_cruft(cls):
-        """
-        Remove cruft files from incoming.
-        """
+        """Remove cruft files from incoming."""
         cls.remove_cruft_files(["{p}/{f}".format(p=mini_buildd.setup.INCOMING_DIR, f=f) for f in os.listdir(mini_buildd.setup.INCOMING_DIR)])
 
     @classmethod
@@ -89,9 +85,7 @@ class FtpDHandler(pyftpdlib.handlers.FTPHandler):
         self._mbd_files_received = []
 
     def on_file_received(self, file):
-        """
-        Make any incoming file read-only as soon as it arrives; avoids overriding uploads of the same file.
-        """
+        """Make any incoming file read-only as soon as it arrives; avoids overriding uploads of the same file."""
         os.chmod(file, stat.S_IRUSR | stat.S_IRGRP)
         self._mbd_files_received.append(file)
         LOG.info("File received: {f}".format(f=file))

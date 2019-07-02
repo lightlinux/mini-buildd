@@ -79,9 +79,7 @@ class Changes(debian.deb822.Changes):  # pylint: disable=too-many-ancestors
             return result
 
         def _compat_parse_magic(self):
-            """
-            Compat parse support for old style "magic" options.
-            """
+            """Compat parse support for old style "magic" options."""
             def warning(magic, option):
                 LOG.warning("Deprecated \"magic\" option \"{m}\" found. Please use new-style option \"{o}\" instead (see user manual).".format(m=magic, o=option))
 
@@ -131,9 +129,7 @@ class Changes(debian.deb822.Changes):  # pylint: disable=too-many-ancestors
             LOG.debug("Upload option set: {k}=\"{v}\"".format(k=key, v=value))
 
         def get(self, key, alt=None, default=None):
-            """
-            Get first existing option value in this order: key[a], key, default.
-            """
+            """Get first existing option value in this order: key[a], key, default."""
             # Validity check for key
             if key not in list(self._OPTIONS.keys()):
                 raise Exception("Internal error: Upload Options: Unknown key used for get(): {k}.".format(k=key))
@@ -199,9 +195,7 @@ class Changes(debian.deb822.Changes):  # pylint: disable=too-many-ancestors
 
     @property
     def options(self):
-        """
-        .. note:: We can't parse this in constructor currently: Upload option error handling won't work properly, exceptions triggered too early in packager.py.
-        """
+        """note:: We can't parse this in constructor currently: Upload option error handling won't work properly, exceptions triggered too early in packager.py."""
         if not self._options:
             self._options = self.Options(self)
         return self._options

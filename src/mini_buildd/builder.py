@@ -109,9 +109,7 @@ class Build(mini_buildd.misc.Status):
         return round((self.built - self.started).total_seconds(), 1) if self.built else "n/a"
 
     def _generate_sbuildrc(self):
-        """
-        Generate .sbuildrc for a build request (not all is configurable via switches, unfortunately).
-        """
+        """Generate .sbuildrc for a build request (not all is configurable via switches, unfortunately)."""
         tpl = """\
 # We update sources.list on the fly via chroot-setup commands;
 # this update occurs before, so we don't need it.
@@ -261,9 +259,7 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
 
 
 class LastBuild(mini_buildd.misc.API):
-    """
-    Subset of 'Build' for pickled statistics.
-    """
+    """Subset of 'Build' for pickled statistics."""
 
     __API__ = -99
 
@@ -288,9 +284,7 @@ class LastBuild(mini_buildd.misc.API):
 
 
 def _expire_live_buildlogs(**kwargs):
-    """
-    Expire live buildlogs older than timedelta. Arguments are given as-is to the datetime.timedelta constructor.
-    """
+    """Expire live buildlogs older than timedelta. Arguments are given as-is to the datetime.timedelta constructor."""
     valid_until = django.utils.timezone.now() - datetime.timedelta(**kwargs)
     for buildlog in glob.glob(os.path.join(mini_buildd.setup.SPOOL_DIR, "*.buildlog")):
         LOG.debug("Checking if live build log is older than {d}: {logfile}".format(d=valid_until, logfile=buildlog))
@@ -300,9 +294,7 @@ def _expire_live_buildlogs(**kwargs):
 
 
 def build_close(daemon, build):
-    """
-    Close build. Just continue on errors, but log them; guarantee to remove it from the builds dict.
-    """
+    """Close build. Just continue on errors, but log them; guarantee to remove it from the builds dict."""
     try:
         build.clean()
         daemon.last_builds.appendleft(LastBuild(build))

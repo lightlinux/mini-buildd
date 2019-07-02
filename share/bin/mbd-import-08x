@@ -29,9 +29,7 @@ def call(cmd, show=True, dry_run=False):
 
 
 def cmp_versions(pair0, pair1):
-    """
-    Compare Debian package versions (on first item of pair).
-    """
+    """Compare Debian package versions (on first item of pair)."""
     return debian.debian_support.version_compare(pair0[0], pair1[0])
 
 

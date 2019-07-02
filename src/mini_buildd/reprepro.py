@@ -1,6 +1,4 @@
-"""
-Run reprepro commands.
-"""
+"""Run reprepro commands."""
 
 import os
 import shutil

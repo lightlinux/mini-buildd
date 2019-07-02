@@ -181,9 +181,7 @@ Comma-separated list of special debugging options:
         return args
 
     def _setup(self):
-        """
-        Set global variables that really make no sense to propagate through.
-        """
+        """Set global variables that really make no sense to propagate through."""
         mini_buildd.setup.DEBUG = self._args.debug.split(",")
         mini_buildd.setup.FOREGROUND = self._args.foreground
 

@@ -101,9 +101,7 @@ def get_django_secret_key(home):
 
 
 def configure(smtp_string, loglevel):
-    """
-    Configure django.
-    """
+    """Configure django."""
     LOG.info("Setting up django...")
 
     smtp = SMTPCreds(smtp_string)

@@ -223,9 +223,7 @@ def urlopen_ca_certificates(url, **kwargs):
 
 
 def detect_apt_cacher_ng(url="http://localhost:3142"):
-    """
-    Little heuristic helper for the "local archives" wizard.
-    """
+    """Little heuristic helper for the "local archives" wizard."""
     try:
         urlopen_ca_certificates(url)
     except urllib.error.HTTPError as e:
