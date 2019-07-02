@@ -145,6 +145,7 @@ class ConfFile():
 class BlockQueue(queue.Queue):
     """
     Wrapper around Queue to get put() block until <= maxsize tasks are actually done.
+
     In Queue.Queue, task_done() is only used together with join().
 
     This way can use the Queue directly to limit the number of
