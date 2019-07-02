@@ -34,6 +34,7 @@ class Call():
     >>> Call(["printf stdin; printf stderr >&2"], stderr=subprocess.STDOUT, shell=True).stdout
     'stdinstderr'
     """
+
     @classmethod
     def _call2shell(cls, call):
         """

@@ -34,6 +34,7 @@ class Changes(debian.deb822.Changes):  # pylint: disable=too-many-ancestors
         >>> "{}".format(Changes("test-data/changes.magic").options)
         "auto-ports=['jessie-test-unstable', 'squeeze-test-snasphot'], ignore-lintian=True"
         """
+
         class Bool():
             _TRUE = ["true", "1"]
             _FALSE = ["false", "0"]

@@ -264,6 +264,7 @@ class LastBuild(mini_buildd.misc.API):
     """
     Subset of 'Build' for pickled statistics.
     """
+
     __API__ = -99
 
     def __init__(self, build):

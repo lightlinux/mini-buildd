@@ -76,6 +76,7 @@ class Model(django.db.models.Model):
     This just makes sure no config is changed or deleted while
     the daemon is running.
     """
+
     extra_options = django.db.models.TextField(blank=True, editable=True,
                                                help_text="""\
 Extra/experimental options (in the form 'KEY: VALUE' per line) a
@@ -185,6 +186,7 @@ class StatusModel(Model):
     """
     Abstract model class for all models that carry a status. See Manual: :ref:`admin_configuration`.
     """
+
     # The main statuses: removed, prepared, active
     STATUS_REMOVED = 0
     STATUS_PREPARED = 1

@@ -69,6 +69,7 @@ class Endpoint():
     'https://example.com:1234/'
 
     """
+
     _PROTOCOL2URL_SCHEME = {Protocol.HTTP: "http", Protocol.FTP: "ftp"}
     _SUPPORTED_TWISTED_TYPES = ["ssl", "tls", "tcp6", "tcp", "unix"]
 
@@ -173,6 +174,7 @@ class UserURL():
       ...
     Exception: UserURL: Username given in twice, in URL and parameter
     """
+
     def __init__(self, url, username=None):
         parsed = urllib.parse.urlparse(url)
         if parsed.password:

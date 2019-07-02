@@ -375,6 +375,7 @@ Builder: {b_len} building
 
 class Start(DaemonCommand):
     """Start the Daemon (engine)."""
+
     COMMAND = "start"
     AUTH = Command.ADMIN
     ARGUMENTS = [BoolArgument(["--force-check", "-C"], default=False, doc="run checks on instances even if already checked.")]
@@ -387,6 +388,7 @@ class Start(DaemonCommand):
 
 class Stop(DaemonCommand):
     """Stop the Daemon (engine)."""
+
     COMMAND = "stop"
     AUTH = Command.ADMIN
     ARGUMENTS = []
@@ -399,6 +401,7 @@ class Stop(DaemonCommand):
 
 class PrintUploaders(DaemonCommand):
     """Print all GPG ids allowed to upload to repositories."""
+
     COMMAND = "printuploaders"
     AUTH = Command.ADMIN
     NEEDS_RUNNING_DAEMON = True
@@ -422,6 +425,7 @@ class PrintUploaders(DaemonCommand):
 
 class Meta(DaemonCommand):
     """Call arbitrary meta functions for models; usually for internal use only."""
+
     COMMAND = "meta"
     AUTH = Command.ADMIN
     ARGUMENTS = [StringArgument(["model"], doc="Model path, for example 'source.Archive'"),
@@ -433,6 +437,7 @@ class Meta(DaemonCommand):
 
 class AutoSetup(DaemonCommand):
     """Auto setup / bootstrap."""
+
     COMMAND = "autosetup"
     AUTH = Command.ADMIN
     CONFIRM = True
@@ -474,6 +479,7 @@ class AutoSetup(DaemonCommand):
 
 class KeyringPackages(DaemonCommand):
     """Build keyring packages for all active repositories."""
+
     COMMAND = "keyringpackages"
     AUTH = Command.ADMIN
     NEEDS_RUNNING_DAEMON = True
@@ -532,8 +538,8 @@ class TestPackages(DaemonCommand):
 
     Per default, we build all test packages for all active
     distributions ending on 'experimental'.
-
     """
+
     COMMAND = "testpackages"
     AUTH = Command.ADMIN
     NEEDS_RUNNING_DAEMON = True
@@ -571,6 +577,7 @@ class ConfigCommand(Command):
 
 class GetKey(ConfigCommand):
     """Get GnuPG public key."""
+
     COMMAND = "getkey"
 
     def _run(self):
@@ -583,6 +590,7 @@ class GetDputConf(ConfigCommand):
 
     Usually, this is for integration in your personal ~/.dput.cf.
     """
+
     COMMAND = "getdputconf"
 
     def _run(self):
@@ -595,6 +603,7 @@ class GetSourcesList(ConfigCommand):
 
     Usually, this output is put to a file like '/etc/sources.list.d/mini-buildd-xyz.list'.
     """
+
     COMMAND = "getsourceslist"
     ARGUMENTS = [
         SelectArgument(["codename"], doc="codename (base distribution) to get apt lines for"),
@@ -852,6 +861,7 @@ class Port(PackageCommand):
     will be adapted) rebuild of the given locally-installed
     package.
     """
+
     COMMAND = "port"
     AUTH = Command.STAFF
     NEEDS_RUNNING_DAEMON = True
@@ -897,6 +907,7 @@ class PortExt(PackageCommand):
     An external 'port' is a no-changes (i.e., only the changelog
     will be adapted) rebuild of any given source package.
     """
+
     COMMAND = "portext"
     AUTH = Command.STAFF
     NEEDS_RUNNING_DAEMON = True
@@ -995,6 +1006,7 @@ class Subscription(UserCommand):
     where both PACKAGE or DISTRIBUTION may be empty to denote
     all resp. items.
     """
+
     COMMAND = "subscription"
     AUTH = Command.LOGIN
     ARGUMENTS = [

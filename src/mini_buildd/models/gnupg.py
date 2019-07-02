@@ -113,6 +113,7 @@ class KeyringKey(GnuPGPublicKey):
     done on the fly (without stopping the daemon), to make this
     maintenance practically usable.
     """
+
     class Meta(mini_buildd.models.base.StatusModel.Meta):
         abstract = True
         app_label = "mini_buildd"

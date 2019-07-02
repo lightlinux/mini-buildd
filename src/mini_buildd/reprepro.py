@@ -29,6 +29,7 @@ class Reprepro():
     For the case that someone else is using reprepro
     manually, we also always run it with '--waitforlock'.
     """
+
     def __init__(self, basedir):
         self._basedir = basedir
         self._cmd = ["reprepro", "--verbose", "--waitforlock", "10", "--basedir", "{b}".format(b=basedir)]

@@ -18,6 +18,7 @@ class Colons():
 
     See /usr/share/doc/gnupg/DETAILS.gz.
     """
+
     def __init__(self, colons_line):
         self._colons = colons_line.split(":")
 
@@ -246,6 +247,7 @@ class TmpGnuPG(BaseGnuPG, mini_buildd.misc.TmpDir):
     >>> tgnupg.close()
     >>> gnupg_home.close()
     """
+
     def __init__(self):
         mini_buildd.misc.TmpDir.__init__(self)
         super().__init__(home=self.tmpdir)

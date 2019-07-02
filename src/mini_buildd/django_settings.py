@@ -58,6 +58,7 @@ class SMTPCreds():
     >>> (d.user, d.password, d.protocol, d.host, d.port)
     ('kuh', 'sa:ck', 'smtp', 'colahost', 44)
     """
+
     def __init__(self, creds):
         self.creds = creds
         at = creds.partition("@")

@@ -56,6 +56,7 @@ class Changelog(debian.changelog.Changelog):
     >>> cl.find_first_not("mini-buildd@buildd.intra")
     ('Mini Buildd <mini-buildd@buildd.intra>', '1.0.1-1~')
     """
+
     def find_first_not(self, author):
         """Find (author,version+1) of the first changelog block not by given author."""
         result = (None, None)
@@ -187,6 +188,7 @@ class DebianVersion(debian.debian_support.Version):
 
 class TemplatePackage(mini_buildd.misc.TmpDir):
     """Copies a package template into a temporary directory (under 'package/')."""
+
     def __init__(self, template):
         super().__init__()
         self.template = template
@@ -277,6 +279,7 @@ class Keyrings():
     """
     Hold/manage all gnupg keyrings (for remotes and all repository uploaders).
     """
+
     def __init__(self):
         self._our_pub_key = get().model.mbd_get_pub_key()
         self._remotes = self._gen_remotes()

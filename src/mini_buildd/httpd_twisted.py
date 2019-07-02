@@ -25,6 +25,7 @@ class RootResource(twisted.web.resource.Resource):
     """
     Twisted root resource needed to mix static and wsgi resources.
     """
+
     def __init__(self, wsgi_resource):
         super().__init__()
         self._wsgi_resource = wsgi_resource
@@ -39,6 +40,7 @@ class FileResource(twisted.web.static.File):
     """
     Twisted static resource enhanced with switchable index and regex matching support.
     """
+
     def __init__(self, *args, with_index=False, uri_regex=".*", **kwargs):
         super().__init__(*args, **kwargs)
         self.mbd_with_index = with_index

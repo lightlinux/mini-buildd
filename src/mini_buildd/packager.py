@@ -219,6 +219,7 @@ class LastPackage(mini_buildd.misc.API):
     """
     Subset of 'Package' for pickled statistics.
     """
+
     __API__ = -99
 
     def __init__(self, package):

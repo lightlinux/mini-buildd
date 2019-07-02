@@ -20,6 +20,7 @@ class DebianPackageTracker():
     hacky way parsing the HTML via bs4 - so this will most
     definitely break at some point. Use at own discretion.
     """
+
     def __init__(self, src_package, tracker_url="https://tracker.debian.org"):
         self.info = {}
 

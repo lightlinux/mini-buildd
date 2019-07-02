@@ -40,6 +40,7 @@ class API():
     that should be increased on incompatible changes, and may
     then check via api_check() method.
     """
+
     __API__ = -1000
 
     def __init__(self):
@@ -55,6 +56,7 @@ class Status():
 
     Inheriting classes must give a stati dict to init.
     """
+
     def __init__(self, stati):
         self.__status__, self.__status_desc__, self.__stati__ = 0, "", stati
 
@@ -94,6 +96,7 @@ class TmpDir():
     """
     Use with contextlib.closing() to guarantee tmpdir is purged afterwards.
     """
+
     def __init__(self, tmpdir=None):
         self._tmpdir = tmpdir if tmpdir else tempfile.mkdtemp(dir=mini_buildd.setup.TMP_DIR)
         LOG.debug("TmpDir {t}".format(t=self._tmpdir))
@@ -124,6 +127,7 @@ class ConfFile():
 
     >>> ConfFile("/tmp/mini_buildd_test_conf_file", "my_option=7").add("my_2nd_option=42").save()
     """
+
     def __init__(self, file_path, snippet="", comment="#"):
         self._file_path = file_path
         self._content = ""
@@ -151,6 +155,7 @@ class BlockQueue(queue.Queue):
     This way can use the Queue directly to limit the number of
     actually worked-on items for incoming and builds.
     """
+
     def __init__(self, maxsize):
         self._maxsize = maxsize
         self._pending = 0
