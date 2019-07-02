@@ -279,7 +279,7 @@ personality={p}
 
 
 class DirChroot(Chroot):
-    """ Dir chroot backend. """
+    """Directory chroot backend."""
 
     UNION_AUFS = 0
     UNION_OVERLAYFS = 1
@@ -329,7 +329,7 @@ union-type={u}
 
 
 class FileChroot(Chroot):
-    """ File chroot backend. """
+    """File chroot backend."""
 
     COMPRESSION_NONE = 0
     COMPRESSION_GZIP = 1
@@ -388,7 +388,7 @@ file={t}
 
 
 class LVMChroot(Chroot):
-    """ LVM chroot backend. """
+    """LVM chroot backend."""
     volume_group = django.db.models.CharField(max_length=80, default="auto",
                                               help_text="Give a pre-existing LVM volume group name. Just leave it on 'auto' for loop lvm chroots.")
     filesystem = django.db.models.CharField(max_length=10, default="ext2")
@@ -446,7 +446,7 @@ lvm-snapshot-options=--size {s}G
 
 
 class LoopLVMChroot(LVMChroot):
-    """ Loop LVM chroot backend. """
+    """Loop LVM chroot backend."""
     loop_size = django.db.models.IntegerField(default=100,
                                               help_text="Loop device file size in GB.")
 
@@ -499,7 +499,7 @@ class LoopLVMChroot(LVMChroot):
 
 
 class BtrfsSnapshotChroot(Chroot):
-    """ Btrfs Snapshot chroot backend. """
+    """Btrfs Snapshot chroot backend."""
     class Meta(Chroot.Meta):
         pass
 
