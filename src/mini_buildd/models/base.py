@@ -70,7 +70,8 @@ except BaseException as e:
 
 
 class Model(django.db.models.Model):
-    """Abstract father model for all mini-buildd models.
+    """
+    Abstract father model for all mini-buildd models.
 
     This just makes sure no config is changed or deleted while
     the daemon is running.
@@ -228,7 +229,8 @@ class StatusModel(Model):
 
         @classmethod
         def _mbd_run_dependencies(cls, request, obj, func, **kwargs):
-            """Run action for all dependencies.
+            """
+            Run action for all dependencies.
 
             But don't fail and run all checks for models with
             LETHAL_DEPENDENCIES set to False. Practical use case is

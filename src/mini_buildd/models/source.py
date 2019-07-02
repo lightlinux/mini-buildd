@@ -53,7 +53,8 @@ Use the 'directory' notation with exactly one trailing slash (like 'http://examp
 
         @classmethod
         def mbd_meta_add_local(cls, msglog):
-            """Local scan for archives.
+            """
+            Local scan for archives.
 
             This currently scans the local sources list and tries to detect a local apt-cacher-ng.
             """

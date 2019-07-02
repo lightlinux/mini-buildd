@@ -218,7 +218,8 @@ auto-ports=buster-test-unstable
         raise Exception("No _run() function defined for: {}".format(self.COMMAND))
 
     def __getstate__(self):
-        """Workaround so objects of this class can be pickled.
+        """
+        Workaround so objects of this class can be pickled.
 
         .. note:: This must be removed eventually. RoadMap: 1.11: API: Fix up result handling, and use json instead of pickle/python to interchange computable data.
         """
@@ -245,7 +246,8 @@ auto-ports=buster-test-unstable
 
     @classmethod
     def auth_err(cls, user):
-        """Check if django user is authorized to call command.
+        """
+        Check if django user is authorized to call command.
 
         Empty string means user is authorized.
         """
@@ -525,7 +527,8 @@ class KeyringPackages(DaemonCommand):
 
 
 class TestPackages(DaemonCommand):
-    """Build internal test packages.
+    """
+    Build internal test packages.
 
     Per default, we build all test packages for all active
     distributions ending on 'experimental'.
@@ -575,7 +578,8 @@ class GetKey(ConfigCommand):
 
 
 class GetDputConf(ConfigCommand):
-    """Get recommended dput config snippet.
+    """
+    Get recommended dput config snippet.
 
     Usually, this is for integration in your personal ~/.dput.cf.
     """
@@ -586,7 +590,8 @@ class GetDputConf(ConfigCommand):
 
 
 class GetSourcesList(ConfigCommand):
-    """Get sources.list (apt lines).
+    """
+    Get sources.list (apt lines).
 
     Usually, this output is put to a file like '/etc/sources.list.d/mini-buildd-xyz.list'.
     """
@@ -840,7 +845,8 @@ class Remove(PackageCommand):
 
 
 class Port(PackageCommand):
-    """Port an internal package.
+    """
+    Port an internal package.
 
     An internal 'port' is a no-changes (i.e., only the changelog
     will be adapted) rebuild of the given locally-installed
@@ -885,7 +891,8 @@ class Port(PackageCommand):
 
 
 class PortExt(PackageCommand):
-    """Port an external package.
+    """
+    Port an external package.
 
     An external 'port' is a no-changes (i.e., only the changelog
     will be adapted) rebuild of any given source package.
@@ -981,7 +988,8 @@ class SetUserKey(UserCommand):
 
 
 class Subscription(UserCommand):
-    """Manage subscriptions to package notifications.
+    """
+    Manage subscriptions to package notifications.
 
     A package subscription is a tuple 'PACKAGE:DISTRIBUTION',
     where both PACKAGE or DISTRIBUTION may be empty to denote

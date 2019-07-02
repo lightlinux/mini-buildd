@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 # pylint: disable=invalid-name  # https://github.com/PyCQA/pylint/issues/516
 
-"""Script to use as a 'command' in an authorized_key file to allow mini-buildd-tool runs only via SSH.
+"""
+Script to use as a 'command' in an authorized_key file to allow mini-buildd-tool runs only via SSH.
 
 You may use this to authorize certain roles (for now: superuser and
 staff) via plain secure SSH.

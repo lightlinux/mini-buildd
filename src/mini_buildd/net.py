@@ -36,7 +36,8 @@ def unescape(string):
 
 
 class Endpoint():
-    r"""Network server endpoint description parser (twisted-like).
+    r"""
+    Network server endpoint description parser (twisted-like).
 
     Syntax and semantic of the description string should be like in
     the twisted framework, see

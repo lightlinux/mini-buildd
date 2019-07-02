@@ -60,7 +60,8 @@ class Changes(debian.deb822.Changes):  # pylint: disable=too-many-ancestors
 
         @classmethod
         def _get_top_changes(cls, upload_changes):
-            """Filter only the first block from the changes (changelog) entry.
+            """
+            Filter only the first block from the changes (changelog) entry.
 
             Upload changes may include multiple version blocks from
             the changelog (internal porting does it, for example),

@@ -178,7 +178,8 @@ class Remote(KeyringKey):
                                  c=status.chroots_str())
 
     def mbd_http2url(self):
-        """Convert user field 'http' into an actually usable URL.
+        """
+        Convert user field 'http' into an actually usable URL.
         """
         # http = '[proto:]hostname:port'
         #               ^part1    ^part0

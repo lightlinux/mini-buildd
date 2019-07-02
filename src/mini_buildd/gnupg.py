@@ -52,7 +52,8 @@ class Colons():
 class BaseGnuPG():
     @classmethod
     def get_flavor(cls):
-        """Ugly-parse GPG binary flavor(=major.minor).
+        """
+        Ugly-parse GPG binary flavor(=major.minor).
 
         "1.4" ("classic"), "2.0" ("stable") or "2.1" ("modern") from
         "gpg --version" output (like "gpg (GnuPG) 2.1.14"). Don't fail

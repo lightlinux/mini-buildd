@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 # pylint: disable=invalid-name  # https://github.com/PyCQA/pylint/issues/516
 
-"""Migrate keyring packages up to stable.
+"""
+Migrate keyring packages up to stable.
 
 keyring-packages should be available in all (non-experimental) suites,
 and most importantly in the 'upmost' (stable) suite. These packages

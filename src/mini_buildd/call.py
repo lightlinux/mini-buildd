@@ -16,7 +16,8 @@ def taint_env(taint):
 
 
 class Call():
-    """Wrapper around python subprocess.
+    """
+    Wrapper around python subprocess.
 
     When supplying ``stdout`` or ``stderr``, provide raw and
     'seekable' file-like object; i.e., use "w+" and standard
@@ -91,7 +92,8 @@ class Call():
         return self._stdx(self.result.stderr, "stderr")
 
     def log(self):
-        """Log calls output to mini-buildd's logging for debugging.
+        """
+        Log calls output to mini-buildd's logging for debugging.
 
         On error, this logs with level ``warning``. On sucesss,
         this logs with level ``debug``.
@@ -111,7 +113,8 @@ class Call():
 
 
 def call_sequence(calls, run_as_root=False, rollback_only=False, **kwargs):
-    """Run sequences of calls with rollback support.
+    """
+    Run sequences of calls with rollback support.
 
     >>> call_sequence([(["echo", "-n", "cmd0"], ["echo", "-n", "rollback cmd0"])])
     >>> call_sequence([(["echo", "cmd0"], ["echo", "rollback cmd0"])], rollback_only=True)
@@ -142,7 +145,8 @@ def call_sequence(calls, run_as_root=False, rollback_only=False, **kwargs):
 
 
 def call_with_retry(call, retry_max_tries=5, retry_sleep=1, retry_failed_cleanup=None, **kwargs):
-    """Run call repeatedly until it succeeds (retval 0).
+    """
+    Run call repeatedly until it succeeds (retval 0).
 
     In case retry_max_tries is reached, the error from the last try is raised.
 

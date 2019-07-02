@@ -119,7 +119,8 @@ class TmpDir():
 
 
 class ConfFile():
-    """ ConfFile generation helper.
+    """
+    ConfFile generation helper.
 
     >>> ConfFile("/tmp/mini_buildd_test_conf_file", "my_option=7").add("my_2nd_option=42").save()
     """
@@ -319,7 +320,8 @@ def strip_epoch(version):
 
 
 def guess_codeversion(release):
-    """Guess the 'codeversion'.
+    """
+    Guess the 'codeversion'.
 
     Aka the first two digits of a Debian release version; for releases
     without version, this falls back to the uppercase codename.
@@ -423,7 +425,8 @@ class PkgLog():
 
 
 def subst_placeholders(template, placeholders):
-    """Substitute placeholders in string from a dict.
+    """
+    Substitute placeholders in string from a dict.
 
     >>> subst_placeholders("Repoversionstring: %IDENTITY%%CODEVERSION%", { "IDENTITY": "test", "CODEVERSION": "60" })
     'Repoversionstring: test60'
