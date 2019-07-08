@@ -240,10 +240,6 @@ mbd_run:00:10:prospector()
 	(
 		pyenv
 		prospector $(mbd_pysources)
-
-		# Try to list all in-code excludes
-		printf "\nI: pylint/noqa in-file linter exceptions present in:\n"
-		grep --files-with-match --regexp="\#.*pylint:.*disable" --regexp="\#.*noqa" $(mbd_pysources)
 	)
 }
 
