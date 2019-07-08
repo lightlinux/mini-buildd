@@ -490,7 +490,7 @@ $build_environment = { 'CCACHE_DIR' => '%LIBDIR%/.ccache' };
                                                   help_text="""\
 Perl snippet to be added in the .sbuildrc for each build.; you may use these placeholders:<br />
 <br />
-%LIBDIR%: Per-chroot persistent dir; may be used for data that should persist beteeen builds (caches, ...).<br />
+%LIBDIR%: Per-chroot persistent dir; may be used for data that should persist between builds (caches, ...).<br />
 <br />
 Example:
 <pre>

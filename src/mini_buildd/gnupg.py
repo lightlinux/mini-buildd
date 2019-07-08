@@ -137,7 +137,7 @@ class BaseGnuPG():
 
         # 2nd, try keyserver (with retry)
         mini_buildd.call.call_with_retry(self.gpg_cmd + ["--armor", "--keyserver", keyserver, "--recv-keys", identity], retry_max_tries=5, retry_sleep=5)
-        LOG.info("{id}: Imported from keyserver: {k}".format(id=identity, k=keyserver))
+        LOG.info("{id}: Imported from key server: {k}".format(id=identity, k=keyserver))
 
     def add_pub_key(self, key):
         with tempfile.TemporaryFile() as t:

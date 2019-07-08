@@ -17,7 +17,7 @@ LOG = logging.getLogger(__name__)
 
 class GnuPGPublicKey(mini_buildd.models.base.StatusModel):
     key_id = django.db.models.CharField(max_length=100, blank=True, default="",
-                                        help_text="Give a key id here to retrieve the actual key automatically per configured keyserver.")
+                                        help_text="Give a key id here to retrieve the actual key automatically per configured key server.")
     key = django.db.models.TextField(blank=True, default="",
                                      help_text="ASCII-armored GnuPG public key. Leave the key id blank if you fill this manually.")
 

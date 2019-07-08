@@ -67,7 +67,7 @@ automatically added.""")
     gnupg_keyserver = django.db.models.CharField(
         max_length=200,
         default="pool.sks-keyservers.net",
-        help_text="GnuPG keyserver to use (as fill-in helper).")
+        help_text="GnuPG key server to use (as fill-in helper).")
 
     ftpd_bind = django.db.models.CharField(
         max_length=200,
@@ -112,10 +112,10 @@ maintainers to be accidentally spammed.
 
     show_last_packages = django.db.models.IntegerField(
         default=100,
-        help_text="How many 'last packages' data to keep for the status display.")
+        help_text="How many 'last packages data' to keep for the status display.")
     show_last_builds = django.db.models.IntegerField(
         default=100,
-        help_text="How many 'last builds' data to keep for the status display.")
+        help_text="How many 'last builds data' to keep for the status display.")
 
     wait_for_build_results = django.db.models.IntegerField(
         default=5,
