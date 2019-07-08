@@ -406,7 +406,7 @@ codeversion is only used for base sources.""")
                                    extra_options="X-Check-Valid-Until: no")
 
             cls._mbd_get_or_create(msglog, "Debian", "stretch",
-                                   [keys["archive_wheezy"], keys["archive_jessie"], keys["release_jessie"], keys["release_stretch"]])
+                                   [keys["archive_jessie"], keys["archive_stretch"], keys["release_stretch"]])
             cls._mbd_get_or_create(msglog, "Debian", "stretch/updates",
                                    [keys["archive_wheezy"], keys["security_archive_jessie"]],
                                    extra_options="Codename: stretch\nLabel: Debian-Security\nX-Remove-From-Component: updates/")
