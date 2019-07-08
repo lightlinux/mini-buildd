@@ -42,15 +42,15 @@ class Changelog(debian.changelog.Changelog):
 
     >>> cl = Changelog(mini_buildd.misc.open_utf8("test-data/changelog"), max_blocks=100)
     >>> cl.find_first_not("mini-buildd@buildd.intra")
-    ('Stephan S\\xfcrken <absurd@debian.org>', '1.0.0-2')
+    ('Stephan Sürken <absurd@debian.org>', '1.0.0-2')
 
     >>> cl = Changelog(mini_buildd.misc.open_utf8("test-data/changelog.ported"), max_blocks=100)
     >>> cl.find_first_not("mini-buildd@buildd.intra")
-    ('Stephan S\\xfcrken <absurd@debian.org>', '1.0.0-2')
+    ('Stephan Sürken <absurd@debian.org>', '1.0.0-2')
 
     >>> cl = Changelog(mini_buildd.misc.open_utf8("test-data/changelog.oneblock"), max_blocks=100)
     >>> cl.find_first_not("mini-buildd@buildd.intra")
-    ('Stephan S\\xfcrken <absurd@debian.org>', '1.0.1-1~')
+    ('Stephan Sürken <absurd@debian.org>', '1.0.1-1~')
 
     >>> cl = Changelog(mini_buildd.misc.open_utf8("test-data/changelog.oneblock.ported"), max_blocks=100)
     >>> cl.find_first_not("mini-buildd@buildd.intra")

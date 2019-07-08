@@ -224,7 +224,7 @@ class TmpGnuPG(BaseGnuPG, mini_buildd.misc.TmpDir):
     >>> gnupg.get_first_sec_colon("sec").type
     'sec'
     >>> gnupg.get_first_sec_key_user_id()
-    '\\xdcdo \\xdcmlaut <test@key.org>'
+    'Üdo Ümlaut <test@key.org>'
     >>> gnupg.get_first_sec_key()  #doctest: +ELLIPSIS
     'AF95FC80FC40A82E'
     >>> gnupg.get_first_sec_key_fingerprint()  #doctest: +ELLIPSIS
@@ -234,7 +234,7 @@ class TmpGnuPG(BaseGnuPG, mini_buildd.misc.TmpDir):
     >>> gnupg.export(export.name)
 
     >>> t = tempfile.NamedTemporaryFile()
-    >>> t.write(b"A test file\\n")
+    >>> t.write(b"A test file\n")
     12
     >>> t.flush()
     >>> gnupg.sign(file_name=t.name, identity="test@key.org")
