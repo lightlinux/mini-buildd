@@ -123,7 +123,7 @@ class BaseGnuPG():
     def get_first_sec_key_user_id(self):
         return self.get_first_sec_colon("uid").user_id
 
-    def import_pub_key(self, keyserver, identity):
+    def import_pub_key(self, key_server, identity):
         # 1st, try keyrings on local system
         for keyring in glob.glob("/usr/share/keyrings/*.gpg"):
             try:
@@ -135,9 +135,9 @@ class BaseGnuPG():
             except BaseException as e:
                 LOG.info("{id}: Can't import from keyring {k}: {e}".format(id=identity, k=keyring, e=e))
 
-        # 2nd, try keyserver (with retry)
-        mini_buildd.call.call_with_retry(self.gpg_cmd + ["--armor", "--keyserver", keyserver, "--recv-keys", identity], retry_max_tries=5, retry_sleep=5)
-        LOG.info("{id}: Imported from key server: {k}".format(id=identity, k=keyserver))
+        # 2nd, try key_server (with retry)
+        mini_buildd.call.call_with_retry(self.gpg_cmd + ["--armor", "--keyserver", key_server, "--recv-keys", identity], retry_max_tries=5, retry_sleep=5)
+        LOG.info("{id}: Imported from key server: {k}".format(id=identity, k=key_server))
 
     def add_pub_key(self, key):
         with tempfile.TemporaryFile() as t:
