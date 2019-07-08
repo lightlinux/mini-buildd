@@ -409,7 +409,7 @@ codeversion is only used for base sources.""")
             cls._mbd_get_or_create(msglog, "Debian", "stretch",
                                    [keys["archive_jessie"], keys["archive_stretch"], keys["release_stretch"]])
             cls._mbd_get_or_create(msglog, "Debian", "stretch/updates",
-                                   [keys["archive_wheezy"], keys["security_archive_jessie"]],
+                                   [keys["security_archive_jessie"], keys["security_archive_stretch"]],
                                    extra_options="Codename: stretch\nLabel: Debian-Security\nX-Remove-From-Component: updates/")
             cls._mbd_get_or_create(msglog, "Debian Backports", "stretch-backports",
                                    [keys["archive_wheezy"], keys["archive_jessie"]])
