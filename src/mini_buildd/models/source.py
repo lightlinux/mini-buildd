@@ -371,6 +371,8 @@ codeversion is only used for base sources.""")
 
             """
             keys = {
+                "archive_buster": "DC30D7C23CBBABEE",            # Debian Archive Automatic Signing Key (10/buster) <ftpmaster@debian.org>
+                "release_buster": "DCC9EFBF77E11517",            # Debian Stable Release Key (10/buster) <debian-release@lists.debian.org>
                 "archive_stretch": "E0B11894F66AEC98",           # Debian Archive Automatic Signing Key (9/stretch) <ftpmaster@debian.org>  (subkey 04EE7237B7D453EC)
                 "release_stretch": "EF0F382A1A7B6500",           # Debian Stable Release Key (9/stretch) <debian-release@lists.debian.org>
                 "archive_jessie": "7638D0442B90D010",            # Debian Archive Automatic Signing Key (8/jessie) <ftpmaster@debian.org>
@@ -412,13 +414,13 @@ codeversion is only used for base sources.""")
                                    [keys["archive_wheezy"], keys["archive_jessie"]])
 
             cls._mbd_get_or_create(msglog, "Debian", "buster",
-                                   [keys["archive_wheezy"], keys["archive_jessie"], keys["archive_stretch"]])
+                                   [keys["release_stretch"], keys["release_buster"], keys["archive_stretch"], keys["archive_buster"]])
             cls._mbd_get_or_create(msglog, "Debian", "buster/updates",
                                    [keys["security_archive_jessie"], keys["security_archive_stretch"]],
                                    extra_options="Codename: buster\nLabel: Debian-Security\nX-Remove-From-Component: updates/")
 
             cls._mbd_get_or_create(msglog, "Debian", "sid",
-                                   [keys["archive_wheezy"], keys["archive_jessie"], keys["archive_stretch"]])
+                                   [keys["archive_stretch"], keys["archive_buster"]])
 
         @classmethod
         def mbd_meta_add_ubuntu(cls, msglog):
