@@ -245,7 +245,7 @@ mbd_run:00:10:prospector()
 
 mbd_run:00:12:codespell()
 {
-	local ups=$(codespell --quiet-level=2 $(mbd_pysources))
+	local ups=$(codespell --ignore-words-list=referer,fpr,stati --quiet-level=2 $(mbd_pysources))
 	if [ -n "${ups}" ]; then
 		printf "${ups}\n" >&2
 		return 1
