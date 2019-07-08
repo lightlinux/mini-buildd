@@ -22,6 +22,7 @@ pep257:
     - D107
     - D203
     - D212
+    - D416
 
 pylint:
   disable:
