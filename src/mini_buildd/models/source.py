@@ -421,6 +421,8 @@ codeversion is only used for base sources.""")
             cls._mbd_get_or_create(msglog, "Debian", "buster/updates",
                                    [keys["security_archive_stretch"], keys["security_archive_buster"]],
                                    extra_options="Codename: buster\nLabel: Debian-Security\nX-Remove-From-Component: updates/")
+            cls._mbd_get_or_create(msglog, "Debian Backports", "buster-backports",
+                                   [keys["archive_stretch"], keys["archive_buster"]])
 
             cls._mbd_get_or_create(msglog, "Debian", "sid",
                                    [keys["archive_stretch"], keys["archive_buster"]])
