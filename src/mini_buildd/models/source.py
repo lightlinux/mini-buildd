@@ -449,6 +449,7 @@ codeversion is only used for base sources.""")
             keys = {
                 "archive_current": "40976EAF437D05B5",    # Ubuntu Archive Automatic Signing Key <ftpmaster@ubuntu.com>
                 "archive_2012": "3B4FE6ACC0B21F32",       # Ubuntu Archive Automatic Signing Key (2012) <ftpmaster@ubuntu.com>
+                "archive_2018": "871920D1991BC93C",       # Ubuntu Archive Automatic Signing Key (2018) <ftpmaster@ubuntu.com>
             }
 
             # trusty: 14.04 (LTS until 2019)
@@ -490,6 +491,16 @@ codeversion is only used for base sources.""")
             cls._mbd_get_or_create(msglog, "Ubuntu", "cosmic-backports",
                                    [keys["archive_current"], keys["archive_2012"]],
                                    "Codename: cosmic\nSuite: cosmic-backports")
+
+            # disco: 19.04
+            cls._mbd_get_or_create(msglog, "Ubuntu", "disco",
+                                   [keys["archive_2012"], keys["archive_2018"]])
+            cls._mbd_get_or_create(msglog, "Ubuntu", "disco-security",
+                                   [keys["archive_2012"], keys["archive_2018"]],
+                                   "Codename: disco\nSuite: disco-security")
+            cls._mbd_get_or_create(msglog, "Ubuntu", "disco-backports",
+                                   [keys["archive_2012"], keys["archive_2018"]],
+                                   "Codename: disco\nSuite: disco-backports")
 
         @classmethod
         def mbd_filter_active_base_sources(cls):
