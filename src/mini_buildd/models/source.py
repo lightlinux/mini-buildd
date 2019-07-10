@@ -256,13 +256,13 @@ comparing <code>Origin</code> and <code>Codename</code> with the values of the
 further specify this source. These are also later used to pin the
 source via apt.</p>
 
-<p>For some sources, <code>Codename</code> (as we use it above) does not
-match resp. value as given in the Release file. When <code>Codename</code>
-is overridden in this manner, be sure to also add one further flag to
-identify the source -- else apt pinning later would likely not be
-unambiguous. Real world examples that need this extra handling are
-<em>Debian Security</em>, and <em>Ubuntu Security and
-Backports</em>:</p>
+<p>For some sources, <code>Codename</code> (as we use it above) does
+not match resp. value as given in the Release file. When
+<code>Codename</code> is overridden in this manner, be sure to also
+add one further flag to identify the source -- else apt pinning later
+would likely not be unambiguous. Real world examples that need this
+extra handling are <em>Debian Security</em> (<code>buster</code> or
+older), <em>Ubuntu Security and Backports</em>:</p>
 
 <pre>
 Codename: bionic
@@ -280,20 +280,30 @@ X-Check-Valid-Until: no
 
 <p>This will, 1st, ignore mini-buildd's own 'Valid-Until check' and
 2nd, create apt lines for this source with the
-<code>[check-valid-until=no]</code> option. I.e., at least from stretch
-onwards, the check is disabled <em>per source</em>. For jessie or
-worse (where this apt option does not work), a global workaround via
-schroot is still in place.</p>
+<code>[check-valid-until=no]</code> option. I.e., at least from
+<code>stretch</code> onwards, the check is disabled <em>per
+source</em>. For <code>jessie</code> or worse (where this apt option
+does not work), a global workaround via schroot is still in place.</p>
 
 <b>X-Remove-From-Component</b>:
 
 <p>Some (actually, we only know of <em>Debian Security</em>) sources
 have weird <code>Components</code> that need to be fixed to work with
-mini-buildd. For example, <em>Debian Security</em> needs:</p>
+mini-buildd. For example, <em>Debian Security</em> (buster or older)
+needs:</p>
 
 <pre>
 Codename: stretch
 Label: Debian-Security
+X-Remove-From-Component: updates/
+</pre>
+
+<p>Fwiw, in <em>Debian Security</em> for <code>bullseye</code> or
+younger, Codename is now unambiguous (like
+<code>bullseye-security</code>), but the component oddity remains; so
+these cases still need:</p>
+
+<pre>
 X-Remove-From-Component: updates/
 </pre>
 """)
