@@ -56,7 +56,7 @@ mbd_installdeps()
 	mk-build-deps --install --root-cmd=sudo --remove --tool="apt-get --no-install-recommends --target-release='*'"
 
 	# Extra tools needed for checks
-	sudo apt-get install --no-install-recommends pycodestyle pylint3 python3-apt python3-pip python3-wheel python3-bs4 python3-keyrings.alt tidy codespell wget apache2-utils ssl-cert
+	sudo apt-get install --no-install-recommends pycodestyle pylint3 python3-apt python3-pip python3-wheel devscripts faketime python3-bs4 python3-keyrings.alt tidy codespell wget apache2-utils ssl-cert
 	# Extra tools needed vc and package building
 	sudo apt-get install --no-install-recommends git git-buildpackage
 	# binary package dependencies so we can just dpkg -i for testing
