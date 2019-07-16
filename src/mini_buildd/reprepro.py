@@ -17,7 +17,7 @@ class Reprepro():
     """
     Abstraction to reprepro repository commands.
 
-    Locking
+    *Locking*
 
     This implicitly provides a locking mechanism to avoid
     parallel calls to the same repository from mini-buildd
@@ -26,11 +26,33 @@ class Reprepro():
 
     For the case that someone else is using reprepro
     manually, we also always run it with '--waitforlock'.
+
+    *Ignoring 'unusedarch' check*
+
+    Known broken use case is linux' 'make deb-pkg' up to version 4.13.
+
+    linux' native 'make deb-pkg' is the recommended and documented way to
+    produce custom kernels on Debian systems.
+
+    Up to linux version 4.13 (see [#l1]_, [#l2]_), this would also produce
+    firmware packages, flagged "arch=all" in the control file, but
+    actually producing "arch=any" firmware *.deb. The changes file
+    produced however would still list "all" in the Architecture field,
+    making the reprepro "unsusedarch" check fail (and thusly, installation
+    on mini-buildd will fail).
+
+    While this is definitely a bug in 'make deb-pkg' (and also not an
+    issue 4.14 onwards or when you use it w/o producing a firmware
+    package), the check is documented as "safe to ignore" in reprepro, so
+    I think we should allow these cases to work.
+
+    .. [l1] https://github.com/torvalds/linux/commit/cc18abbe449aafc013831a8e0440afc336ae1cba
+    .. [l2] https://github.com/torvalds/linux/commit/5620a0d1aacd554ebebcff373e31107bb1ef7769
     """
 
     def __init__(self, basedir):
         self._basedir = basedir
-        self._cmd = ["reprepro", "--verbose", "--waitforlock", "10", "--basedir", "{b}".format(b=basedir)]
+        self._cmd = ["reprepro", "--verbose", "--waitforlock", "10", "--ignore", "unusedarch", "--basedir", "{b}".format(b=basedir)]
         self._lock = _LOCKS.setdefault(self._basedir, threading.Lock())
         LOG.debug("Lock for reprepro repository '{r}': {o}".format(r=self._basedir, o=self._lock))
 
