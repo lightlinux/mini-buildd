@@ -217,7 +217,7 @@ EOF
 
 	mbd_pipclear()
 	{
-		pip3 uninstall --yes --requirement=<(pip3 freeze)
+		pip3 uninstall --yes --requirement=<(pip3 freeze --user)
 	}
 
 	mbd_pipupdateprospector()
