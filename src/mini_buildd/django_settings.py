@@ -182,7 +182,7 @@ def pseudo_configure():
                 "NAME": ":memory:",
             }
         },
-        MIDDLEWARE_CLASSES=(),
+        MIDDLEWARE=[],
         INSTALLED_APPS=MBD_INSTALLED_APPS)
 
     django.setup()
