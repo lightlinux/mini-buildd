@@ -28,7 +28,7 @@ class WebApp(django.core.handlers.wsgi.WSGIHandler):
             django.core.management.call_command("migrate", interactive=False, run_syncdb=True, fake_initial=True, verbosity=0)
 
         LOG.info("Clean up python-registration (cleanupregistration)...")
-        django.core.management.call_command("cleanupregistration", interactive=False, verbosity=0)
+        django.core.management.call_command("cleanupregistration", verbosity=0)
 
         # django 1.8 no longer per default runs this; Doing this once, manually
         LOG.info("Run django internal checks (check)...")
