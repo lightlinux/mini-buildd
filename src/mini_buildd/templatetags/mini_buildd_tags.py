@@ -11,7 +11,7 @@ import mini_buildd.api
 
 LOG = logging.getLogger(__name__)
 
-register = django.template.Library()  # pylint: disable=invalid-name
+register = django.template.Library()
 
 
 @register.filter
