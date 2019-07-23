@@ -52,8 +52,6 @@ class GnuPGPublicKey(mini_buildd.models.base.StatusModel):
 
     def mbd_prepare(self, _request):
         with contextlib.closing(mini_buildd.gnupg.TmpGnuPG()) as gpg:
-            # https://github.com/PyCQA/pylint/issues/1437
-            # pylint: disable=no-member
             if self.key:
                 # Add key given explicitly
                 gpg.add_pub_key(self.key)
