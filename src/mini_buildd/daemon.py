@@ -509,7 +509,7 @@ class Daemon():
         return not self.is_running()
 
     def is_busy(self):
-        return self.lock.locked()  # pylint: disable=no-member
+        return self.lock.locked()
 
     def is_running(self):
         return not self.is_busy() and bool(self.thread)
