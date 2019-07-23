@@ -871,7 +871,7 @@ DscIndices: Sources Release . .gz .bz2
                     meta_distributions=" ".join(self.mbd_get_meta_distributions(d, s)),
                     origin=self.mbd_get_daemon().model.mbd_get_archive_origin(),
                     components=" ".join(d.mbd_get_components()),
-                    architectures=" ".join([x.name for x in d.architectures.all()]),  # pylint: disable=no-member
+                    architectures=" ".join([x.name for x in d.architectures.all()]),
                     desc=self.mbd_get_description(d, s),
                     na="yes" if s.not_automatic else "no",
                     bau="yes" if s.but_automatic_upgrades else "no")
@@ -882,7 +882,7 @@ DscIndices: Sources Release . .gz .bz2
                         meta_distributions="",
                         origin=self.mbd_get_daemon().model.mbd_get_archive_origin(),
                         components=" ".join(d.mbd_get_components()),
-                        architectures=" ".join([x.name for x in d.architectures.all()]),  # pylint: disable=no-member
+                        architectures=" ".join([x.name for x in d.architectures.all()]),
                         desc="{d}: Automatic rollback distribution #{r}".format(d=self.mbd_get_description(d, s), r=r),
                         na="yes",
                         bau="no")
@@ -1179,8 +1179,6 @@ DscIndices: Sources Release . .gz .bz2
 
     def _mbd_package_install(self, bres, dist_str):
         with contextlib.closing(mini_buildd.misc.TmpDir()) as t:
-            # https://github.com/PyCQA/pylint/issues/1437
-            # pylint: disable=no-member
             bres.untar(path=t.tmpdir)
             self._mbd_reprepro().install(" ".join(glob.glob(os.path.join(t.tmpdir, "*.changes"))),
                                          dist_str)
