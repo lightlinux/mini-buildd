@@ -116,11 +116,10 @@ class Endpoint():
     def hopo2desc(cls, hopo, server=True):
         """Needed for HoPo compat."""
         host, port = parse_hopo(hopo)
-        if server:  # pylint: disable=no-else-return
+        if server:
             typ = "tcp" if isinstance(ipaddress.ip_address(host), ipaddress.IPv4Address) else "tcp6"
             return "{typ}:interface={host}:port={port}".format(typ=typ, port=port, host=escape(host))
-        else:
-            return "tcp:host={host}:port={port}".format(host=escape(host), port=port)
+        return "tcp:host={host}:port={port}".format(host=escape(host), port=port)
 
     @property
     def port(self):
