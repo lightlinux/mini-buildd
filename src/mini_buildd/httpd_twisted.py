@@ -57,7 +57,7 @@ class FileResource(twisted.web.static.File):
 
 
 class HttpD(mini_buildd.httpd.HttpD):
-    def _add_route(self, route, directory, with_index=False, uri_regex=".*", with_doc_missing_error=False):  # pylint: disable=unused-argument
+    def _add_route(self, route, directory, with_index=False, uri_regex=".*", with_doc_missing_error=False):
         static = FileResource(with_index=with_index, uri_regex=uri_regex, path=directory)
 
         if with_doc_missing_error:
@@ -74,7 +74,7 @@ class HttpD(mini_buildd.httpd.HttpD):
         twisted.logger.globalLogPublisher.addObserver(twisted.logger.STDLibLogObserver(name=__name__))
 
         # HTTP setup
-        self.resource = RootResource(twisted.web.wsgi.WSGIResource(twisted.internet.reactor, twisted.internet.reactor.getThreadPool(), wsgi_app))  # pylint: disable=no-member
+        self.resource = RootResource(twisted.web.wsgi.WSGIResource(twisted.internet.reactor, twisted.internet.reactor.getThreadPool(), wsgi_app))
         self.site = Site(self.resource, logPath=mini_buildd.setup.ACCESS_LOG_FILE)
 
         for ep in self._endpoints:
@@ -84,4 +84,4 @@ class HttpD(mini_buildd.httpd.HttpD):
         self._add_routes()
 
     def run(self):
-        twisted.internet.reactor.run(installSignalHandlers=0)  # pylint: disable=no-member
+        twisted.internet.reactor.run(installSignalHandlers=0)
