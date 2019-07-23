@@ -1,3 +1,207 @@
+mini-buildd (1.1.17) experimental; urgency=medium
+
+  ** 1.1.x are _development_ releases, use for testing only. **
+
+  'static code check' release. We now use 'prospector' to coordinate
+  3rd party static checkers. In addition to pylint, pycodestyle and
+  pyflakes this (for now) adds pydocstyle, mccabe, and dodgy.
+  Whole (new py3) code && exceptions have been reviewed and updated.
+
+  This release also fixes mini-buildd for django 2.2, and updates the
+  wizards for Debian repo changes after the buster release.
+
+  Offtopic: 1.0.x (stable) can no longer be maintained in Debian
+  unstable/bullseye. Please see http://mini-buildd.installiert.net/
+  on how to get further updates.
+
+  * [544a185] pylint: Rm exception for doc/conf.py (add specific
+    exceptions in-file).
+  * [3601724] devel: Add general "linters" check using pylama (exceptions
+    go to tox.ini for now).
+  * [b78f8a4] Rather use 'setup.cfg' than 'tox.ini'.
+  * [3b9b8f9] devel: Print list of files with in-file exceptions after
+    'linters' check.
+  * [0d33499] devel: Rm separate pycodestyle && pylint checkers.
+  * [049a5db] Remove .pycodestyle and .pylintrc files (now pylama conf in
+    setup.cfg).
+  * [b00c586] devel: Fix pylintgenerated... helper for setup.cfg.
+  * [e8f3757] devel: Rm obsolete bug 877637 reproducer.
+  * [cb441a4] devel: linters: Add pyflakes.
+  * [d99b100] devel: linters: Add mccabe.
+  * [c9a90cc] devel: linters: Add pydocstyle.
+  * [d326843] Bulk-remove all 'editor UTF-8 hints' from python files (py3
+    code is by default UTF-8).
+  * [a2bca1f] setup.cfg: sync max line length (240).
+  * [f2dbe5f] setup.cfg: pylint: We don't need the REPORT section.
+  * [603010f] setup.cfg: elpy/flake8: Fix exception order.
+  * [4a780f1] setup.cfg: elpy/flake8: Rm line length exception (since have
+    a line length configured).
+  * [c9b75c7] devel: prepare-system: Make sure pylama is upgraded.
+  * [7dc66a0] setup.cfg: pycodestyle: Fix syntax for max line length.
+  * [c59a32a] devel: pylama: Seems only version 7.6.5 seems to (kinda)
+    work (wtf?).
+  * [3919342] devel: Add pipclear (uninstall all pip3 local installs).
+  * [c596ee0] devel: Could not for the life of me get pylama to anything
+    consistent ;). Trying prospector now.
+  * [18f0212] doc/conf.py: pylint exceptions: Rather use symbolic names.
+  * [4ead2bc] .prospector.yaml: New config for prospector; pylama config
+    from setup.cfg moved here.
+  * [8248747] devel: Rename linters->prospector.
+  * [f5d5e9c] devel: rm flake8 check (obsolete w/ prospector).
+  * [fd3ee87] .prospector.yaml: Add run option for every tool; only enable
+    pep8 for now.
+  * [10831ad] .prospector.yaml: pep8: Run full with exceptions.
+  * [88a9f09] Fix pep8/E122 in api/__init__.py.
+  * [1c67ef9] Fix pep8/E122 in builder.py.
+  * [ca2cd6b] Enable pep8/E122 for prospector.
+  * [c4880cb] Fix pep8/E124 in models/daemon.py.
+  * [c0dcdd8] Fix pep8/E124 in models/source.py.
+  * [bd61a15] Fix pep8/E124 in reprepro.py.
+  * [2c6615f] Enable pep8/E124 for prospector.
+  * [343474e] Ignore pep8/E402 for doc/conf.py in-code.
+  * [b7674d4] Enable pep8/E402 in prospector.
+  * [d4b78b9] Fix pep8/E741 in mbd-import-08x.
+  * [eae863d] Fix pep8/E741 in mini_buildd/call.py.
+  * [0c72ad5] Fix pep8/E741 in mini_buildd/net.py.
+  * [183ef25] Fix pep8/E741 in models/chroot.py.
+  * [4dfee44] Fix pep8/E741 in views.py.
+  * [04e29ad] Fix pep8/E741 in models/msglog.py.
+  * [3fbd8a6] Fix pep8/E741 in api/__init__.py.
+  * [0e2e312] Fix pep8/E741 in builder.py.
+  * [5fbab17] Fix pep8/E741 in packager.py.
+  * [afe476f] Fix pep8/E741 in changes.py.
+  * [825ed0e] Fix pep8/E741 in misc.py.
+  * [cabd8d5] Fix pep8/E741 in models/repository.py.
+  * [6d48bfb] Fix pep8/E741 in templatetags/mini_buildd_tags.py.
+  * [339c9f4] Enable pep8/E741 in prospector.
+  * [7c96945] Don't disable pep8/W503 in prospector (seems to be ignored
+    anyway/W504 is being used rather)
+  * [572ab63] Ignore pep8/N802 for httpd_twisted.py in-code.
+  * [5bb6e35] Enable pep8/N802 in prospector.
+  * [38c2939] Fix pylint/invalid-name in run-doctest.
+  * [d40fef5] Fix pylint/wrong-import-order in mini-buildd.
+  * [f1322f4] .prospector.yaml: Tighten max module lines to 1400.
+  * [a101f6d] .prospector.yaml: pylint: Complete exceptions for scripts
+    (false-positive 'invalid-name').
+  * [6ed07ce] Disable pylint/import-error in mini-buildd (obviously false-
+    positive) in-code.
+  * [51c0fa9] Enable pylint/import-error globally.
+  * [3e3f679] Enable pylint/cyclic-import globally (there seem to be no
+    issue any more).
+  * [bbfc10f] .prospector.yaml (pylint): Update comments for logging-
+    format-interpolation exception.
+  * [3d61135] .prospector.yaml: Add skeleton config for dodgy and pyflakes
+    (disabled for now).
+  * [1cc5011] .prospector.yaml: Update strictness: low->veryhigh && use
+    django lib.
+  * [16cbfec] .prospector.yaml: Re-enable pylint.
+  * [ec35003] pylint: Remove "generated members" django workaround (seems
+    prospector django lib already handles this).
+  * [0d9c1c8] .prospector.yaml: Simplify/cleanup notation of pylint
+    config.
+  * [249e7c6] .prospector.yaml: Rm per tool run: option (too confusing).
+  * [da263a0] pylint: Disable invalid-name in mini_buildd_tags.py in-code.
+  * [47162f8] pylint: Disable "invalid-name" for all scripts in-code (and
+    remove 'good-names' global config).
+  * [54d818f] pylint: Globally disable cyclic-import in .prospector.yaml.
+  * [0a2f376] pylint: locally-disabled && missing-docstring don't need to
+    be disabled w/ prospector.
+  * [e53a5e1] pylint: Disable 'too-many-ancestor' locally in changes.py
+    only.
+  * [40c4044] pylint: Disable 'too-many-boolean-expressions' locally in
+    api/client_1_0.py only.
+  * [c0555d1] pylint: Remove 'max-statements' config: Does not seem to be
+    needed any more.
+  * [bdc3b23] pylint: Disable 'too-many-return-statemtments+branches' in
+    'views.py' locally only.
+  * [7ca6ac3] pylint: Adapt 'max-public-methods', add comment.
+  * [567b967] .prospector.yaml: Enable doc warnings.
+  * [64df174] pyflakes: Disable F841 globally ('# noqa' just does not work
+    as advertised).
+  * [99513a0] pep257: Fix D413 in models/base.py.
+  * [fd44ee4] pep257: Fix D412 in models/base.py.
+  * [771af13] pep257: Fix D404 in various modules.
+  * [ff6439a] pep257: Fix D403 in various modules.
+  * [edad9c8] pep257: Fix D401 in numerous modules.
+  * [ade8a97] pep257: Fix D400 in numerous modules.
+  * [2673142] models/chroot.py: Remove unused class method.
+  * [33fae70] pep257: Fix D301 in two modules.
+  * [a8f63e9] pep257: Fix D300 in numerous modules.
+  * [dfc45a7] pep257: Fix D213 in numerous modules.
+  * [eb2bc71] pep257: Fix D210 in models/chroot.py.
+  * [427d6e6] pep257: Enable D207 (no issues).
+  * [c8be5f2] pep257: Fix D205 in misc.py.
+  * [f0f84c5] pep257: Fix D204 in numerous modules.
+  * [0d8750d] pep257: Fix D202 in some modules.
+  * [76e7aff] pep257: Fix D200 in numerous modules.
+  * [6af7cd3] .prospector.yaml: Explicitly run pep257 (not default, unlike
+    documented).
+  * [c26bb95] devel: prospector: Skip printing exception files.
+  * [1b8a2e3] models/base.py: Renice module doc; avoid 'r' prefix.
+  * [42ed056] .prospector.yaml: pep257: Disable D416: seems to produce
+    false-positives now.
+  * [adbc543] src/*: Some code/text fixes due to new codespell.
+  * [1404aae] codespell: Rename some variables keyserver->key_server to
+    make it happy.
+  * [c089477] devel: codespell: Add exceptions (needed w/ version 1.15).
+  * [3fda8b0] doctests: Fix special escaping in some tests (no longer
+    needed and now breaks it).
+  * [e89e6f4] wizards (key updates after buster release): Add buster apt
+    keys, and update source wizards for buster and sid.
+  * [9fc5a7f] wizards (key updates after buster release): Update source
+    wizard for stretch.
+  * [289e9fa] wizards (key updates after buster release): Add buster
+    security key, and update source wizard for buster/updates.
+  * [3639136] wizards (key updates after buster release): Update source
+    wizards for jessie/updates.
+  * [803b700] wizards (key updates after buster release): Update source
+    wizards for stretch/updates.
+  * [94dc2c0] wizards (key updates after buster release): Update source
+    wizards for stretch-backports.
+  * [c8d7d5a] wizards (updates after buster release): Add stretch-
+    backports-sloppy.
+  * [fd01fd7] wizards (updates after buster release): Add buster-
+    backports.
+  * [1605c4c] wizards (updates after buster release): Add bullseye +
+    bullseye-security.
+  * [ee0d42b] Update in-place doc on sources after buster release.
+  * [61665e2] wizards: Add Ubuntu disco (and 2018 archive key).
+  * [b96b44a] devel: installdeps: Add py3-pip, py3-wheel.
+  * [033e1fd] devel: installdeps: Add devscripts and faketime (for
+    debrepro).
+  * [814f3bd] reprepro.py: Ignore 'unusedarch' check (fixes linux' <= 4.13
+    'make deb-pkg').
+  * [03ba21b] devel: pip3: uninstall user installations only.
+  * [05489c6] django 2.0: Call cleanupregistration w/o option
+    'interactive'.
+  * [86f66f6] django 2.1: Update to class based views in root_urls.
+  * [efb4712] django 2.0: django_settings.py, pseudo config:
+    MIDDLEWARE_CLASSES -> MIDDLEWARE
+  * [ba10dbe] django 2: django.contrib.message now _must_ mandatory in
+    INSTALLED_APPS.
+  * [7a2d48c] control: Allow django up to 2.2.
+  * [89fe749] pylint: Fix one in-code exception in net.py.
+  * [b95afb6] pylint: Remove no-longer-needed in-code exception in
+    models/source.py.
+  * [771195c] pylint: Remove no-longer-needed in-code exception in
+    models/gnupg.py.
+  * [a930627] pylint: Remove three no-longer-needed in-code exception in
+    models/repository.py.
+  * [4fc008d] pylint: Remove no-longer-needed in-code exception in
+    models/chroot.py.
+  * [0ea4698] pylint: Remove three no-longer-needed in-code excpetions in
+    httpd_twisted.py.
+  * [b7f74c0] pylint: Remove no-longer-needed in-code excpetion in
+    templatetags/mini_buildd_tags.py.
+  * [0f93a0f] pylint: Remove no-longer-needed in-code excpetion in
+    daemon.py.
+  * [dfe625b] pylint: Remove two no-longer-needed in-code exceptions in
+    changes.py.
+  * [84efa52] pylint: Remove no-longer-needed in-code exception in
+    api/__init__.py.
+
+ -- Stephan Sürken <absurd@debian.org>  Tue, 23 Jul 2019 17:57:55 +0200
+
 mini-buildd (1.1.16) experimental; urgency=medium
 
   ** 1.1.x are _development_ releases, use for testing only. **
