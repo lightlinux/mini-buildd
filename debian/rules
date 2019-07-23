@@ -16,5 +16,5 @@ override_dh_fixperms:
 override_dh_auto_build:
 	dh_auto_build
 ifeq ($(filter nodoc,$(DEB_BUILD_OPTIONS)),)
-	/usr/share/sphinx/scripts/python3/sphinx-build -N -bhtml ./doc/ ./build/sphinx/html/
+	python3 -m sphinx -N -bhtml ./doc/ ./build/sphinx/html/
 endif
