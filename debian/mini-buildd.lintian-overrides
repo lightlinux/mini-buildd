@@ -1,2 +1,0 @@
-# The template file is for the postinstall only, to warn when purging
-mini-buildd: no-debconf-config
