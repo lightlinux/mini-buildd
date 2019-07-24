@@ -156,6 +156,12 @@ mbd_gen_httpd_testfiles()
 	done
 }
 
+mbd_changes() # [<arch>]
+{
+	local arch=${1-$(dpkg-architecture --query=DEB_BUILD_ARCH)}
+	printf "../mini-buildd_$(dpkg-parsechangelog --show-field=version)_${arch}.changes"
+}
+
 #
 # Runner functions: mbd_run:<sequence>:<level>:<name>
 #
@@ -308,11 +314,20 @@ mbd_run:03:00:buildfast()
 # Build package again (build must have been run) w/ checks && doc
 mbd_run:03:12:buildcheck()
 {
-	debuild -us -uc --lintian-opts --cfg="${MBD_LINTIAN_CFG}"
+	debuild --no-lintian -us -uc
+}
+
+mbd_run:04:12:lintian()
+{
+	local result=$(lintian --cfg="${MBD_LINTIAN_CFG}" "$(mbd_changes)")
+	printf "%s\n---\n" "${result}"
+	if grep "^[EW]:" <<< ${result}; then
+		read -p "Lintian FAILED (RETURN to ignore)" DUMMY
+	fi
 }
 
 # This also checks "full" package building (with doc and check)
-mbd_run:04:21:debrepro()
+mbd_run:05:21:debrepro()
 {
 	debrepro
 }
@@ -332,7 +347,7 @@ mbd_run:11:00:install()
 {
 	cat ./devel.debconf.selections | sudo debconf-set-selections --verbose -
 	# sudo debi --with-depends  # 2019 July: Not usable. See https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=932896
-	sudo apt --yes --allow-downgrades install ../mini-buildd_$(dpkg-parsechangelog --show-field=version)_$(dpkg-architecture --query=DEB_BUILD_ARCH).changes
+	sudo apt --yes --allow-downgrades install $(mbd_changes)
 }
 
 mbd_run:12:00:restart()
