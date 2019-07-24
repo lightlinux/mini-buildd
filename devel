@@ -331,7 +331,8 @@ mbd_run:10:23:purge()
 mbd_run:11:00:install()
 {
 	cat ./devel.debconf.selections | sudo debconf-set-selections --verbose -
-	sudo debi --with-depends
+	# sudo debi --with-depends  # 2019 July: Not usable. See https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=932896
+	sudo apt --yes --allow-downgrades install ../mini-buildd_$(dpkg-parsechangelog --show-field=version)_$(dpkg-architecture --query=DEB_BUILD_ARCH).changes
 }
 
 mbd_run:12:00:restart()
