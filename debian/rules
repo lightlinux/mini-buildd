@@ -1,7 +1,10 @@
 #!/usr/bin/make -f
 
 %:
-	dh $@ --with=python3,sphinxdoc,bash-completion --buildsystem=pybuild --fail-missing
+	dh $@ --with=python3,sphinxdoc,bash-completion --buildsystem=pybuild
+
+override_dh_missing:
+	dh_missing --fail-missing
 
 override_dh_auto_test:
 	dh_auto_test
