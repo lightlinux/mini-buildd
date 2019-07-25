@@ -57,6 +57,7 @@ Description: minimal build daemon - python library and user tool
 
 Package: mini-buildd
 Architecture: all
+Pre-Depends: ${misc:Pre-Depends}
 Depends:
 	${misc:Depends},
 	${python3:Depends},
