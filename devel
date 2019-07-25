@@ -297,7 +297,6 @@ mbd_run:01:12:pydoctests()
 	)
 }
 
-# Build package as fast as possible
 mbd_run:02:00:changelog()
 {
 	# Checking changelog (must be unchanged)...
@@ -307,16 +306,9 @@ mbd_run:02:00:changelog()
 	mbd_changes >"${MBD_LAST_CHANGES}"
 }
 
-# Build package as fast as possible
-mbd_run:03:00:buildfast()
+mbd_run:03:00:build()
 {
-	DEB_BUILD_OPTIONS+="nodoc nocheck" debuild --no-lintian -us -uc
-}
-
-# Build package again (build must have been run) w/ checks && doc
-mbd_run:03:12:buildcheck()
-{
-	debuild --no-lintian -us -uc
+	DEB_BUILD_OPTIONS+="nocheck" debuild --no-lintian -us -uc
 }
 
 mbd_run:04:12:lintian()
