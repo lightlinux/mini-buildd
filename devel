@@ -44,6 +44,7 @@ MBD_SETUP_CFG="${MBD_PJPATH}/setup.cfg"
 MBD_LINTIAN_CFG="${MBD_PJPATH}/.lintian.cfg"
 MBD_HTTPD_PROTO="http"
 MBD_TOOL="${MBD_PYPATH}/mini-buildd-tool --protocol=${MBD_HTTPD_PROTO} admin@${MBD_HTTPD}"  # m-b-tool shortcut for testing calls
+MBD_LAST_CHANGES="${MBD_PJPATH}/.last_changes"
 
 mbd_installdeps()
 {
@@ -303,6 +304,7 @@ mbd_run:02:00:changelog()
 	git diff-index --exit-code HEAD debian/changelog
 	on_exit git checkout debian/changelog
 	gbp dch --snapshot --auto
+	mbd_changes >"${MBD_LAST_CHANGES}"
 }
 
 # Build package as fast as possible
@@ -319,7 +321,9 @@ mbd_run:03:12:buildcheck()
 
 mbd_run:04:12:lintian()
 {
-	local result=$(lintian --cfg="${MBD_LINTIAN_CFG}" "$(mbd_changes)")
+	local changes=$(cat "${MBD_LAST_CHANGES}" || mbd_changes)
+	printf "I: Lintian-checking: %s\n" "${changes}" >&2
+	local result=$(lintian --cfg="${MBD_LINTIAN_CFG}" "${changes}")
 	printf "%s\n---\n" "${result}"
 	if grep "^[EW]:" <<< ${result}; then
 		read -p "Lintian FAILED (RETURN to ignore)" DUMMY

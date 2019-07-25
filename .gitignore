@@ -1,3 +1,6 @@
+# ./devel
+/.last_changes
+
 # python, setup.py
 /build/
 /.pybuild/
