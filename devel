@@ -311,7 +311,7 @@ mbd_run:04:00:build()
 	DEB_BUILD_OPTIONS+="nocheck" debuild --no-lintian -us -uc
 }
 
-mbd_run:05:12:lintian()
+mbd_run:05:11:lintian()
 {
 	local changes=$(cat "${MBD_LAST_CHANGES}" || mbd_changes)
 	printf "I: Lintian-checking: %s\n" "${changes}" >&2
