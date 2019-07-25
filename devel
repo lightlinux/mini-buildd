@@ -172,7 +172,7 @@ mbd_changes() # [<arch>]
 #  10-19: check : Static tests, fully automatic.
 #  20-29: test  : Live tests, system tests.
 
-mbd_run:00:00:prepare-system()
+mbd_run:00:99:prepare-system()
 {
 	# Hack to be able to do authorized non-interactive API calls
 	mbd_pythonkeyringtestconfig()
@@ -241,7 +241,7 @@ EOF
 }
 
 # See .prospector.yaml for config
-mbd_run:00:10:prospector()
+mbd_run:01:10:prospector()
 {
 	_check_prog prospector
 	(
@@ -250,7 +250,7 @@ mbd_run:00:10:prospector()
 	)
 }
 
-mbd_run:00:12:codespell()
+mbd_run:01:12:codespell()
 {
 	local ups=$(codespell --ignore-words-list=referer,fpr,stati --quiet-level=2 $(mbd_pysources))
 	if [ -n "${ups}" ]; then
@@ -259,7 +259,7 @@ mbd_run:00:12:codespell()
 	fi
 }
 
-mbd_run:00:12:htmlmisc()
+mbd_run:01:12:htmlmisc()
 {
 	local class errors=0 ignoreRegex="mbd-action-.*"
 
@@ -284,7 +284,7 @@ mbd_run:00:12:htmlmisc()
 	return ${errors}
 }
 
-mbd_run:01:12:pydoctests()
+mbd_run:02:12:pydoctests()
 {
 	(
 		pyenv
@@ -297,7 +297,7 @@ mbd_run:01:12:pydoctests()
 	)
 }
 
-mbd_run:02:00:changelog()
+mbd_run:03:00:changelog()
 {
 	# Checking changelog (must be unchanged)...
 	git diff-index --exit-code HEAD debian/changelog
@@ -306,12 +306,12 @@ mbd_run:02:00:changelog()
 	mbd_changes >"${MBD_LAST_CHANGES}"
 }
 
-mbd_run:03:00:build()
+mbd_run:04:00:build()
 {
 	DEB_BUILD_OPTIONS+="nocheck" debuild --no-lintian -us -uc
 }
 
-mbd_run:04:12:lintian()
+mbd_run:05:12:lintian()
 {
 	local changes=$(cat "${MBD_LAST_CHANGES}" || mbd_changes)
 	printf "I: Lintian-checking: %s\n" "${changes}" >&2
@@ -323,7 +323,7 @@ mbd_run:04:12:lintian()
 }
 
 # This also checks "full" package building (with doc and check)
-mbd_run:05:21:debrepro()
+mbd_run:06:21:debrepro()
 {
 	debrepro
 }
