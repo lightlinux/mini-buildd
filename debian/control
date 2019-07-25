@@ -3,7 +3,7 @@ Section: devel
 Priority: optional
 Maintainer: Stephan Sürken <absurd@debian.org>
 Build-Depends:
-	debhelper (>= 12),
+	debhelper-compat (= 12),
 	dh-python,
 	bash-completion,
 	man-db (>= 2.5.1),
