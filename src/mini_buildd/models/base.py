@@ -50,7 +50,7 @@ import django.core.exceptions
 import django.template.response
 import django.utils.timezone
 
-import mini_buildd.setup
+import mini_buildd.config
 
 from mini_buildd.models.msglog import MsgLog
 LOG = logging.getLogger(__name__)
@@ -147,13 +147,13 @@ are actually supported by the current model.
 
     def mbd_get_pickled_data(self, default=None):
         try:
-            return pickle.loads(base64.decodebytes(bytes(self.pickled_data, encoding=mini_buildd.setup.CHAR_ENCODING)))
+            return pickle.loads(base64.decodebytes(bytes(self.pickled_data, encoding=mini_buildd.config.CHAR_ENCODING)))
         except BaseException as e:
-            mini_buildd.setup.log_exception(LOG, "Ignoring unpickling error", e)
+            mini_buildd.config.log_exception(LOG, "Ignoring unpickling error", e)
             return default
 
     def mbd_set_pickled_data_pickled(self, pickled_data):
-        self.pickled_data = str(base64.encodebytes(pickled_data), encoding=mini_buildd.setup.CHAR_ENCODING)
+        self.pickled_data = str(base64.encodebytes(pickled_data), encoding=mini_buildd.config.CHAR_ENCODING)
 
     def mbd_set_pickled_data(self, data):
         self.mbd_set_pickled_data_pickled(pickle.dumps(data, pickle.HIGHEST_PROTOCOL))
@@ -358,7 +358,7 @@ class StatusModel(Model):
                 try:
                     getattr(cls, "mbd_" + action)(request, o, **kwargs)
                 except BaseException as e:
-                    mini_buildd.setup.log_exception(MsgLog(LOG, request), "{a} failed: {o}".format(a=action, o=o), e)
+                    mini_buildd.config.log_exception(MsgLog(LOG, request), "{a} failed: {o}".format(a=action, o=o), e)
 
         def mbd_action_prepare(self, request, queryset):
             self.mbd_action(request, queryset, "prepare")

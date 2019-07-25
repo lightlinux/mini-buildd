@@ -66,10 +66,10 @@ Use the 'directory' notation with exactly one trailing slash (like 'http://examp
                     msglog.info("Archive added from local source: {}".format(src))
 
             except BaseException as e:
-                mini_buildd.setup.log_exception(LOG,
-                                                "Failed to scan local sources.lists for default mirrors ('python-apt' not installed?)",
-                                                e,
-                                                level=logging.WARN)
+                mini_buildd.config.log_exception(LOG,
+                                                 "Failed to scan local sources.lists for default mirrors ('python-apt' not installed?)",
+                                                 e,
+                                                 level=logging.WARN)
 
             url = mini_buildd.net.detect_apt_cacher_ng(url="http://{}:3142".format(socket.getfqdn()))
             if url:
@@ -628,7 +628,7 @@ codeversion is only used for base sources.""")
                     else:
                         msglog.debug("{a}: Not hosting {s}".format(a=archive, s=self))
                 except BaseException as e:
-                    mini_buildd.setup.log_exception(msglog, "Error checking {a} for {s} (check Archive or Source)".format(a=archive, s=self), e)
+                    mini_buildd.config.log_exception(msglog, "Error checking {a} for {s} (check Archive or Source)".format(a=archive, s=self), e)
 
         # Check that at least one archive can be found
         self.mbd_get_archive()

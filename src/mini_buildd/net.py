@@ -12,7 +12,7 @@ import logging.handlers
 
 import twisted.internet.endpoints
 
-import mini_buildd.setup
+import mini_buildd.config
 
 LOG = logging.getLogger(__name__)
 
@@ -276,7 +276,7 @@ def web_login(host, user, credentials,
                                           "csrfmiddlewaretoken": csrf_cookies[0].value,
                                           "this_is_the_login_form": "1",
                                           "next": next_loc}),
-                  encoding=mini_buildd.setup.CHAR_ENCODING))
+                  encoding=mini_buildd.config.CHAR_ENCODING))
 
         # If successful, next url of the response must match
         if canonize_url(response.geturl()) != canonize_url(next_url):

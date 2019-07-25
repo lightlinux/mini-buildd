@@ -16,7 +16,7 @@ import argcomplete
 
 import mini_buildd.misc
 import mini_buildd.net
-import mini_buildd.setup
+import mini_buildd.config
 import mini_buildd.api
 
 LOG = logging.getLogger("mini_buildd")
@@ -128,7 +128,7 @@ def cmd_call(args):
     if sys.stdout.isatty() and http_args["output"] == "plain":
         # 1st, create a proper unicode str from HTTP result
         result_encoding = response.headers["content-type"].partition("charset=")[2]
-        result_str = str(result, result_encoding if result_encoding else mini_buildd.setup.CHAR_ENCODING, errors="backslashreplace")
+        result_str = str(result, result_encoding if result_encoding else mini_buildd.config.CHAR_ENCODING, errors="backslashreplace")
 
         # 2nd, make stdout never fail on encoding errors
         io.TextIOWrapper(sys.stdout.buffer, encoding=sys.stdout.encoding, errors="backslashreplace").write(result_str)
@@ -160,7 +160,7 @@ ARGS = PARSER.parse_args()
 LOG.setLevel(logging.WARNING - (10 * (min(2, ARGS.verbosity) - min(2, ARGS.terseness))))
 
 if LOG.getEffectiveLevel() <= logging.DEBUG:
-    mini_buildd.setup.DEBUG = ["exception"]
+    mini_buildd.config.DEBUG = ["exception"]
 mini_buildd.misc.clone_log("keyring")
 
 try:
@@ -180,8 +180,8 @@ try:
 
 except urllib.error.HTTPError as e:
     print_daemon_messages(e.headers, ARGS.host)
-    mini_buildd.setup.log_exception(LOG, ARGS.host, e)
+    mini_buildd.config.log_exception(LOG, ARGS.host, e)
     sys.exit(1)
 except BaseException as e:
-    mini_buildd.setup.log_exception(LOG, "{u}".format(u=ARGS.host), e)
+    mini_buildd.config.log_exception(LOG, "{u}".format(u=ARGS.host), e)
     sys.exit(2)

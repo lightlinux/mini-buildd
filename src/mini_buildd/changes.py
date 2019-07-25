@@ -12,7 +12,7 @@ import contextlib
 
 import debian.deb822
 
-import mini_buildd.setup
+import mini_buildd.config
 import mini_buildd.misc
 import mini_buildd.net
 import mini_buildd.gnupg
@@ -285,7 +285,7 @@ class Changes(debian.deb822.Changes):  # pylint: disable=too-many-ancestors
                                                     architecture=self["Architecture"],
                                                     relative=relative)
         except BaseException as e:
-            mini_buildd.setup.log_exception(LOG, "No package log dir for bogus changes: {f}".format(f=self.file_name), e, logging.DEBUG)
+            mini_buildd.config.log_exception(LOG, "No package log dir for bogus changes: {f}".format(f=self.file_name), e, logging.DEBUG)
 
     def is_new(self):
         return self._new
@@ -294,7 +294,7 @@ class Changes(debian.deb822.Changes):  # pylint: disable=too-many-ancestors
         return "{type}-{hash}".format(type=self.TYPE2NAME[self._type], hash=self._spool_hash)
 
     def get_spool_dir(self):
-        return os.path.join(mini_buildd.setup.SPOOL_DIR, self.get_spool_id())
+        return os.path.join(mini_buildd.config.SPOOL_DIR, self.get_spool_id())
 
     def get_pkg_id(self, with_arch=False, arch_separator=":"):
         pkg_id = "{s}_{v}".format(s=self["Source"], v=self["Version"])
@@ -327,7 +327,7 @@ class Changes(debian.deb822.Changes):  # pylint: disable=too-many-ancestors
         """
         try:
             LOG.info("Saving changes: {f}".format(f=self._file_path))
-            with open(self._file_path, "w+", encoding=mini_buildd.setup.CHAR_ENCODING) as f:
+            with open(self._file_path, "w+", encoding=mini_buildd.config.CHAR_ENCODING) as f:
                 f.write(self.dump())
 
             LOG.info("Signing changes: {f}".format(f=self._file_path))
@@ -378,10 +378,10 @@ class Changes(debian.deb822.Changes):  # pylint: disable=too-many-ancestors
                 mini_buildd.models.gnupg.Remote.Admin.mbd_check(None, remote, force=True)
                 add_remote(remote, False)
             except BaseException as e:
-                mini_buildd.setup.log_exception(LOG, "Builder check failed", e, logging.WARNING)
+                mini_buildd.config.log_exception(LOG, "Builder check failed", e, logging.WARNING)
 
         # Always add our own instance as pseudo remote first
-        add_remote(mini_buildd.models.gnupg.Remote(http="{proto}:{hopo}".format(proto=mini_buildd.setup.HTTPD_ENDPOINTS[0].url_scheme, hopo=local_endpoint.hopo())), True)
+        add_remote(mini_buildd.models.gnupg.Remote(http="{proto}:{hopo}".format(proto=mini_buildd.config.HTTPD_ENDPOINTS[0].url_scheme, hopo=local_endpoint.hopo())), True)
 
         # Check all active or auto-deactivated remotes
         for r in mini_buildd.models.gnupg.Remote.mbd_get_active_or_auto_reactivate():
@@ -397,7 +397,7 @@ class Changes(debian.deb822.Changes):  # pylint: disable=too-many-ancestors
                 self.live_buildlog_url = self.get_live_buildlog_url(base_url=remote.url)
                 return
             except BaseException as e:
-                mini_buildd.setup.log_exception(LOG, "Uploading to '{h}' failed".format(h=remote.ftp), e, logging.WARNING)
+                mini_buildd.config.log_exception(LOG, "Uploading to '{h}' failed".format(h=remote.ftp), e, logging.WARNING)
 
         raise Exception("Buildrequest upload failed for {a}/{c}".format(a=arch, c=codename))
 
@@ -513,7 +513,7 @@ class Changes(debian.deb822.Changes):  # pylint: disable=too-many-ancestors
                     asl.write(dist.mbd_get_apt_sources_list(repository, suite_option))
                     ap.write(dist.mbd_get_apt_preferences(repository, suite_option, self.options.get("internal-apt-priority")))
                     ak.write(repository.mbd_get_apt_keys(dist))
-                    ssl_cert.write(mini_buildd.setup.HTTPD_ENDPOINTS[0].get_certificate())
+                    ssl_cert.write(mini_buildd.config.HTTPD_ENDPOINTS[0].get_certificate())
                     css.write(mini_buildd.misc.fromdos(dist.chroot_setup_script))  # Note: For some reason (python, django sqlite, browser?) the text field may be in DOS mode.
                     os.chmod(chroot_setup_script, stat.S_IRWXU)
                     src.write(dist.mbd_get_sbuildrc_snippet(ao.architecture.name))

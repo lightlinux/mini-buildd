@@ -8,7 +8,7 @@ import logging
 
 import django.utils.timezone
 
-import mini_buildd.setup
+import mini_buildd.config
 import mini_buildd.misc
 import mini_buildd.net
 import mini_buildd.call
@@ -142,7 +142,7 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
         better way to get these values.
         """
         regex = re.compile("^(Status|Lintian): [^ ]+$")
-        with open(buildlog, encoding=mini_buildd.setup.CHAR_ENCODING, errors="replace") as f:
+        with open(buildlog, encoding=mini_buildd.config.CHAR_ENCODING, errors="replace") as f:
             for line in f:
                 if regex.match(line):
                     LOG.debug("Build log line detected as build status: {line}".format(line=line.strip()))
@@ -207,14 +207,14 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
         else:
             sbuild_cmd += ["--no-run-lintian"]
 
-        if "sbuild" in mini_buildd.setup.DEBUG:
+        if "sbuild" in mini_buildd.config.DEBUG:
             sbuild_cmd += ["--debug"]
 
         sbuild_cmd += [self._breq.dsc_name]
 
         # Actually run sbuild
         buildlog = os.path.join(self._build_dir, self._breq.buildlog_name)
-        live_buildlog = os.path.join(mini_buildd.setup.SPOOL_DIR, self._breq.live_buildlog_name)
+        live_buildlog = os.path.join(mini_buildd.config.SPOOL_DIR, self._breq.live_buildlog_name)
         with open(buildlog, "w+") as buildlog_file:
             LOG.info("Adding live buildlog: {b}".format(b=live_buildlog))
             # The spool id/hash might the very same (retry a failed build, for example) as a previous one. So we need to be sure to remove before linking.
@@ -225,7 +225,7 @@ $apt_allow_unauthenticated = {apt_allow_unauthenticated};
             sbuild_call = mini_buildd.call.Call(sbuild_cmd,
                                                 cwd=self._build_dir,
                                                 env=mini_buildd.call.taint_env({"HOME": self._build_dir,
-                                                                                "GNUPGHOME": os.path.join(mini_buildd.setup.HOME_DIR, ".gnupg"),
+                                                                                "GNUPGHOME": os.path.join(mini_buildd.config.HOME_DIR, ".gnupg"),
                                                                                 "DEB_BUILD_OPTIONS": self._breq.get("Deb-Build-Options", "")}),
                                                 stdout=buildlog_file, stderr=subprocess.STDOUT)
             retval = sbuild_call.result.returncode
@@ -286,7 +286,7 @@ class LastBuild(mini_buildd.misc.API):
 def _expire_live_buildlogs(**kwargs):
     """Expire live buildlogs older than timedelta. Arguments are given as-is to the datetime.timedelta constructor."""
     valid_until = django.utils.timezone.now() - datetime.timedelta(**kwargs)
-    for buildlog in glob.glob(os.path.join(mini_buildd.setup.SPOOL_DIR, "*.buildlog")):
+    for buildlog in glob.glob(os.path.join(mini_buildd.config.SPOOL_DIR, "*.buildlog")):
         LOG.debug("Checking if live build log is older than {d}: {logfile}".format(d=valid_until, logfile=buildlog))
         if datetime.datetime.fromtimestamp(os.path.getmtime(buildlog), tz=datetime.timezone.utc) < valid_until:
             LOG.info("Expiring live build log: {logfile}".format(logfile=buildlog))
@@ -300,7 +300,7 @@ def build_close(daemon, build):
         daemon.last_builds.appendleft(LastBuild(build))
         _expire_live_buildlogs(days=5)
     except BaseException as e:
-        mini_buildd.setup.log_exception(LOG, "Error closing build '{p}'".format(p=build.key), e, level=logging.CRITICAL)
+        mini_buildd.config.log_exception(LOG, "Error closing build '{p}'".format(p=build.key), e, level=logging.CRITICAL)
     finally:
         if build.key in daemon.builds:
             del daemon.builds[build.key]
@@ -327,7 +327,7 @@ def run_build(daemon_, breq):
             build.upload()
             build.set_status(build.UPLOADED)
         except BaseException as e:
-            mini_buildd.setup.log_exception(LOG, "Upload failed (retry later)", e, logging.WARN)
+            mini_buildd.config.log_exception(LOG, "Upload failed (retry later)", e, logging.WARN)
             build.set_status(build.UPLOADING, str(e))
 
     except BaseException as e:
@@ -335,7 +335,7 @@ def run_build(daemon_, breq):
         if build:
             build.set_status(build.FAILED)
         breq.upload_failed_buildresult(daemon_.model.mbd_gnupg, mini_buildd.net.ClientEndpoint(mini_buildd.net.Endpoint.hopo2desc(breq["Upload-Result-To"]), server=False), 101, "builder-failed", e)
-        mini_buildd.setup.log_exception(LOG, "Internal error building", e)
+        mini_buildd.config.log_exception(LOG, "Internal error building", e)
 
     finally:
         if build:

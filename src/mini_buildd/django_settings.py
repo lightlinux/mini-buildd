@@ -7,7 +7,7 @@ import tzlocal
 import django
 import django.conf
 
-import mini_buildd.setup
+import mini_buildd.config
 import mini_buildd.models.msglog
 
 LOG = logging.getLogger(__name__)
@@ -106,7 +106,7 @@ def configure(smtp_string, loglevel):
     LOG.info("Setting up django...")
 
     smtp = SMTPCreds(smtp_string)
-    debug = "webapp" in mini_buildd.setup.DEBUG
+    debug = "webapp" in mini_buildd.config.DEBUG
 
     django.conf.settings.configure(
         DEBUG=debug,
@@ -121,13 +121,13 @@ def configure(smtp_string, loglevel):
         EMAIL_HOST_PASSWORD=smtp.password,
 
         DATABASES={"default": {"ENGINE": "django.db.backends.sqlite3",
-                               "NAME": os.path.join(mini_buildd.setup.HOME_DIR, "config.sqlite")}},
+                               "NAME": os.path.join(mini_buildd.config.HOME_DIR, "config.sqlite")}},
 
         TIME_ZONE=tzlocal.get_localzone().zone,
         USE_TZ=True,  # Django: "stores datetime information in UTC in the database": that's definitely what we want
         USE_L10N=True,
 
-        SECRET_KEY=get_django_secret_key(mini_buildd.setup.HOME_DIR),
+        SECRET_KEY=get_django_secret_key(mini_buildd.config.HOME_DIR),
         ROOT_URLCONF="mini_buildd.root_urls",
         STATIC_URL="/static/",
         ACCOUNT_ACTIVATION_DAYS=3,
@@ -145,7 +145,7 @@ def configure(smtp_string, loglevel):
             {
                 "BACKEND": "django.template.backends.django.DjangoTemplates",
                 "DIRS": [
-                    "{p}/mini_buildd/templates".format(p=mini_buildd.setup.PY_PACKAGE_PATH)
+                    "{p}/mini_buildd/templates".format(p=mini_buildd.config.PY_PACKAGE_PATH)
                 ],
                 "APP_DIRS": True,
                 "OPTIONS": {

@@ -7,7 +7,7 @@ import logging
 
 import mini_buildd.misc
 import mini_buildd.call
-import mini_buildd.setup
+import mini_buildd.config
 
 LOG = logging.getLogger(__name__)
 
@@ -74,7 +74,7 @@ class BaseGnuPG():
         self.home = home
         self.gpg_cmd = ["gpg",
                         "--homedir", home,
-                        "--display-charset", mini_buildd.setup.CHAR_ENCODING,
+                        "--display-charset", mini_buildd.config.CHAR_ENCODING,
                         "--batch"]
         LOG.info("GPG {f}: {c}".format(f=self.flavor, c=self.gpg_cmd))
 
@@ -83,8 +83,8 @@ class BaseGnuPG():
                             "2.2": "\n%no-protection\n"}
 
         with tempfile.TemporaryFile() as t:
-            t.write(template.encode(mini_buildd.setup.CHAR_ENCODING))
-            t.write(flavor_additions.get(self.flavor, "").encode(mini_buildd.setup.CHAR_ENCODING))
+            t.write(template.encode(mini_buildd.config.CHAR_ENCODING))
+            t.write(flavor_additions.get(self.flavor, "").encode(mini_buildd.config.CHAR_ENCODING))
             t.seek(0)
             mini_buildd.call.Call(self.gpg_cmd + ["--gen-key"], stdin=t).log().check()
 
@@ -141,7 +141,7 @@ class BaseGnuPG():
 
     def add_pub_key(self, key):
         with tempfile.TemporaryFile() as t:
-            t.write(key.encode(mini_buildd.setup.CHAR_ENCODING))
+            t.write(key.encode(mini_buildd.config.CHAR_ENCODING))
             t.seek(0)
             mini_buildd.call.Call(self.gpg_cmd + ["--import"], stdin=t).log().check()
 
@@ -187,7 +187,7 @@ class BaseGnuPG():
 
 class GnuPG(BaseGnuPG):
     def __init__(self, template, fullname, email):
-        super().__init__(home=os.path.join(mini_buildd.setup.HOME_DIR, ".gnupg"))
+        super().__init__(home=os.path.join(mini_buildd.config.HOME_DIR, ".gnupg"))
         self.template = """\
 {t}
 Name-Real: {n}
@@ -215,7 +215,7 @@ class TmpGnuPG(BaseGnuPG, mini_buildd.misc.TmpDir):
     r"""
     Temporary GnuPG.
 
-    >>> # mini_buildd.setup.DEBUG.append("keep")  # Enable 'keep' for debugging only
+    >>> # mini_buildd.config.DEBUG.append("keep")  # Enable 'keep' for debugging only
     >>> gnupg_home = mini_buildd.misc.TmpDir()
     >>> dummy = shutil.copy2("test-data/gpg/secring.gpg", gnupg_home.tmpdir)
     >>> dummy = shutil.copy2("test-data/gpg/pubring.gpg", gnupg_home.tmpdir)

@@ -12,7 +12,7 @@ import django.contrib.auth.models
 
 import debian.debian_support
 
-import mini_buildd.setup
+import mini_buildd.config
 import mini_buildd.misc
 import mini_buildd.gnupg
 import mini_buildd.reprepro
@@ -618,7 +618,7 @@ some reason create their automated debug packages with file appendix
         return "{p}{u}{r}/{i}/ {d} {c}".format(
             p=prefix,
             u=self.mbd_get_daemon().model.mbd_get_http_url(),
-            r=os.path.basename(mini_buildd.setup.REPOSITORIES_DIR),
+            r=os.path.basename(mini_buildd.config.REPOSITORIES_DIR),
             i=repository.identity,
             d=suite_option.mbd_get_distribution_string(repository, self, rollback=rollback),
             c=" ".join(self.mbd_get_components()))
@@ -784,7 +784,7 @@ Example:
         return gpg
 
     def mbd_get_path(self):
-        return os.path.join(mini_buildd.setup.REPOSITORIES_DIR, self.identity)
+        return os.path.join(mini_buildd.config.REPOSITORIES_DIR, self.identity)
 
     def mbd_get_description(self, distribution, suite_option):
         return "{s} packages for {d}-{i}".format(s=suite_option.suite.name, d=distribution.base_source.codename, i=self.identity)
@@ -911,8 +911,8 @@ DscIndices: Sources Release . .gz .bz2
             dsc = "{r}/pool/{c}/{d}/{p}/{dsc}".format(r=self.identity, c=c.name, d=subdir, p=package,
                                                       dsc=mini_buildd.changes.Changes.gen_dsc_file_name(package, version))
             LOG.debug("Checking dsc: {d}".format(d=dsc))
-            if os.path.exists(os.path.join(mini_buildd.setup.REPOSITORIES_DIR, dsc)):
-                return c.name, os.path.join("/", os.path.basename(mini_buildd.setup.REPOSITORIES_DIR), dsc)
+            if os.path.exists(os.path.join(mini_buildd.config.REPOSITORIES_DIR, dsc)):
+                return c.name, os.path.join("/", os.path.basename(mini_buildd.config.REPOSITORIES_DIR), dsc)
 
         # Not found in pool
         return None, None
@@ -1049,7 +1049,7 @@ DscIndices: Sources Release . .gz .bz2
             try:
                 reprepro_output += self._mbd_reprepro().migrate(package_name, src, dst)
             except BaseException as e:
-                mini_buildd.setup.log_exception(LOG, "Rollback failed (ignoring)", e)
+                mini_buildd.config.log_exception(LOG, "Rollback failed (ignoring)", e)
         return reprepro_output
 
     def _mbd_package_migrate(self, package, distribution, suite, rollback=None, version=None, msglog=LOG):
@@ -1139,10 +1139,10 @@ DscIndices: Sources Release . .gz .bz2
                     reprepro_output += self._mbd_reprepro().migrate(package, src, dst)
                     reprepro_output += self._mbd_reprepro().remove(package, src)
                 except BaseException as e:
-                    mini_buildd.setup.log_exception(msglog,
-                                                    "Rollback: Moving '{p}' from '{s}' to '{d}' FAILED (ignoring)".format(p=package, s=src, d=dst),
-                                                    e,
-                                                    logging.WARN)
+                    mini_buildd.config.log_exception(msglog,
+                                                     "Rollback: Moving '{p}' from '{s}' to '{d}' FAILED (ignoring)".format(p=package, s=src, d=dst),
+                                                     e,
+                                                     logging.WARN)
 
         # Finally, purge any now-maybe-orphaned package logs
         self.mbd_package_purge_orphaned_logs(package, msglog=msglog)
@@ -1246,7 +1246,7 @@ DscIndices: Sources Release . .gz .bz2
             """\
 gnupghome {h}
 {m}
-""".format(h=os.path.join(mini_buildd.setup.HOME_DIR, ".gnupg"), m="morguedir +b/morguedir" if self.reprepro_morguedir else "")).save()
+""".format(h=os.path.join(mini_buildd.config.HOME_DIR, ".gnupg"), m="morguedir +b/morguedir" if self.reprepro_morguedir else "")).save()
 
         # (Re-)index
         self._mbd_reprepro().reindex()

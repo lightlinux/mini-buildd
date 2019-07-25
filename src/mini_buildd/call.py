@@ -3,7 +3,7 @@ import time
 import os
 import logging
 
-import mini_buildd.setup
+import mini_buildd.config
 
 LOG = logging.getLogger(__name__)
 
@@ -71,7 +71,7 @@ class Call():
     @classmethod
     def _bos2str(cls, value, errors="replace"):
         """Return str(), regardless if value is of type bytes or str."""
-        return value if isinstance(value, str) else value.decode(encoding=mini_buildd.setup.CHAR_ENCODING, errors=errors)
+        return value if isinstance(value, str) else value.decode(encoding=mini_buildd.config.CHAR_ENCODING, errors=errors)
 
     def _stdx(self, value, key):
         """Stdin or stdout value as str."""

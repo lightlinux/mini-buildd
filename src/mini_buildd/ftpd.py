@@ -12,7 +12,7 @@ import pyftpdlib.servers
 import debian.deb822
 
 import mini_buildd
-import mini_buildd.setup
+import mini_buildd.config
 import mini_buildd.misc
 import mini_buildd.net
 
@@ -28,7 +28,7 @@ class Incoming():
 
     @classmethod
     def get_changes(cls):
-        return glob.glob(os.path.join(mini_buildd.setup.INCOMING_DIR, "*.changes"))
+        return glob.glob(os.path.join(mini_buildd.config.INCOMING_DIR, "*.changes"))
 
     @classmethod
     def remove_cruft_files(cls, files):
@@ -45,7 +45,7 @@ class Incoming():
 
                         valid_files.append(os.path.basename(changes_file))
                 except BaseException as e:
-                    mini_buildd.setup.log_exception(LOG, "Invalid changes file: {f}".format(f=changes_file), e, logging.WARNING)
+                    mini_buildd.config.log_exception(LOG, "Invalid changes file: {f}".format(f=changes_file), e, logging.WARNING)
 
         for f in files:
             if os.path.basename(f) not in valid_files:
@@ -57,12 +57,12 @@ class Incoming():
                         os.remove(f)
                     LOG.warning("Cruft file (not in any changes file) removed: {f}".format(f=f))
                 except BaseException as e:
-                    mini_buildd.setup.log_exception(LOG, "Can't remove cruft from incoming: {f}".format(f=f), e, logging.CRITICAL)
+                    mini_buildd.config.log_exception(LOG, "Can't remove cruft from incoming: {f}".format(f=f), e, logging.CRITICAL)
 
     @classmethod
     def remove_cruft(cls):
         """Remove cruft files from incoming."""
-        cls.remove_cruft_files(["{p}/{f}".format(p=mini_buildd.setup.INCOMING_DIR, f=f) for f in os.listdir(mini_buildd.setup.INCOMING_DIR)])
+        cls.remove_cruft_files(["{p}/{f}".format(p=mini_buildd.config.INCOMING_DIR, f=f) for f in os.listdir(mini_buildd.config.INCOMING_DIR)])
 
     @classmethod
     def requeue_changes(cls, queue):
@@ -108,8 +108,8 @@ def run(bind, queue):
 
     handler = FtpDHandler
     handler.authorizer = pyftpdlib.authorizers.DummyAuthorizer()
-    handler.authorizer.add_anonymous(homedir=mini_buildd.setup.HOME_DIR, perm="")
-    handler.authorizer.override_perm(username="anonymous", directory=mini_buildd.setup.INCOMING_DIR, perm="elrw")
+    handler.authorizer.add_anonymous(homedir=mini_buildd.config.HOME_DIR, perm="")
+    handler.authorizer.override_perm(username="anonymous", directory=mini_buildd.config.INCOMING_DIR, perm="elrw")
 
     handler.banner = "mini-buildd {v} ftp server ready (pyftpdlib {V}).".format(v=mini_buildd.__version__, V=pyftpdlib.__ver__)
     handler.mini_buildd_queue = queue

@@ -93,9 +93,9 @@ class Package(mini_buildd.misc.Status):
             try:
                 breq.upload_buildrequest(self.daemon.model.mbd_get_http_endpoint())
             except BaseException as e:
-                mini_buildd.setup.log_exception(LOG,
-                                                "{i}: Buildrequest upload failed".format(i=breq.get_pkg_id()),
-                                                e)
+                mini_buildd.config.log_exception(LOG,
+                                                 "{i}: Buildrequest upload failed".format(i=breq.get_pkg_id()),
+                                                 e)
                 # Upload failure build result to ourselves
                 breq.upload_failed_buildresult(self.daemon.model.mbd_gnupg, self.daemon.model.mbd_get_ftp_endpoint(), 100, "upload-failed", e)
 
@@ -147,7 +147,7 @@ class Package(mini_buildd.misc.Status):
                 self.port_report[to_dist_str] = "Requested"
             except BaseException as e:
                 self.port_report[to_dist_str] = "FAILED: {e}".format(e=e)
-                mini_buildd.setup.log_exception(LOG, "{i}: Automatic package port failed for: {d}".format(i=self.changes.get_pkg_id(), d=to_dist_str), e)
+                mini_buildd.config.log_exception(LOG, "{i}: Automatic package port failed for: {d}".format(i=self.changes.get_pkg_id(), d=to_dist_str), e)
 
     def move_to_pkglog(self):
         # Archive build results and request
@@ -261,7 +261,7 @@ def package_close(daemon, package):
         package.notify()
         daemon.last_packages.appendleft(LastPackage(package))
     except BaseException as e:
-        mini_buildd.setup.log_exception(LOG, "Error closing package '{p}'".format(p=package.pid), e, level=logging.CRITICAL)
+        mini_buildd.config.log_exception(LOG, "Error closing package '{p}'".format(p=package.pid), e, level=logging.CRITICAL)
     finally:
         del daemon.packages[package.pid]
 
@@ -284,7 +284,7 @@ def run(daemon, changes):
         except BaseException as e:
             package.set_status(package.FAILED, str(e))
             package_close(daemon, package)
-            mini_buildd.setup.log_exception(LOG, "Package '{p}' FAILED".format(p=pid), e)
+            mini_buildd.config.log_exception(LOG, "Package '{p}' FAILED".format(p=pid), e)
 
     else:  # User upload
         if pid in daemon.packages:
@@ -298,4 +298,4 @@ def run(daemon, changes):
         except BaseException as e:
             package.set_status(package.REJECTED, str(e))
             package_close(daemon, package)
-            mini_buildd.setup.log_exception(LOG, "Package '{p}' REJECTED".format(p=pid), e)
+            mini_buildd.config.log_exception(LOG, "Package '{p}' REJECTED".format(p=pid), e)

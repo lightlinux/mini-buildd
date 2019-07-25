@@ -5,7 +5,7 @@ import django.core.handlers.wsgi
 import django.core.management
 import django.contrib.messages.constants
 
-import mini_buildd.setup
+import mini_buildd.config
 import mini_buildd.models
 import mini_buildd.models.msglog
 

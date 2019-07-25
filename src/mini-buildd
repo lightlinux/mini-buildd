@@ -19,7 +19,7 @@ import daemon.runner  # pylint: disable=import-error
 
 import mini_buildd.misc
 import mini_buildd.net
-import mini_buildd.setup
+import mini_buildd.config
 import mini_buildd.httpd
 import mini_buildd.django_settings
 
@@ -182,41 +182,41 @@ Comma-separated list of special debugging options:
 
     def _setup(self):
         """Set global variables that really make no sense to propagate through."""
-        mini_buildd.setup.DEBUG = self._args.debug.split(",")
-        mini_buildd.setup.FOREGROUND = self._args.foreground
+        mini_buildd.config.DEBUG = self._args.debug.split(",")
+        mini_buildd.config.FOREGROUND = self._args.foreground
 
-        mini_buildd.setup.HTTPD_ENDPOINTS = [mini_buildd.net.ServerEndpoint(ep_desc, mini_buildd.net.Protocol.HTTP) for ep_desc in self._args.httpd_endpoint]
+        mini_buildd.config.HTTPD_ENDPOINTS = [mini_buildd.net.ServerEndpoint(ep_desc, mini_buildd.net.Protocol.HTTP) for ep_desc in self._args.httpd_endpoint]
 
-        mini_buildd.setup.HOME_DIR = self._args.home
+        mini_buildd.config.HOME_DIR = self._args.home
 
-        mini_buildd.setup.INCOMING_DIR = os.path.join(self._args.home, "incoming")
-        mini_buildd.setup.REPOSITORIES_DIR = os.path.join(self._args.home, "repositories")
+        mini_buildd.config.INCOMING_DIR = os.path.join(self._args.home, "incoming")
+        mini_buildd.config.REPOSITORIES_DIR = os.path.join(self._args.home, "repositories")
 
         vardir = os.path.join(self._args.home, "var")
-        mini_buildd.setup.LOG_DIR = os.path.join(vardir, "log")
-        mini_buildd.setup.LOG_FILE = os.path.join(mini_buildd.setup.LOG_DIR, "daemon.log")
-        mini_buildd.setup.ACCESS_LOG_FILE = os.path.join(mini_buildd.setup.LOG_DIR, "access.log")
-        mini_buildd.setup.CHROOTS_DIR = os.path.join(vardir, "chroots")
-        mini_buildd.setup.CHROOTS_LIBDIR = os.path.join(vardir, "chroots-libdir")
-        mini_buildd.setup.SPOOL_DIR = os.path.join(vardir, "spool")
-        mini_buildd.setup.TMP_DIR = os.path.join(vardir, "tmp")
+        mini_buildd.config.LOG_DIR = os.path.join(vardir, "log")
+        mini_buildd.config.LOG_FILE = os.path.join(mini_buildd.config.LOG_DIR, "daemon.log")
+        mini_buildd.config.ACCESS_LOG_FILE = os.path.join(mini_buildd.config.LOG_DIR, "access.log")
+        mini_buildd.config.CHROOTS_DIR = os.path.join(vardir, "chroots")
+        mini_buildd.config.CHROOTS_LIBDIR = os.path.join(vardir, "chroots-libdir")
+        mini_buildd.config.SPOOL_DIR = os.path.join(vardir, "spool")
+        mini_buildd.config.TMP_DIR = os.path.join(vardir, "tmp")
 
         # Hardcoded to the Debian path atm
-        mini_buildd.setup.MANUAL_DIR = os.path.realpath("/usr/share/doc/mini-buildd/html")
+        mini_buildd.config.MANUAL_DIR = os.path.realpath("/usr/share/doc/mini-buildd/html")
 
         # Create base directories
-        for d in [mini_buildd.setup.INCOMING_DIR,
-                  mini_buildd.setup.REPOSITORIES_DIR,
-                  mini_buildd.setup.LOG_DIR,
-                  mini_buildd.setup.TMP_DIR,
-                  mini_buildd.setup.SPOOL_DIR,
-                  mini_buildd.setup.CHROOTS_LIBDIR]:
+        for d in [mini_buildd.config.INCOMING_DIR,
+                  mini_buildd.config.REPOSITORIES_DIR,
+                  mini_buildd.config.LOG_DIR,
+                  mini_buildd.config.TMP_DIR,
+                  mini_buildd.config.SPOOL_DIR,
+                  mini_buildd.config.CHROOTS_LIBDIR]:
             os.makedirs(d, exist_ok=True)
 
     @staticmethod
     def _log_handler_file():
         handler = logging.handlers.RotatingFileHandler(
-            mini_buildd.setup.LOG_FILE,
+            mini_buildd.config.LOG_FILE,
             maxBytes=5000000,
             backupCount=9,
             encoding="UTF-8")
@@ -267,9 +267,9 @@ Comma-separated list of special debugging options:
         LOGW.setLevel(self._loglevel())
 
         # Properly set raiseException based "exception" debug value given (see https://docs.python.org/3.5/howto/logging.html#exceptions-raised-during-logging)
-        logging.raiseExceptions = "exception" in mini_buildd.setup.DEBUG
+        logging.raiseExceptions = "exception" in mini_buildd.config.DEBUG
 
-        if "warnings" in mini_buildd.setup.DEBUG:
+        if "warnings" in mini_buildd.config.DEBUG:
             warnings.simplefilter("default")
 
         # Finally, log all errors now that occurred while setting up loggers
@@ -368,8 +368,8 @@ Comma-separated list of special debugging options:
 
 try:
     MAIN = Main()
-    if "profile" in mini_buildd.setup.DEBUG:
-        PROFILE = os.path.join(mini_buildd.setup.LOG_DIR, "daemon.profile")
+    if "profile" in mini_buildd.config.DEBUG:
+        PROFILE = os.path.join(mini_buildd.config.LOG_DIR, "daemon.profile")
         LOG.warning("PROFILE DEBUG MODE: Profiling to '{p}'".format(p=PROFILE))
         import cProfile
         cProfile.run("MAIN.run()", PROFILE)
@@ -378,5 +378,5 @@ try:
 except SystemExit as e:
     sys.exit(e.code)
 except BaseException as e:
-    mini_buildd.setup.log_exception(LOG, "mini-buildd FAILED", e)
+    mini_buildd.config.log_exception(LOG, "mini-buildd FAILED", e)
     sys.exit(1)

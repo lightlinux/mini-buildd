@@ -277,7 +277,7 @@ class DaemonCommand(Command):
                 self.msglog.info("Requesting: {i}".format(i=info))
                 return self.daemon.portext(dsc_url, dist)
             except BaseException as e:
-                mini_buildd.setup.log_exception(self.msglog, "FAILED: {i}".format(i=info), e)
+                mini_buildd.config.log_exception(self.msglog, "FAILED: {i}".format(i=info), e)
 
 
 class Status(DaemonCommand):

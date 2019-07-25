@@ -193,7 +193,7 @@ class TemplatePackage(mini_buildd.misc.TmpDir):
         super().__init__()
         self.template = template
         self.package_dir = os.path.join(self.tmpdir, "package")
-        shutil.copytree(os.path.join(mini_buildd.setup.PACKAGE_TEMPLATES_DIR, template), self.package_dir)
+        shutil.copytree(os.path.join(mini_buildd.config.PACKAGE_TEMPLATES_DIR, template), self.package_dir)
         self.package_version = DebianVersion.stamp()
         self.package_name = None
 
@@ -367,7 +367,7 @@ def run():
                     changes=changes)
 
         except BaseException as e:
-            mini_buildd.setup.log_exception(LOG, "Invalid changes file", e)
+            mini_buildd.config.log_exception(LOG, "Invalid changes file", e)
 
             # Try to notify
             try:
@@ -375,7 +375,7 @@ def run():
                     subject = "INVALID CHANGES: {c}: {e}".format(c=event, e=e)
                     get().model.mbd_notify(subject, body.read())
             except BaseException as e:
-                mini_buildd.setup.log_exception(LOG, "Invalid changes notify failed", e)
+                mini_buildd.config.log_exception(LOG, "Invalid changes notify failed", e)
 
             # Try to clean up
             try:
@@ -384,7 +384,7 @@ def run():
                 else:
                     os.remove(event)
             except BaseException as e:
-                mini_buildd.setup.log_exception(LOG, "Invalid changes cleanup failed", e)
+                mini_buildd.config.log_exception(LOG, "Invalid changes cleanup failed", e)
 
         finally:
             get().incoming_queue.task_done()
@@ -469,7 +469,7 @@ class Daemon():
                 else:
                     LOG.warning("Removing (new API) from last builds info: {b}".format(b=b))
         except BaseException as e:
-            mini_buildd.setup.log_exception(LOG, "Error adding persisted last builds/packages (ignoring)", e, logging.WARN)
+            mini_buildd.config.log_exception(LOG, "Error adding persisted last builds/packages (ignoring)", e, logging.WARN)
 
     def update_to_model(self):
         # Save pickled persistent state
@@ -530,7 +530,7 @@ class Daemon():
 
     @classmethod
     def logcat(cls, lines):
-        with mini_buildd.misc.open_utf8(mini_buildd.setup.LOG_FILE) as lf:
+        with mini_buildd.misc.open_utf8(mini_buildd.config.LOG_FILE) as lf:
             return "".join(collections.deque(lf, lines))
 
     def get_last_packages(self):

@@ -8,7 +8,7 @@ import django.db.models
 import django.contrib.admin
 import django.contrib.messages
 
-import mini_buildd.setup
+import mini_buildd.config
 import mini_buildd.misc
 import mini_buildd.call
 
@@ -117,7 +117,7 @@ chroots (with <kbd>qemu-user-static</kbd> installed).
         raise Exception("No chroot backend found")
 
     def mbd_get_path(self):
-        return os.path.join(mini_buildd.setup.CHROOTS_DIR, self.source.codename, self.architecture.name)
+        return os.path.join(mini_buildd.config.CHROOTS_DIR, self.source.codename, self.architecture.name)
 
     def mbd_get_name(self):
         return "mini-buildd-{d}-{a}".format(d=self.source.codename, a=self.architecture.name)

@@ -143,7 +143,7 @@ Please just retry later if this build is currently pending.
 
 
 def live_buildlogs(_request, logfile):
-    buildlog = os.path.join(mini_buildd.setup.SPOOL_DIR, logfile)
+    buildlog = os.path.join(mini_buildd.config.SPOOL_DIR, logfile)
     if not os.path.exists(buildlog):
         return django.http.HttpResponse(LIVE_BUILDLOGS_404, content_type="text/plain")
     return django.http.FileResponse(open(buildlog, "rb"), content_type="text/plain")
@@ -208,8 +208,8 @@ def api(request):  # pylint: disable=too-many-return-statements,too-many-branche
                                                 "repositories": mini_buildd.models.repository.Repository.mbd_get_prepared()})
 
         elif output == "plain":
-            response = django.http.HttpResponse(api_cmd.__str__().encode(mini_buildd.setup.CHAR_ENCODING),
-                                                content_type="text/plain; charset={charset}".format(charset=mini_buildd.setup.CHAR_ENCODING))
+            response = django.http.HttpResponse(api_cmd.__str__().encode(mini_buildd.config.CHAR_ENCODING),
+                                                content_type="text/plain; charset={charset}".format(charset=mini_buildd.config.CHAR_ENCODING))
 
         elif output == "python":
             response = django.http.HttpResponse(pickle.dumps(api_cmd, pickle.HIGHEST_PROTOCOL),
@@ -231,5 +231,5 @@ def api(request):  # pylint: disable=too-many-return-statements,too-many-branche
     except BaseException as e:
         # This might as well be just an internal error; in case of no bug in the code, 405 fits better though.
         # ['wontfix' unless we refactor to diversified exception classes]
-        mini_buildd.setup.log_exception(LOG, "API call error", e)
+        mini_buildd.config.log_exception(LOG, "API call error", e)
         return error405_method_not_allowed(request, "API call error: {e}".format(e=e), api_cmd=api_cmd)

@@ -229,10 +229,10 @@ prepare/remove actions will generate/remove the GnuPG key.
 
     @classmethod
     def mbd_get_http_endpoint(cls):
-        return mini_buildd.setup.HTTPD_ENDPOINTS[0]
+        return mini_buildd.config.HTTPD_ENDPOINTS[0]
 
     def mbd_get_http_url(self):
-        return mini_buildd.setup.HTTPD_ENDPOINTS[0].url(self.hostname)
+        return mini_buildd.config.HTTPD_ENDPOINTS[0].url(self.hostname)
 
     def mbd_get_archive_origin(self):
         return "Mini-Buildd archive {i} on {h}".format(i=self.identity, h=self.hostname)
@@ -331,4 +331,4 @@ Manage your account : {url}accounts/login/
             django.core.mail.send_mass_mail(m_to)
             msglog.info("Notify: Sent '{s}'".format(s=subject))
         except BaseException as e:
-            mini_buildd.setup.log_exception(msglog, "Notify: Mail '{s}' failed to '{r}'".format(s=subject, r=m_to), e)
+            mini_buildd.config.log_exception(msglog, "Notify: Mail '{s}' failed to '{r}'".format(s=subject, r=m_to), e)

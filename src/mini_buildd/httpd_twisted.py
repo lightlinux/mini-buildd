@@ -75,7 +75,7 @@ class HttpD(mini_buildd.httpd.HttpD):
 
         # HTTP setup
         self.resource = RootResource(twisted.web.wsgi.WSGIResource(twisted.internet.reactor, twisted.internet.reactor.getThreadPool(), wsgi_app))
-        self.site = Site(self.resource, logPath=mini_buildd.setup.ACCESS_LOG_FILE)
+        self.site = Site(self.resource, logPath=mini_buildd.config.ACCESS_LOG_FILE)
 
         for ep in self._endpoints:
             twisted.internet.endpoints.serverFromString(twisted.internet.reactor, ep.desc).listen(self.site)
