@@ -49,7 +49,7 @@ Depends:
 Conflicts: python-mini-buildd
 Replaces: python-mini-buildd
 Suggests: python3-bs4
-Description: minimal build daemon - python library and user tool
+Description: minimal build daemon - Python library and user tool
 	Mini-buildd is an easy-to-configure autobuilder and
 	repository for deb packages.
 	.
