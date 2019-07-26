@@ -315,7 +315,7 @@ mbd_run:05:11:lintian()
 {
 	local changes=$(cat "${MBD_LAST_CHANGES}" || mbd_changes)
 	printf "I: Lintian-checking: %s\n" "${changes}" >&2
-	local result=$(lintian --cfg="${MBD_LINTIANRC}" "${changes}")
+	local result=$(lintian --cfg="${MBD_LINTIANRC}" "${@}" "${changes}")
 	printf "%s\n---\n" "${result}"
 	if grep "^[EW]:" <<< ${result}; then
 		read -p "Lintian FAILED (RETURN to ignore)" DUMMY
