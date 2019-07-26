@@ -125,7 +125,7 @@ Depends:
 	${sphinxdoc:Depends}
 Replaces: mini-buildd (<< 1.1.5~)
 Breaks: mini-buildd (<< 1.1.5~)
-Description: minimal build daemon - utilities
+Description: minimal build daemon - manual
 	Mini-buildd is an easy-to-configure autobuilder and
 	repository for deb packages.
 	.
