@@ -486,7 +486,7 @@ mbd_sequence()  # [<levelRegex>=00] [<name>] <hr>
 	done
 }
 
-mbd_run()  # [<levelRegex>=00] [<name>]
+mbd_run()  # [<levelRegex>=00] [<name>] [<customArgs>...]
 {
 	local -a info=()
 	local func totalStartStamp=$(date +%s)
@@ -494,7 +494,7 @@ mbd_run()  # [<levelRegex>=00] [<name>]
 	for func in $(mbd_sequence "${1}" "${2}"); do
 		printf "I: Running %s...\n" "${func}"
 		local startStamp=$(date +%s)
-		${func}
+		${func} "${@:3}"
 		count+=1
 		info+=("$(printf "OK (%03d seconds): %s" "$(($(date +%s) - startStamp))" "${func}")")
 	done
@@ -528,7 +528,7 @@ main()
 	if [ -z "${1}" ]; then
 		local p="./$(basename "${0}")" b=$(tput bold) i=$(tput sitm) r=$(tput sgr0)
 		cat <<EOF
-Usage: ${i}${p} <shortcut-or-runner-or-special> | run <groupRegex><levelRegex>${r}
+Usage: ${i}${p} <shortcut-or-runner-or-special> | run <groupRegex><levelRegex>${r} [<customArgs>...]
 
 mini-buildd development helper.
 
@@ -543,14 +543,11 @@ ${b}Special (non-runner) targets${r}:
  ...-> Check source for other possible esoteric calls.
 EOF
 	else
-		local f="mbd_${1}"                    # function
 		local s="${MBD_RUN_SHORTCUTS[${1}]}"  # shortcut
-		if [ "$(type -t "${f}")" = "function" ]; then
-			${f} "${@:2}"
-		elif [ -n "${s}" ]; then
-			mbd_run "${s}"
+		if [ -n "${s}" ]; then
+			mbd_run "${s}" "" "${@:2}"
 		else
-			mbd_run ".." "${1}"
+			mbd_run ".." "${1}" "${@:2}"
 		fi
 	fi
 }
