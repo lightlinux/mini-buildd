@@ -28,7 +28,7 @@ Build-Depends:
 # Needed for api/_contrib.py only:
 	python3-bs4,
 	gnupg
-Standards-Version: 4.1.1
+Standards-Version: 4.4.0
 Vcs-Browser: https://salsa.debian.org/debian/mini-buildd
 Vcs-Git: https://salsa.debian.org/debian/mini-buildd.git
 Homepage: http://mini-buildd.installiert.net/
