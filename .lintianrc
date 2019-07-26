@@ -3,3 +3,4 @@ suppress-tags = changelog-should-mention-nmu,source-nmu-has-incorrect-version-nu
 pedantic = yes
 show-overrides = yes
 display-info = yes
+display-experimental = yes
