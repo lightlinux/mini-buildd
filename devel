@@ -41,7 +41,7 @@ MBD_HTTPD="${MBD_HTTPD:-$(hostname -f):8066}"  # Use 'MBD_HTTPD=some.where.com:1
 MBD_PJPATH="$(readlink -f $(dirname $0))"
 MBD_PYPATH="${MBD_PJPATH}/src"
 MBD_SETUP_CFG="${MBD_PJPATH}/setup.cfg"
-MBD_LINTIAN_CFG="${MBD_PJPATH}/.lintian.cfg"
+MBD_LINTIANRC="${MBD_PJPATH}/.lintianrc"
 MBD_HTTPD_PROTO="http"
 MBD_TOOL="${MBD_PYPATH}/mini-buildd-tool --protocol=${MBD_HTTPD_PROTO} admin@${MBD_HTTPD}"  # m-b-tool shortcut for testing calls
 MBD_LAST_CHANGES="${MBD_PJPATH}/.last_changes"
@@ -315,7 +315,7 @@ mbd_run:05:11:lintian()
 {
 	local changes=$(cat "${MBD_LAST_CHANGES}" || mbd_changes)
 	printf "I: Lintian-checking: %s\n" "${changes}" >&2
-	local result=$(lintian --cfg="${MBD_LINTIAN_CFG}" "${changes}")
+	local result=$(lintian --cfg="${MBD_LINTIANRC}" "${changes}")
 	printf "%s\n---\n" "${result}"
 	if grep "^[EW]:" <<< ${result}; then
 		read -p "Lintian FAILED (RETURN to ignore)" DUMMY
