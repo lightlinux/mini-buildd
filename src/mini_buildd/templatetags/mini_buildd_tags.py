@@ -11,7 +11,7 @@ import mini_buildd.api
 
 LOG = logging.getLogger(__name__)
 
-register = django.template.Library()
+register = django.template.Library()  # pylint: disable=invalid-name  # django needs this lower-case afaiu
 
 
 @register.filter
