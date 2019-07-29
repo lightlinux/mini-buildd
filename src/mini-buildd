@@ -313,18 +313,21 @@ Comma-separated list of special debugging options:
         # Setup logging *after* django config, as the latter might overwrite global logging/warning setup.
         self._setup_logging()
 
-        # Shutdown on SIGTERM or SIGINT
-        self._status = "RESTART"
-        signal.signal(signal.SIGTERM, self.on_signal)
-        signal.signal(signal.SIGINT, self.on_signal)
-        signal.signal(signal.SIGHUP, self.on_signal)
+    class Signals():
+        SHUTDOWN = [signal.SIGTERM, signal.SIGINT]
+        RESTART = [signal.SIGHUP]
+        SIGNALS = SHUTDOWN + RESTART
 
-    def on_signal(self, signum=-1, frame=-1):
-        LOG.info("Got signal: {s} ({f})".format(s=signum, f=frame))
-        if signum in (signal.SIGTERM, signal.SIGINT):
-            self._status = "SHUTDOWN"
-        elif signum == signal.SIGHUP:
-            self._status = "RESTART"
+        def __init__(self):
+            for s in self.SIGNALS:
+                signal.signal(s, lambda x, y: None)  # We need overwrite default handlers with no-ops for signals we handle below
+
+        def wait(self):
+            sig = signal.sigtimedwait(self.SIGNALS, 604800)
+            LOG.info("Got signal: {}".format(sig))
+            if not sig or sig.si_signo in self.RESTART:
+                return self.RESTART  # On SIGHUP or timeout
+            return self.SHUTDOWN
 
     def run_daemon(self, webapp):
         # Start httpd w/ webapp
@@ -336,13 +339,9 @@ Comma-separated list of special debugging options:
         mini_buildd_daemon = Daemon()
         mini_buildd_daemon.start()
 
-        while True:
-            signal.pause()
-            if self._status == "RESTART":
-                mini_buildd_daemon.stop()
-                mini_buildd_daemon.start()
-            else:
-                break
+        signals = self.Signals()
+        while signals.wait() == signals.RESTART:
+            mini_buildd_daemon.restart()
 
         mini_buildd_daemon.stop()
 
