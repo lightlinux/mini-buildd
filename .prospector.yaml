@@ -28,6 +28,7 @@ pylint:
   disable:
     - cyclic-import                 # False-positives, and also seems to break other checks (?).
     - logging-format-interpolation  # We use .format()-style for string formatting. Aiming for fstring-style formatting later (but requires >=3.6, so not yet).
+    - broad-except                  # Should maybe be fixed, but too many right now.
   options:
     variable-rgx: '[a-z_][a-z0-9_]{0,30}$'
     dummy-variables-rgx: _|dummy
