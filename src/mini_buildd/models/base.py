@@ -243,8 +243,7 @@ class StatusModel(Model):
                 except BaseException as e:
                     if obj.LETHAL_DEPENDENCIES:
                         raise
-                    else:
-                        MsgLog(LOG, request).warning("Check on '{o}' failed: {e}".format(o=o, e=e))
+                    MsgLog(LOG, request).warning("Check on '{o}' failed: {e}".format(o=o, e=e))
 
         @classmethod
         def mbd_prepare(cls, request, obj):
