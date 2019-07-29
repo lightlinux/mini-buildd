@@ -518,9 +518,14 @@ declare -A MBD_RUN_SHORTCUTS=(
 # We can't iterate through the associative array in the given order later, so we at least want a sorted key list as helper
 MBD_RUN_SHORTCUTS_SORTED="$(printf '%s\n' "${!MBD_RUN_SHORTCUTS[@]}" | sort -n)"
 
-mbd_logcat()
+mbd_daemon.log()
 {
-	tail --follow=name --retry /var/lib/mini-buildd/var/log/daemon.log /var/lib/mini-buildd/var/log/access.log
+	tail --follow=name --retry /var/lib/mini-buildd/var/log/daemon.log
+}
+
+mbd_access.log()
+{
+	tail --follow=name --retry /var/lib/mini-buildd/var/log/access.log
 }
 
 main()
