@@ -230,7 +230,6 @@ EOF
 	mbd_pipupdateprospector()
 	{
 		pip3 install --upgrade --ignore-installed prospector
-		pip3 install --upgrade --ignore-installed pylint==2.2.2  # https://github.com/PyCQA/prospector/issues/321
 	}
 
 	mbd_pythonkeyringtestconfig
