@@ -543,11 +543,16 @@ ${b}Special (non-runner) targets${r}:
  ...-> Check source for other possible esoteric calls.
 EOF
 	else
-		local s="${MBD_RUN_SHORTCUTS[${1}]}"  # shortcut
-		if [ -n "${s}" ]; then
-			mbd_run "${s}" "" "${@:2}"
+		local shortcut="${MBD_RUN_SHORTCUTS[${1}]}"
+		if [ -n "${shortcut}" ]; then
+			mbd_run "${shortcut}" "" "${@:2}"
 		else
-			mbd_run ".." "${1}" "${@:2}"
+			local func="mbd_${1}"  # direct function
+			if [ "$(type -t "${func}")" = "function" ]; then
+				${func} "${@:2}"
+			else
+				mbd_run ".." "${1}" "${@:2}"
+			fi
 		fi
 	fi
 }
