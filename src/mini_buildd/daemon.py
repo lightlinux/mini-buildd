@@ -508,6 +508,10 @@ class Daemon():
 
         return not self.is_running()
 
+    def restart(self, force_check=False, msglog=LOG):
+        self.stop(msglog=msglog)
+        return self.start(force_check=force_check, msglog=msglog)
+
     def is_busy(self):
         return self.lock.locked()
 
