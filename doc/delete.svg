@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -8,61 +6,34 @@
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:xlink="http://www.w3.org/1999/xlink"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="31.749893mm"
-   height="31.749884mm"
-   viewBox="0 0 31.749893 31.749884"
-   version="1.1"
    id="svg14488"
-   inkscape:version="0.92.1 r15371"
-   sodipodi:docname="delete.svg">
+   version="1.1"
+   viewBox="0 0 31.749893 31.749884"
+   height="31.749884mm"
+   width="31.749893mm">
   <defs
      id="defs14482">
     <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient15107"
-       id="linearGradient15129"
-       x1="665"
-       y1="1291.125"
-       x2="745"
-       y2="1371.125"
+       gradientTransform="matrix(0.26458333,0,0,0.26458333,-99.596721,-188.2411)"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.26458333,0,0,0.26458333,-99.596721,-188.2411)" />
+       y2="1371.125"
+       x2="745"
+       y1="1291.125"
+       x1="665"
+       id="linearGradient15129"
+       xlink:href="#linearGradient15107" />
     <linearGradient
        id="linearGradient15107">
       <stop
-         style="stop-color:#f77676;stop-opacity:1;"
+         id="stop15109"
          offset="0"
-         id="stop15109" />
+         style="stop-color:#f77676;stop-opacity:1;" />
       <stop
-         style="stop-color:#cc2b2a;stop-opacity:1;"
+         id="stop15111"
          offset="1"
-         id="stop15111" />
+         style="stop-color:#cc2b2a;stop-opacity:1;" />
     </linearGradient>
   </defs>
-  <sodipodi:namedview
-     id="base"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="0.35"
-     inkscape:cx="-401.42878"
-     inkscape:cy="117.14263"
-     inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
-     showgrid="false"
-     fit-margin-top="0"
-     fit-margin-left="0"
-     fit-margin-right="0"
-     fit-margin-bottom="0"
-     inkscape:window-width="1680"
-     inkscape:window-height="985"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1" />
   <metadata
      id="metadata14485">
     <rdf:RDF>
@@ -76,17 +47,11 @@
     </rdf:RDF>
   </metadata>
   <g
-     inkscape:label="Layer 1"
-     inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(-71.059579,-148.07744)">
+     transform="translate(-71.059579,-148.07744)"
+     id="layer1">
     <path
-       style="display:inline;fill:url(#linearGradient15129);fill-opacity:1;stroke:#a21919;stroke-width:2.64583325;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 93.549108,163.95238 7.937502,-7.9375 -6.614586,-6.61458 -7.9375,7.9375 -7.9375,-7.9375 -6.614583,6.61458 v 0 l 7.9375,7.9375 -7.9375,7.9375 6.614583,6.61458 7.9375,-7.93749 7.9375,7.93749 6.614586,-6.61458 z"
        id="path15105"
-       inkscape:connector-curvature="0"
-       inkscape:export-filename="/home/gad/Desktop/mini-buildd/cross.png"
-       inkscape:export-xdpi="7.5010986"
-       inkscape:export-ydpi="7.5010986" />
+       d="m 93.549108,163.95238 7.937502,-7.9375 -6.614586,-6.61458 -7.9375,7.9375 -7.9375,-7.9375 -6.614583,6.61458 v 0 l 7.9375,7.9375 -7.9375,7.9375 6.614583,6.61458 7.9375,-7.93749 7.9375,7.93749 6.614586,-6.61458 z"
+       style="display:inline;fill:url(#linearGradient15129);fill-opacity:1;stroke:#a21919;stroke-width:2.64583325;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   </g>
 </svg>
