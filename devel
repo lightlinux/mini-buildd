@@ -519,12 +519,12 @@ MBD_RUN_SHORTCUTS_SORTED="$(printf '%s\n' "${!MBD_RUN_SHORTCUTS[@]}" | sort -n)"
 
 mbd_daemon.log()
 {
-	tail --follow=name --retry /var/lib/mini-buildd/var/log/daemon.log
+	less --follow-name +F /var/lib/mini-buildd/var/log/daemon.log
 }
 
 mbd_access.log()
 {
-	tail --follow=name --retry /var/lib/mini-buildd/var/log/access.log
+	less --follow-name +F /var/lib/mini-buildd/var/log/access.log
 }
 
 main()
