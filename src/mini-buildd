@@ -6,6 +6,7 @@ import os
 import pwd
 import contextlib
 import argparse
+import datetime
 import sys
 import warnings
 import logging
@@ -322,8 +323,17 @@ Comma-separated list of special debugging options:
             for s in self.SIGNALS:
                 signal.signal(s, lambda x, y: None)  # We need overwrite default handlers with no-ops for signals we handle below
 
+        @classmethod
+        def seconds_until_next_sunday_2am(cls):
+            now = datetime.datetime.now()
+            next_sunday = now + datetime.timedelta(days=7 - (now.isoweekday() % 7))
+            next_sunday_2am = datetime.datetime(year=next_sunday.year, month=next_sunday.month, day=next_sunday.day, hour=2)
+            return (next_sunday_2am - now).total_seconds()
+
         def wait(self):
-            sig = signal.sigtimedwait(self.SIGNALS, 604800)
+            secs = self.seconds_until_next_sunday_2am()
+            LOG.info("Scheduling internal restart for: {}".format(datetime.datetime.now() + datetime.timedelta(seconds=secs)))
+            sig = signal.sigtimedwait(self.SIGNALS, self.seconds_until_next_sunday_2am())
             LOG.info("Got signal: {}".format(sig))
             if not sig or sig.si_signo in self.RESTART:
                 return self.RESTART  # On SIGHUP or timeout
@@ -339,10 +349,10 @@ Comma-separated list of special debugging options:
         mini_buildd_daemon = Daemon()
         mini_buildd_daemon.start()
 
+        # Main loop
         signals = self.Signals()
         while signals.wait() == signals.RESTART:
             mini_buildd_daemon.restart()
-
         mini_buildd_daemon.stop()
 
     def run(self):
