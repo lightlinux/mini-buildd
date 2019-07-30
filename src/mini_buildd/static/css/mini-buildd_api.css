@@ -45,7 +45,9 @@ input.mbd-api-needs-login
 /* Customizations per command -- i.e., use images where available */
 input.mbd-api-start
 {
-	background: url("../img/mbd_start.png") no-repeat scroll 3px 50% #e7e7e7;
+	background: url("../img/start.svg") #e7e7e7;
+	background-size: 20%;
+	background-repeat: no-repeat;
 	padding: 2px 6px 2px 16px;
 }
 
