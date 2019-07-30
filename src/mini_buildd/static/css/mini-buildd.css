@@ -85,6 +85,8 @@ a.hover-underline:hover
 	float: left;
 	margin: 8px 0px 8px 10px;
 	border: 0;
+	width: 48px;
+	height: 48px;
 }
 
 
@@ -237,14 +239,13 @@ a.hover-underline:hover
 
 #mbd-content h1.box-caption
 {
-	background: url("../img/icon_48x48.png") no-repeat scroll right top;
+	background: url("../img/mini-buildd.svg") no-repeat scroll right top;
 	background-color: #57859a;
+	background-size: 48px;
 	color: white;
 	font-weight: bold;
 	margin: 0;
-	padding: 3px 0px 3px 5px;
 	font-size: 14px;
-	margin: 0;
 	padding: 2px 0px 3px 5px;
 	border-top: 2px solid #57859a;
 	border-right: 2px solid #57859a;

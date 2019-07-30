@@ -13,6 +13,8 @@
 {
 	float: left;
 	margin: 0px 10px 8px 10px;
+	width: 48px;
+	height: 48px;
 }
 
 #mbd-django-admin-daemon-status
