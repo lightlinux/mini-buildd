@@ -1,8 +1,0 @@
-[Unit]
-Description=Restart mini-buildd weekly to trigger automatic maintenance
-
-[Timer]
-OnCalendar=Sun 02:00
-
-[Install]
-WantedBy=timers.target
