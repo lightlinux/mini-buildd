@@ -54,7 +54,7 @@
 
 #header
 {
-	background: url("../img/da_header_background_gradient.png") repeat-x scroll left top;
+	background-image: linear-gradient(#CC3434, #417690);
 }
 
 #content-main td.right
