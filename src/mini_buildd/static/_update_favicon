@@ -1,0 +1,8 @@
+#!/usr/bin/make -f
+
+# Half-automation to re-create favicon.ico when logo has changed.
+# favicon.ico must still be checked-in, and changes need to be commited.
+# Not worth really to (do it in the build process and) add imagemagick build dependencies
+
+favicon.ico: img/mini-buildd.svg
+	convert -density 256x256 -background transparent $< -define icon:auto-resize -colors 256 $@
