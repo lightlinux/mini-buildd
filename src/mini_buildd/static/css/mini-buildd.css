@@ -412,7 +412,7 @@ a.hover-underline:hover
 
 #mbd-content ul
 {
-	list-style-image: url("../img/mbd_list_style_image.png");
+	list-style-image: url("../img/bullet.svg");
 }
 
 #mbd-content li
