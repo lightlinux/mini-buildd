@@ -1,3 +1,92 @@
+mini-buildd (1.1.18) experimental; urgency=medium
+
+  ** 1.1.x are _development_ releases, use for testing only. **
+
+  This and that: Moves to SVG-only for the webapp images; adds
+  internal restart (cron.weekly now removed); plus misc Debian
+  packaging upgrades (now dh 12 and 'lintian clean' again).
+
+  Offtopic: 1.0.x (stable) can no longer be maintained in Debian
+  unstable/bullseye. Please see http://mini-buildd.installiert.net/
+  on how to get further updates.
+
+  * [229b287] rules: Use 'python3 -msphinx' instead of sphinx-build.
+  * [f560b97] devel: Use "custom debi code" temporarily (see bug #932896).
+  * [322fe02] .lintian.cfg: 'fail-on-warnings': Is no more.
+  * [f6ff78f] .lintian.cfg: show overrides.
+  * [8e964a2] Remove mini-buildd.lintian-overrides: 'no-debconf-config' no
+    longer needs to be overwritten.
+  * [845fae1] devel: Roll own lintian check (ask to continue on warning or
+    error).
+  * [15bb2c1] devel: Persist last changes file; make lintian use that if
+    it exists (be able to repeat the lintian call).
+  * [f5f2d8c] debian/*: Update to debhelper 12 (change: fixup dh_missing
+    call).
+  * [6f090c6] control: Update to 'debhelper-compat' notation.
+  * [ddfe683] control: We need python3 >= 3.6 (f.e., use of enum.auto).
+  * [c400f3e] devel: Skip buildfast|check in favor of one build(): Always
+    no check, but always docs.
+  * [a59ea6b] devel: Run prepare-system on updatetestall only.
+  * [cccc79b] control: mini-buildd.deb: Add missing 'Pre-Depends' (Fixes
+    lintian/skip-systemd-native-flag-missing-pre-depends).
+  * [71ce9ec] Rename setup.py -> config.py (was confusing: setup.py has
+    special meaning in pyworld).
+  * [a6d1144] devel: Run lintian on updatecheck.
+  * [d7ac20c] .lintian.cfg: Use nicer notation (like in shipped).
+  * [b245b0d] lintian: Rather use '.lintianrc' as config file name
+    (similar to shipped).
+  * [bf72b63] .lintianrc: Also display experimental checks.
+  * [73dc748] devel: Add support for custom args.
+  * [1c45205] devel: lintian(): Custom args == addon arge for lintian run.
+  * [38986f6] debian/control: Fix short description of mini-buildd-doc
+    (was copy/paste from -utils).
+  * [c8b7f92] mini-buildd-doc: Register HTML manual with doc-base.
+  * [509bb7a] control: python3-mini-buildd desc: "Python" should be
+    capital.
+  * [88864f9] mini-buildd.timer: Add systemd timer (for weekly maintenance
+    restart).
+  * [624c248] control: Update stds-version to 4.4.0 (no changes required).
+  * [1bec858] devel: Fix running of non-queued functions (mbd_func).
+  * [fa1d334] daemon.py: Add convenience restart() method.
+  * [12f98e5] devel: Separate log functions (daemon, access)
+  * [9b02af7] pylint 2.3.1: Fix new 'no-else-raise' in models/base.py.
+  * [4451a3f] pylint 2.3.1: Now finds 'invalid-name' in
+    templatetags/mini_buildd_tags.py: Needs exception.
+  * [8763e5d] pylint 2.3.1: Now finds "broad-except" for BaseException
+    too: Disabling for now (too many).
+  * [d5c1ae3] devel: Since prospector 1.1.7, we no longer need to pin
+    pylint at 2.2.2.
+  * [8a24c72] mini-buildd: Better code for signal handling; prepare for
+    internal weekly restart.
+  * [699755d] devel: Use less to follow logs.
+  * [4008411] mini-buildd: Add internal restart schedule (hardcoded to
+    Sunday 2am).
+  * [49c787b] debian/*: Remove cron.weekly (we now have an internal
+    (hardcoded) scheduled restart in place).
+  * [3bae100] doc/*.svg: Convert all to plain SVG (was: inkscape SVG).
+  * [ddad215] Move all doc/*.svg into the static/img/.
+  * [3286533] Choose better names for the svg image files.
+  * [96d284f] setup.py: Also install *.svg files.
+  * [2a06a43] Remove mbd_migrate|remove|wizard.png: Using svg instead.
+  * [7e6ac04] images: Use svg only for logo.
+  * [9487f68] img/mbd_start.png: Convert and use as start.svg.
+  * [8e210da] img/mbd_migrate_rollback.png: Unused -- removed.
+  * [48ade15] img/mbd_rebuild.png: Unused -- removed.
+  * [eac726d] img/mbd_stop.png: Unused -- removed.
+  * [e1faeac] img: Use SVG for bullet list.
+  * [7d591f8] css: Do all "gradients" via CSS 'background-image'; remove
+    all "gradient pngs".
+  * [77160bf] doc: Fix logo to use SVG.
+  * [c488f4f] img: Convert message PNGs to SVGs.
+  * [711b98a] setup.py: Remove "png" from static files to be installed.
+  * [289ada3] static: Add script to generate favicon.ico && update
+    favicon.ico.
+  * [e6b5c1e] img: Remove progress_blue.gif; do rotation via CSS only.
+  * [3c8147f] setup.py: static data install: "gif" no longer needed.
+  * [086b959] img: Rename mini-buildd.svg -> logo.svg.
+
+ -- Stephan Sürken <absurd@debian.org>  Wed, 31 Jul 2019 17:03:35 +0200
+
 mini-buildd (1.1.17) experimental; urgency=medium
 
   ** 1.1.x are _development_ releases, use for testing only. **
