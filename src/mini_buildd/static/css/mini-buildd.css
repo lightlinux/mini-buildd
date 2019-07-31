@@ -565,4 +565,18 @@ label.mbd-api
 	width: 80px;
 	text-align: right;
 	font-style: italic;
-}​
+}
+
+.rotate
+{
+	animation: rotation 8s infinite linear;
+	width: 24px;
+	margin: -5px 0 -5px 0;
+	padding: 0;
+}
+
+@keyframes rotation
+{
+	from { transform: rotate(0deg); }
+	to { transform: rotate(359deg); }
+}
