@@ -20,24 +20,24 @@ li.messagelist
 
 li.debug
 {
-	background-image: url(../img/mbd_message_debug.png);
+	background-image: url(../img/message_debug.svg);
 	color: blue;
 }
 
 li.success, li.info
 {
-	background-image: url(../img/mbd_message_info.png);
+	background-image: url(../img/message_info.svg);
 	color: green;
 }
 
 li.warning
 {
-	background-image: url(../img/mbd_message_warning.png);
+	background-image: url(../img/message_warning.svg);
 	color: purple;
 }
 
 li.error
 {
-	background-image: url(../img/mbd_message_error.png);
+	background-image: url(../img/message_error.svg);
 	color: red;
 }

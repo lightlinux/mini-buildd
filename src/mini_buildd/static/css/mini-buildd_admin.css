@@ -21,7 +21,7 @@
 {
 	float: left;
 	width: 100%;
-	background: url("../img/mbd_message_warning.png") no-repeat scroll 0 0px white;
+	background: url("../img/message_warning.svg") no-repeat scroll 0 0px white;
 	border-bottom: 1px solid #cccccc;
 	border-top: 1px solid #cccccc;
 	color: #999999;
